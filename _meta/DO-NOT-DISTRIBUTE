@@ -2,6 +2,9 @@
 # the release ZIP that projects copy (.github/workflows/release.yml reads this list).
 # One path per line, relative to the root. This is the confidentiality lever between
 # the framework repository and the copies it distributes.
-_meta/DO-NOT-DISTRIBUTE
+#
+# This file itself is NOT excluded: it lists filenames only, nothing confidential, and
+# _meta/INVENTORY.md and playbooks/sync-framework.md cite it as present in every copy —
+# excluding it made the copy's own `verify.sh` fail every time (self-referential listing).
 .glossario-pt-en.json
 .mapa-pt-en.json

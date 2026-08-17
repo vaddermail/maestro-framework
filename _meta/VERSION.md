@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.0.1** (2026-08-17)
+**Current version: 1.0.2** (2026-08-17)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -16,6 +16,19 @@ framework evolves in this repository through pull requests and curation
 never automatically.
 
 ## Changelog
+
+### 1.0.2 — 2026-08-17
+
+- Fix: `_meta/DO-NOT-DISTRIBUTE` listed itself as excluded from the release ZIP. Since the
+  inventory and `playbooks/sync-framework.md` both cite this file as present in every copy, the
+  self-exclusion made `_meta/verify.sh` fail with 2 errors in every distributed copy, right after
+  extraction — before a project even started. The file carries only filenames, nothing
+  confidential, so it now ships; the actual secrets (the PT↔EN translation memory) stay excluded.
+  Verified by rebuilding the release ZIP locally and running the gate inside the extracted copy.
+- Also created the missing `improvements` GitHub label — the issue template and the curation
+  playbook both depend on it, but it had never been created on the repository, so every field
+  report opened through the template would have landed unlabeled and invisible to the curation
+  queue.
 
 ### 1.0.1 — 2026-08-17
 
