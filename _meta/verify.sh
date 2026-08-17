@@ -66,15 +66,28 @@ done < <(grep -rhoE '`(core|agents|workflows|loops|modules|templates|checklists|
 # 4. Fichas de agente: todas as secções do TEMPLATE-AGENTE presentes
 #    (exclui READMEs e o próprio template)
 # ---------------------------------------------------------------------------
-seccoes=(
+seccoes_pt=(
   '## Identificação' '## Objetivo' '## Quando inicia' '## Quando termina'
   '## Inputs' '## Outputs' '## Perguntas ao utilizador' '## Regras'
   '## Limitações' '## Workflow' '## Exemplos' '## Boas práticas'
   '## Anti-padrões' '## Interações' '## Critérios de pronto'
 )
+seccoes_en=(
+  '## Identification' '## Objective' '## When it starts' '## When it ends'
+  '## Inputs' '## Outputs' '## Questions to the user' '## Rules'
+  '## Limitations' '## Workflow' '## Examples' '## Best practices'
+  '## Anti-patterns' '## Interactions' '## Done criteria'
+)
+# transição PT→EN: uma ficha passa se TODAS as secções de UM dos conjuntos existirem (e por ordem)
+conjunto_da_ficha() { # devolve pt|en|nenhum
+  if grep -qF '## Identification' "$1"; then echo en; elif grep -qF '## Identificação' "$1"; then echo pt; else echo nenhum; fi
+}
 fichas_ko=0
 while IFS= read -r f; do
-  for s in "${seccoes[@]}"; do
+  cj=$(conjunto_da_ficha "$f")
+  [ "$cj" = nenhum ] && { falha "FICHA SEM SECÇÕES RECONHECÍVEIS: $f"; fichas_ko=1; continue; }
+  if [ "$cj" = en ]; then lista=("${seccoes_en[@]}"); else lista=("${seccoes_pt[@]}"); fi
+  for s in "${lista[@]}"; do
     grep -qF "$s" "$f" || { falha "FICHA SEM SECÇÃO '$s': $f"; fichas_ko=1; }
   done
 done < <(find agents -mindepth 2 -type f -name '*.md' ! -name 'README.md' ! -name 'AGENT-TEMPLATE.md')
@@ -117,8 +130,10 @@ fi
 # ---------------------------------------------------------------------------
 ordem_ko=0
 while IFS= read -r f; do
+  cj=$(conjunto_da_ficha "$f")
+  if [ "$cj" = en ]; then lista=("${seccoes_en[@]}"); else lista=("${seccoes_pt[@]}"); fi
   prev=0
-  for s in "${seccoes[@]}"; do
+  for s in "${lista[@]}"; do
     ln=$(grep -nF "$s" "$f" | head -1 | cut -d: -f1)
     if [ -n "$ln" ]; then
       if [ "$ln" -lt "$prev" ]; then falha "SECÇÕES FORA DE ORDEM: $f ('$s')"; ordem_ko=1; break; fi
