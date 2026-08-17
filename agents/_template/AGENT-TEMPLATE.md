@@ -1,110 +1,111 @@
-# Template de Agente — `TEMPLATE-AGENTE`
+# Agent Template — `AGENT-TEMPLATE`
 
-> **Como usar:** copia este ficheiro para a categoria certa (`agents/NN-categoria/nome-do-agente.md`),
-> preenche **todas** as secções e regista o novo agente no índice da categoria (`README.md` da pasta)
-> e no inventário global (`_meta/INVENTORY.md`). Nenhuma secção é opcional — se uma não se aplicar,
-> escreve explicitamente "Não aplicável, porque …". Ver `playbooks/add-an-agent.md` para o
-> processo completo e `core/extensibility.md` para as garantias de compatibilidade.
+> **How to use:** copy this file into the right category (`agents/NN-category/agent-name.md`),
+> fill in **all** sections and register the new agent in the category index (the folder's
+> `README.md`) and in the global inventory (`_meta/INVENTORY.md`). No section is optional — if one
+> does not apply, write explicitly "Not applicable, because …". See `playbooks/add-an-agent.md` for
+> the full process and `core/extensibility.md` for the compatibility guarantees.
 
 ---
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Nome** | Nome do agente em PT-PT (ex.: Guardião de Segurança) |
-| **Alias** | Nome internacional, se existir (ex.: Security Guardian) |
-| **Categoria** | `NN-categoria` (pasta onde vive) |
-| **Fases** | Fases do ciclo de vida em que atua (ver `core/lifecycle.md`) — ex.: F1, F9 |
-| **Tipo** | `especialista` \| `árbitro` \| `revisor` \| `guardião` \| `coordenador` |
-| **Modelo sugerido** | Camada de modelo + esforço, segundo `core/model-routing.md` (ex.: `padrão` / `topo, effort medium`) |
+| **Name** | Agent name in PT-PT (e.g. Guardião de Segurança) |
+| **Alias** | International name, if any (e.g. Security Guardian) |
+| **Category** | `NN-category` (the folder it lives in) |
+| **Phases** | Lifecycle phases where it acts (see `core/lifecycle.md`) — e.g. F1, F9 |
+| **Type** | `specialist` \| `arbiter` \| `reviewer` \| `guardian` \| `coordinator` |
+| **Suggested model** | Model tier + effort, per `core/model-routing.md` (e.g. `standard` / `top, effort medium`) |
 
-## Objetivo
+## Objective
 
-Um parágrafo: a **única responsabilidade** deste agente. Se precisares de "e" para descrever duas
-responsabilidades independentes, são dois agentes.
+One paragraph: this agent's **single responsibility**. If you need an "and" to describe two
+independent responsibilities, that is two agents.
 
-## Quando inicia
+## When it starts
 
-Condições concretas de ativação: que fase, que evento, que artefacto ficou disponível, quem o invoca
-(normalmente o Orquestrador — ver `core/orchestrator.md`). Um agente nunca se auto-invoca fora
-destas condições.
+Concrete activation conditions: which phase, which event, which artifact became available, who
+invokes it (normally the Orchestrator — see `core/orchestrator.md`). An agent never invokes itself
+outside these conditions.
 
-## Quando termina
+## When it ends
 
-Critérios verificáveis de conclusão (não "quando estiver bom"): que artefactos existem, que checklist
-passou, que portão de qualidade foi cumprido. Se o agente pode terminar **bloqueado** (à espera de
-resposta do utilizador), diz como regista o bloqueio (`STATE.md` → decisões pendentes).
+Verifiable completion criteria (not "when it looks good"): which artifacts exist, which checklist
+passed, which quality gate was met. If the agent can end **blocked** (waiting for an answer from
+the user), say how it records the block (`STATE.md` → pending decisions).
 
 ## Inputs
 
-| Artefacto | Origem (agente/fase) | Obrigatório? | Notas |
+| Artifact | Source (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/…/exemplo.md` | Agente X (F1) | Sim | O que precisa de conter para ser utilizável |
+| `product/…/example.md` | Agent X (F1) | Yes | What it needs to contain to be usable |
 
-Se um input obrigatório não existir ou estiver incompleto, o agente **não avança com pressupostos**:
-devolve ao Orquestrador a lista de lacunas e as perguntas a fazer (ver `core/question-engine.md`).
+If a required input does not exist or is incomplete, the agent **does not proceed on assumptions**:
+it returns to the Orchestrator the list of gaps and the questions to ask (see
+`core/question-engine.md`).
 
 ## Outputs
 
-| Artefacto | Destino (localização no projeto) | Consumidores |
+| Artifact | Destination (location in the project) | Consumers |
 | --- | --- | --- |
-| `product/…/exemplo.md` | Onde fica escrito | Agentes que o vão ler a jusante |
+| `product/…/example.md` | Where it gets written | Agents that will read it downstream |
 
-Todo o output é **escrito em ficheiro** no projeto (nunca apenas "dito" na conversa) — é assim que a
-memória do projeto se mantém auditável (ver `core/project-memory.md`).
+Every output is **written to a file** in the project (never just "said" in the conversation) —
+that is how the project memory stays auditable (see `core/project-memory.md`).
 
-## Perguntas ao utilizador
+## Questions to the user
 
-As perguntas-tipo que este agente coloca quando falta informação, no formato do
-`core/question-engine.md`: contexto → pergunta → porque importa → opções com prós/contras em
-linguagem simples → recomendação por defeito. Perguntas agrupadas em lotes; nunca uma metralhadora
-de perguntas soltas.
+The typical questions this agent asks when information is missing, in the format of
+`core/question-engine.md`: context → question → why it matters → options with pros/cons in plain
+language → default recommendation. Questions grouped in batches; never a machine gun of loose
+questions.
 
-## Regras
+## Rules
 
-Regras inegociáveis que o agente cumpre sempre. Numeradas, verificáveis, com o porquê quando não for
-óbvio. Ex.: "1. Nunca declara a análise concluída com requisitos ambíguos por resolver — abre o loop
-`loops/L01-ambiguous-requirements.md`."
+Non-negotiable rules the agent always follows. Numbered, verifiable, with the why when it is not
+obvious. E.g.: "1. Never declares the analysis complete with unresolved ambiguous requirements —
+opens the loop `loops/L01-ambiguous-requirements.md`."
 
-## Limitações (o que este agente NÃO faz)
+## Limitations (what this agent does NOT do)
 
-Fronteiras explícitas com os agentes vizinhos, para evitar sobreposição e trabalho duplicado. Nomear
-o agente responsável por cada coisa excluída. Ex.: "Não escolhe tecnologias — isso é do
+Explicit boundaries with the neighboring agents, to avoid overlap and duplicated work. Name the
+agent responsible for each excluded item. E.g.: "Does not choose technologies — that belongs to
 `agents/02-architecture/stack-selector.md`."
 
 ## Workflow
 
-Passo-a-passo numerado do trabalho do agente, do primeiro input ao último output. Incluir os pontos
-de decisão, os loops que pode abrir e os momentos em que devolve controlo ao Orquestrador. Se o passo
-produz artefacto, indicar qual.
+Numbered step-by-step of the agent's work, from the first input to the last output. Include the
+decision points, the loops it can open and the moments when it returns control to the Orchestrator.
+If a step produces an artifact, say which one.
 
-## Exemplos
+## Examples
 
-Pelo menos **um exemplo concreto e realista** de ponta a ponta: input recebido → raciocínio → perguntas
-feitas (se aplicável) → output produzido (excerto). Preferir exemplos de domínios variados (e-commerce,
-SaaS B2B, app interna) para mostrar que o agente é agnóstico de domínio.
+At least **one concrete and realistic example** end to end: input received → reasoning → questions
+asked (if applicable) → output produced (excerpt). Prefer examples from varied domains
+(e-commerce, B2B SaaS, internal app) to show the agent is domain-agnostic.
 
-## Boas práticas
+## Best practices
 
-O que distingue um resultado excelente de um aceitável neste papel. Destilado da experiência
-(ver `knowledge/`), não teoria genérica.
+What separates an excellent result from an acceptable one in this role. Distilled from experience
+(see `knowledge/`), not generic theory.
 
-## Anti-padrões
+## Anti-patterns
 
-Erros típicos que este agente deve recusar-se a cometer, cada um com o sintoma e a alternativa correta.
-Ex.: "❌ Assumir a resposta em vez de perguntar → ✅ registar a lacuna e perguntar em lote."
+Typical mistakes this agent must refuse to make, each with the symptom and the correct alternative.
+E.g.: "❌ Assuming the answer instead of asking → ✅ record the gap and ask in a batch."
 
-## Interações
+## Interactions
 
-| Agente | Relação |
+| Agent | Relationship |
 | --- | --- |
-| `caminho/para/agente.md` | a montante (fornece X) / a jusante (consome Y) / paralelo (coordena Z) |
+| `path/to/agent.md` | upstream (provides X) / downstream (consumes Y) / parallel (coordinates Z) |
 
-## Critérios de pronto
+## Done criteria
 
-Checklist final verificável antes de o agente entregar (liga aos `checklists/` e ao portão da fase em
-`core/quality-gates.md`):
+Final verifiable checklist before the agent delivers (links to `checklists/` and to the phase gate
+in `core/quality-gates.md`):
 
 - [ ] …
 - [ ] …

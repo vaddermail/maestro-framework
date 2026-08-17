@@ -1,73 +1,77 @@
-# Arquitetura (F3)
+# Architecture (F3)
 
-A categoria que decide **como se constrói** — o estilo arquitetural e a stack concreta — antes de
-escrever uma linha de código de produto. Trabalha na fase **F3** do ciclo de vida
-(`core/lifecycle.md`), entre os requisitos fechados (F2) e o desenho da experiência (F4), e o
-seu produto (visão de arquitetura + ADRs + stack fixada) é a base de toda a especificação (F5) e
-construção (F6).
+The category that decides **how it gets built** — the architectural style and the concrete stack —
+before writing a single line of product code. It works in phase **F3** of the lifecycle
+(`core/lifecycle.md`), between the closed requirements (F2) and the experience design (F4), and its
+product (architecture vision + ADRs + pinned stack) is the base of all specification (F5) and
+build (F6).
 
-O princípio central desta categoria: **decisões estruturais não se tomam por moda nem por opinião do
-agente mais falador — geram-se em painel, decidem-se por árbitro, registam-se em ADR e fecham-se**
-(`core/decision-engine.md`). Reverter uma escolha de estilo arquitetural custa meses; por isso é
-das decisões mais formais da framework.
+The central principle of this category: **structural decisions are not made by fashion nor by the
+opinion of the most talkative agent — they are generated in a panel, decided by an arbiter,
+recorded in an ADR and closed** (`core/decision-engine.md`). Reverting an architectural style
+choice costs months; that is why it is among the most formal decisions in the framework.
 
-## Agentes da categoria
+## Agents in this category
 
-| Agente | Tipo | O que faz |
+| Agent | Type | What it does |
 | --- | --- | --- |
-| `agents/02-architecture/architecture-arbiter.md` | Árbitro | Compara as propostas do painel contra critérios pesados e decide com ADR justificado |
-| `agents/02-architecture/stack-selector.md` | Especialista | Escolhe as tecnologias concretas depois do estilo decidido (versões estáveis/LTS, lockfiles) |
-| `agents/02-architecture/monolith-specialist.md` | Especialista | Propõe e justifica um monólito clássico (um só deployable) |
-| `agents/02-architecture/modular-monolith-specialist.md` | Especialista | Propõe monólito com fronteiras internas explícitas e caminho de migração |
-| `agents/02-architecture/microservices-specialist.md` | Especialista | Propõe serviços independentes; expõe honestamente o custo operacional |
-| `agents/02-architecture/event-driven-specialist.md` | Especialista | Propõe comunicação por eventos; brokers, garantias de entrega, idempotência |
-| `agents/02-architecture/cqrs-specialist.md` | Especialista | CQRS (com/sem event sourcing): quando compensa a complexidade |
-| `agents/02-architecture/clean-architecture-specialist.md` | Especialista | Clean Architecture: camadas, regra de dependência, custos |
-| `agents/02-architecture/hexagonal-specialist.md` | Especialista | Ports & Adapters: isolamento do domínio e testabilidade |
-| `agents/02-architecture/ddd-specialist.md` | Especialista | DDD estratégico e tático: bounded contexts, agregados |
-| `agents/02-architecture/vertical-slice-specialist.md` | Especialista | Vertical slices: organização por funcionalidade |
-| `agents/02-architecture/serverless-specialist.md` | Especialista | Serverless/FaaS: custos, cold starts, lock-in |
-| `agents/02-architecture/edge-computing-specialist.md` | Especialista | Edge: latência, dados na borda, restrições de runtime |
+| `agents/02-architecture/architecture-arbiter.md` | Arbiter | Compares the panel's proposals against weighted criteria and decides with a justified ADR |
+| `agents/02-architecture/stack-selector.md` | Specialist | Picks the concrete technologies after the style is decided (stable/LTS versions, lockfiles) |
+| `agents/02-architecture/monolith-specialist.md` | Specialist | Proposes and justifies a classic monolith (a single deployable) |
+| `agents/02-architecture/modular-monolith-specialist.md` | Specialist | Proposes a monolith with explicit internal boundaries and a migration path |
+| `agents/02-architecture/microservices-specialist.md` | Specialist | Proposes independent services; honestly exposes the operational cost |
+| `agents/02-architecture/event-driven-specialist.md` | Specialist | Proposes event-based communication; brokers, delivery guarantees, idempotency |
+| `agents/02-architecture/cqrs-specialist.md` | Specialist | CQRS (with/without event sourcing): when the complexity pays off |
+| `agents/02-architecture/clean-architecture-specialist.md` | Specialist | Clean Architecture: layers, dependency rule, costs |
+| `agents/02-architecture/hexagonal-specialist.md` | Specialist | Ports & Adapters: domain isolation and testability |
+| `agents/02-architecture/ddd-specialist.md` | Specialist | Strategic and tactical DDD: bounded contexts, aggregates |
+| `agents/02-architecture/vertical-slice-specialist.md` | Specialist | Vertical slices: organization by feature |
+| `agents/02-architecture/serverless-specialist.md` | Specialist | Serverless/FaaS: costs, cold starts, lock-in |
+| `agents/02-architecture/edge-computing-specialist.md` | Specialist | Edge: latency, data at the edge, runtime constraints |
 
-> O Orquestrador convoca **só os especialistas relevantes** ao problema — nunca todos por reflexo.
+> The Orchestrator convenes **only the specialists relevant** to the problem — never all of them by
+> reflex.
 
-## Como o árbitro usa os especialistas (painel + ADR)
+## How the arbiter uses the specialists (panel + ADR)
 
-O processo é o do `core/decision-engine.md`, secção "decisões estruturais", aplicado a esta
-categoria:
+The process is the one in `core/decision-engine.md`, section "decisões estruturais", applied to
+this category:
 
-1. **Enquadrar.** O Orquestrador formula a pergunta de decisão ("que estilo arquitetural para este
-   produto?") e os **critérios com pesos**, derivados dos requisitos e RNF de F2 (escala esperada,
-   nº de equipas, maturidade de operação, reversibilidade, custo, prazo).
-2. **Propor em painel, às cegas.** Convoca 2–4 especialistas de estilo relevantes. Cada um produz
-   uma proposta **independente**, sem ver as dos outros, com desenho, prós/contras honestos contra os
-   critérios, custo, riscos e caminho de reversão. **Uma proposta "o meu estilo não serve aqui" é
-   válida e valiosa** — poupa ao árbitro descartar uma opção má e mostra que o especialista pensou.
-3. **Arbitrar.** O `arbitro-de-arquitetura` — que **nunca é um dos proponentes** — compara contra os
-   critérios pesados, pode fundir ideias, e escreve o ADR fundamentado, incluindo as opções rejeitadas
-   e o "não fazer nada" (o status quo).
-4. **Validar e fixar a stack.** O utilizador valida em linguagem simples; só depois o ADR fica
-   `aprovado`. Com o estilo fechado, o `selecionador-de-stack` escolhe as tecnologias concretas.
+1. **Frame.** The Orchestrator formulates the decision question ("which architectural style for
+   this product?") and the **weighted criteria**, derived from the F2 requirements and NFRs
+   (expected scale, number of teams, operational maturity, reversibility, cost, deadline).
+2. **Propose in a panel, blind.** It convenes 2–4 relevant style specialists. Each produces an
+   **independent** proposal, without seeing the others', with a design, honest pros/cons against
+   the criteria, cost, risks and a reversal path. **A proposal saying "my style does not fit
+   here" is valid and valuable** — it saves the arbiter discarding a bad option and shows the
+   specialist thought it through.
+3. **Arbitrate.** The `architecture-arbiter` — who is **never one of the proponents** — compares
+   against the weighted criteria, may merge ideas, and writes the reasoned ADR, including the
+   rejected options and the "do nothing" (the status quo).
+4. **Validate and pin the stack.** The user validates in plain language; only then does the ADR
+   become `approved`. With the style closed, the `stack-selector` picks the concrete
+   technologies.
 
-Este desenho separa deliberadamente **quem propõe** de **quem decide**: um painel de fachada (onde os
-especialistas validam uma escolha já feita) é um anti-padrão que o motor de decisão proíbe.
+This design deliberately separates **who proposes** from **who decides**: a rubber-stamp panel
+(where the specialists validate a choice already made) is an anti-pattern the decision engine
+forbids.
 
-## Ordem de trabalho recomendada
+## Recommended order of work
 
-Estilo primeiro, stack depois. `especialistas de estilo (em paralelo) → arbitro-de-arquitetura (ADR)
-→ validação do utilizador → selecionador-de-stack`. A stack **nunca** se escolhe antes do estilo: a
-tecnologia serve a arquitetura, não o contrário.
+Style first, stack second. `style specialists (in parallel) → architecture-arbiter (ADR) → user
+validation → stack-selector`. The stack is **never** chosen before the style: technology
+serves the architecture, not the other way around.
 
-## Portão de saída da fase
+## Phase exit gate
 
-`core/quality-gates.md` (F3): ADRs escritos com alternativas consideradas e caminho de
-reversão; stack fixada com versões e lockfiles; utilizador validou custos e trade-offs. Só com o
-portão fechado se avança para F4/F5.
+`core/quality-gates.md` (F3): ADRs written with the alternatives considered and a reversal path;
+stack pinned with versions and lockfiles; user validated costs and trade-offs. Only with the gate
+closed does work move on to F4/F5.
 
-## Relacionados
+## Related
 
-- `core/decision-engine.md` — o processo painel→árbitro→ADR que esta categoria encarna.
-- `workflows/W03-architecture.md` — o workflow que executa a fase.
-- `templates/project/ADR-DECISION.md.template` — o formato do registo de decisão.
-- `agents/08-infrastructure/hosting-arbiter.md` — o mesmo padrão de arbitragem para a infra.
-- `agents/12-reviewers/architecture-reviewer.md` — quem, em F7, verifica a aderência ao decidido.
+- `core/decision-engine.md` — the panel→arbiter→ADR process this category embodies.
+- `workflows/W03-architecture.md` — the workflow that runs the phase.
+- `templates/project/ADR-DECISION.md.template` — the decision record format.
+- `agents/08-infrastructure/hosting-arbiter.md` — the same arbitration pattern for infrastructure.
+- `agents/12-reviewers/architecture-reviewer.md` — who, in F7, checks adherence to what was decided.
