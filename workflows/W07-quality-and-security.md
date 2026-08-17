@@ -50,7 +50,7 @@ sinal forte; a contaminação destrói-o. O `consolidador-de-revisoes` é o **ú
 
 > **Escala ao perfil:** num protótipo, o painel colapsa no mínimo (segurança + arquitetura) e o
 > Orquestrador consolida; numa plataforma empresarial corre o painel completo, ASVS nível 2+ e a
-> auditoria adversarial é obrigatória antes do go-live (`core/orchestrator.md` §Perfis).
+> auditoria adversarial é obrigatória antes do go-live (`core/orchestrator.md` §Effort profiles).
 
 ## Pontos de decisão
 
@@ -59,7 +59,7 @@ sinal forte; a contaminação destrói-o. O `consolidador-de-revisoes` é o **ú
   loops certos; menores/nits podem ser dívida registada se o utilizador aceitar.
 - **Aprovação humana obrigatória (P7):** o **risco residual** é decisão do utilizador — os achados
   que se decide **não** corrigir ficam em `product/05-security/residual-risk.md` **assinados** por
-  ele, com o porquê e o risco assumido (`core/orchestrator.md` §Aprovação humana). O agente
+  ele, com o porquê e o risco assumido (`core/orchestrator.md` §Human approval). O agente
   recomenda; nunca aceita risco em nome do utilizador.
 - **Derrogação de critério** (um item da checklist que não passa mas se decide seguir na mesma) é do
   utilizador e regista-se (`core/quality-gates.md`) — nunca um atalho do Orquestrador.

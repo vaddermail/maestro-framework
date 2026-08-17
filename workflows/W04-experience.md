@@ -41,7 +41,7 @@ A ordem segue `agents/03-experience/README.md`. Artefactos em `product/03-experi
 `-de-seo.md` (produto público indexável), `-de-internacionalizacao.md` (mais do que um locale). **Não
 se desenha para requisitos que não existem** — o Orquestrador só os convoca se necessário.
 
-**Paralelismo (`core/orchestrator.md` §Paralelismo):** direção visual (3a) e tokens (3b) avançam
+**Paralelismo (`core/orchestrator.md` §Parallelism):** direção visual (3a) e tokens (3b) avançam
 juntos — o designer decide, o arquiteto codifica em tokens semânticos; responsividade (5a) e
 acessibilidade (5b) revêem tudo o que os anteriores produziram, no viewport real e contra a WCAG,
 antes do portão. Conteúdo (labels, tooltips, ajuda) sai do catálogo único
@@ -89,7 +89,7 @@ são validados pelo utilizador — decisões de UX são revisitáveis, mas **nã
 
 ## Recuperação de falhas e bloqueios
 
-`core/orchestrator.md` §Recuperação. `wireframer` sem `fluxos-e-jornadas.md` aprovado, ou
+`core/orchestrator.md` §Recovery. `wireframer` sem `fluxos-e-jornadas.md` aprovado, ou
 `arquiteto-de-componentes` sem tokens → devolve a lacuna como lote de perguntas, **não assume**.
 Utilizador indisponível para validar o mapa de ecrãs → o mapa fica em `em-revisao`, a pendência em
 `STATE.md` → "Decisões pendentes"; F5 **não arranca** sem P4 fechado. Divergência descoberta em F6

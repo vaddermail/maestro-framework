@@ -105,7 +105,7 @@ Checklist objetiva: `Maestro/checklists/definition-of-done.md` e
 
 *Uma linha por ADR aprovado em `product/02-architecture/decisions/`, com link. Reabrir exige novidade
 material e avisa-se antes de contrariar (`Maestro/core/decision-engine.md`
-§Decisões fechadas).*
+§Closed decisions).*
 
 1. {{decisão 1}} — `product/02-architecture/decisions/ADR-{{nnn}}-{{titulo-em-kebab}}.md`.
 2. {{decisão 2}} — `product/02-architecture/decisions/ADR-{{nnn}}-{{titulo-em-kebab}}.md`.

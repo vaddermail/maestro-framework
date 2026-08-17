@@ -44,7 +44,7 @@ completa, prova-se, integra-se, e só então a seguinte.
   a entidade central e a sua máquina de estados); depois as que dependem delas. O `priorizador`
   (`agents/00-discovery/prioritizer.md`) já deu a ordem de valor; o Orquestrador ordena por
   dependência técnica dentro dela.
-- **Fatias independentes correm em paralelo** (`core/orchestrator.md` §Paralelismo); fatias que
+- **Fatias independentes correm em paralelo** (`core/orchestrator.md` §Parallelism); fatias que
   partilham a mesma entidade central, não.
 
 ## Anatomia de uma fatia (a sequência interna)

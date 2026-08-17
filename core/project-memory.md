@@ -1,89 +1,92 @@
-# Memória do Projeto
+# Project Memory
 
-Como um projeto conduzido por agentes de IA **se lembra de tudo** — entre sessões, entre pessoas,
-entre ferramentas e entre anos. A regra fundadora: **a memória vive no repositório, em ficheiros
-locais versionáveis — nunca na sessão de uma ferramenta.** Qualquer agente, em qualquer ferramenta,
-pega no projeto lendo ficheiros; nada de relevante pode existir só na memória efémera de uma
-conversa.
+How a project driven by AI agents **remembers everything** — across sessions, across people,
+across tools and across years. The founding rule: **memory lives in the repository, in versionable
+local files — never in a tool's session.** Any agent, in any tool, picks up the project by reading
+files; nothing relevant may exist only in the ephemeral memory of a conversation.
 
-## As camadas de memória (e a ordem de leitura)
+## The memory layers (and the reading order)
 
-Fontes de verdade estratificadas, lidas por esta ordem — com **precedência explícita** e regra de
-desempate escrita (quando duas divergem, ganha a de cima e regista-se a divergência):
+Stratified sources of truth, read in this order — with **explicit precedence** and a written
+tie-break rule (when two diverge, the one above wins and the divergence gets recorded):
 
-| # | Ficheiro/pasta | Natureza | Muda |
+| # | File/folder | Nature | Changes |
 | --- | --- | --- | --- |
-| 1 | `CLAUDE.md` (ou equivalente) | **Regras estáveis**: como trabalhar, guardrails, decisões fechadas, mapeamento de modelos | Raramente, com peso |
-| 2 | `STATE.md` | **Memória viva**: feito / em curso / a seguir / pendências / lições | Toda a sessão |
-| 3 | `product/` | **Artefactos canónicos**: descoberta, requisitos, spec, ADRs (`core/artifact-protocol.md`) | Por fase/fatia |
-| 4 | Código + testes | A implementação da spec (se divergir, a spec ganha — atualiza-se uma ou outro, às claras) | Continuamente |
-| 5 | `CHANGELOG.md` | História do *o que mudou e porquê*, por marco | Por marco |
+| 1 | `CLAUDE.md` (or equivalent) | **Stable rules**: how to work, guardrails, closed decisions, model mapping | Rarely, with weight |
+| 2 | `STATE.md` | **Living memory**: done / in progress / next / pending items / lessons | Every session |
+| 3 | `product/` | **Canonical artifacts**: discovery, requirements, spec, ADRs (`core/artifact-protocol.md`) | Per phase/slice |
+| 4 | Code + tests | The implementation of the spec (if they diverge, the spec wins — update one or the other, in the open) | Continuously |
+| 5 | `CHANGELOG.md` | The history of *what changed and why*, per milestone | Per milestone |
 
-## STATE.md — o testemunho
+## STATE.md — the handover
 
-O ficheiro mais importante do dia-a-dia: é onde uma sessão **passa o testemunho** à seguinte (ou ao
-colega humano). Estrutura (instanciada de `templates/project/STATE.md.template`):
+The most important file of the day-to-day: it is where one session **hands over** to the next (or
+to a human colleague). Structure (instantiated from `templates/project/STATE.md.template`):
 
-1. **Cabeçalho de situação** — fase atual, workflow ativo, perfil de esforço, versão da framework.
-2. **Feito** — blocos concluídos (o quê, evidência de verificação).
-3. **Em curso** — o que está a meio, com o suficiente para outro retomar **sem re-perguntar**.
-4. **A seguir** — próximos passos ordenados.
-5. **Decisões pendentes** — perguntas à espera do utilizador (`P-nnn`), com contexto e o que bloqueiam.
-6. **Decisões tomadas em nome do dono ausente** — quando foi preciso avançar, registadas
-   explicitamente como revisitáveis.
-7. **Lições** — o **não-óbvio** aprendido, cada uma com o *porquê* e o *como aplicar*. Bugs que se
-   repetiram, armadilhas de ferramenta, correções de rumo. (Antes de acrescentar: verificar
-   duplicados — atualizar em vez de duplicar; apagar o que se revelou errado.)
-8. **Registo histórico** — sessões anteriores, colapsado/resumido (ver §Higiene).
+1. **Situation header** — current phase, active workflow, effort profile, framework version.
+2. **Done** — completed blocks (what, verification evidence).
+3. **In progress** — what is halfway, with enough for someone else to resume **without
+   re-asking**.
+4. **Next** — ordered next steps.
+5. **Pending decisions** — questions waiting on the user (`P-nnn`), with context and what they
+   block.
+6. **Decisions made on behalf of the absent owner** — when moving forward was necessary, recorded
+   explicitly as revisitable.
+7. **Lessons** — the **non-obvious** things learned, each with the *why* and the *how to apply*.
+   Bugs that repeated, tool pitfalls, course corrections. (Before adding: check for duplicates —
+   update instead of duplicating; delete what proved wrong.)
+8. **Historical log** — previous sessions, collapsed/summarized (see §Memory hygiene).
 
-Disciplina associada:
+Associated discipline:
 
-- **Início de sessão:** protocolo de arranque — sincronizar (pull), ler `STATE.md`, confirmar o
-  ambiente, só depois trabalhar (`workflows/W00-project-kickoff.md`).
-- **Fim de sessão:** atualizar `STATE.md` **sempre** (`START-HERE.md` §2.5). Uma sessão que não
-  atualiza o estado é trabalho meio-perdido.
+- **Session start:** startup protocol — sync (pull), read `STATE.md`, confirm the environment,
+  only then work (`workflows/W00-project-kickoff.md`).
+- **Session end:** update `STATE.md` **always** (`START-HERE.md` §2.5). A session that does not
+  update the state is half-lost work.
 
-## Onde vive cada tipo de conhecimento
+## Where each kind of knowledge lives
 
-| Tipo | Onde | Anti-exemplo |
+| Type | Where | Anti-example |
 | --- | --- | --- |
-| Regra estável de trabalho | `CLAUDE.md` | Repetida em cada sessão oralmente |
-| Estado e pendências | `STATE.md` | Na cabeça da última sessão |
-| Decisão estrutural + porquê | ADR em `product/02-architecture/decisions/` | Num comentário de commit |
-| Regra de negócio | `product/04-specification/` | Só no código |
-| Lição não-óbvia | `STATE.md` §Lições | Reaprendida à conta de repetir o bug |
-| Melhoria que é da framework (não do produto) | `FRAMEWORK-IMPROVEMENTS.md` na raiz | Morre nos commits e na cabeça; a framework não aprende (`playbooks/report-framework-improvements.md`) |
-| Pergunta/resposta do utilizador | `product/01-requirements/questions-and-answers.md` | Re-perguntada de 3 em 3 sessões |
-| Proveniência de regra | Anotação na própria spec ("origem: defeito X") | Perdida — a spec vira dogma sem contexto |
+| Stable working rule | `CLAUDE.md` | Repeated orally every session |
+| State and pending items | `STATE.md` | In the last session's head |
+| Structural decision + why | ADR in `product/02-architecture/decisions/` | In a commit comment |
+| Business rule | `product/04-specification/` | Only in the code |
+| Non-obvious lesson | `STATE.md` §Lições | Relearned by repeating the bug |
+| Improvement that belongs to the framework (not the product) | `FRAMEWORK-IMPROVEMENTS.md` at the root | Dies in commits and in heads; the framework does not learn (`playbooks/report-framework-improvements.md`) |
+| User question/answer | `product/01-requirements/questions-and-answers.md` | Re-asked every 3 sessions |
+| Rule provenance | Annotation in the spec itself ("origin: defect X") | Lost — the spec becomes dogma without context |
 
-**Regras com proveniência:** anotar nas specs a origem de cada regra dura (o defeito/decisão que a
-criou) transforma a especificação em memória de defeitos — impede que um agente futuro a "simplifique"
-por não perceber porque existe.
+**Rules with provenance:** annotating in the specs the origin of each hard rule (the
+defect/decision that created it) turns the specification into defect memory — it prevents a future
+agent from "simplifying" it for not understanding why it exists.
 
-## Higiene da memória
+## Memory hygiene
 
-- **Topo detalhado, histórico colapsado.** O `STATE.md` cresce; o topo mantém-se hiper-detalhado
-  sobre o presente e o histórico resume-se por marcos (o detalhe antigo fica no Git/CHANGELOG).
-  Um `STATE.md` de 200KB onde ninguém encontra nada deixou de ser memória.
-- **Sem segredos.** Nunca em nenhum ficheiro versionado — referências por caminho
+- **Detailed top, collapsed history.** `STATE.md` grows; the top stays hyper-detailed about the
+  present and the history is summarized by milestones (old detail stays in Git/CHANGELOG).
+  A 200KB `STATE.md` where nobody finds anything has stopped being memory.
+- **No secrets.** Never in any versioned file — references by path
   (`playbooks/secrets-management.md`).
-- **Experiências falhadas registam-se com o motivo exato** — para ninguém repetir a tentativa três
-  sessões depois.
-- **Memórias de ferramenta ≠ memória do projeto.** Estados de sessão de ferramentas (projeto ativo
-  de um MCP, cache de um plugin) não persistem nem se assumem — o que interessa passa para os
-  ficheiros do projeto.
+- **Failed experiments are recorded with the exact reason** — so nobody repeats the attempt three
+  sessions later.
+- **Tool memories ≠ project memory.** Tool session state (an MCP's active project, a plugin's
+  cache) is neither persisted nor assumed — whatever matters moves into the project files.
 
-## Anti-padrões
+## Anti-patterns
 
-- ❌ "Eu lembro-me do que decidimos" → ✅ está escrito ou não existe.
-- ❌ Atualizar o estado "no fim do dia" e a sessão morrer antes → ✅ atualizar ao fim de cada bloco.
-- ❌ Lição escrita sem porquê ("cuidado com X") → ✅ porquê + como aplicar, senão vira superstição.
-- ❌ Duplicar a mesma lição com palavras novas → ✅ procurar e atualizar a existente.
-- ❌ Memória em ferramenta proprietária (notas da sessão, threads) → ✅ repositório, sempre.
+- ❌ "I remember what we decided" → ✅ it is written down or it does not exist.
+- ❌ Updating the state "at the end of the day" and the session dying first → ✅ update at the end
+  of every block.
+- ❌ A lesson written without the why ("careful with X") → ✅ why + how to apply, otherwise it
+  becomes superstition.
+- ❌ Duplicating the same lesson in new words → ✅ search for and update the existing one.
+- ❌ Memory in a proprietary tool (session notes, threads) → ✅ the repository, always.
 
-## Relacionados
+## Related
 
-- `templates/project/STATE.md.template` · `templates/project/CLAUDE.md.template` — os instanciáveis.
-- `core/artifact-protocol.md` — a memória canónica por artefactos.
-- `core/decision-engine.md` — ADRs e decisões fechadas.
-- `knowledge/README.md` — como as lições sobem de projeto para a framework.
+- `templates/project/STATE.md.template` · `templates/project/CLAUDE.md.template` — the
+  instantiables.
+- `core/artifact-protocol.md` — canonical memory through artifacts.
+- `core/decision-engine.md` — ADRs and closed decisions.
+- `knowledge/README.md` — how lessons rise from project to framework.

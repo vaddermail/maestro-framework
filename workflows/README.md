@@ -47,7 +47,7 @@ formato:
    decisão (`core/decision-engine.md`); onde há aprovação humana obrigatória.
 5. **Loops que abre** — os `loops/` que correm dentro da fase e a sua condição de saída.
 6. **Portão de saída** — os critérios verificáveis de `core/quality-gates.md` e quem aprova.
-7. **Perfis de esforço** — como o perfil (`core/orchestrator.md` §Perfis) dimensiona a fase.
+7. **Perfis de esforço** — como o perfil (`core/orchestrator.md` §Effort profiles) dimensiona a fase.
 8. **Relacionados** — para onde o leitor segue.
 
 ## Como se executa um workflow
@@ -57,7 +57,7 @@ formato:
    workflow anterior não fechou — não se arranca este (`core/lifecycle.md` §1, sem saltos).
 3. **Percorrer os passos por dependência**, não pela numeração cega: um passo arranca quando os seus
    inputs existem (grafo montado a partir das fichas, `core/orchestrator.md`). Passos independentes
-   podem correr em paralelo; painéis correm às cegas (`core/orchestrator.md` §Paralelismo).
+   podem correr em paralelo; painéis correm às cegas (`core/orchestrator.md` §Parallelism).
 4. **Agrupar as perguntas em lotes** por fase, nunca à peça (`core/question-engine.md`).
 5. **Fechar os loops** abertos antes de tentar o portão.
 6. **Passar o portão** — verificação independente + aprovação humana onde é obrigatória — e registar

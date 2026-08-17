@@ -1,71 +1,70 @@
-# Portões de Qualidade
+# Quality Gates
 
-Um portão é uma **decisão binária e verificável**: ou o trabalho cumpre os critérios e avança, ou
-não cumpre e fica. Os portões existem para substituir "parece pronto" por evidência — e para
-garantir que as decisões que são do humano chegam mesmo ao humano.
+A gate is a **binary, verifiable decision**: either the work meets the criteria and moves forward,
+or it does not and it stays. Gates exist to replace "looks ready" with evidence — and to
+guarantee that the decisions that belong to the human actually reach the human.
 
-## Anatomia de um portão
+## Anatomy of a gate
 
-Todo o portão declara:
+Every gate declares:
 
-1. **O que guarda** — a transição (fase→fase, fatia→merge, release→produção).
-2. **Critérios** — checklist verificável (vive em `checklists/`), sem itens subjetivos.
-3. **Quem verifica** — nunca quem produziu (revisores, harness de testes, ou o Orquestrador para
-   critérios formais).
-4. **Quem aprova** — o utilizador, quando a decisão é dele (ver matriz abaixo); caso contrário, o
-   Orquestrador declara a passagem.
-5. **Registo** — resultado em `STATE.md` (e em `product/99-records/` quando produz relatório).
+1. **What it guards** — the transition (phase→phase, slice→merge, release→production).
+2. **Criteria** — a verifiable checklist (lives in `checklists/`), no subjective items.
+3. **Who verifies** — never whoever produced (reviewers, the test harness, or the Orchestrator
+   for formal criteria).
+4. **Who approves** — the user, when the decision is theirs (see matrix below); otherwise the
+   Orchestrator declares the pass.
+5. **Record** — result in `STATE.md` (and in `product/99-records/` when a report is produced).
 
-**Não há passagem parcial.** Um portão com um critério falhado não passa; o que há é o utilizador
-poder **derrogar explicitamente** um critério — e a derrogação fica registada com o porquê e o risco
-assumido (é uma decisão dele, não um atalho do agente).
+**There is no partial pass.** A gate with one failed criterion does not pass; what exists is the
+user being able to **explicitly waive** a criterion — and the waiver is recorded with the why and
+the risk assumed (it is the user's decision, not an agent's shortcut).
 
-## Os portões do ciclo de vida
+## The lifecycle gates
 
-| Portão | Transição | Critérios principais | Aprovação humana? |
+| Gate | Transition | Main criteria | Human approval? |
 | --- | --- | --- | --- |
-| **P0** | F0 → F1 | Memória instanciada; perfil de esforço calibrado | Sim (perfil) |
-| **P1** | F1 → F2 | Dossier de descoberta completo; MVP e prioridades definidos; riscos com dono | **Sim** (âmbito) |
-| **P2** | F2 → F3 | Zero ambiguidades críticas (L01 fechado); RNF quantificados; regras de negócio numeradas | **Sim** (requisitos) |
-| **P3** | F3 → F4 | ADRs aprovados com reversão; stack fixada em versões estáveis; custos validados | **Sim** (ADRs + custos) |
-| **P4** | F4 → F5 | Wireframes dos fluxos críticos validados; tokens do design system definidos; plano de acessibilidade | **Sim** (UX) |
-| **P5** | F5 → F6 | Especificação aprovada; máquinas de estado dos fluxos críticos; modelo de dados lógico; contrato backend; revisão mínima (arquitetura+segurança+UX) | **Sim** — desbloqueia código |
-| **P6** | por fatia, F6 | `checklists/definition-of-done.md` + `checklists/pre-merge.md`; testes verdes (front e back); spec respeitada | Não (salvo âmbito novo) |
-| **P6b** | F6 → F7 | MVP completo vs spec; harness de regressão verde; dívida registada | Sim (aceitação do MVP) |
-| **P7** | F7 → F8 | Zero achados críticos/altos abertos; `checklists/pre-production-security.md`; risco residual assinado | **Sim** (risco residual) |
-| **P8** | F8 → produção | `checklists/go-live.md`; rollback ensaiado; backups verificados; monitorização ativa | **Sim, sempre** — produção é do humano |
-| **P9** | contínuo, F9 | Cadências dos guardiões cumpridas; loops sem pendências críticas | Por exceção (relatórios) |
+| **P0** | F0 → F1 | Memory instantiated; effort profile calibrated | Yes (profile) |
+| **P1** | F1 → F2 | Discovery dossier complete; MVP and priorities defined; risks with owners | **Yes** (scope) |
+| **P2** | F2 → F3 | Zero critical ambiguities (L01 closed); NFRs quantified; business rules numbered | **Yes** (requirements) |
+| **P3** | F3 → F4 | ADRs approved with reversal path; stack pinned to stable versions; costs validated | **Yes** (ADRs + costs) |
+| **P4** | F4 → F5 | Wireframes of the critical flows validated; design system tokens defined; accessibility plan | **Yes** (UX) |
+| **P5** | F5 → F6 | Specification approved; state machines for the critical flows; logical data model; backend contract; minimal review (architecture+security+UX) | **Yes** — unlocks code |
+| **P6** | per slice, F6 | `checklists/definition-of-done.md` + `checklists/pre-merge.md`; tests green (front and back); spec respected | No (unless new scope) |
+| **P6b** | F6 → F7 | MVP complete vs spec; regression harness green; debt recorded | Yes (MVP acceptance) |
+| **P7** | F7 → F8 | Zero critical/high findings open; `checklists/pre-production-security.md`; residual risk signed off | **Yes** (residual risk) |
+| **P8** | F8 → production | `checklists/go-live.md`; rollback rehearsed; backups verified; monitoring active | **Yes, always** — production belongs to the human |
+| **P9** | continuous, F9 | Guardian cadences met; loops with no critical pending items | By exception (reports) |
 
-## Matriz de aprovação humana
+## Human approval matrix
 
-Independentemente do portão, exigem humano **sempre** (ver `core/orchestrator.md` §Aprovação
-humana): âmbito e prioridades · dinheiro e compromissos · ações destrutivas/em massa · produção ·
-risco residual de segurança · dados pessoais · reabertura de decisões fechadas.
+Regardless of the gate, these **always** require a human (see `core/orchestrator.md` §Human
+approval): scope and priorities · money and commitments · destructive/bulk actions · production ·
+residual security risk · personal data · reopening closed decisions.
 
-E **nunca** precisam de humano: correr testes, lint e scans; escrever rascunhos; refactors sem
-mudança de comportamento dentro de uma fatia; perguntas ao próprio código (análise). Automatizar a
-verificação é desejável; automatizar a **aprovação**, proibido.
+And these **never** need a human: running tests, lint and scans; writing drafts; refactors with no
+behavior change inside a slice; questions to the code itself (analysis). Automating verification
+is desirable; automating **approval**, forbidden.
 
-## Portões e perfis de esforço
+## Gates and effort profiles
 
-O perfil (`core/orchestrator.md` §Perfis) dimensiona a **profundidade da evidência**, não a
-existência do portão: num protótipo, P5 pode ser "spec de 3 páginas revista pelo próprio
-Orquestrador + OK do utilizador"; numa plataforma empresarial é painel completo. A tabela de cada
-checklist indica o que é dispensável por perfil — o que não estiver marcado como dispensável,
-não é.
+The profile (`core/orchestrator.md` §Effort profiles) scales the **depth of the evidence**, not
+the existence of the gate: in a prototype, P5 can be "a 3-page spec reviewed by the Orchestrator
+itself + the user's OK"; on an enterprise platform it is a full panel. Each checklist's table
+states what is waivable per profile — whatever is not marked as waivable, is not.
 
-## Anti-padrões
+## Anti-patterns
 
-- ❌ Portão de borracha ("falta pouco, passa") → ✅ ou passa, ou fica; derrogação é do utilizador,
-  registada.
-- ❌ Auto-validação (quem fez declara pronto) → ✅ verificação independente sempre.
-- ❌ "Testado" sem output → ✅ evidência anexa (resultado real dos testes) — honestidade absoluta.
-- ❌ Portão surpresa (critérios revelados na hora) → ✅ critérios conhecidos desde o início da fase.
-- ❌ Acumular tudo para um mega-portão final → ✅ portões pequenos e frequentes (P6 por fatia).
+- ❌ Rubber gate ("almost there, let it pass") → ✅ it either passes or it stays; a waiver is the
+  user's, recorded.
+- ❌ Self-validation (whoever built it declares it done) → ✅ independent verification, always.
+- ❌ "Tested" without output → ✅ evidence attached (actual test results) — absolute honesty.
+- ❌ Surprise gate (criteria revealed on the spot) → ✅ criteria known from the start of the phase.
+- ❌ Piling everything into one final mega-gate → ✅ small, frequent gates (P6 per slice).
 
-## Relacionados
+## Related
 
-- `checklists/README.md` e todas as checklists — os critérios concretos.
-- `core/lifecycle.md` — onde os portões se encaixam.
-- `core/orchestrator.md` — quem os faz cumprir.
-- `playbooks/adversarial-audit.md` — o escrutínio máximo, usado em P7.
+- `checklists/README.md` and all the checklists — the concrete criteria.
+- `core/lifecycle.md` — where the gates fit.
+- `core/orchestrator.md` — who enforces them.
+- `playbooks/adversarial-audit.md` — maximum scrutiny, used at P7.

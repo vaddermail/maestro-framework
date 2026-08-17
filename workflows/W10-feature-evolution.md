@@ -7,7 +7,7 @@
 ## Objetivo
 
 Levar um pedido novo — uma funcionalidade, uma mudança de regra, um campo a mais — da ideia à
-produção **reexecutando F2→F8 em miniatura** (`core/lifecycle.md` §regra 4), sem repetir a
+produção **reexecutando F2→F8 em miniatura** (`core/lifecycle.md` §rule 4), sem repetir a
 descoberta inteira nem partir o que já corre. O produto vivo não pára para cada pedido: cada
 evolução é uma **fatia vertical** que atravessa só as fases que precisa, com o rigor proporcional ao
 risco que carrega.
@@ -59,12 +59,12 @@ nunca o **rigor** dos portões que se atravessam.
 
 ## Pontos de decisão (aprovação humana)
 
-O Orquestrador **para e pergunta** (`core/orchestrator.md` §Aprovação humana):
+O Orquestrador **para e pergunta** (`core/orchestrator.md` §Human approval):
 
 - **Etapa 2 — vale a pena?** A decisão de avançar/adiar/recusar é do utilizador: é âmbito e é dinheiro
   (esforço). Um "já agora" do agente não vira feature (`knowledge/ai-pitfalls.md` §5).
 - **Etapa 2 — reabre decisão fechada?** Se o pedido contraria uma decisão fechada
-  (`core/decision-engine.md` §Decisões fechadas), avisa-se **porquê está fechada** antes de reabrir.
+  (`core/decision-engine.md` §Closed decisions), avisa-se **porquê está fechada** antes de reabrir.
 - **Etapa 4 — toca dados pessoais/sensíveis** de forma nova, ou exige migração destrutiva → aprovação
   explícita com plano item a item (`core/quality-gates.md`).
 - **Etapa 6 — produção** → aprovação humana sempre (P8), nunca delegável.

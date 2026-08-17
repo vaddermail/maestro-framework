@@ -59,7 +59,7 @@ A ordem é deliberada e não se inverte sob pressão:
 
 - **Mitigação de baixo risco não espera aprovação:** reverter para um estado bom conhecido e acionar
   kill-switches são ações reversíveis dentro de runbook — fazem-se já (`core/quality-gates.md`
-  §nunca precisam de humano: refactors/ações reversíveis). Parar para pedir autorização a sangrar é o
+  §Human approval matrix — nunca precisam de humano: refactors/ações reversíveis). Parar para pedir autorização a sangrar é o
   erro.
 - **Sobe ao humano, sempre:** qualquer ação **destrutiva ou irreversível** na mitigação (apagar dados,
   restaurar backup por cima de dados novos — `agents/06-data/disaster-recovery-planner.md`);

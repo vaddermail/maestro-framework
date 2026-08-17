@@ -1,7 +1,7 @@
 # ADR-{{numero-adr}} — {{titulo-da-decisao}}
 
 > **Como usar:** uma cópia por decisão **estrutural** (`Maestro/core/decision-engine.md`
-> §Tipos de decisão — estilo arquitetural, stack, cloud, modelo de identidade, estratégia de dados).
+> §Decision types — estilo arquitetural, stack, cloud, modelo de identidade, estratégia de dados).
 > Nomeia-se `ADR-{{numero-com-3-digitos}}-{{titulo-em-kebab}}.md`, em
 > `product/02-architecture/decisions/`. Nunca se apaga: quando substituída, marca-se
 > `substituída por ADR-{{numero-adr}}` e cria-se um ADR novo.
@@ -23,7 +23,7 @@ decide agora.*
 ## Critérios (com peso)
 
 *Derivados dos artefactos de requisitos/riscos/custos (`Maestro/core/decision-engine.md`
-§O processo para decisões estruturais). Exemplos típicos: adequação funcional, custo total
+§The process for structural decisions). Exemplos típicos: adequação funcional, custo total
 (construção + operação), complexidade operacional, competência da equipa, reversibilidade,
 maturidade/estabilidade, lock-in.*
 

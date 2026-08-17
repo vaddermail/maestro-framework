@@ -35,7 +35,7 @@ A ordem segue `agents/01-requirements/README.md`. Todos os artefactos vivem em `
 | 5 | `agents/01-requirements/acceptance-criteria-writer.md` | `criterios-de-aceitacao.md` (CA verificáveis por `RF`) | 2 estabilizado, 3 |
 | 6 | `agents/01-requirements/ambiguity-hunter.md` | `perguntas-e-respostas.md` (lote de perguntas + marcas de ambiguidade) | corre sobre 1–5 |
 
-**Paralelismo (`core/orchestrator.md` §Paralelismo):** os passos 3 (regras) e 4 (RNF) correm em
+**Paralelismo (`core/orchestrator.md` §Parallelism):** os passos 3 (regras) e 4 (RNF) correm em
 paralelo — as regras que os `RF` têm de respeitar e os atributos de qualidade que os atravessam não
 partilham artefacto de escrita. O glossário (1) **continua a crescer durante toda a fase**, não é um
 passo que fecha no início. O `cacador-de-ambiguidades` (6) **não é um passo final único**: dispara
@@ -89,10 +89,10 @@ rastreabilidade). **Quem aprova:** o utilizador (requisitos, regras, RNF). Com P
 
 ## Recuperação de falhas e bloqueios
 
-`core/orchestrator.md` §Recuperação. Agente sem input (ex.: RNF sem riscos de F1) → agenda-se o
+`core/orchestrator.md` §Recovery. Agente sem input (ex.: RNF sem riscos de F1) → agenda-se o
 agente a montante ou junta-se ao próximo lote de perguntas. Ambiguidade que o utilizador não resolve
 → fica em `STATE.md` → "Decisões pendentes"; só se assume por defeito quando a **regra única** o
-permite (`core/question-engine.md` §Quando se assume por defeito) — ambiguidades **críticas**
+permite (`core/question-engine.md` §When to assume by default) — ambiguidades **críticas**
 nunca se assumem.
 Divergência descoberta mais tarde (em F5) devolve trabalho a esta fase — regista-se a razão em
 `STATE.md` e reabre-se L01 (é o ciclo a funcionar, não uma falha).

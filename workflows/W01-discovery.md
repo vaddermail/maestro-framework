@@ -18,7 +18,7 @@ validado aqui vira defeito caro adiante (`knowledge/ai-pitfalls.md` §3).
 
 ## Passos (agente → artefacto)
 
-A descoberta é uma cadeia com dependências reais (`agents/00-discovery/README.md` §Ordem). Todos os
+A descoberta é uma cadeia com dependências reais (`agents/00-discovery/README.md` §Recommended working order). Todos os
 artefactos vivem em `product/00-discovery/`.
 
 | # | Agente | Artefacto | Depende de |
@@ -36,7 +36,7 @@ artefactos vivem em `product/00-discovery/`.
 | 11 | `agents/00-discovery/mvp-scoper.md` | `mvp.md` (mínimo demonstrável + cortes explícitos) | 5,12 |
 | 12 | `agents/00-discovery/prioritizer.md` | `prioridades.md` (valor × esforço × risco) | 5,9 |
 
-**Paralelismo (`core/orchestrator.md` §Paralelismo):** os passos 3–4 (stakeholders/personas) e 6–7
+**Paralelismo (`core/orchestrator.md` §Parallelism):** os passos 3–4 (stakeholders/personas) e 6–7
 (objetivos/KPIs) podem correr no mesmo lote de perguntas; riscos (9) corre em paralelo com objetivos.
 O MVP (11) precisa de casos de utilização priorizados (12). O Orquestrador monta o grafo pelas
 secções **Inputs**/**Interações** das fichas, não pela numeração cega.
@@ -56,7 +56,7 @@ Todas as lacunas sobem ao Orquestrador, que as agrupa em **lotes por tema** (nun
 - **Restrições e riscos** — orçamento, prazos, conformidade, dependências externas.
 
 **Aprovação humana obrigatória (P1):** o **âmbito e as prioridades** são do utilizador — o produto é
-dele (`core/orchestrator.md` §Aprovação humana). Qualquer envolvimento de **dados pessoais** já se
+dele (`core/orchestrator.md` §Human approval). Qualquer envolvimento de **dados pessoais** já se
 sinaliza aqui, mesmo que o tratamento se decida em fases seguintes.
 
 ## Loops que abre

@@ -15,7 +15,7 @@ a seguir — e não decidiu ainda nada sobre o produto.
 Não há portão a montante (é a primeira fase). Exige-se apenas:
 
 - [ ] Uma pasta/repositório do projeto, com `Maestro/` copiada para dentro a partir do ZIP de uma
-      **release** (`START-HERE.md` §Parte 1).
+      **release** (`START-HERE.md` §Part 1).
 - [ ] Auto-verificação da cópia instalada **verde**: `bash Maestro/_meta/verify.sh` — uma cópia
       corrompida ou parcial descobre-se aqui, não a meio de F5.
 - [ ] Uma sessão de IA com acesso a ficheiros, na raiz do projeto.
@@ -38,7 +38,7 @@ Não há portão a montante (é a primeira fase). Exige-se apenas:
 
 Nada aqui consome artefactos a montante (não os há); tudo é escrita de fundação. O passo 7 depende
 das respostas do utilizador — se ele não responder, os passos seguintes ficam bloqueados e a pendência
-fica em `STATE.md` → "Decisões pendentes" (`core/orchestrator.md` §Recuperação).
+fica em `STATE.md` → "Decisões pendentes" (`core/orchestrator.md` §Recovery).
 
 ## Pontos de decisão
 
@@ -46,7 +46,7 @@ Um **único lote** de calibração ao utilizador (formato de `core/question-engi
 `START-HERE.md` §2.3):
 
 - **Dimensão da ambição** → escolhe o perfil de esforço: protótipo / produto interno / produto
-  comercial / plataforma empresarial (`core/orchestrator.md` §Perfis). **Decisão do utilizador**
+  comercial / plataforma empresarial (`core/orchestrator.md` §Effort profiles). **Decisão do utilizador**
   (dimensiona todos os portões seguintes).
 - **Horizonte** (semanas / meses / anos) e **equipa** (só utilizador+IA / equipa pequena / várias
   equipas) — afinam a profundidade e a disciplina de Git.
@@ -91,7 +91,7 @@ constante:
 | **Plataforma empresarial** | Como o comercial + registo de que toda a decisão estrutural exige ADR e de que a revisão global (`workflows/W12-global-review.md`) é periódica. |
 
 Mudar de perfil mais tarde é legítimo (regista-se em `STATE.md` e executam-se os portões que o novo
-perfil exige — `core/orchestrator.md` §Perfis).
+perfil exige — `core/orchestrator.md` §Effort profiles).
 
 ## Relacionados
 

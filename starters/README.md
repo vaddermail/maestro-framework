@@ -45,7 +45,7 @@ Tudo abaixo é verificável; um starter que falhe um item não entra nesta pasta
       evidência de cada um.
 - [ ] **Estrutura compatível com o protocolo de artefactos**: o starter não cria, não ocupa nem
       colide com `product/`, `CLAUDE.md`, `STATE.md` ou a pasta da framework — esses caminhos
-      são do projeto (`core/artifact-protocol.md` §A árvore). O código segue a forma
+      são do projeto (`core/artifact-protocol.md` §The project's `product/` tree). O código segue a forma
       prevista no fim dessa árvore (apps/, packages/, infra/, … conforme a arquitetura).
 - [ ] **Zero segredos**: nenhum valor real no repositório nem no histórico; configuração sensível
       por `*.example` documentado e injeção em runtime (`playbooks/secrets-management.md`).

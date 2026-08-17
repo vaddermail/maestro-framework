@@ -83,10 +83,10 @@ Ao Orquestrador, em lote (`core/question-engine.md`):
 1. **Todo pedido passa por análise de impacto antes de qualquer código** — nunca implementa
    diretamente "porque parece pequeno".
 2. **Reentra F2→F8 em miniatura, dimensionado ao pedido** — não salta portões; o perfil de esforço
-   decide a profundidade (`core/lifecycle.md` §1, `core/orchestrator.md` §Perfis de esforço).
+   decide a profundidade (`core/lifecycle.md` §1, `core/orchestrator.md` §Effort profiles).
 3. **A especificação atualiza-se antes do código, mesmo em produção** (`MANIFESTO.md` §4).
 4. **Reabrir uma decisão fechada exige aviso explícito** — porque estava fechada, porquê se reabre, e
-   confirmação do utilizador antes de avançar (`core/decision-engine.md` §Decisões fechadas,
+   confirmação do utilizador antes de avançar (`core/decision-engine.md` §Closed decisions,
    `MANIFESTO.md` §8).
 5. **A revisão é proporcional ao risco tocado, não ao tamanho da fatia** — um pedido pequeno em RBAC
    ou dados sensíveis leva o painel completo (`agents/12-reviewers/`).
@@ -141,7 +141,7 @@ lançado**, rollback pronto.
 "trocar o motor de filas X por Y porque X está caro à escala atual". Ao analisar impacto, o agente
 descobre que a escolha de X foi uma decisão fechada (ADR-014, F3, com justificação de custo
 registada). Antes de avançar, avisa explicitamente que está a reabrir uma decisão fechada — o que
-dizia e porquê foi fechada — e pede confirmação (`core/decision-engine.md` §Decisões fechadas). O
+dizia e porquê foi fechada — e pede confirmação (`core/decision-engine.md` §Closed decisions). O
 utilizador confirma: o volume décuplicou desde então. O agente reentra `workflows/W03-architecture.md`
 em miniatura, aciona o `arbitro-de-arquitetura` para reavaliar com o custo novo, que escreve um ADR
 novo (o ADR-014 marca-se `obsoleto` com apontador, nunca se apaga). Só depois reentra F5/F6 para

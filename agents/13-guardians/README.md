@@ -39,7 +39,7 @@ pergunta "continua bom, hoje?".
 
 ## Cadências por perfil (a fonte única)
 
-Esta tabela é a **fonte única** das cadências — `core/orchestrator.md` §Perfis e
+Esta tabela é a **fonte única** das cadências — `core/orchestrator.md` §Effort profiles e
 `workflows/W09-continuous-operation.md` remetem para aqui. No **protótipo**, todos os guardiões ficam
 **desativados** até à decisão de continuar. Um projeto pode **apertar** uma cadência (nunca alargar
 sem risco aceite pelo utilizador), registando-a no seu `CLAUDE.md`.

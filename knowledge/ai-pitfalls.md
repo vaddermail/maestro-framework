@@ -101,5 +101,5 @@ independentes é confiança alta, mas mesmo essa se verifica.
 
 - `knowledge/permanent-rules.md` — as regras que estas armadilhas justificam.
 - `knowledge/origin-lessons.md` — os casos reais de onde vieram.
-- `core/orchestrator.md` §Anti-padrões — as armadilhas específicas do papel coordenador.
+- `core/orchestrator.md` §Orchestrator anti-patterns — as armadilhas específicas do papel coordenador.
 - `playbooks/adversarial-audit.md` — o método que as caça em lote.

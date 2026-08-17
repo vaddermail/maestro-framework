@@ -58,7 +58,7 @@ a fila.
 - **Passo 1 — o âmbito e a profundidade** são do utilizador (define o custo da revisão).
 - **Passo 5 — o núcleo de W12:** para **cada** achado, o utilizador decide **corrigir já** ou **mandar
   para o backlog**. O agente não decide isso sozinho — a priorização técnica (`consolidador`) informa;
-  a decisão de negócio é do dono (`core/orchestrator.md` §Aprovação humana). Achados que envolvam
+  a decisão de negócio é do dono (`core/orchestrator.md` §Human approval). Achados que envolvam
   dados pessoais, dinheiro ou fluxos irreversíveis recebem recomendação explícita de "corrigir já"
   (`MANIFESTO.md` §9), mas a palavra final é do utilizador.
 
@@ -88,7 +88,7 @@ alimenta o portão P7 — mas essa vinculação é de W07, não deste workflow.
 
 | Situação | Resposta |
 | --- | --- |
-| Dois revisores contradizem-se | O `consolidador` não escolhe em silêncio: expõe a contradição no plano e sobe-a ao utilizador ou pede reanálise com o conflito explícito (`core/orchestrator.md` §Recuperação). |
+| Dois revisores contradizem-se | O `consolidador` não escolhe em silêncio: expõe a contradição no plano e sobe-a ao utilizador ou pede reanálise com o conflito explícito (`core/orchestrator.md` §Recovery). |
 | Um revisor não tem o artefacto de que precisa | Declara-o em "fora de âmbito"; o Orquestrador agenda o artefacto em falta ou nota a lacuna no plano. Não se inventa um veredicto sobre o que não se viu. |
 | Achados demais para triar de uma vez | O consolidador agrupa por severidade e por módulo; o utilizador tria por lotes (bloqueadores primeiro). |
 | Âmbito revelou-se maior do que o pedido | Renegociar o âmbito com o utilizador (passo 1) antes de gastar o painel todo — a profundidade é uma decisão de custo dele. |

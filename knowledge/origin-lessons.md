@@ -25,7 +25,7 @@ esse vive em ADRs separados.
 **A2. A spec é também memória de defeitos.** Anotar cada regra dura com a sua **proveniência** (o
 defeito/decisão que a originou).
 - *Porquê:* impede que um agente futuro "simplifique" uma salvaguarda por não perceber porque existe.
-- *Aplicar:* proveniência obrigatória (`core/project-memory.md` §Higiene).
+- *Aplicar:* proveniência obrigatória (`core/project-memory.md` §Memory hygiene).
 
 **A3. STATE.md passa o testemunho: topo hiper-detalhado, histórico colapsado.**
 - *Porquê:* um estado que cresce sem higiene deixa de ser encontrável — memória que não se lê não é

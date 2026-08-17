@@ -42,7 +42,7 @@ A especificação **consolida** o que F2–F4 produziram — não reinventa. Art
 `maquina-de-estados.md.template`, `modelo-de-dados-logico.md.template`,
 `contrato-backend.md.template` (e `requisito-funcional.md.template` para o rasto `RF`→spec).
 
-**Paralelismo (`core/orchestrator.md` §Paralelismo):** os módulos independentes (passo 2)
+**Paralelismo (`core/orchestrator.md` §Parallelism):** os módulos independentes (passo 2)
 especificam-se em paralelo; máquinas de estado (3), modelo de dados (4) e contrato de backend (5)
 partilham as regras do passo 2 e encadeiam-se por dependência. O `modelador-de-ameacas` (6) corre
 sobre o conjunto já esboçado. O `agents/09-security/security-coordinator.md` tem assento
@@ -97,7 +97,7 @@ escreveu. **Quem aprova:** o utilizador. **Com P5 fechado, desbloqueia-se o cód
 
 ## Recuperação de falhas e bloqueios
 
-`core/orchestrator.md` §Recuperação. Revisões contraditórias (ex.: contrato de backend vs threat
+`core/orchestrator.md` §Recovery. Revisões contraditórias (ex.: contrato de backend vs threat
 model) → o consolidador não escolhe em silêncio: expõe o conflito e pede reanálise, ou sobe ao
 utilizador se for decisão de produto. Requisito em falta descoberto ao especificar → devolve-se a F2,
 regista-se em `STATE.md`; **não se avança para F6** com a spec incompleta. Utilizador indisponível

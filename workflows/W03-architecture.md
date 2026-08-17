@@ -25,7 +25,7 @@ que separa um monólito de microserviços. Faltando, devolve-se a F2 (`core/life
 
 ## Passos (agente → artefacto)
 
-O processo é o do `core/decision-engine.md` §"decisões estruturais". Artefactos em
+O processo é o do `core/decision-engine.md` §The process for structural decisions. Artefactos em
 `product/02-architecture/`.
 
 | # | Passo | Quem | Artefacto |
@@ -45,7 +45,7 @@ meu estilo não serve aqui" é válida e poupa ao árbitro descartar uma opção
 dos proponentes** (separar quem propõe de quem decide).
 
 **Paralelismo:** as propostas do painel (passo 2) correm em paralelo e **às cegas** — sem se verem
-umas às outras (`core/orchestrator.md` §Paralelismo). A stack (4) **nunca** se escolhe antes do
+umas às outras (`core/orchestrator.md` §Parallelism). A stack (4) **nunca** se escolhe antes do
 estilo: a tecnologia serve a arquitetura, não o contrário.
 
 ## Pontos de decisão
@@ -60,23 +60,23 @@ Este é o workflow do **motor de decisão** — quase tudo aqui é decisão regi
   **dinheiro/compromisso** (infra paga), é aprovação humana obrigatória.
 
 **Aprovação humana obrigatória (P3):** os **ADRs e os custos**. O Orquestrador para e pergunta antes
-de assumir qualquer compromisso pago (`core/orchestrator.md` §Aprovação humana). Cada ADR aprovado
-fica **fechado** — não se reabre sem novidade material (`core/decision-engine.md` §Decisões
-fechadas); a lista de decisões fechadas vai para o `CLAUDE.md` do projeto.
+de assumir qualquer compromisso pago (`core/orchestrator.md` §Human approval). Cada ADR aprovado
+fica **fechado** — não se reabre sem novidade material (`core/decision-engine.md` §Closed decisions);
+a lista de decisões fechadas vai para o `CLAUDE.md` do projeto.
 
 ## Loops que abre
 
 - F3 não corre um loop dos `loops/` numerados; a sua iteração é o **ciclo de arbitragem**: se
   nenhuma proposta satisfaz os critérios, o Orquestrador reformula os pesos (ou pede uma proposta
   extra) e volta ao passo 2. **Salvaguarda:** 3 rondas sem convergência → subir ao utilizador com o
-  trade-off por decidir, em vez de arbitrar no vazio (`core/orchestrator.md` §Recuperação).
+  trade-off por decidir, em vez de arbitrar no vazio (`core/orchestrator.md` §Recovery).
 
 ## Portão de saída (P3)
 
 `core/quality-gates.md` + `checklists/definition-of-done.md`:
 
 - [ ] ADRs escritos com **opções consideradas** (incl. o status quo), decisão, consequências e
-      **caminho de reversão** (`core/decision-engine.md` §"ADR — o que tem de conter").
+      **caminho de reversão** (`core/decision-engine.md` §ADR — what it must contain).
 - [ ] Stack **fixada** em versões estáveis, com lockfiles (`stack.md`).
 - [ ] Integrações externas com contrato assumido (read-only, sincronização, campos geridos fora).
 - [ ] Utilizador **validou custos e trade-offs** em linguagem simples.
@@ -87,7 +87,7 @@ só audita a *aderência* em F7. **Quem aprova:** o utilizador (ADRs + custos). 
 
 ## Recuperação de falhas e bloqueios
 
-`core/orchestrator.md` §Recuperação. Propostas contraditórias entre especialistas → **não se
+`core/orchestrator.md` §Recovery. Propostas contraditórias entre especialistas → **não se
 escolhe em silêncio**: confronta-se contra os critérios pesados ou sobe-se ao utilizador se for
 decisão de produto. Utilizador indisponível para validar custos → o ADR fica em `rascunho`, a
 pendência em `STATE.md` → "Decisões pendentes", e **não se fixa stack nem se contrata infra** por

@@ -88,7 +88,7 @@ Adição pura é trivialmente reversível: remover o ficheiro do agente e as **d
 (README da categoria + inventário), a linha de artefacto (se criada) e o bump de VERSÃO — nada mais foi
 tocado, por construção. Se um agente deixar de fazer sentido mais tarde, **não se apaga às cegas**:
 marca-se `obsoleto` no topo com apontador para o substituto e sai dos índices ativos
-(`core/extensibility.md` §Descontinuar).
+(`core/extensibility.md` §Deprecating).
 
 ## Relacionados
 

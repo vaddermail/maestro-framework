@@ -1,120 +1,122 @@
-# Motor de Perguntas
+# Question Engine
 
-Como a framework obtém informação do utilizador. É o mecanismo que torna real o princípio
-**"nunca assumir"** (`MANIFESTO.md` §2) sem transformar o processo num interrogatório: perguntas
-**inteligentes, em lotes, com opções e recomendação** — e tudo registado.
+How the framework gets information from the user. It is the mechanism that makes the principle of
+**"never assume"** (`MANIFESTO.md` §2) real without turning the process into an interrogation:
+**smart questions, in batches, with options and a recommendation** — all of it recorded.
 
-## Quando se pergunta
+## When to ask
 
-1. Um agente encontra uma **lacuna** num input obrigatório (a sua ficha diz o que precisa).
-2. Uma decisão é **do utilizador por natureza**: âmbito, dinheiro, risco, gosto, prioridade
-   (ver `core/orchestrator.md` §Aprovação humana).
-3. Duas fontes **contradizem-se** e nenhuma é claramente a fonte de verdade.
-4. Um default proposto tem consequências difíceis de reverter — confirma-se antes.
+1. An agent finds a **gap** in a required input (its agent spec says what it needs).
+2. A decision is **the user's by nature**: scope, money, risk, taste, priority
+   (see `core/orchestrator.md` §Human approval).
+3. Two sources **contradict each other** and neither is clearly the source of truth.
+4. A proposed default has consequences that are hard to reverse — confirm before acting.
 
-**Quando NÃO se pergunta:** o que se pode verificar nos artefactos ou no código, verifica-se;
-o que tem convenção estabelecida na framework, segue-se a convenção e anota-se; o que é detalhe
-sem impacto na decisão do utilizador, decide o agente e regista.
+**When NOT to ask:** whatever can be verified in the artifacts or the code gets verified; whatever
+has an established convention in the framework follows the convention and gets noted; whatever is
+detail with no impact on the user's decision, the agent decides and records.
 
-## O formato de cada pergunta
+## The format of every question
 
-Toda a pergunta colocada ao utilizador leva **cinco elementos**:
-
-```markdown
-### P-014 · Autenticação dos utilizadores  [fase F3 · bloqueia: ADR-004]
-
-**Contexto:** A aplicação vai ter utilizadores internos da empresa e clientes externos.
-**Pergunta:** Como devem autenticar-se os utilizadores?
-**Porque importa:** Define a arquitetura de identidade — mudar depois custa semanas e migração
-de contas.
-**Opções:**
-1. **Entra ID / Google Workspace (SSO)** — sem passwords a gerir; exige que todos tenham conta
-   corporativa. Custo ~0; melhor segurança.
-2. **Email + password próprios** — funciona para qualquer pessoa; passa a haver reset de password,
-   MFA e armazenamento seguro de credenciais para manter — mais superfície de risco.
-3. **Híbrido (SSO interno + convites externos)** — cobre ambos; mais complexo de construir (+X dias).
-**Recomendação:** Opção 1 se todos os utilizadores tiverem conta corporativa; caso contrário, 3.
-**Se não responderes:** assumimos a opção recomendada **como provisória e reversível**, marcada
-para confirmação antes do portão de F3.
-```
-
-Regras do formato:
-
-1. **Linguagem simples.** Quem responde pode não ter formação técnica — trade-offs explicam-se por
-   consequências (tempo, custo, risco, esforço futuro), não por jargão.
-2. **Opções fechadas + escape.** 2–4 opções concretas; "outra ideia / não sei" é sempre resposta
-   válida. "Não sei" ativa a recomendação por defeito, marcada como **provisória**.
-3. **Recomendação sempre.** O agente que pergunta sem recomendar está a exportar o trabalho dele
-   para o utilizador.
-4. **ID único (`P-nnn`)** para rastreio: a resposta liga-se aos artefactos que desbloqueou.
-
-## Quando se assume por defeito (a regra única)
-
-Perante uma pergunta sem resposta, o Orquestrador assume a opção recomendada **apenas quando as
-quatro condições se verificam**:
-
-1. a pergunta incluiu a cláusula **"Se não responderes"** com essa consequência explícita;
-2. o default é **reversível** sem custo material;
-3. a decisão **não** pertence à aprovação humana obrigatória (`core/quality-gates.md` —
-   âmbito, dinheiro, produção, dados pessoais, risco residual);
-4. **não** é uma ambiguidade crítica de requisitos (`loops/L01-ambiguous-requirements.md`) — essas
-   ficam pendentes, sempre.
-
-O assumido regista-se como `assumida-por-defeito (provisória)` em `perguntas-e-respostas.md` e em
-`STATE.md` §Decisões tomadas em nome do dono ausente, e **confirma-se no portão seguinte**. Tudo o
-que falhar uma das condições fica em `STATE.md` §Decisões pendentes — bloqueio honesto vale mais
-do que assunção silenciosa. Esta é a única regra sobre assumir por defeito: `core/orchestrator.md`
-§Recuperação e os workflows remetem para aqui, não a redefinem.
-
-## Lotes, não metralhadora
-
-- As lacunas **sobem ao Orquestrador**, que as agrupa por tema/fase num **lote coerente**
-  (idealmente 3–8 perguntas; nunca mais de 12).
-- Um lote indica o que fica **bloqueado** por cada resposta em falta — o utilizador vê o custo de
-  adiar.
-- Perguntas urgentes (bloqueiam o trabalho de hoje) separam-se das que podem esperar pelo fim da
-  fase.
-- Nunca se repete uma pergunta já respondida: verifica-se primeiro o histórico (abaixo). Se a
-  resposta anterior parecer errada à luz de nova informação, **cita-se a resposta antiga** e
-  pergunta-se se mantém.
-
-## Registo (auditável)
-
-Todas as perguntas e respostas vivem em `product/01-requirements/questions-and-answers.md`
-(mesmo as de outras fases — um único histórico, ordenado, pesquisável):
+Every question put to the user carries **five elements**:
 
 ```markdown
-## P-014 · Autenticação dos utilizadores
-- **Estado:** respondida | pendente | assumida-por-defeito (provisória)
-- **Colocada:** 2026-07-08 (F3) · **Respondida:** 2026-07-09
-- **Resposta:** Opção 1 (SSO Entra ID). "Toda a gente tem conta da empresa."
-- **Desbloqueou:** ADR-004, RF-031
+### P-014 · User authentication  [phase F3 · blocks: ADR-004]
+
+**Context:** The application will have internal company users and external customers.
+**Question:** How should users authenticate?
+**Why it matters:** It defines the identity architecture — changing later costs weeks plus an
+account migration.
+**Options:**
+1. **Entra ID / Google Workspace (SSO)** — no passwords to manage; requires everyone to have a
+   corporate account. Cost ~0; better security.
+2. **Own email + password** — works for anyone; adds password resets, MFA and secure credential
+   storage to maintain — more risk surface.
+3. **Hybrid (internal SSO + external invites)** — covers both; more complex to build (+X days).
+**Recommendation:** Option 1 if all users have a corporate account; otherwise, 3.
+**If you don't answer:** we assume the recommended option **as provisional and reversible**,
+marked for confirmation before the F3 gate.
 ```
 
-- Perguntas **pendentes** espelham-se em `STATE.md` → "Decisões pendentes" (é aí que a próxima
-  sessão as encontra).
-- Respostas **assumidas por defeito** têm de ser confirmadas até ao portão da fase — o portão não
-  passa com provisórias críticas.
+Format rules:
 
-## Loop associado
+1. **Plain language.** The person answering may have no technical background — trade-offs are
+   explained through consequences (time, cost, risk, future effort), not jargon.
+2. **Closed options + an escape hatch.** 2–4 concrete options; "another idea / I don't know" is
+   always a valid answer. "I don't know" activates the default recommendation, marked as
+   **provisional**.
+3. **Always a recommendation.** An agent that asks without recommending is exporting its own work
+   to the user.
+4. **Unique ID (`P-nnn`)** for tracking: the answer links to the artifacts it unblocked.
 
-`loops/L01-ambiguous-requirements.md`: enquanto existirem ambiguidades/lacunas abertas → formular lote
-→ perguntar → integrar respostas nos artefactos → reverificar. Sai quando não há lacunas críticas.
-Salvaguarda: se o utilizador não responde, o loop **não** gira em vazio — as pendências ficam
-registadas e o trabalho segue por onde não depende delas.
+## When to assume by default (the single rule)
 
-## Anti-padrões
+Faced with an unanswered question, the Orchestrator assumes the recommended option **only when all
+four conditions hold**:
 
-- ❌ Perguntar o que já está respondido no histórico → ✅ ler `perguntas-e-respostas.md` primeiro.
-- ❌ Pergunta aberta vaga ("o que achas da segurança?") → ✅ opções concretas com consequências.
-- ❌ Assumir em silêncio → ✅ assumir **por defeito declarado**, marcado como provisório e visível.
-- ❌ Interrogatório técnico ("REST ou GraphQL?") sem tradução → ✅ perguntar pelas consequências que
-  o utilizador consegue avaliar; a tradução técnica é trabalho do agente.
-- ❌ 30 perguntas de uma vez → ✅ lotes por tema, priorizados pelo que bloqueiam.
+1. the question included the **"If you don't answer"** clause with that explicit consequence;
+2. the default is **reversible** at no material cost;
+3. the decision does **not** belong to mandatory human approval (`core/quality-gates.md` —
+   scope, money, production, personal data, residual risk);
+4. it is **not** a critical requirements ambiguity (`loops/L01-ambiguous-requirements.md`) — those
+   stay pending, always.
 
-## Relacionados
+What gets assumed is recorded as `assumed-by-default (provisional)` in `questions-and-answers.md`
+and in `STATE.md` §Decisões tomadas em nome do dono ausente, and is **confirmed at the next
+gate**. Anything that fails one of the conditions goes to `STATE.md` §Decisões pendentes — an
+honest block is worth more than a silent assumption. This is the only rule about assuming by
+default: `core/orchestrator.md` §Recovery and the workflows point here; they do not redefine it.
 
-- `core/orchestrator.md` — quem agrupa e coloca os lotes.
-- `core/decision-engine.md` — o que acontece às respostas que viram decisões técnicas.
-- `loops/L01-ambiguous-requirements.md` — o loop que este motor alimenta.
-- `agents/01-requirements/ambiguity-hunter.md` — o principal produtor de lacunas.
+## Batches, not a barrage
+
+- Gaps **escalate to the Orchestrator**, which groups them by theme/phase into a **coherent
+  batch** (ideally 3–8 questions; never more than 12).
+- A batch states what stays **blocked** by each missing answer — the user sees the cost of
+  delaying.
+- Urgent questions (blocking today's work) are separated from those that can wait until the end of
+  the phase.
+- Never repeat an already-answered question: check the history first (below). If the previous
+  answer looks wrong in light of new information, **quote the old answer** and ask whether it
+  stands.
+
+## Record (auditable)
+
+All questions and answers live in `product/01-requirements/questions-and-answers.md`
+(even those from other phases — a single history, ordered, searchable):
+
+```markdown
+## P-014 · User authentication
+- **Status:** answered | pending | assumed-by-default (provisional)
+- **Asked:** 2026-07-08 (F3) · **Answered:** 2026-07-09
+- **Answer:** Option 1 (Entra ID SSO). "Everyone has a company account."
+- **Unblocked:** ADR-004, FR-031
+```
+
+- **Pending** questions are mirrored in `STATE.md` → "Decisões pendentes" (that is where the next
+  session finds them).
+- Answers **assumed by default** must be confirmed by the phase gate — the gate does not pass with
+  critical provisionals.
+
+## Associated loop
+
+`loops/L01-ambiguous-requirements.md`: while open ambiguities/gaps exist → build a batch → ask →
+integrate the answers into the artifacts → re-verify. It exits when no critical gaps remain.
+Safeguard: if the user does not answer, the loop does **not** spin idle — the pending items get
+recorded and work proceeds wherever it does not depend on them.
+
+## Anti-patterns
+
+- ❌ Asking what the history already answers → ✅ read `questions-and-answers.md` first.
+- ❌ Vague open question ("what do you think about security?") → ✅ concrete options with
+  consequences.
+- ❌ Assuming in silence → ✅ assume **by declared default**, marked provisional and visible.
+- ❌ Technical interrogation ("REST or GraphQL?") with no translation → ✅ ask about the
+  consequences the user can evaluate; the technical translation is the agent's job.
+- ❌ 30 questions at once → ✅ batches by theme, prioritized by what they block.
+
+## Related
+
+- `core/orchestrator.md` — who groups and places the batches.
+- `core/decision-engine.md` — what happens to answers that become technical decisions.
+- `loops/L01-ambiguous-requirements.md` — the loop this engine feeds.
+- `agents/01-requirements/ambiguity-hunter.md` — the main producer of gaps.

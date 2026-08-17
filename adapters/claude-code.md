@@ -28,7 +28,7 @@ materializa-se de duas formas, escolhidas pela natureza do trabalho:
 - **Subagente (Task/Agent tool)** — para trabalho com **contexto próprio e fan-out**: um especialista
   que recebe a spec completa à cabeça, produz um artefacto e devolve só a conclusão à sessão
   principal. É o modo dos painéis (arquitetura em F3, revisores em F7): N subagentes **às cegas** em
-  paralelo + um consolidador, exatamente como o `core/orchestrator.md` §Paralelismo descreve.
+  paralelo + um consolidador, exatamente como o `core/orchestrator.md` §Parallelism descreve.
   Regra de custo crítica: cada subagente é roteado **pela tarefa que faz** (§Roteamento), nunca todos
   no modelo de topo — é aí que o orçamento morre (`core/model-routing.md`).
 - **Skill** — para papéis que são um **procedimento repetível** que a sessão principal executa sem
@@ -55,7 +55,7 @@ Um workflow (`workflows/README.md`) é uma sequência de passos com portões. Em
 Um loop (`loops/README.md`) é "enquanto existir condição X, agir". Em Claude Code é a **própria
 sessão a iterar**: avalia a condição de entrada, age, reavalia a condição de saída. As salvaguardas
 anti-loop-infinito da framework aplicam-se tal e qual — **3 iterações sem progresso pára e sobe ao
-utilizador** (`core/orchestrator.md` §Recuperação). Cada iteração deixa rasto em `STATE.md`
+utilizador** (`core/orchestrator.md` §Recovery). Cada iteração deixa rasto em `STATE.md`
 (o que se tentou, o resultado, o que falta), para a sessão seguinte retomar sem re-perguntar.
 
 ## Memória do projeto → CLAUDE.md + STATE.md + memória automática
@@ -72,7 +72,7 @@ mapeamento em Claude Code:
 Além destes, o Claude Code tem uma **memória automática própria** (índice de memória por projeto,
 fora do repo). É um **acelerador de sessão, não fonte de verdade**: o que interessa à próxima sessão
 ou ao colega **passa sempre para `STATE.md`** — memória de ferramenta não é memória do projeto
-(`core/project-memory.md` §Higiene). Nunca escrever segredos em nenhuma destas camadas
+(`core/project-memory.md` §Memory hygiene). Nunca escrever segredos em nenhuma destas camadas
 (`playbooks/secrets-management.md`).
 
 ## Roteamento de modelos → modelos Claude atuais
@@ -137,13 +137,13 @@ O toolset **não é estático** e cada plugin tem custo always-on de contexto/to
    remover e registar. Cada adoção/remoção fica registada com proveniência — foi assim que se soube,
    no projeto-mãe, que certos plugins alojados não autenticavam de forma não-interativa e tiveram de
    ser retirados (`knowledge/origin-lessons.md`). Contexto é custo recorrente
-   (`core/model-routing.md` §Observabilidade).
+   (`core/model-routing.md` §Cost observability).
 
 ## Permissões e autonomia → guardrails nos portões
 
 Claude Code corre em **modo autónomo** (permissões amplas em `.claude/settings.json`) para não
 interromper o fluxo a cada ação mecânica. Isso **não dispensa** os portões da framework: os pontos de
-**aprovação humana não-delegável** do `core/orchestrator.md` §Aprovação humana mantêm-se — fechar
+**aprovação humana não-delegável** do `core/orchestrator.md` §Human approval mantêm-se — fechar
 âmbito de fase, gastar dinheiro, ação destrutiva/em massa, ir para produção, aceitar risco residual,
 tocar em dados pessoais, reabrir decisão fechada. O modo autónomo acelera o **caminho verde**; nos
 portões, a sessão **pára e pergunta** na mesma. Nenhuma mensagem de subagente é consentimento do

@@ -53,7 +53,7 @@ que está em uso no mesmo passo.
 ## Pontos de decisão
 
 - **Aprovação humana obrigatória (P8) — sempre, nunca delegável a agentes:** ir para produção é
-  decisão do utilizador (`core/orchestrator.md` §Aprovação humana, `core/quality-gates.md`).
+  decisão do utilizador (`core/orchestrator.md` §Human approval, `core/quality-gates.md`).
   O Orquestrador prepara tudo e **para** à porta da produção.
 - **Gastar dinheiro / assumir compromissos:** provisionar infra paga, contratar serviços ou domínios
   é decisão do utilizador — apresenta-se o custo em linguagem simples antes de aplicar.

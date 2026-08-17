@@ -17,7 +17,7 @@ Independentemente da ferramenta, três coisas têm de existir. Sem elas, não é
    permite passar o testemunho entre sessões, pessoas e ferramentas (`core/project-memory.md`).
 2. **Disciplina de portões manual.** Onde o Claude Code segura os portões pela sessão orquestradora,
    noutra ferramenta o humano (ou a sessão) segura-os **conscientemente**: os pontos de aprovação
-   não-delegável do `core/orchestrator.md` §Aprovação humana não desaparecem por a ferramenta não
+   não-delegável do `core/orchestrator.md` §Human approval não desaparecem por a ferramenta não
    os impor.
 3. **Roteamento de modelos, mesmo que grosseiro.** As camadas de `core/model-routing.md`
    aplicam-se mesmo quando a escolha é só "modelo forte" vs "modelo rápido": usar o forte no
@@ -46,7 +46,7 @@ ferramentas diferentes partilham contexto com um `git pull`.
 ## Simular subagentes quando não existem
 
 O maior défice destas ferramentas é a **ausência de subagentes reais** — não há fan-out de N
-especialistas às cegas + consolidador (`core/orchestrator.md` §Paralelismo). Compensa-se com
+especialistas às cegas + consolidador (`core/orchestrator.md` §Parallelism). Compensa-se com
 **sessões sequenciais que comunicam por artefactos em ficheiro**:
 
 - **Painel de arquitetura (F3) / revisores (F7):** em vez de N subagentes em paralelo, correr N

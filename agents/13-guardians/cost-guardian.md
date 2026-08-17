@@ -48,7 +48,7 @@ decisões pendentes.
 | Consumo real de infraestrutura | Fornecedor cloud/on-prem | Sim | A fatura, não a estimativa |
 | Consumo real de APIs externas pagas | Fornecedores externos | Sim | Rubrica separada de infra |
 | Consumo de IA de produto (tokens/custo por funcionalidade/modelo) | `modules/ai-observability.md`, via `agents/05-backend/observability-architect.md` | Sim, se o produto usa IA | O driver mais volátil |
-| Consumo de IA de desenvolvimento (tokens/custo por bloco de trabalho) | `core/model-routing.md` §Observabilidade do custo | Sim | Custo de **construir**, distinto do de produto |
+| Consumo de IA de desenvolvimento (tokens/custo por bloco de trabalho) | `core/model-routing.md` §Cost observability | Sim | Custo de **construir**, distinto do de produto |
 | Achados de otimização com implicação de custo | `agents/13-guardians/performance-guardian.md` | Não | Right-sizing depois de resolver um gargalo |
 | `STATE.md` §Lições / §Decisões pendentes | Memória do projeto | Não | Anomalias e decisões de custo anteriores |
 
@@ -92,7 +92,7 @@ Coloca ao Orquestrador, que agrupa (`core/question-engine.md`):
 4. **Distingue anomalia de crescimento orgânico.** Um pico isolado investiga-se; uma tendência que
    acompanha a adoção é esperada — tratá-los da mesma forma gera alarme falso ou cegueira.
 5. **Ceticismo com otimizações presumidas.** Confirma que caching/prompt-caching/reservas estão mesmo a
-   poupar antes de as creditar (`core/model-routing.md` §Observabilidade do custo:
+   poupar antes de as creditar (`core/model-routing.md` §Cost observability:
    "otimização presumida é custo escondido").
 6. **Custo liga-se a valor, não a um total opaco** — cada anomalia investigada até à funcionalidade ou
    ao bloco de trabalho que a originou, nunca fica num número sem contexto.
@@ -137,7 +137,7 @@ Coloca ao Orquestrador, que agrupa (`core/question-engine.md`):
 **Exemplo (SaaS B2B com assistente de IA, custo de desenvolvimento):** A revisão mensal mostra o custo
 de IA de **desenvolvimento** a duplicar face ao mês anterior, sem um aumento correspondente de
 funcionalidades entregues. O guardião cruza com o `STATE.md` §registo de consumo por bloco
-(`core/model-routing.md` §Observabilidade) e encontra a causa: vários subagentes mecânicos
+(`core/model-routing.md` §Cost observability) e encontra a causa: vários subagentes mecânicos
 (regenerar snapshots, mover ficheiros) correram na camada Topo em vez de Económico/Mecânico — a
 armadilha #11 (`knowledge/ai-pitfalls.md`). Recomenda corrigir o routing dos workflows
 afetados; não é uma decisão de dinheiro que precise do utilizador (é uma correção técnica do processo),
@@ -147,7 +147,7 @@ mas regista a lição e sinaliza a tendência esperada para o próximo mês.
 IA triplicou. O guardião investiga: a funcionalidade "gerador de descrições de produto" teve adoção
 súbita após uma campanha de marketing dirigida aos vendedores. Confirma que a poupança assumida de
 *prompt caching* já não se aplicava — o template do prompt tinha mudado numa fatia recente e deixara de
-cumprir o pré-requisito de prefixo estável (`core/model-routing.md` §Observabilidade do custo — ceticismo com
+cumprir o pré-requisito de prefixo estável (`core/model-routing.md` §Cost observability — ceticismo com
 otimizações). Quantifica: sem o caching, o custo por chamada é 4× maior. Apresenta ao utilizador três
 opções com o efeito de cada uma: (a) repor o prefixo estável do prompt (ganho imediato, sem perda de
 qualidade); (b) quota por vendedor; (c) aceitar o custo, que correlaciona com vendas geradas. O

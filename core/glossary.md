@@ -1,56 +1,56 @@
-# Glossário da Framework
+# Framework Glossary
 
-Termos com significado preciso dentro da Maestro. Em caso de dúvida noutro documento, vale a
-definição daqui.
+Terms with a precise meaning inside Maestro. When in doubt in another document, the definition
+here prevails.
 
-| Termo | Definição |
+| Term | Definition |
 | --- | --- |
-| **Agente** | Um papel especializado de IA com uma única responsabilidade, definido por uma ficha (`agents/_template/AGENT-TEMPLATE.md`): objetivo, inputs, outputs, regras, limitações, workflow, exemplos, boas práticas, anti-padrões. |
-| **Ficha (de agente)** | O documento que define um agente. A ficha é o agente — não há comportamento fora dela. |
-| **Orquestrador** | O papel que a sessão principal assume para coordenar agentes, fases e portões (`core/orchestrator.md`). |
-| **Árbitro** | Agente que decide entre propostas independentes de especialistas, contra critérios explícitos, produzindo um ADR (`core/decision-engine.md`). Nunca é um dos proponentes. |
-| **Revisor** | Agente que examina trabalho alheio numa dimensão (segurança, UX, …) e produz um relatório. Quem produz nunca revê o próprio trabalho. |
-| **Guardião** | Agente de operação contínua (F9) com cadência própria: monitoriza uma dimensão do produto em produção e propõe/executa correções (`agents/13-guardians/`). |
-| **Coordenador** | Agente transversal que acompanha uma dimensão ao longo de várias fases (ex.: `agents/09-security/security-coordinator.md`). |
-| **Artefacto** | Ficheiro com dono, estado e consumidores, produzido por um agente na árvore `product/` (`core/artifact-protocol.md`). A unidade de colaboração. |
-| **Fase (F0–F9)** | Etapa do ciclo de vida do produto (`core/lifecycle.md`). |
-| **Portão (de qualidade)** | Decisão binária e verificável que guarda uma transição; com critérios, verificador e aprovador definidos (`core/quality-gates.md`). |
-| **Workflow (Wnn)** | Processo documentado que liga agentes e artefactos para cumprir uma fase ou um processo transversal (`workflows/`). |
-| **Loop (Lnn)** | Ciclo "enquanto condição → agir", com condição de saída e salvaguarda anti-infinito (`loops/`). |
-| **Módulo** | Capacidade de produto reutilizável e desacoplada, documentada de forma agnóstica de stack (`modules/`). |
-| **Playbook** | Procedimento operacional passo-a-passo para uma situação concreta (`playbooks/`). |
-| **Checklist** | Lista de critérios verificáveis usada em portões e revisões (`checklists/`). |
-| **Template** | Documento pronto a instanciar num projeto, com placeholders `{{assim}}` (`templates/`). |
-| **ADR** | Architecture Decision Record — registo de decisão estrutural: contexto, opções, decisão, consequências, reversão (`core/decision-engine.md`). |
-| **Decisão fechada** | Decisão validada pelo utilizador que os agentes não reabrem sem novidade material — e nunca em silêncio. |
-| **Decisão pendente** | Pergunta à espera do utilizador, registada em `STATE.md` com o que bloqueia. |
-| **Perfil de esforço** | Calibração do processo ao tamanho/risco do projeto (protótipo → plataforma empresarial); dimensiona portões, nunca os elimina (`core/orchestrator.md`). |
-| **Dossier** | Conjunto de artefactos de uma fase (ex.: dossier de descoberta = `product/00-discovery/`). |
-| **Fatia vertical** | Unidade de construção em F6: uma funcionalidade completa (dados → backend → frontend → testes) entregue de ponta a ponta. |
-| **Fonte de verdade (SSOT)** | O único lugar onde um facto se edita; tudo o resto deriva. Aplica-se a dados, labels, contratos e documentação. |
-| **Invariante** | Propriedade do domínio que nunca pode ser violada (ex.: "um ativo, um responsável"); catalogada na spec e imposta no servidor/BD. |
-| **Máquina de estados** | Modelação explícita de um ciclo de vida: estados, transições permitidas, efeitos; transições inválidas são rejeitadas no servidor (`modules/state-machines.md`). |
-| **Expand-contract** | Estratégia de migração reversível: primeiro adicionar (expand), migrar dados/código, só depois remover o antigo (contract) (`playbooks/expand-contract-db-migration.md`). |
-| **Kill-switch** | Interruptor para desligar uma funcionalidade/modelo/integração sem deploy; a mesma primitiva corta risco e corta custo (`modules/feature-flags.md`). |
-| **Auditoria adversarial** | Verificação independente que tenta ativamente refutar as conclusões, em vez de as confirmar (`playbooks/adversarial-audit.md`). |
-| **Prova live** | Verificação no sistema real a correr (não só testes verdes) — gate insubstituível antes de declarar "funciona". |
-| **Proveniência** | Registo da origem de uma regra/dado (que defeito/decisão/fonte o criou); obrigatória em dados tocados por IA. |
-| **Camada de modelo** | Nível de capacidade/custo de modelo de IA (topo/padrão/económico/mecânico) atribuído por tarefa (`core/model-routing.md`). |
-| **Esforço (effort)** | Segundo eixo de custo de IA, ortogonal ao modelo: quanto raciocínio se pede por tarefa. |
-| **Grounding** | Dar a uma IA a fonte de verdade (ajuda, specs) como base factual das respostas, em vez de deixá-la inventar (`modules/single-source-of-content.md`). |
-| **Ledger (de créditos)** | Registo imutável de movimentos de consumo/carregamento de créditos; o saldo deriva-se, nunca se edita (`modules/credit-management.md`). |
-| **Scoping** | Restrição de *que subconjunto de dados* um perfil vê/opera (por unidade organizacional, projeto, …). Eixo distinto de **autorização** (que *ações* pode fazer) — colapsá-los cria bugs nos dois sentidos (`modules/rbac-and-scoping.md`). |
-| **Runbook** | Guia operacional testado para um procedimento em produção (deploy, restauro, incidente). |
-| **Post-mortem** | Análise de incidente sem culpados: linha temporal, causas, ações com dono (`templates/technical/post-mortem.md.template`). |
-| **RTO / RPO** | Recovery Time/Point Objective — quanto tempo de indisponibilidade e quanta perda de dados são toleráveis (`agents/06-data/disaster-recovery-planner.md`). |
-| **Framework-mãe** | O repositório de origem da Maestro, onde a framework evolui por SemVer; os projetos trabalham sobre cópias e re-sincronizam deliberadamente (`_meta/VERSION.md`, `playbooks/sync-framework.md`). |
-| **Reporte de melhorias** | O envio consolidado e sanitizado do `FRAMEWORK-IMPROVEMENTS.md` de um projeto para a framework-mãe, como issue com label `melhorias` (`playbooks/report-framework-improvements.md`). |
-| **Candidata** | Lição/padrão reportado por um projeto, à espera de segunda confirmação antes de ser promovido à framework (`knowledge/candidates.md`). |
-| **Curadoria (da framework)** | O processo que transforma reportes de melhorias em evolução curada da framework — triagem, candidatas, promoções por PR com merge humano (`playbooks/framework-curation.md`, `agents/14-meta/framework-curator.md`). |
-| **Dossier de génese** | O registo, fase a fase, dos números de um projeto (custo de IA, dias, achados, retrabalho) que provam — ou desmentem — a promessa da framework (`templates/project/GENESIS.md.template`). |
-| **Curva de aprendizagem (do ecossistema)** | A agregação dos dossiers de génese, produto a produto e por código, mantida pela curadoria (`knowledge/learning-curve.md`); onde se lê se cada produto saiu mesmo mais barato e melhor. |
+| **Agent** | A specialized AI role with a single responsibility, defined by an agent spec (`agents/_template/AGENT-TEMPLATE.md`): objective, inputs, outputs, rules, limitations, workflow, examples, good practices, anti-patterns. |
+| **Agent spec** | The document that defines an agent. The spec is the agent — there is no behavior outside it. |
+| **Orchestrator** | The role the main session assumes to coordinate agents, phases and gates (`core/orchestrator.md`). |
+| **Arbiter** | Agent that decides between independent specialist proposals, against explicit criteria, producing an ADR (`core/decision-engine.md`). Never one of the proponents. |
+| **Reviewer** | Agent that examines someone else's work along one dimension (security, UX, …) and produces a report. Whoever produces never reviews their own work. |
+| **Guardian** | Continuous-operation agent (F9) with its own cadence: monitors one dimension of the product in production and proposes/executes fixes (`agents/13-guardians/`). |
+| **Coordinator** | Cross-cutting agent that follows one dimension across several phases (e.g. `agents/09-security/security-coordinator.md`). |
+| **Artifact** | File with an owner, a state and consumers, produced by an agent in the `product/` tree (`core/artifact-protocol.md`). The unit of collaboration. |
+| **Phase (F0–F9)** | Stage of the product lifecycle (`core/lifecycle.md`). |
+| **Gate (quality gate)** | Binary, verifiable decision that guards a transition; with defined criteria, verifier and approver (`core/quality-gates.md`). |
+| **Workflow (Wnn)** | Documented process that links agents and artifacts to fulfill a phase or a cross-cutting process (`workflows/`). |
+| **Loop (Lnn)** | "While condition → act" cycle, with an exit condition and an anti-infinite safeguard (`loops/`). |
+| **Module** | Reusable, decoupled product capability, documented stack-agnostically (`modules/`). |
+| **Playbook** | Step-by-step operational procedure for a concrete situation (`playbooks/`). |
+| **Checklist** | List of verifiable criteria used in gates and reviews (`checklists/`). |
+| **Template** | Document ready to instantiate in a project, with `{{like-this}}` placeholders (`templates/`). |
+| **ADR** | Architecture Decision Record — record of a structural decision: context, options, decision, consequences, reversal (`core/decision-engine.md`). |
+| **Closed decision** | Decision validated by the user that agents do not reopen without material news — and never silently. |
+| **Pending decision** | Question awaiting the user, recorded in `STATE.md` with what it blocks. |
+| **Effort profile** | Calibration of the process to project size/risk (prototype → enterprise platform); it sizes gates, never removes them (`core/orchestrator.md`). |
+| **Dossier** | The set of artifacts of one phase (e.g. discovery dossier = `product/00-discovery/`). |
+| **Vertical slice** | Unit of build in F6: one complete feature (data → backend → frontend → tests) delivered end to end. |
+| **Source of truth (SSOT)** | The single place where a fact is edited; everything else derives from it. Applies to data, labels, contracts and documentation. |
+| **Invariant** | Domain property that can never be violated (e.g. "one asset, one owner"); cataloged in the spec and enforced in the server/DB. |
+| **State machine** | Explicit modeling of a lifecycle: states, allowed transitions, effects; invalid transitions are rejected on the server (`modules/state-machines.md`). |
+| **Expand-contract** | Reversible migration strategy: first add (expand), migrate data/code, only then remove the old (contract) (`playbooks/expand-contract-db-migration.md`). |
+| **Kill-switch** | Switch that turns off a feature/model/integration without a deploy; the same primitive cuts risk and cuts cost (`modules/feature-flags.md`). |
+| **Adversarial audit** | Independent verification that actively tries to refute the conclusions instead of confirming them (`playbooks/adversarial-audit.md`). |
+| **Live proof** | Verification on the real running system (not just green tests) — an irreplaceable gate before declaring "it works". |
+| **Provenance** | Record of the origin of a rule/datum (which defect/decision/source created it); mandatory for data touched by AI. |
+| **Model tier** | AI model capability/cost level (top/standard/economy/mechanical) assigned per task (`core/model-routing.md`). |
+| **Effort** | The second axis of AI cost, orthogonal to the model: how much reasoning is requested per task. |
+| **Grounding** | Giving an AI the source of truth (help content, specs) as the factual basis for its answers, instead of letting it invent (`modules/single-source-of-content.md`). |
+| **Ledger (credits)** | Immutable record of credit consumption/top-up movements; the balance is derived, never edited (`modules/credit-management.md`). |
+| **Scoping** | Restriction of *which subset of data* a profile sees/operates on (by organizational unit, project, …). A distinct axis from **authorization** (which *actions* it may take) — collapsing them creates bugs in both directions (`modules/rbac-and-scoping.md`). |
+| **Runbook** | Tested operational guide for a production procedure (deploy, restore, incident). |
+| **Post-mortem** | Blameless incident analysis: timeline, causes, actions with an owner (`templates/technical/post-mortem.md.template`). |
+| **RTO / RPO** | Recovery Time/Point Objective — how much downtime and how much data loss are tolerable (`agents/06-data/disaster-recovery-planner.md`). |
+| **Upstream framework** | Maestro's origin repository, where the framework evolves by SemVer; projects work on copies and re-sync deliberately (`_meta/VERSION.md`, `playbooks/sync-framework.md`). |
+| **Improvement report** | The consolidated, sanitized submission of a project's `FRAMEWORK-IMPROVEMENTS.md` to the upstream framework, as an issue with the `melhorias` label (`playbooks/report-framework-improvements.md`). |
+| **Candidate** | Lesson/pattern reported by a project, awaiting a second confirmation before being promoted into the framework (`knowledge/candidates.md`). |
+| **Curation (of the framework)** | The process that turns improvement reports into curated framework evolution — triage, candidates, promotions via PR with human merge (`playbooks/framework-curation.md`, `agents/14-meta/framework-curator.md`). |
+| **Genesis dossier** | The phase-by-phase record of a project's numbers (AI cost, days, findings, rework) that prove — or disprove — the framework's promise (`templates/project/GENESIS.md.template`). |
+| **Learning curve (of the ecosystem)** | The aggregation of the genesis dossiers, product by product and by code, maintained by curation (`knowledge/learning-curve.md`); where you read whether each product really came out cheaper and better. |
 
-## Relacionados
+## Related
 
-- `_meta/STYLE-GUIDE.md` — convenções de escrita que usam estes termos.
-- `core/artifact-protocol.md` — IDs e estados dos artefactos (`RF-nnn`, `RN-nnn`, `P-nnn`, …).
+- `_meta/STYLE-GUIDE.md` — writing conventions that use these terms.
+- `core/artifact-protocol.md` — artifact IDs and states (`FR-nnn`, `BR-nnn`, `P-nnn`, …).

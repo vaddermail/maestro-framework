@@ -1,75 +1,76 @@
-# Roteamento de Modelos de IA
+# AI Model Routing
 
-Como se escolhe **que modelo e que esforço** usar em cada tarefa do desenvolvimento. O princípio:
-**o modelo escolhe-se por tarefa, nunca é fixo** — qualidade máxima onde o raciocínio é distintivo,
-custo mínimo onde o trabalho é mecânico. Este mecanismo foi aprendido à conta de orçamentos
-esgotados no projeto-mãe (`knowledge/origin-lessons.md`): o que esgota créditos não é usar um
-modelo forte no problema difícil — é **replicar o modelo caro em todos os subagentes, incluindo os
-mecânicos**.
+How to choose **which model and which effort** to use for each development task. The principle:
+**the model is chosen per task, never fixed** — maximum quality where reasoning is distinctive,
+minimum cost where the work is mechanical. This mechanism was learned at the cost of exhausted
+budgets in the origin project (`knowledge/origin-lessons.md`): what burns through credits is not
+using a strong model on the hard problem — it is **replicating the expensive model across every
+subagent, including the mechanical ones**.
 
-> Os nomes de camadas abaixo são abstratos de propósito: os modelos concretos mudam a cada
-> trimestre; as camadas não. O projeto mapeia camadas→modelos no seu `CLAUDE.md` (a partir de
-> `templates/project/CLAUDE.md.template`) e **revisita o mapeamento deliberadamente** quando os
-> preços/capacidades mudam — as regras de custo são versionadas com o porquê, como qualquer decisão.
+> The layer names below are abstract on purpose: concrete models change every quarter; the layers
+> do not. The project maps layers→models in its `CLAUDE.md` (from
+> `templates/project/CLAUDE.md.template`) and **revisits the mapping deliberately** when prices or
+> capabilities change — cost rules are versioned with the why, like any decision.
 
-## As quatro camadas
+## The four layers
 
-| Camada | Para quê | Exemplos de tarefas |
+| Layer | For what | Task examples |
 | --- | --- | --- |
-| **Topo** | Raciocínio difícil e distintivo, onde acertar à primeira poupa retrabalho caro | Desenho de RBAC multi-perfil, máquinas de estado, fluxos críticos com reversibilidade, migrações expand-contract, arbitragem de arquitetura, **verificação adversarial** |
-| **Padrão** | O default do dia-a-dia: implementação e revisão de código com regras de negócio | Fatias verticais, lógica de domínio, revisão de PRs, consolidação de relatórios |
-| **Económico** | Trabalho padronizado com spec clara | Replicar ecrãs, escrever testes a partir de plano, espelhar mocks, CRUD direto, atualizar docs/ajuda |
-| **Mecânico** | Trivial e repetitivo | Find/replace em massa, mover ficheiros, correções de lint, regenerar snapshots |
+| **Top** | Hard, distinctive reasoning, where getting it right first time saves expensive rework | Multi-profile RBAC design, state machines, critical flows with reversibility, expand-contract migrations, architecture arbitration, **adversarial verification** |
+| **Standard** | The day-to-day default: implementation and code review with business rules | Vertical slices, domain logic, PR reviews, report consolidation |
+| **Economy** | Standardized work with a clear spec | Replicating screens, writing tests from a plan, mirroring mocks, straightforward CRUD, updating docs/help |
+| **Mechanical** | Trivial and repetitive | Mass find/replace, moving files, lint fixes, regenerating snapshots |
 
-## O segundo eixo: esforço (effort/thinking)
+## The second axis: effort (effort/thinking)
 
-Ortogonal ao modelo. Regra provada: **modelo forte com esforço baixo bate modelo fraco com esforço
-máximo** em tarefas de raciocínio. Começar em médio/alto e subir só se necessário — nunca esforço
-máximo por reflexo. O custo de uma tarefa é `modelo × esforço × volume de contexto`; os três
-gerem-se, não só o primeiro.
+Orthogonal to the model. Proven rule: **a strong model at low effort beats a weak model at maximum
+effort** on reasoning tasks. Start at medium/high and raise only if needed — never maximum effort
+by reflex. A task's cost is `model × effort × context volume`; all three get managed, not just the
+first.
 
-## Regras de routing
+## Routing rules
 
-1. **Default = camada Padrão.** Qualquer tarefa sem classificação clara vai para Padrão — incluindo,
-   na dúvida, qualquer subagente.
-2. **Descer é deliberado:** só quando a tarefa é **claramente mecânica/padronizada** (spec completa,
-   zero ambiguidade, falha barata de detetar).
-3. **Subir é deliberado:** só para raciocínio difícil e distintivo ou **verificação/juízo adversarial**
-   — e afinando o esforço em vez de saltar para o máximo.
-4. **A sessão orquestradora mantém-se forte** (Padrão ou Topo no problema difícil): coordenar,
-   decidir e verificar é onde os erros custam mais caro.
-5. **Fan-out é onde o orçamento morre.** Antes de lançar N subagentes, classifica a tarefa deles —
-   N × topo × esforço alto é a receita comprovada para esgotar créditos num dia.
-6. **Dar a spec completa à cabeça.** Um prompt completo corta turnos de ida-e-volta — é a otimização
-   de custo mais barata que existe.
-7. **Exceções com razão registada.** Sair desta tabela é legítimo com justificação concreta escrita
-   (em `STATE.md` ou no plano da tarefa).
+1. **Default = Standard layer.** Any task without a clear classification goes to Standard —
+   including, when in doubt, any subagent.
+2. **Going down is deliberate:** only when the task is **clearly mechanical/standardized**
+   (complete spec, zero ambiguity, failure cheap to detect).
+3. **Going up is deliberate:** only for hard, distinctive reasoning or **adversarial
+   verification/judgment** — and by tuning the effort rather than jumping to maximum.
+4. **The orchestrating session stays strong** (Standard, or Top on the hard problem):
+   coordinating, deciding and verifying is where mistakes cost the most.
+5. **Fan-out is where the budget dies.** Before launching N subagents, classify their task —
+   N × top × high effort is the proven recipe for burning through credits in a day.
+6. **Give the full spec upfront.** A complete prompt cuts round-trip turns — the cheapest cost
+   optimization there is.
+7. **Exceptions with a recorded reason.** Departing from this table is legitimate with a concrete
+   written justification (in `STATE.md` or in the task's plan).
 
-## Observabilidade do custo (o "sistema de créditos" do desenvolvimento)
+## Cost observability (development's "credit system")
 
-- **Contabilizar por unidade de trabalho:** cada bloco/fatia regista no `STATE.md` o consumo
-  aproximado (tokens/custo) e o que produziu — o custo liga-se a valor, não a um total opaco.
-- **Rever a tendência:** o `agents/13-guardians/cost-guardian.md` inclui o custo de IA do
-  desenvolvimento na sua análise (não só a infra do produto).
-- **Kill-switch:** a mesma primitiva que corta risco corta custo — poder desligar um modelo/camada
-  (ex.: "sem créditos da camada Topo → tudo o que era Topo passa a Padrão + verificação redobrada")
-  sem parar o projeto. Regras interinas destas ficam **com prazo e condição de reversão** escritos.
-- **Ceticismo com otimizações:** não confiar em poupanças (caching de prompts, batch, contexto
-  reutilizado) sem verificar os pré-requisitos reais — otimização presumida é custo escondido.
-- **Contexto é custo recorrente:** ferramentas/documentos carregados em todas as sessões pagam-se em
-  todas as sessões. Adotar ferramentas quando acrescentam valor **agora**, remover quando deixam de
-  o fazer (adoção evolutiva — `adapters/claude-code.md`).
+- **Account per unit of work:** each block/slice records in `STATE.md` its approximate consumption
+  (tokens/cost) and what it produced — cost ties to value, not to an opaque total.
+- **Review the trend:** `agents/13-guardians/cost-guardian.md` includes development AI cost in its
+  analysis (not just the product's infrastructure).
+- **Kill-switch:** the same primitive that cuts risk cuts cost — being able to turn off a
+  model/layer (e.g. "no Top-layer credits → everything that was Top becomes Standard + doubled
+  verification") without stopping the project. Interim rules like these come **with a written
+  deadline and reversal condition**.
+- **Skepticism toward optimizations:** do not trust savings (prompt caching, batching, reused
+  context) without verifying the real prerequisites — presumed optimization is hidden cost.
+- **Context is recurring cost:** tools/documents loaded in every session are paid for in every
+  session. Adopt tools when they add value **now**, remove them when they stop doing so
+  (evolutionary adoption — `adapters/claude-code.md`).
 
-## Para o produto (não confundir)
+## For the product (do not confuse the two)
 
-Este documento governa o custo de **construir** o produto. Se o próprio produto consumir IA/APIs
-pagas, isso governa-se com os módulos `modules/credit-management.md` (ledger, quotas, tarifas por
-utilizador/organização) e `modules/ai-observability.md` (contabilização, alertas, kill-switch
-por modelo) — os mesmos princípios, desacoplados e dentro do produto.
+This document governs the cost of **building** the product. If the product itself consumes paid
+AI/APIs, that is governed by the `modules/credit-management.md` (ledger, quotas, per-user and
+per-organization rates) and `modules/ai-observability.md` (accounting, alerts, per-model
+kill-switch) modules — the same principles, decoupled and inside the product.
 
-## Relacionados
+## Related
 
-- `core/orchestrator.md` — quem aplica o routing ao delegar.
-- `modules/credit-management.md` · `modules/ai-observability.md` — os equivalentes de produto.
-- `knowledge/origin-lessons.md` — a história que originou estas regras.
-- `adapters/claude-code.md` — mapeamento concreto de camadas em ferramentas reais.
+- `core/orchestrator.md` — who applies the routing when delegating.
+- `modules/credit-management.md` · `modules/ai-observability.md` — the product-side equivalents.
+- `knowledge/origin-lessons.md` — the story that originated these rules.
+- `adapters/claude-code.md` — concrete mapping of layers onto real tools.

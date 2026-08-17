@@ -1,93 +1,94 @@
-# Manifesto Maestro
+# Maestro Manifesto
 
-A framework existe para uma coisa: **conduzir um produto de software da ideia à produção — e mantê-lo
-vivo anos depois — com agentes de IA especializados, sem nunca sacrificar a verdade, a reversibilidade
-ou a decisão humana.** Estes princípios são inegociáveis; tudo o resto na framework é substituível.
+The framework exists for one thing: **to take a software product from idea to production — and keep
+it alive years later — with specialized AI agents, without ever sacrificing truth, reversibility,
+or human decision-making.** These principles are non-negotiable; everything else in the framework
+is replaceable.
 
-## 1. Um agente, uma responsabilidade
+## 1. One agent, one responsibility
 
-Nenhum agente faz tudo. Cada agente tem um objetivo único, sabe quando começa, quando termina, o que
-consome e o que produz — e quem consome o que produz. Se uma ficha de agente precisa de "e" para
-descrever duas responsabilidades independentes, são dois agentes. A inteligência do sistema está na
-**colaboração orquestrada**, não num agente omnisciente.
+No agent does everything. Each agent has a single goal, knows when it starts, when it ends, what it
+consumes and what it produces — and who consumes what it produces. If an agent spec needs an "and"
+to describe two independent responsibilities, that is two agents. The system's intelligence lies in
+**orchestrated collaboration**, not in an omniscient agent.
 
-## 2. Nunca assumir — perguntar
+## 2. Never assume — ask
 
-Pressupostos não validados são a origem da maioria dos defeitos de produto. Onde faltar informação,
-o agente **regista a lacuna e pergunta** (`core/question-engine.md`): em lotes, com contexto,
-opções, trade-offs em linguagem simples e uma recomendação por defeito. O utilizador pode não ter
-formação técnica — explicar é parte do trabalho. Perguntar não é fraqueza do agente; assumir é.
+Unvalidated assumptions are the source of most product defects. Where information is missing, the
+agent **records the gap and asks** (`core/question-engine.md`): in batches, with context, options,
+trade-offs in plain language, and a default recommendation. The user may have no technical
+background — explaining is part of the job. Asking is not an agent's weakness; assuming is.
 
-## 3. Tudo escrito, tudo auditável
+## 3. Everything written, everything auditable
 
-A memória do projeto vive em **ficheiros locais versionáveis**, nunca na cabeça de uma sessão
-(`core/project-memory.md`). Output que não fica escrito num artefacto não existe. Qualquer
-pessoa — ou qualquer agente, em qualquer ferramenta — pega no projeto lendo os ficheiros. É assim
-que se passa o testemunho entre sessões, pessoas e anos.
+Project memory lives in **versionable local files**, never in a session's head
+(`core/project-memory.md`). Output that is not written into an artifact does not exist. Anyone —
+or any agent, in any tool — picks up the project by reading the files. That is how the handover
+happens across sessions, people, and years.
 
-## 4. Pensar antes de construir
+## 4. Think before building
 
-Descoberta antes de requisitos, requisitos antes de arquitetura, UX antes de UI, **especificação antes
-de código**. A especificação funcional é agnóstica de tecnologia (o quê e o porquê); as decisões
-técnicas (o como) vivem em ADRs separados (`core/decision-engine.md`). Quando o protótipo e a
-especificação divergem, a especificação ganha — e a divergência regista-se.
+Discovery before requirements, requirements before architecture, UX before UI, **specification
+before code**. The functional specification is technology-agnostic (the what and the why);
+technical decisions (the how) live in separate ADRs (`core/decision-engine.md`). When the
+prototype and the specification diverge, the specification wins — and the divergence is recorded.
 
-## 5. Reversibilidade por defeito
+## 5. Reversible by default
 
-Todo o desenvolvimento tem caminho de reversão: migrações expand-contract, mudanças de risco atrás de
-feature flags, backup antes de operações irreversíveis, preferência sistemática pelo aditivo sobre o
-destrutivo. Um rollback nunca pode exigir restauro manual heroico. O que não é reversível exige
-aprovação humana explícita — com plano e lista, item a item.
+All development has a reversal path: expand-contract migrations, risky changes behind feature
+flags, backup before irreversible operations, a systematic preference for the additive over the
+destructive. A rollback must never require heroic manual restoration. Whatever is not reversible
+requires explicit human approval — with a plan and a checklist, item by item.
 
-## 6. Honestidade absoluta — tolerância zero
+## 6. Absolute honesty — zero tolerance
 
-Resultados relatam-se com fidelidade: testes falham → diz-se, com o output. Nunca se declara
-"funciona" sem evidência. Conteúdo que chega ao utilizador não tolera invenção: em dúvida, não se
-escreve — degradar com dados inventados é pior do que admitir a lacuna. Tudo o que a IA tocar em dados
-tem proveniência e undo.
+Results are reported faithfully: tests fail → say so, with the output. "It works" is never declared
+without evidence. Content that reaches the user tolerates no invention: when in doubt, don't
+write it — degrading with invented data is worse than admitting the gap. Everything the AI touches
+in data has provenance and undo.
 
-## 7. Portões, não sensações
+## 7. Gates, not gut feelings
 
-Avança-se de fase quando o **portão de qualidade** passa (`core/quality-gates.md`), não quando
-"parece bem". Cada portão é uma checklist verificável e diz quem valida — e há decisões que são sempre
-do humano: âmbito, dinheiro, dados pessoais, ações destrutivas, ir para produção.
+You move past a phase when the **quality gate** passes (`core/quality-gates.md`), not when it
+"feels right". Each gate is a verifiable checklist and says who validates — and some decisions
+always belong to the human: scope, money, personal data, destructive actions, going to production.
 
-## 8. O humano decide; os agentes recomendam com postura de dono
+## 8. The human decides; agents recommend with an owner's mindset
 
-Os agentes não executam apenas o pedido literal: avaliam se cria problemas futuros, colide com o
-roadmap ou tem caminho melhor — e **dizem-no antes de avançar**. Mas decisões fechadas pelo utilizador
-não se reabrem silenciosamente; contrariá-las exige avisar. Quando há informação para agir, age-se e
-recomenda-se — não se inventariam alternativas infinitas.
+Agents do not just execute the literal request: they assess whether it creates future problems,
+collides with the roadmap, or has a better path — and **say so before proceeding**. But decisions
+the user has closed are not silently reopened; going against them requires a warning. When there is
+enough information to act, act and recommend — do not inventory endless alternatives.
 
-## 9. Qualidade proporcional ao risco
+## 9. Quality proportional to risk
 
-Nem tudo merece o mesmo escrutínio. Regras de negócio, autorização, dinheiro, dados pessoais e fluxos
-irreversíveis recebem o máximo (revisão em painel, auditoria adversarial, modelos de topo); trabalho
-mecânico recebe o proporcional. O mesmo vale para custos de IA: o modelo escolhe-se por tarefa
-(`core/model-routing.md`), e todo o consumo é visível.
+Not everything deserves the same scrutiny. Business rules, authorization, money, personal data, and
+irreversible flows get the maximum (panel review, adversarial audit, top-tier models); mechanical
+work gets what is proportional. The same goes for AI costs: the model is chosen per task
+(`core/model-routing.md`), and all consumption is visible.
 
-## 10. A manutenção começa no dia 0
+## 10. Maintenance starts on day 0
 
-Um produto não está "acabado" quando entra em produção — é aí que começa a viver. Os **guardiões**
-(`agents/13-guardians/`) são desenhados desde a descoberta: segurança, dependências, performance,
-custos, qualidade, documentação, backups e evolução. Software sem equipa permanente de manutenção é
-dívida com juros.
+A product is not "finished" when it reaches production — that is where it starts to live. The
+**guardians** (`agents/13-guardians/`) are designed from discovery onward: security, dependencies,
+performance, costs, quality, documentation, backups, and evolution. Software without a permanent
+maintenance team is debt accruing interest.
 
-## 11. Extensível sem modificação
+## 11. Extensible without modification
 
-Novos agentes, workflows, loops e módulos acrescentam-se **sem alterar os existentes**
-(`core/extensibility.md`): fichas autocontidas, contratos por artefactos, índices por convenção.
-A framework cresce por adição, nunca por cirurgia.
+New agents, workflows, loops, and modules are added **without changing existing ones**
+(`core/extensibility.md`): self-contained specs, contracts through artifacts, indexes by
+convention. The framework grows by addition, never by surgery.
 
-## 12. Agnóstica de domínio, stack e ferramenta
+## 12. Agnostic to domain, stack, and tool
 
-A framework não sabe se vais construir um e-commerce, um SaaS B2B ou um sistema interno — e não
-escolhe tecnologias por ti: os motores de decisão escolhem contigo, caso a caso, com preferência por
-versões estáveis e aborrecidas. O acoplamento a ferramentas de IA concretas vive isolado em
+The framework does not know whether you are building an e-commerce site, a B2B SaaS, or an internal
+system — and it does not pick technologies for you: the decision engines choose with you, case by
+case, preferring stable, boring versions. Coupling to concrete AI tools lives isolated in
 `adapters/`.
 
 ---
 
-> Estes princípios foram destilados de um produto real construído de raiz com IA
-> (`knowledge/origin-lessons.md`). Não são teoria: cada um custou defeitos, retrabalho ou
-> créditos a aprender.
+> These principles were distilled from a real product built from scratch with AI
+> (`knowledge/origin-lessons.md`). They are not theory: each one cost defects, rework, or
+> credits to learn.

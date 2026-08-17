@@ -23,7 +23,7 @@ o que é geral e da framework sobe à mãe na cadência do perfil
 - [ ] P8 passou: produto em produção, monitorização ativa, rollback ensaiado, `product/07-operations/`
       completo (runbooks, SLOs, observabilidade, plano DR).
 - [ ] Perfil de esforço confirmado em `STATE.md` — decide **quais** guardiões correm e com que
-      cadência (`core/orchestrator.md` §Perfis).
+      cadência (`core/orchestrator.md` §Effort profiles).
 - [ ] Molde de relatório disponível (`templates/technical/guardian-report.md.template`).
 
 ## Passos (agente → artefacto → cadência)
@@ -57,7 +57,7 @@ utilizador em lotes (nunca à peça — `core/question-engine.md`).
 
 ## Pontos de decisão
 
-- **Aprovação humana** (`core/orchestrator.md` §Aprovação humana): só o utilizador **aceita risco
+- **Aprovação humana** (`core/orchestrator.md` §Human approval): só o utilizador **aceita risco
   residual** (um CVE que se decide não corrigir já), autoriza **gastar dinheiro** (upgrade de infra
   proposto pelo guardião de custos), aprova **majors** de dependências com risco, ou toca em **dados
   pessoais**. O guardião recomenda com evidência; **não decide**.

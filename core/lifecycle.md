@@ -1,147 +1,147 @@
-# Ciclo de Vida do Produto (F0–F9)
+# Product Lifecycle (F0–F9)
 
-O ciclo de vida é a espinha dorsal da framework: dez fases, da ideia à operação perpétua. Cada fase
-tem um **workflow** que a executa, **agentes** que trabalham nela, **artefactos** que produz e um
-**portão de qualidade** que decide a passagem à seguinte (`core/quality-gates.md`).
+The lifecycle is the framework's backbone: ten phases, from idea to perpetual operation. Each phase
+has a **workflow** that executes it, **agents** that work in it, **artifacts** it produces and a
+**quality gate** that decides the passage to the next (`core/quality-gates.md`).
 
 ```
-F0 Arranque
-└─▶ F1 Descoberta ─▶ F2 Requisitos ─▶ F3 Arquitetura ─▶ F4 Experiência ─▶ F5 Especificação
+F0 Kickoff
+└─▶ F1 Discovery ─▶ F2 Requirements ─▶ F3 Architecture ─▶ F4 Experience ─▶ F5 Specification
                                                                               │
         ┌─────────────────────────────────────────────────────────────────────┘
         ▼
-    F6 Construção ─▶ F7 Qualidade & Segurança ─▶ F8 Lançamento ─▶ F9 Operação contínua ──▶ ∞
-                                                                        │
-                                              (pedidos novos) ◀─────────┘
-                                              W10-evolucao-de-feature reentra em F2–F8 em miniatura
+    F6 Build ─▶ F7 Quality & Security ─▶ F8 Launch ─▶ F9 Continuous operation ──▶ ∞
+                                                                 │
+                                              (new requests) ◀───┘
+                                              W10-feature-evolution re-enters F2–F8 in miniature
 ```
 
-## Regras do ciclo
+## Lifecycle rules
 
-1. **Sem saltos.** Nenhuma fase se salta — dimensiona-se. O perfil de esforço
-   (`core/orchestrator.md` §Perfis) decide a profundidade: num protótipo, F1–F5 podem caber num
-   dia; numa plataforma empresarial, são semanas. Mas um portão nunca se atravessa por pressa.
-2. **Voltar atrás é normal; avançar sem portão não é.** Descobrir em F5 que falta um requisito
-   devolve trabalho a F2 — isso é o processo a funcionar. Registar a razão em `STATE.md`.
-3. **Iteração dentro da fase é livre.** Os loops (`loops/`) correm dentro das fases até a condição
-   de saída fechar.
-4. **F9 não acaba.** A operação contínua dura a vida do produto. Pedidos novos entram por
-   `workflows/W10-feature-evolution.md`, que reexecuta F2→F8 em miniatura para cada feature.
-5. **Transversais sempre ativos:** memória (`core/project-memory.md`), motor de perguntas
-   (`core/question-engine.md`), segurança (o `agents/09-security/security-coordinator.md`
-   tem assento em todas as fases — segurança não é uma fase, é uma dimensão).
+1. **No skipping.** No phase is skipped — it is scaled. The effort profile
+   (`core/orchestrator.md` §Effort profiles) decides the depth: in a prototype, F1–F5 may fit in
+   a day; on an enterprise platform, they take weeks. But a gate is never crossed out of haste.
+2. **Going back is normal; advancing without a gate is not.** Discovering in F5 that a requirement
+   is missing sends work back to F2 — that is the process working. Record the reason in `STATE.md`.
+3. **Iteration inside a phase is free.** Loops (`loops/`) run inside the phases until the exit
+   condition closes.
+4. **F9 never ends.** Continuous operation lasts the product's lifetime. New requests come in
+   through `workflows/W10-feature-evolution.md`, which re-runs F2→F8 in miniature for each feature.
+5. **Cross-cutting concerns always on:** memory (`core/project-memory.md`), question engine
+   (`core/question-engine.md`), security (the `agents/09-security/security-coordinator.md`
+   has a seat in every phase — security is not a phase, it is a dimension).
 
-## As fases
+## The phases
 
-### F0 — Arranque
+### F0 — Kickoff
 
-- **Objetivo:** fundação do projeto: memória instanciada, perfil de esforço calibrado, ideia bruta registada.
+- **Goal:** project foundation: memory instantiated, effort profile calibrated, raw idea recorded.
 - **Workflow:** `workflows/W00-project-kickoff.md`
-- **Agentes:** o Orquestrador em pessoa (`core/orchestrator.md`).
-- **Artefactos:** `STATE.md`, `CLAUDE.md` (ou equivalente), árvore `product/`.
-- **Portão:** memória criada + perfil de esforço confirmado pelo utilizador.
+- **Agents:** the Orchestrator in person (`core/orchestrator.md`).
+- **Artifacts:** `STATE.md`, `CLAUDE.md` (or equivalent), the `product/` tree.
+- **Gate:** memory created + effort profile confirmed by the user.
 
-### F1 — Descoberta
+### F1 — Discovery
 
-- **Objetivo:** perceber o problema antes da solução: stakeholders, personas, casos de utilização,
-  objetivos, KPIs, riscos, custos, roadmap, MVP.
+- **Goal:** understand the problem before the solution: stakeholders, personas, use cases,
+  goals, KPIs, risks, costs, roadmap, MVP.
 - **Workflow:** `workflows/W01-discovery.md`
-- **Agentes:** `agents/00-discovery/` (12 especialistas).
-- **Artefactos:** `product/00-discovery/` (dossier completo).
-- **Portão:** dossier de descoberta validado pelo utilizador; MVP e prioridades aprovados;
-  nenhuma lacuna crítica aberta.
+- **Agents:** `agents/00-discovery/` (12 specialists).
+- **Artifacts:** `product/00-discovery/` (complete dossier).
+- **Gate:** discovery dossier validated by the user; MVP and priorities approved;
+  no critical gap left open.
 
-### F2 — Requisitos
+### F2 — Requirements
 
-- **Objetivo:** transformar a descoberta em requisitos rastreáveis, regras de negócio explícitas e
-  critérios de aceitação verificáveis — **sem ambiguidades**.
+- **Goal:** turn discovery into traceable requirements, explicit business rules and verifiable
+  acceptance criteria — **with no ambiguities**.
 - **Workflow:** `workflows/W02-requirements.md`
-- **Agentes:** `agents/01-requirements/` (6 especialistas); loop `loops/L01-ambiguous-requirements.md`.
-- **Artefactos:** `product/01-requirements/`.
-- **Portão:** zero ambiguidades **críticas** (não-críticas registadas com risco aceite); RNF
-  quantificados; regras de negócio numeradas e aprovadas.
+- **Agents:** `agents/01-requirements/` (6 specialists); loop `loops/L01-ambiguous-requirements.md`.
+- **Artifacts:** `product/01-requirements/`.
+- **Gate:** zero **critical** ambiguities (non-critical ones recorded with accepted risk); NFRs
+  quantified; business rules numbered and approved.
 
-### F3 — Arquitetura
+### F3 — Architecture
 
-- **Objetivo:** decidir como se constrói: estilo arquitetural (em painel de especialistas com
-  árbitro), stack concreta (versões estáveis), integrações e fronteiras.
+- **Goal:** decide how it gets built: architectural style (specialist panel with an
+  arbiter), concrete stack (stable versions), integrations and boundaries.
 - **Workflow:** `workflows/W03-architecture.md`
-- **Agentes:** `agents/02-architecture/` (árbitro + 11 especialistas + selecionador de stack);
-  motores em `core/decision-engine.md`.
-- **Artefactos:** `product/02-architecture/` (visão + ADRs + stack).
-- **Portão:** ADRs escritos com alternativas e reversibilidade; stack fixada; utilizador validou
-  custos e trade-offs em linguagem simples.
+- **Agents:** `agents/02-architecture/` (arbiter + 11 specialists + stack selector);
+  engines in `core/decision-engine.md`.
+- **Artifacts:** `product/02-architecture/` (vision + ADRs + stack).
+- **Gate:** ADRs written with alternatives and reversibility; stack pinned; user validated
+  costs and trade-offs in plain language.
 
-### F4 — Experiência (UX/UI)
+### F4 — Experience (UX/UI)
 
-- **Objetivo:** desenhar a experiência antes do código: fluxos, wireframes, design system (tokens),
-  mapa de ecrãs, acessibilidade e responsividade planeadas.
+- **Goal:** design the experience before the code: flows, wireframes, design system (tokens),
+  screen map, accessibility and responsiveness planned.
 - **Workflow:** `workflows/W04-experience.md`
-- **Agentes:** `agents/03-experience/` (10 especialistas).
-- **Artefactos:** `product/03-experience/`.
-- **Portão:** utilizador validou wireframes dos fluxos críticos; design system com tokens definidos;
-  requisitos de acessibilidade aceites.
+- **Agents:** `agents/03-experience/` (10 specialists).
+- **Artifacts:** `product/03-experience/`.
+- **Gate:** user validated the wireframes of the critical flows; design system with tokens defined;
+  accessibility requirements accepted.
 
-### F5 — Especificação
+### F5 — Specification
 
-- **Objetivo:** a fonte de verdade funcional canónica, agnóstica de tecnologia: regras de negócio
-  por módulo, fluxos críticos, máquinas de estado, modelo de dados lógico, contrato do backend.
-  É o documento que sobrevive a reescritas do código.
+- **Goal:** the canonical functional source of truth, technology-agnostic: business rules
+  per module, critical flows, state machines, logical data model, backend contract.
+  It is the document that survives code rewrites.
 - **Workflow:** `workflows/W05-specification.md`
-- **Agentes:** `agents/01-requirements/business-rules-modeler.md`,
+- **Agents:** `agents/01-requirements/business-rules-modeler.md`,
   `agents/06-data/data-modeler.md`, `agents/05-backend/api-designer.md`,
-  `agents/09-security/threat-modeler.md`, coordenados pelo Orquestrador.
-- **Artefactos:** `product/04-specification/` (specs por módulo + transversais).
-- **Portão:** especificação revista pelo `agents/12-reviewers/review-consolidator.md` (painel
-  mínimo: arquitetura + segurança + UX) e aprovada pelo utilizador. **Só aqui se desbloqueia código.**
+  `agents/09-security/threat-modeler.md`, coordinated by the Orchestrator.
+- **Artifacts:** `product/04-specification/` (specs per module + cross-cutting).
+- **Gate:** specification reviewed by `agents/12-reviewers/review-consolidator.md` (minimal
+  panel: architecture + security + UX) and approved by the user. **Only here is code unlocked.**
 
-### F6 — Construção
+### F6 — Build
 
-- **Objetivo:** construir em fatias verticais (dados → backend → frontend por funcionalidade),
-  cada fatia com testes, seguindo a especificação. Divergência da spec → a spec ganha ou
-  atualiza-se a spec primeiro.
+- **Goal:** build in vertical slices (data → backend → frontend per feature),
+  each slice with tests, following the specification. Divergence from the spec → the spec wins or
+  the spec is updated first.
 - **Workflow:** `workflows/W06-build.md`
-- **Agentes:** `agents/04-frontend/`, `agents/05-backend/`, `agents/06-data/`,
+- **Agents:** `agents/04-frontend/`, `agents/05-backend/`, `agents/06-data/`,
   `agents/10-quality/`; loops L02/L04/L05.
-- **Artefactos:** código + testes + `product/99-records/` (progresso por fatia em `STATE.md`).
-- **Portão por fatia:** `checklists/definition-of-done.md` + `checklists/pre-merge.md`.
-- **Portão da fase:** MVP completo contra a especificação; harness de regressão verde.
+- **Artifacts:** code + tests + `product/99-records/` (progress per slice in `STATE.md`).
+- **Gate per slice:** `checklists/definition-of-done.md` + `checklists/pre-merge.md`.
+- **Phase gate:** MVP complete against the specification; regression harness green.
 
-### F7 — Qualidade & Segurança
+### F7 — Quality & Security
 
-- **Objetivo:** escrutínio independente antes do mundo real: painel de revisores, auditoria
-  adversarial, pentest, verificação de performance e acessibilidade.
-- **Workflow:** `workflows/W07-quality-and-security.md` (usa `workflows/W12-global-review.md`)
-- **Agentes:** `agents/12-reviewers/` (painel completo), `agents/09-security/pentester.md`,
+- **Goal:** independent scrutiny before the real world: reviewer panel, adversarial audit,
+  pentest, performance and accessibility verification.
+- **Workflow:** `workflows/W07-quality-and-security.md` (uses `workflows/W12-global-review.md`)
+- **Agents:** `agents/12-reviewers/` (full panel), `agents/09-security/pentester.md`,
   `playbooks/adversarial-audit.md`.
-- **Artefactos:** `product/99-records/reviews/` + plano consolidado de correções.
-- **Portão:** zero achados críticos/altos por resolver; `checklists/pre-production-security.md`
-  completa; decisões de risco residual assinadas pelo utilizador.
+- **Artifacts:** `product/99-records/reviews/` + consolidated fix plan.
+- **Gate:** zero critical/high findings left unresolved; `checklists/pre-production-security.md`
+  complete; residual-risk decisions signed off by the user.
 
-### F8 — Lançamento
+### F8 — Launch
 
-- **Objetivo:** pôr em produção com rede: infra provisionada, pipelines a funcionar, backups e
-  rollback ensaiados, monitorização ligada.
+- **Goal:** go to production with a net: infra provisioned, pipelines working, backups and
+  rollback rehearsed, monitoring on.
 - **Workflow:** `workflows/W08-launch.md`
-- **Agentes:** `agents/07-devops/`, `agents/08-infrastructure/`; pipelines de `pipelines/`.
-- **Artefactos:** `product/07-operations/` (runbooks, SLOs, plano DR) + infra como código.
-- **Portão:** `checklists/go-live.md` completa; **aprovação humana explícita para produção**
-  (nunca delegável a agentes).
+- **Agents:** `agents/07-devops/`, `agents/08-infrastructure/`; pipelines from `pipelines/`.
+- **Artifacts:** `product/07-operations/` (runbooks, SLOs, DR plan) + infrastructure as code.
+- **Gate:** `checklists/go-live.md` complete; **explicit human approval for production**
+  (never delegable to agents).
 
-### F9 — Operação contínua
+### F9 — Continuous operation
 
-- **Objetivo:** manter o produto saudável para sempre: guardiões em cadência, loops de manutenção,
-  resposta a incidentes, evolução de features.
-- **Workflow:** `workflows/W09-continuous-operation.md` (+ W10 evolução, W11 incidentes)
-- **Agentes:** `agents/13-guardians/` (equipa permanente de 8).
-- **Artefactos:** relatórios de guardiões em `product/99-records/guardians/`, post-mortems,
-  `STATE.md` sempre vivo.
-- **Portão:** não há — há **cadências** (diária/semanal/mensal, definidas em
-  `agents/13-guardians/README.md`) e os loops L02–L08 sempre armados.
+- **Goal:** keep the product healthy forever: guardians on cadence, maintenance loops,
+  incident response, feature evolution.
+- **Workflow:** `workflows/W09-continuous-operation.md` (+ W10 evolution, W11 incidents)
+- **Agents:** `agents/13-guardians/` (permanent team of 8).
+- **Artifacts:** guardian reports in `product/99-records/guardians/`, post-mortems,
+  `STATE.md` always alive.
+- **Gate:** none — there are **cadences** (daily/weekly/monthly, defined in
+  `agents/13-guardians/README.md`) and loops L02–L08 always armed.
 
-## Relacionados
+## Related
 
-- `core/orchestrator.md` — quem conduz o ciclo.
-- `core/quality-gates.md` — o detalhe dos portões.
-- `core/artifact-protocol.md` — a árvore `product/` completa.
-- `workflows/README.md` — convenções dos workflows.
+- `core/orchestrator.md` — who drives the cycle.
+- `core/quality-gates.md` — the gates in detail.
+- `core/artifact-protocol.md` — the complete `product/` tree.
+- `workflows/README.md` — workflow conventions.

@@ -1,73 +1,73 @@
-# Extensibilidade
+# Extensibility
 
-Como a framework cresce **sem se partir**: novos agentes, workflows, loops, módulos e templates
-acrescentam-se **por adição, nunca por cirurgia** aos existentes. É o princípio open-closed aplicado
-a documentação executável — e é o que permite que a Maestro acompanhe um produto durante anos.
+How the framework grows **without breaking**: new agents, workflows, loops, modules and templates
+are added **by addition, never by surgery** on the existing ones. It is the open-closed principle
+applied to executable documentation — and it is what lets Maestro accompany a product for years.
 
-## Porque funciona
+## Why it works
 
-Três propriedades estruturais tornam a adição segura:
+Three structural properties make addition safe:
 
-1. **Contratos por artefactos, não por chamadas.** Os agentes não se conhecem uns aos outros —
-   conhecem artefactos (`core/artifact-protocol.md`). Um agente novo que produza/consuma
-   artefactos existentes encaixa sem que nenhum existente saiba dele.
-2. **Descoberta por índices, não por hardcoding.** O Orquestrador encontra agentes pelos índices
-   (`agents/README.md` + README de categoria + `_meta/INVENTORY.md`), montando o grafo de
-   dependências a partir das fichas. Registar = existir.
-3. **Fichas autocontidas.** Cada ficha declara tudo (inputs, outputs, regras, interações); não há
-   comportamento escondido noutro ficheiro que fosse preciso editar.
+1. **Contracts through artifacts, not calls.** Agents do not know each other — they know
+   artifacts (`core/artifact-protocol.md`). A new agent that produces/consumes existing
+   artifacts fits in without any existing one knowing about it.
+2. **Discovery through indexes, not hardcoding.** The Orchestrator finds agents through the
+   indexes (`agents/README.md` + category README + `_meta/INVENTORY.md`), assembling the
+   dependency graph from the agent specs. To be registered is to exist.
+3. **Self-contained agent specs.** Each spec declares everything (inputs, outputs, rules,
+   interactions); there is no hidden behavior in some other file that would need editing.
 
-## Adicionar um agente
+## Adding an agent
 
-Processo completo em `playbooks/add-an-agent.md`. O essencial:
+Full process in `playbooks/add-an-agent.md`. The essentials:
 
-1. Confirmar que é mesmo **um agente novo** (uma responsabilidade que nenhum existente tem) e não
-   uma secção em falta numa ficha existente.
-2. Copiar `agents/_template/AGENT-TEMPLATE.md` para a categoria certa; preencher **todas** as
-   secções.
-3. Declarar inputs/outputs em termos de artefactos existentes — ou, se cria artefactos novos,
-   acrescentá-los ao `core/artifact-protocol.md` (adição de linhas, não alteração das
-   existentes).
-4. Registar nos índices: README da categoria + `_meta/INVENTORY.md`.
-5. Se o agente entra num workflow, acrescentar o passo no workflow respetivo — como **passo novo**,
-   sem reordenar os existentes salvo razão registada.
+1. Confirm it really is **a new agent** (a responsibility no existing one has) and not a
+   missing section in an existing agent spec.
+2. Copy `agents/_template/AGENT-TEMPLATE.md` into the right category; fill in **all**
+   sections.
+3. Declare inputs/outputs in terms of existing artifacts — or, if it creates new artifacts,
+   add them to `core/artifact-protocol.md` (adding rows, not changing the existing
+   ones).
+4. Register in the indexes: category README + `_meta/INVENTORY.md`.
+5. If the agent joins a workflow, add the step to that workflow — as a **new step**,
+   without reordering the existing ones unless a reason is recorded.
 
-**O que nunca é preciso:** editar outras fichas de agentes, o Orquestrador, ou o template.
-Se a adição parecer exigir isso, o desenho está errado — voltar ao passo 1.
+**What is never needed:** editing other agent specs, the Orchestrator, or the template.
+If the addition seems to require that, the design is wrong — go back to step 1.
 
-## Adicionar uma categoria de agentes
+## Adding an agent category
 
-Nova pasta `agents/NN-nome/` com README-índice próprio + entrada no `agents/README.md` e no
-inventário. Os números não se reciclam (como os IDs de artefactos — `core/artifact-protocol.md`).
+New folder `agents/NN-name/` with its own index README + an entry in `agents/README.md` and in the
+inventory. Numbers are never recycled (like artifact IDs — `core/artifact-protocol.md`).
 
-## Adicionar workflows, loops, módulos, templates, checklists, playbooks
+## Adding workflows, loops, modules, templates, checklists, playbooks
 
-Mesmo padrão em todos: **criar o ficheiro seguindo a convenção da pasta (ver o README respetivo) →
-registar no índice da pasta → registar no inventário.** Loops declaram sempre condição de entrada,
-de saída e salvaguarda anti-infinito (`loops/README.md`); módulos declaram-se desacoplados e
-adotáveis isoladamente (`modules/README.md`).
+Same pattern for all: **create the file following the folder's convention (see its README) →
+register it in the folder's index → register it in the inventory.** Loops always declare an entry
+condition, an exit condition and an anti-infinite safeguard (`loops/README.md`); modules declare
+themselves decoupled and adoptable in isolation (`modules/README.md`).
 
-## Alterar os existentes (a exceção)
+## Changing the existing ones (the exception)
 
-Às vezes é mesmo preciso mudar um contrato (template de agente, protocolo de artefactos, ciclo de
-vida). Isso é uma **mudança MAJOR** da framework (`_meta/VERSION.md`):
+Sometimes a contract really does have to change (agent template, artifact protocol, lifecycle).
+That is a **MAJOR change** of the framework (`_meta/VERSION.md`):
 
-- Justifica-se por escrito (o quê, porquê, o que parte).
-- Preferir o caminho expand-contract também aqui: introduzir o novo ao lado, migrar as fichas,
-  retirar o antigo — nunca partir tudo num passo.
-- Projetos existentes **não herdam a mudança automaticamente**: re-sincronizam deliberadamente.
+- It is justified in writing (what, why, what breaks).
+- Prefer the expand-contract path here too: introduce the new one alongside, migrate the agent
+  specs, retire the old one — never break everything in one step.
+- Existing projects **do not inherit the change automatically**: they re-sync deliberately.
 
-## Descontinuar
+## Deprecating
 
-Nada se apaga às cegas: uma ficha/documento descontinuado marca-se `obsoleto` no topo, com apontador
-para o substituto, e sai dos índices ativos. (O mesmo princípio de reversibilidade de sempre —
-`MANIFESTO.md` §5.)
+Nothing is deleted blindly: a deprecated spec/document is marked `obsolete` at the top, with a
+pointer to its replacement, and leaves the active indexes. (The same reversibility principle as
+always — `MANIFESTO.md` §5.)
 
-## Relacionados
+## Related
 
-- `playbooks/add-an-agent.md` — o passo-a-passo.
-- `agents/_template/AGENT-TEMPLATE.md` — o molde.
-- `_meta/INVENTORY.md` — o registo que faz um ficheiro "existir".
-- `_meta/VERSION.md` — versionamento da própria framework.
-- `playbooks/framework-curation.md` — de onde vêm muitas das adições: o circuito de melhorias
-  reportadas pelos projetos (`knowledge/README.md` §Como o conhecimento circula).
+- `playbooks/add-an-agent.md` — the step-by-step.
+- `agents/_template/AGENT-TEMPLATE.md` — the mold.
+- `_meta/INVENTORY.md` — the register that makes a file "exist".
+- `_meta/VERSION.md` — versioning of the framework itself.
+- `playbooks/framework-curation.md` — where many of the additions come from: the circuit of
+  improvements reported by projects (`knowledge/README.md` §Como o conhecimento circula).
