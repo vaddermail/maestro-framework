@@ -1,88 +1,90 @@
-# CD de Entrega (Delivery CD)
+# Delivery CD
 
-Pipeline que pega no artefacto verde do `pipelines/ci-quality.md` — já filtrado pelo
-`pipelines/ci-security.md` — e leva-o a produção de forma reversível: promoção por ambientes, backup
-antes de tocar em produção, estratégia de release com critérios de saúde e *rollback* automático
-quando esses critérios falham. Executa a estratégia definida por
-`agents/07-devops/deployment-strategist.md`; materializado por
-`agents/07-devops/github-actions-specialist.md` ou fornecedor equivalente.
+Pipeline that takes the green artifact from `pipelines/ci-quality.md` — already filtered by
+`pipelines/ci-security.md` — and carries it to production reversibly: promotion across
+environments, backup before touching production, a release strategy with health criteria and
+automatic *rollback* when those criteria fail. It executes the strategy defined by
+`agents/07-devops/deployment-strategist.md`; materialized by
+`agents/07-devops/github-actions-specialist.md` or equivalent vendor.
 
-## Princípios
+## Principles
 
-- **Promove-se o mesmo artefacto que passou o CI**, por hash/tag — nunca se reconstrói por ambiente
-  (`agents/07-devops/deployment-strategist.md` regra 5).
-- **Nunca promove sobre vermelho.** Sem build verde do CI de qualidade e sem gate do CI de segurança,
-  o pipeline de entrega não arranca (`core/quality-gates.md`).
-- **Backup/estado de reversão antes de qualquer deploy de produção** — sem ponto de retorno
-  verificado, não há promoção (`knowledge/permanent-rules.md` §3).
-- **Produção atrás de aprovação humana, sempre.** Nunca automático no merge, por mais verde que o
-  pipeline esteja a montante.
-- **Hard-block contra a infra errada.** O pipeline confirma o alvo (ambiente/conta/cluster/host) antes
-  de qualquer passo o tocar, e **aborta** se não bater certo — um deploy de staging que acerta em
-  produção é a classe de erro mais cara.
-- **Rollback automático por critério objetivo**, definido antes do release (taxa de erro, latência,
-  disponibilidade), nunca decidido "a olho" durante o incidente.
+- **The same artifact that passed CI is what gets promoted**, by hash/tag — it is never rebuilt per
+  environment (`agents/07-devops/deployment-strategist.md` rule 5).
+- **Never promote over red.** Without a green build from the quality CI and the security CI gate,
+  the delivery pipeline does not start (`core/quality-gates.md`).
+- **Backup/rollback state before any production deploy** — without a verified point of return,
+  there is no promotion (`knowledge/permanent-rules.md` §3).
+- **Production behind human approval, always.** Never automatic on merge, no matter how green the
+  upstream pipeline is.
+- **Hard-block against the wrong infra.** The pipeline confirms the target
+  (environment/account/cluster/host) before any step touches it, and **aborts** if it does not
+  match — a staging deploy that lands on production is the most expensive class of error.
+- **Automatic rollback on an objective criterion**, defined before the release (error rate,
+  latency, availability), never decided "by eye" during the incident.
 
-## Estágios
+## Stages
 
-1. **Gatilho** — merge no ramo de integração dispara deploy automático a **dev**; uma tag/release
-   dispara promoção a **staging**; a promoção a **produção** é sempre um passo manual de aprovação,
-   nunca automático por evento.
-2. **Confirmação de alvo (hard-block)** — antes de qualquer ação, o pipeline valida que o ambiente/
-   conta/cluster de destino é o pretendido; se divergir, aborta sem tocar em nada.
-3. **Deploy em dev** — automático a cada merge; ambiente descartável, sem aprovação, feedback rápido
-   para quem desenvolveu.
-4. **Deploy em staging** — automático depois de dev saudável (ou disparado por tag); espelha produção
-   o mais possível (dados, configuração, topologia) para o release não surpreender mais tarde.
-5. **Backup de produção** — obrigatório e **verificado** antes do primeiro passo que toca produção
+1. **Trigger** — a merge into the integration branch fires an automatic deploy to **dev**; a
+   tag/release fires promotion to **staging**; promotion to **production** is always a manual
+   approval step, never automatic on an event.
+2. **Target confirmation (hard-block)** — before any action, the pipeline validates that the
+   destination environment/account/cluster is the intended one; if it diverges, it aborts without
+   touching anything.
+3. **Deploy to dev** — automatic on every merge; disposable environment, no approval, fast feedback
+   for whoever developed the change.
+4. **Deploy to staging** — automatic after dev is healthy (or fired by a tag); mirrors production
+   as closely as possible (data, configuration, topology) so the release holds no surprises later.
+5. **Production backup** — mandatory and **verified** before the first step that touches production
    (`agents/06-data/backup-specialist.md`, `agents/08-infrastructure/infra-backup-specialist.md`);
-   sem backup confirmado, o pipeline não avança.
-6. **Aprovação humana (ambiente de produção)** — gate manual com reviewers definidos à partida; regista
-   quem aprovou e quando, como parte da evidência do release.
-7. **Promoção com estratégia de release** — recreate/rolling/blue-green/canary conforme decidido pelo
-   `agents/07-devops/deployment-strategist.md`; se houver migração de BD, corre em expand-contract
-   coordenado com `agents/06-data/migration-engineer.md` (`playbooks/expand-contract-db-migration.md`).
-8. **Health checks contra critério pré-acordado** — erro/latência/disponibilidade observados durante
-   uma janela definida (ex.: 5–20 min de canário), nunca "parece estar bem".
-9. **Decisão: promover 100% ou reverter** — aplicação mecânica do critério objetivo; se os health
-   checks falham dentro da janela, **rollback automático** para a versão anterior, sem esperar por
-   confirmação humana.
-10. **Registo** — versão, decisão e evidência escritos no runbook de release/rollback
-    (`playbooks/release-and-rollback.md`) e no `STATE.md` do produto (`core/project-memory.md`);
-    obrigatório mesmo quando o release corre sem incidentes.
+   without a confirmed backup, the pipeline does not advance.
+6. **Human approval (production environment)** — manual gate with reviewers defined up front;
+   records who approved and when, as part of the release evidence.
+7. **Promotion with a release strategy** — recreate/rolling/blue-green/canary as decided by
+   `agents/07-devops/deployment-strategist.md`; if there is a DB migration, it runs expand-contract
+   coordinated with `agents/06-data/migration-engineer.md`
+   (`playbooks/expand-contract-db-migration.md`).
+8. **Health checks against a pre-agreed criterion** — error/latency/availability observed over a
+   defined window (e.g. 5–20 min of canary), never "it seems fine".
+9. **Decision: promote to 100% or revert** — mechanical application of the objective criterion; if
+   the health checks fail within the window, **automatic rollback** to the previous version,
+   without waiting for human confirmation.
+10. **Record** — version, decision and evidence written to the release/rollback runbook
+    (`playbooks/release-and-rollback.md`) and to the product's `STATE.md`
+    (`core/project-memory.md`); mandatory even when the release goes without incident.
 
-## Exemplo (pseudocódigo neutro, ilustrativo)
+## Example (neutral pseudocode, illustrative)
 
 ```yaml
-pipeline: cd-entrega
-gatilhos: [merge(integracao), tag(release), promocao_manual(producao)]
-estagios:
-  - job: confirmar-alvo
+pipeline: cd-delivery
+triggers: [merge(integration), tag(release), manual_promotion(production)]
+stages:
+  - job: confirm-target
     hard_block: true
   - job: deploy-dev
-    corre_em: [merge(integracao)]
-    depende_de: [confirmar-alvo]
+    runs_on: [merge(integration)]
+    depends_on: [confirm-target]
   - job: deploy-staging
-    corre_em: [tag(release)]
-    depende_de: [deploy-dev-saudavel]
-  - job: backup-producao
-    corre_em: [promocao_manual(producao)]
-    obrigatorio: true
-  - job: aprovacao-producao
-    tipo: gate-humano
-    depende_de: [backup-producao]
-  - job: promover-producao
-    estrategia: canario
-    depende_de: [aprovacao-producao]
+    runs_on: [tag(release)]
+    depends_on: [deploy-dev-healthy]
+  - job: production-backup
+    runs_on: [manual_promotion(production)]
+    mandatory: true
+  - job: production-approval
+    type: human-gate
+    depends_on: [production-backup]
+  - job: promote-production
+    strategy: canary
+    depends_on: [production-approval]
     health_check:
-      janela: 20m
-      criterio: erro < 1%
-  - job: decisao
-    se_saudavel: promover_100
-    senao: rollback_automatico
+      window: 20m
+      criterion: error < 1%
+  - job: decision
+    if_healthy: promote_100
+    otherwise: automatic_rollback
 ```
 
-## Relacionados
+## Related
 
 - `pipelines/README.md` · `pipelines/ci-quality.md` · `pipelines/ci-security.md`
 - `playbooks/release-and-rollback.md` · `checklists/go-live.md` · `playbooks/expand-contract-db-migration.md`

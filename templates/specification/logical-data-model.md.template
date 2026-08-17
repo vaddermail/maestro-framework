@@ -1,75 +1,74 @@
-# Modelo de Dados Lógico — {{nome-do-dominio-ou-modulo}}
+# Logical Data Model — {{domain-or-module-name}}
 
-> **Como usar:** instanciado pelo `agents/06-data/data-modeler.md` em F5, depois de existirem
-> regras de negócio e máquinas de estado. Fica em `product/04-specification/logical-data-model.md`.
-> **Agnóstico de motor de BD** — nada de tipos físicos concretos (isso é a derivação para modelo físico
-> em F6, depois de a stack estar decidida); aqui descrevem-se entidades, relações e invariantes.
+> **How to use:** instantiated by `agents/06-data/data-modeler.md` in F5, once business rules and
+> state machines exist. Lives at `product/04-specification/logical-data-model.md`.
+> **DB-engine agnostic** — no concrete physical types (that is the derivation to the physical model
+> in F6, after the stack is decided); here you describe entities, relationships and invariants.
 
-> **Estado:** rascunho
-> **Dono:** `agents/06-data/data-modeler.md`
-> **Fase:** F5 (lógico) · F6 (derivação física) · **Atualizado:** {{aaaa-mm-dd}}
-> **Satisfaz:** {{rn-nnn-que-este-modelo-impoe}}
-> **Consumidores:** `engenheiro-de-migracoes`, `especialista-de-indexes`, backend (F6), revisores
+> **Status:** draft
+> **Owner:** `agents/06-data/data-modeler.md`
+> **Phase:** F5 (logical) · F6 (physical derivation) · **Updated:** {{yyyy-mm-dd}}
+> **Satisfies:** {{br-nnn-this-model-enforces}}
+> **Consumers:** `migration-engineer`, `indexing-specialist`, backend (F6), reviewers
 
-## Entidades
+## Entities
 
-*Uma linha por entidade, nomes canónicos do `product/01-requirements/glossary.md`. O detalhe de
-atributos vai na secção seguinte.*
+*One line per entity, canonical names from `product/01-requirements/glossary.md`. Attribute detail
+goes in the next section.*
 
-| Entidade | Descrição | Atributos essenciais |
+| Entity | Description | Essential attributes |
 | --- | --- | --- |
-| {{nome-da-entidade}} | {{o-que-representa}} | {{lista-curta-dos-atributos-que-a-definem}} |
+| {{entity-name}} | {{what-it-represents}} | {{short-list-of-defining-attributes}} |
 
-## Atributos por entidade
+## Attributes per entity
 
-*Repetir por entidade. "Obrigatório?" decide `NOT NULL` explicitamente — não deixar a ambiguidade
-NULL-significa-ausente vs. NULL-significa-desconhecido por resolver.*
+*Repeat per entity. "Required?" decides `NOT NULL` explicitly — do not leave the
+NULL-means-absent vs. NULL-means-unknown ambiguity unresolved.*
 
-### {{nome-da-entidade}}
+### {{entity-name}}
 
-| Atributo | Tipo lógico | Obrigatório? | Notas |
+| Attribute | Logical type | Required? | Notes |
 | --- | --- | --- | --- |
-| {{nome-do-atributo}} | {{texto \| número \| data \| booleano \| enumeração \| referência}} | {{sim/não}} | {{regra-de-formato-precisao-ou-catalogo-de-origem}} |
+| {{attribute-name}} | {{text \| number \| date \| boolean \| enumeration \| reference}} | {{yes/no}} | {{format-precision-rule-or-source-catalog}} |
 
-## Relações
+## Relationships
 
-*Uma relação bidirecional guarda um lado como fonte; o outro deriva-se por consulta — nunca os dois
-como colunas editáveis em paralelo. Marcar sempre o lado canónico.*
+*A bidirectional relationship stores one side as the source; the other is derived by query — never
+both as editable columns in parallel. Always mark the canonical side.*
 
-| Origem | Relação | Destino | Cardinalidade | Lado canónico | Notas |
+| Source | Relationship | Target | Cardinality | Canonical side | Notes |
 | --- | --- | --- | --- | --- | --- |
-| {{entidade-a}} | {{nome-da-relacao}} | {{entidade-b}} | {{1:1 \| 1:N \| N:M}} | {{entidade-que-guarda-a-fk-ou-tabela-de-associacao}} | {{ex.-histórico-com-inicio-fim-em-vez-de-fk-simples}} |
+| {{entity-a}} | {{relationship-name}} | {{entity-b}} | {{1:1 \| 1:N \| N:M}} | {{entity-holding-the-fk-or-association-table}} | {{e.g.-history-with-start-end-instead-of-plain-fk}} |
 
-## Ciclos de vida como histórico
+## Lifecycles as history
 
-*Sempre que uma entidade desta lista tem estado que muda (ver `templates/specification/state-machine.md.template`),
-modelar como histórico com `início`/`fim` — o "atual" é o registo sem `fim`, nunca um campo
-sobrescrito. Se não há ciclos de vida relevantes aqui, dizê-lo.*
+*Whenever an entity on this list has state that changes (see `templates/specification/state-machine.md.template`),
+model it as history with `start`/`end` — the "current" one is the record without `end`, never an
+overwritten field. If there are no relevant lifecycles here, say so.*
 
-| Entidade | Tabela de histórico | O que representa o registo "atual" |
+| Entity | History table | What the "current" record represents |
 | --- | --- | --- |
-| {{entidade}} | {{nome-da-tabela-de-atribuicao-ou-historico}} | {{registo-sem-fim-ou-equivalente}} |
+| {{entity}} | {{assignment-or-history-table-name}} | {{record-without-end-or-equivalent}} |
 
-## Invariantes entre entidades
+## Cross-entity invariants
 
-*Catálogo numerado — cada invariante candidato a constraint na BD, com a prescrição de como se impõe
-e como se testa por violação nomeada.*
+*Numbered catalog — each invariant is a candidate for a DB constraint, with the prescription for how
+it is enforced and how it is tested per named violation.*
 
-| ID | Enunciado | Porquê | Prescrição de imposição |
+| ID | Statement | Why | Enforcement prescription |
 | --- | --- | --- | --- |
-| {{i-nnn}} | {{facto-que-nunca-pode-ser-falso}} | {{consequencia-de-violar-ou-defeito-de-origem}} | {{check \| unique-parcial \| fk \| not-null + guard-na-app}} |
+| {{i-nnn}} | {{fact-that-can-never-be-false}} | {{consequence-of-violating-or-origin-defect}} | {{check \| partial-unique \| fk \| not-null + app-guard}} |
 
-## Seeds de referência
+## Reference seeds
 
-*Catálogos (estados, categorias, prioridades) vivem em tabelas configuráveis, não em enums de código.
-Datas de seeds de demonstração são relativas a uma âncora (`hoje − N dias`), nunca absolutas — para o
-demo não envelhecer.*
+*Catalogs (statuses, categories, priorities) live in configurable tables, not in code enums. Demo
+seed dates are relative to an anchor (`today − N days`), never absolute — so the demo does not age.*
 
-| Catálogo | Valores de referência | Âncora de datas (se aplicável) |
+| Catalog | Reference values | Date anchor (if applicable) |
 | --- | --- | --- |
-| {{nome-do-catalogo}} | {{lista-de-valores}} | {{ex.-data-de-referencia-menos-n-dias}} |
+| {{catalog-name}} | {{list-of-values}} | {{e.g.-reference-date-minus-n-days}} |
 
-## Relacionados
+## Related
 
 - `agents/06-data/data-modeler.md` · `agents/01-requirements/business-rules-modeler.md`
 - `agents/06-data/migration-engineer.md` · `agents/06-data/indexing-specialist.md`

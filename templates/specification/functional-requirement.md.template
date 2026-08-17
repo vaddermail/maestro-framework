@@ -1,73 +1,74 @@
-# RF-{{nnn}} — {{titulo-do-requisito}}
+# FR-{{nnn}} — {{requirement-title}}
 
-> **Como usar:** um ficheiro (ou secção) por requisito funcional, instanciado pelo
-> `agents/01-requirements/requirements-engineer.md` em F2 a partir de um caso de utilização do MVP.
-> A secção "Critérios de aceitação" é preenchida a jusante pelo
-> `agents/01-requirements/acceptance-criteria-writer.md` — o Engenheiro deixa-a pronta, vazia.
-> Fica em `product/01-requirements/functional-requirements.md` (um `RF-nnn` por bloco, concatenados no
-> mesmo ficheiro; em projetos grandes pode desdobrar-se em `product/01-requirements/requisitos/RF-nnn.md`).
+> **How to use:** one file (or section) per functional requirement, instantiated by
+> `agents/01-requirements/requirements-engineer.md` in F2 from an MVP use case.
+> The "Acceptance criteria" section is filled in downstream by
+> `agents/01-requirements/acceptance-criteria-writer.md` — the Engineer leaves it ready, empty.
+> Lives at `product/01-requirements/functional-requirements.md` (one `FR-nnn` per block,
+> concatenated in the same file; large projects may split into
+> `product/01-requirements/requirements/FR-nnn.md`).
 
-> **Estado:** rascunho
-> **Dono:** `agents/01-requirements/requirements-engineer.md`
-> **Fase:** F2 · **Atualizado:** {{aaaa-mm-dd}}
-> **Satisfaz:** {{cu-nnn-do-caso-de-utilizacao}}
-> **Consumidores:** `redator-de-criterios-de-aceitacao`, `modelador-de-regras-de-negocio`, arquitetura (F3), especificação (F5), testes (F6/F7)
+> **Status:** draft
+> **Owner:** `agents/01-requirements/requirements-engineer.md`
+> **Phase:** F2 · **Updated:** {{yyyy-mm-dd}}
+> **Satisfies:** {{uc-nnn-of-the-use-case}}
+> **Consumers:** `acceptance-criteria-writer`, `business-rules-modeler`, architecture (F3), specification (F5), tests (F6/F7)
 
-## Descrição
+## Description
 
-*Forma obrigatória: "o sistema [faz X] quando [gatilho], para [ator]" — força ator, gatilho e
-resultado observável a aparecerem. Uma só capacidade; se precisa de "e" para duas capacidades
-independentes, são dois `RF`.*
+*Mandatory form: "the system [does X] when [trigger], for [actor]" — forces actor, trigger and
+observable outcome to appear. A single capability; if it needs an "and" for two independent
+capabilities, it is two `FR`s.*
 
-> O sistema {{acao-observavel}} quando {{gatilho}}, para {{ator}}.
+> The system {{observable-action}} when {{trigger}}, for {{actor}}.
 
-## Origem e prioridade
+## Origin and priority
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Caso(s) de utilização** | {{cu-nnn}} |
-| **Prioridade** | {{essencial \| importante \| desejável}} (herdada de `agents/00-discovery/prioritizer.md`) |
-| **Ator(es)** | {{persona-ou-papel}} |
+| **Use case(s)** | {{uc-nnn}} |
+| **Priority** | {{essential \| important \| nice-to-have}} (inherited from `agents/00-discovery/prioritizer.md`) |
+| **Actor(s)** | {{persona-or-role}} |
 
-## Regras de negócio associadas
+## Associated business rules
 
-*Um `RF` sem regras associadas é raro — a maioria pressupõe pelo menos uma. Preencher com os `RN-nnn`
-que este requisito respeita (ver `templates/specification/business-rules.md.template`).*
+*An `FR` without associated rules is rare — most presuppose at least one. Fill in with the `BR-nnn`
+this requirement respects (see `templates/specification/business-rules.md.template`).*
 
-| ID | Enunciado resumido |
+| ID | Summarized statement |
 | --- | --- |
-| {{rn-nnn}} | {{resumo-de-uma-linha}} |
+| {{br-nnn}} | {{one-line-summary}} |
 
-## Critérios de aceitação
+## Acceptance criteria
 
-*Dono: `redator-de-criterios-de-aceitacao`. Formato Dado/Quando/Então; um cenário testa um só
-comportamento. Cobrir caminho feliz + erros + limites — não só o feliz.*
+*Owner: `acceptance-criteria-writer`. Given/When/Then format; one scenario tests a single
+behavior. Cover happy path + errors + boundaries — not just the happy one.*
 
-- **Caminho feliz** — Dado {{condicao-inicial}}, Quando {{acao}}, Então {{resultado-observavel}}.
-- **Erro/limite** — Dado {{condicao-de-fronteira}}, Quando {{acao}}, Então {{resultado-de-rejeicao-ou-erro}}.
-- *(repetir uma linha por cenário relevante; um resultado ainda não decidido fica "a confirmar (P-nnn)")*
+- **Happy path** — Given {{initial-condition}}, When {{action}}, Then {{observable-outcome}}.
+- **Error/boundary** — Given {{boundary-condition}}, When {{action}}, Then {{rejection-or-error-outcome}}.
+- *(repeat one line per relevant scenario; an outcome not yet decided stays "to confirm (P-nnn)")*
 
-## Dependências
+## Dependencies
 
-*Outros `RF` que têm de existir ou estar concluídos antes deste, e o porquê.*
+*Other `FR`s that must exist or be complete before this one, and why.*
 
-| Depende de | Porquê |
+| Depends on | Why |
 | --- | --- |
-| {{rf-nnn}} | {{razao-da-dependencia}} |
+| {{fr-nnn}} | {{reason-for-the-dependency}} |
 
-## Fora de âmbito
+## Out of scope
 
-*O que este `RF` explicitamente não cobre, para não virar suposição de quem o lê depois — normalmente
-o que o `delimitador-de-mvp` cortou ou outro `RF` trata.*
+*What this `FR` explicitly does not cover, so it does not become an assumption for later readers —
+usually what the `mvp-scoper` cut or another `FR` handles.*
 
-- {{exclusao-explicita}}
+- {{explicit-exclusion}}
 
-## Notas
+## Notes
 
-*Decisões de fronteira já resolvidas com o utilizador (com data), ou lacunas ainda em aberto
-registadas como pergunta em `product/01-requirements/questions-and-answers.md`.*
+*Boundary decisions already settled with the user (with a date), or gaps still open recorded as a
+question in `product/01-requirements/questions-and-answers.md`.*
 
-## Relacionados
+## Related
 
 - `agents/01-requirements/requirements-engineer.md` · `agents/01-requirements/acceptance-criteria-writer.md`
 - `agents/01-requirements/business-rules-modeler.md` · `agents/01-requirements/glossary-curator.md`

@@ -1,71 +1,72 @@
-# Runbook — `{{nome-do-procedimento}}`
+# Runbook — `{{procedure-name}}`
 
-> **Como usar:** copia para `product/07-operations/runbooks/{{procedimento}}.md` (ou pasta equivalente do
-> componente afetado). Escreve para quem o vai correr sem contexto extra, a meio da noite — passos
-> exatos, sem improviso. Quem o corre em produção não deve adivinhar.
+> **How to use:** copy to `product/07-operations/runbooks/{{procedure}}.md` (or the equivalent
+> folder of the affected component). Write for someone running it with no extra context, in the
+> middle of the night — exact steps, no improvisation. Whoever runs it in production should not
+> have to guess.
 
-## Cabeçalho
+## Header
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| Procedimento | {{nome}} |
-| Sistema / componente | {{componente}} |
-| Última verificação | {{aaaa-mm-dd}} |
-| Dono | {{agente-ou-equipa}} |
+| Procedure | {{name}} |
+| System / component | {{component}} |
+| Last verified | {{yyyy-mm-dd}} |
+| Owner | {{agent-or-team}} |
 
-## Quando usar
+## When to use
 
-*O gatilho concreto — alerta, ticket, decisão planeada.*
+*The concrete trigger — alert, ticket, planned decision.*
 
-{{descricao-do-gatilho}}
+{{trigger-description}}
 
-## Pré-condições
+## Preconditions
 
-- [ ] {{acesso-necessario-ex-vpn-ligada}}
-- [ ] {{backup-recente-confirmado}}
-- [ ] {{janela-de-manutencao-se-aplicavel}}
+- [ ] {{required-access-e.g.-vpn-connected}}
+- [ ] {{recent-backup-confirmed}}
+- [ ] {{maintenance-window-if-applicable}}
 
-## Passos
+## Steps
 
-*Comandos-placeholder entre crases; substituir pelos reais do projeto antes de correr. Cada passo diz
-o que se espera ver, não só o comando.*
+*Placeholder commands in backticks; replace with the project's real ones before running. Each step
+says what you expect to see, not just the command.*
 
-1. {{passo-1-descricao}}
+1. {{step-1-description}}
    ```
-   {{comando-placeholder-1}}
+   {{placeholder-command-1}}
    ```
-2. {{passo-2-descricao}}
+2. {{step-2-description}}
    ```
-   {{comando-placeholder-2}}
+   {{placeholder-command-2}}
    ```
-3. {{passo-n-descricao}}
+3. {{step-n-description}}
    ```
-   {{comando-placeholder-n}}
+   {{placeholder-command-n}}
    ```
 
-## Verificação
+## Verification
 
-*Como confirmar que o procedimento funcionou — nunca "parece bem".*
+*How to confirm the procedure worked — never "looks fine".*
 
-| Verificação | Comando/consulta | Resultado esperado |
+| Check | Command/query | Expected result |
 | --- | --- | --- |
-| {{ex-servico-responde}} | `{{comando-placeholder}}` | {{resultado-esperado}} |
+| {{e.g.-service-responds}} | `{{placeholder-command}}` | {{expected-result}} |
 
-## Reversão
+## Rollback
 
-*Passos exatos para desfazer, se algo correr mal. Se não há reversão possível a partir de um certo
-ponto, dizê-lo aqui, de forma explícita.*
+*Exact steps to undo, if something goes wrong. If no rollback is possible past a certain point, say
+so here, explicitly.*
 
-1. {{passo-de-reversao-1}}
-2. {{passo-de-reversao-2}}
+1. {{rollback-step-1}}
+2. {{rollback-step-2}}
 
-## Escalamento e contactos
+## Escalation and contacts
 
-| Situação | Contactar | Como |
+| Situation | Contact | How |
 | --- | --- | --- |
-| {{procedimento-falha-a-meio}} | {{papel-ou-pessoa}} | {{canal-ex-telefone-slack}} |
+| {{procedure-fails-midway}} | {{role-or-person}} | {{channel-e.g.-phone-slack}} |
 
-## Relacionados
+## Related
 
 - `agents/07-devops/deployment-strategist.md` · `agents/06-data/backup-specialist.md`
 - `playbooks/release-and-rollback.md` · `checklists/go-live.md`

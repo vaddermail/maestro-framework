@@ -1,84 +1,85 @@
-# Sincronizar a framework num projeto existente
+# Syncing the framework in an existing project
 
-Um projeto copia a Maestro uma vez, no arranque (`workflows/W00-project-kickoff.md`); a
-framework-mãe continua a evoluir no seu próprio repositório, por SemVer (`_meta/VERSION.md`). Este
-playbook traz um projeto para uma versão mais recente — **deliberadamente, nunca automaticamente**.
-Executa-o o Orquestrador do projeto (`core/orchestrator.md`), com o utilizador a aprovar o salto
-de versão. A regra que torna a sincronização segura é uma só: **a cópia da framework num projeto é
-só-de-leitura** — extensões locais vivem em ficheiros do projeto (fora de `Maestro/`) ou
-promovem-se à mãe (`knowledge/README.md` §Como o conhecimento circula); nunca se edita a cópia.
+A project copies Maestro once, at kickoff (`workflows/W00-project-kickoff.md`); the upstream
+framework keeps evolving in its own repository, by SemVer (`_meta/VERSION.md`). This playbook
+brings a project up to a newer version — **deliberately, never automatically**. The project's
+Orchestrator (`core/orchestrator.md`) runs it, with the user approving the version jump. A single
+rule makes syncing safe: **a project's framework copy is read-only** — local extensions live in
+project files (outside `Maestro/`) or get promoted upstream (`knowledge/README.md` §How knowledge
+circulates); the copy is never edited.
 
-## Pré-condições
+## Preconditions
 
-- O `STATE.md` do projeto regista a versão da framework copiada (obrigatório desde
-  `START-HERE.md` §2.2). Se não regista, descobre-a primeiro (`Maestro/_meta/VERSION.md` da
-  cópia) e regista — não sincronizes sem saber de onde partes.
-- Working tree do projeto limpo (sem alterações por commitar) — a sincronização tem de ser um commit
-  isolado, revertível de uma vez.
-- Acesso à **release-alvo** da framework-mãe (o ZIP publicado por tag — a fonte canónica de
-  distribuição, já sanitizada pela lista `_meta/DO-NOT-DISTRIBUTE` da mãe) e ao registo de alterações
-  (`_meta/VERSION.md`).
+- The project's `STATE.md` records the copied framework version (mandatory since
+  `START-HERE.md` §2.2). If it does not, find it out first (the copy's `Maestro/_meta/VERSION.md`)
+  and record it — do not sync without knowing where you start from.
+- Clean project working tree (no uncommitted changes) — the sync must be an isolated commit,
+  revertible in one go.
+- Access to the upstream framework's **target release** (the ZIP published per tag — the canonical
+  distribution source, already sanitized by the upstream `_meta/DO-NOT-DISTRIBUTE` list) and to the
+  changelog (`_meta/VERSION.md`).
 
-## Passos
+## Steps
 
-1. **Ler o registo de alterações** da mãe entre a versão do projeto e a versão-alvo
-   (`_meta/VERSION.md`). Classificar o salto: PATCH/MINOR seguem este playbook; **MAJOR exige ler as
-   notas de rutura e avaliar impacto antes de continuar** — se o contrato entre agentes mudou
-   (protocolo de artefactos, ciclo de vida, template de agente), lista o que muda para ESTE projeto
-   e obtém o OK do utilizador.
-2. **Verificar que a cópia não foi editada localmente**: `diff -rq` entre a cópia do projeto e a
-   versão da mãe que o projeto diz ter. Se houver diferenças → **parar**. Para cada diferença,
-   decidir com o utilizador: promover à mãe (é uma melhoria geral — regista-a em
-   `FRAMEWORK-IMPROVEMENTS.md` e envia-a pelo `playbooks/report-framework-improvements.md`; a
-   incorporação segue a curadoria e `core/extensibility.md`) ou descartar (era uma edição
-   indevida — mas o atrito que a motivou merece, quase sempre, uma entrada no mesmo reporte: uma
-   edição local é o sinal mais forte de que a framework estorvou). Só continuar com a cópia
-   reconciliada.
-3. **Substituir a cópia** pelo conteúdo do ZIP da release-alvo (cópia integral com remoção do que
-   deixou de existir — ex.: extrair para pasta temporária e `rsync -a --delete`). É seguro porque,
-   pela regra acima, nada de específico do projeto vive dentro de `Maestro/`.
-4. **Correr a auto-verificação** da versão instalada: `Maestro/_meta/verify.sh`. Tem de
-   sair verde; se falhar, a cópia ficou corrompida — reverter (ver Reversão) e recomeçar.
-5. **Avaliar impacto nos artefactos do projeto**: instâncias antigas de templates **não se tocam**
-   (foram válidas quando escritas); portões/checklists novos aplicam-se ao trabalho **futuro**;
-   agentes novos ficam disponíveis sem cerimónia. Só há trabalho a fazer se o registo de alterações
-   o disser explicitamente (ex.: um MAJOR que renomeie artefactos).
-6. **Registar em `STATE.md`**: nova versão da framework, data, salto (de → para), e qualquer
-   decisão tomada nos passos 1–2.
-7. **Commit isolado** ("sincroniza Maestro X.Y.Z → A.B.C"), proposto ao utilizador.
+1. **Read the upstream changelog** between the project's version and the target version
+   (`_meta/VERSION.md`). Classify the jump: PATCH/MINOR follow this playbook; **MAJOR requires
+   reading the breaking-change notes and assessing impact before continuing** — if the contract
+   between agents changed (artifact protocol, lifecycle, agent template), list what changes for
+   THIS project and get the user's OK.
+2. **Check that the copy was not edited locally**: `diff -rq` between the project's copy and the
+   upstream version the project claims to have. If there are differences → **stop**. For each
+   difference, decide with the user: promote upstream (it is a general improvement — record it in
+   `FRAMEWORK-IMPROVEMENTS.md` and submit it via `playbooks/report-framework-improvements.md`;
+   incorporation follows curation and `core/extensibility.md`) or discard (it was an improper
+   edit — but the friction that motivated it almost always deserves an entry in the same report: a
+   local edit is the strongest signal that the framework got in the way). Only continue with the
+   copy reconciled.
+3. **Replace the copy** with the contents of the target release's ZIP (full copy with removal of
+   what no longer exists — e.g. extract to a temporary folder and `rsync -a --delete`). It is safe
+   because, by the rule above, nothing project-specific lives inside `Maestro/`.
+4. **Run the self-check** of the installed version: `Maestro/_meta/verify.sh`. It must come out
+   green; if it fails, the copy got corrupted — revert (see Rollback) and start over.
+5. **Assess impact on the project's artifacts**: old template instances are **not touched** (they
+   were valid when written); new gates/checklists apply to **future** work; new agents become
+   available without ceremony. There is only work to do if the changelog says so explicitly (e.g.
+   a MAJOR that renames artifacts).
+6. **Record in `STATE.md`**: new framework version, date, jump (from → to), and any decision made
+   in steps 1–2.
+7. **Isolated commit** ("sync Maestro X.Y.Z → A.B.C"), proposed to the user.
 
-**Deteção contínua de deriva:** entre sincronizações, qualquer sessão pode correr
-`bash Maestro/_meta/verify.sh --integridade` — compara a cópia com o manifesto
-`_meta/SHA256SUMS` da release de origem e acusa edições locais no momento, em vez de as deixar
-acumular até ao passo 2 da próxima sincronização.
+**Continuous drift detection:** between syncs, any session can run
+`bash Maestro/_meta/verify.sh --integridade` — it compares the copy against the origin release's
+`_meta/SHA256SUMS` manifest and flags local edits on the spot, instead of letting them pile up
+until step 2 of the next sync.
 
-## Alternativas de distribuição (equipas com Git maduro)
+## Distribution alternatives (teams with mature Git)
 
-A cópia por ZIP de release é o **default** (simples, sanitizada pela lista `_meta/DO-NOT-DISTRIBUTE`,
-sem exigir Git a quem arranca). Duas alternativas, com trade-offs honestos:
+Copying from a release ZIP is the **default** (simple, sanitized by the `_meta/DO-NOT-DISTRIBUTE`
+list, requiring no Git from whoever is starting out). Two alternatives, with honest trade-offs:
 
-- **Submodule pinado a tag** — integridade por hash nativa do Git e updates explícitos
-  (`git submodule update`); em troca, fricção operacional conhecida dos submodules e **sem
-  sanitização** (aponta ao repositório-mãe completo — só aceitável quando toda a equipa pode ver a
-  mãe).
-- **Subtree** — histórico único e updates por merge; mais simples no dia-a-dia do que o submodule,
-  mas mistura o histórico da framework com o do projeto e também **não é sanitizado**.
+- **Submodule pinned to a tag** — Git-native hash integrity and explicit updates
+  (`git submodule update`); in exchange, the well-known operational friction of submodules and
+  **no sanitization** (it points at the full upstream repository — acceptable only when the whole
+  team may see upstream).
+- **Subtree** — single history and updates by merge; simpler day-to-day than the submodule, but it
+  mixes the framework's history with the project's and is also **not sanitized**.
 
-Qualquer alternativa mantém as regras de sempre: cópia read-only, salto de versão deliberado,
-registo em `STATE.md`.
+Either alternative keeps the usual rules: read-only copy, deliberate version jump, record in
+`STATE.md`.
 
-## Reversão
+## Rollback
 
-O commit do passo 7 é a unidade de reversão: `git revert` (ou repor a pasta da versão anterior a
-partir do histórico) devolve o projeto ao estado exato pré-sincronização. Nenhum artefacto do
-projeto foi tocado pelos passos 1–4, por isso a reversão não tem efeitos colaterais.
+The step 7 commit is the unit of rollback: `git revert` (or restoring the previous version's
+folder from history) returns the project to the exact pre-sync state. No project artifact was
+touched by steps 1–4, so the rollback has no side effects.
 
-## Relacionados
+## Related
 
-- `_meta/VERSION.md` — SemVer da framework e registo de alterações.
-- `workflows/W00-project-kickoff.md` — onde a cópia inicial acontece e a versão se regista.
-- `core/extensibility.md` — como se estende a framework sem editar o existente.
-- `knowledge/README.md` — o circuito que promove lições do projeto à mãe.
-- `playbooks/add-an-agent.md` — o caminho certo quando a "edição local" era um agente novo.
-- `playbooks/report-framework-improvements.md` — o destino das edições locais que eram melhorias.
-- `checklists/pre-merge.md` — aplica-se ao commit de sincronização como a qualquer outro.
+- `_meta/VERSION.md` — the framework's SemVer and changelog.
+- `workflows/W00-project-kickoff.md` — where the initial copy happens and the version is recorded.
+- `core/extensibility.md` — how to extend the framework without editing what exists.
+- `knowledge/README.md` — the circuit that promotes project lessons upstream.
+- `playbooks/add-an-agent.md` — the right path when the "local edit" was a new agent.
+- `playbooks/report-framework-improvements.md` — the destination of local edits that were
+  improvements.
+- `checklists/pre-merge.md` — applies to the sync commit like any other.

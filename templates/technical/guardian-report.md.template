@@ -1,64 +1,64 @@
-# Relatório de Guardião — `{{dimensao}}`
+# Guardian Report — `{{dimension}}`
 
-> **Como usar:** copia para `product/99-records/guardians/{{dimensao}}-AAAA-MM-DD.md`, um ficheiro
-> por ciclo. Todo o `agents/13-guardians/` usa este molde. Um relatório sem números e sem estados
-> terminais **não fecha o ciclo** — formato definido em `agents/13-guardians/README.md` §Cycle report format —
-> relatório do ciclo.
+> **How to use:** copy to `product/99-records/guardians/{{dimension}}-YYYY-MM-DD.md`, one file
+> per cycle. All of `agents/13-guardians/` uses this template. A report without numbers and without
+> terminal states **does not close the cycle** — format defined in
+> `agents/13-guardians/README.md` §Cycle report format.
 
-## Cabeçalho
+## Header
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| Guardião (dimensão) | {{ex-guardiao-de-seguranca}} |
-| Janela do ciclo | {{data-inicio}} a {{data-fim}} |
-| Cadência | {{diaria-semanal-mensal-por-evento}} |
-| Ciclo anterior | `{{caminho-para-relatorio-anterior}}` |
+| Guardian (dimension) | {{e.g.-security-guardian}} |
+| Cycle window | {{start-date}} to {{end-date}} |
+| Cadence | {{daily-weekly-monthly-per-event}} |
+| Previous cycle | `{{path-to-previous-report}}` |
 
-## Achados por estado terminal
+## Findings by terminal state
 
-*Todo o achado do ciclo termina resolvido, mitigado (risco residual aceite pelo utilizador) ou
-não-aplicável (justificado). Nada fica "em análise" sem dono e sem prazo.*
+*Every finding of the cycle ends resolved, mitigated (residual risk accepted by the user) or
+not-applicable (justified). Nothing stays "under analysis" without an owner and a deadline.*
 
-### Resolvido
+### Resolved
 
-| Achado | Ação aplicada | Validação |
+| Finding | Action applied | Validation |
 | --- | --- | --- |
-| {{ex-cve-2026-x-na-lib-y}} | {{patch-aplicado}} | {{teste-de-regressao-verde}} |
+| {{e.g.-cve-2026-x-in-lib-y}} | {{patch-applied}} | {{regression-test-green}} |
 
-### Mitigado (risco residual aceite)
+### Mitigated (residual risk accepted)
 
-| Achado | Mitigação | Aceite por | Data | Revisão prevista |
+| Finding | Mitigation | Accepted by | Date | Planned review |
 | --- | --- | --- | --- | --- |
-| {{achado}} | {{mitigacao-aplicada}} | {{utilizador}} | {{aaaa-mm-dd}} | {{quando-reavaliar}} |
+| {{finding}} | {{mitigation-applied}} | {{user}} | {{yyyy-mm-dd}} | {{when-to-reassess}} |
 
-### Não-aplicável
+### Not-applicable
 
-| Achado | Porque não se aplica |
+| Finding | Why it does not apply |
 | --- | --- |
-| {{achado}} | {{justificacao}} |
+| {{finding}} | {{justification}} |
 
-## Ações aplicadas e como foram validadas
+## Actions applied and how they were validated
 
-*Nunca "aplicado" sem prova — o ciclo é analisa→planeia→aplica→valida→documenta.*
+*Never "applied" without proof — the cycle is analyze→plan→apply→validate→document.*
 
-| Ação | Validação real (nunca "parece bem") |
+| Action | Real validation (never "looks fine") |
 | --- | --- |
-| {{acao}} | {{evidencia-concreta}} |
+| {{action}} | {{concrete-evidence}} |
 
-## O que subiu ao utilizador
+## What was escalated to the user
 
-*Só o utilizador aceita risco residual e decide âmbito/dinheiro/dados/produção — o guardião
-recomenda, não decide (`MANIFESTO.md` §8).*
+*Only the user accepts residual risk and decides scope/money/data/production — the guardian
+recommends, it does not decide (`MANIFESTO.md` §8).*
 
-- {{decisao-pendente-1-com-opcoes-e-recomendacao-por-defeito}}
+- {{pending-decision-1-with-options-and-default-recommendation}}
 
-## Tendência face ao ciclo anterior
+## Trend versus the previous cycle
 
-| Métrica | Ciclo anterior | Este ciclo | Direção |
+| Metric | Previous cycle | This cycle | Direction |
 | --- | --- | --- | --- |
-| {{ex-numero-de-achados-abertos}} | {{valor}} | {{valor}} | {{melhor-pior-igual}} |
+| {{e.g.-number-of-open-findings}} | {{value}} | {{value}} | {{better-worse-same}} |
 
-## Relacionados
+## Related
 
 - `agents/13-guardians/README.md` · `core/lifecycle.md`
 - `workflows/W09-continuous-operation.md` · `loops/README.md`

@@ -1,101 +1,104 @@
-# Playbook — Adicionar um Agente
+# Playbook — Add an Agent
 
-Estender a framework com um agente novo **por adição, nunca por cirurgia** aos existentes (princípio
-open-closed — `core/extensibility.md`). Este é o passo-a-passo que o `agents/_template/AGENT-TEMPLATE.md`
-e a `core/extensibility.md` descrevem; segui-lo garante que o novo agente fica descobrível pelo
-Orquestrador sem partir nada.
+Extend the framework with a new agent **by addition, never by surgery** on the existing ones
+(open-closed principle — `core/extensibility.md`). This is the step-by-step that
+`agents/_template/AGENT-TEMPLATE.md` and `core/extensibility.md` describe; following it guarantees
+the new agent becomes discoverable by the Orchestrator without breaking anything.
 
-**Quando se executa:** quando aparece uma **responsabilidade que nenhum agente existente tem** e que
-não cabe como secção de uma ficha existente. **Quem:** quem estende a framework (tipicamente numa
-sessão de manutenção da própria Maestro), em branch dedicado e PR verde
+**When it runs:** when a **responsibility no existing agent has** appears and it does not fit as a
+section of an existing agent spec. **Who:** whoever extends the framework (typically in a
+maintenance session of Maestro itself), on a dedicated branch with a green PR
 (`knowledge/permanent-rules.md` §8).
 
-## Pré-condições
+## Preconditions
 
-- [ ] A necessidade está descrita numa frase ("uma linha" ao estilo do `_meta/INVENTORY.md`).
-- [ ] Sabes a **categoria** de destino (`agents/NN-categoria/`) e a **fase** dominante do agente
+- [ ] The need is described in one sentence (a "one-liner" in the style of `_meta/INVENTORY.md`).
+- [ ] You know the target **category** (`agents/NN-category/`) and the agent's dominant **phase**
       (`core/lifecycle.md`).
 
-## Passos
+## Steps
 
-### 1. Confirmar que é mesmo um agente novo
-**Faz:** varrer o `_meta/INVENTORY.md` e o README da categoria à procura de sobreposição. Testar a
-regra do MANIFESTO: se a responsabilidade precisa de "e" para se descrever (duas coisas independentes),
-são dois agentes; se cabe como secção de uma ficha existente, **não** é agente novo.
-**Verifica:** consegues nomear a **única** responsabilidade numa frase e apontar por que nenhum agente
-atual a cobre.
-**Se falhar:** se há sobreposição com um agente existente, **para** — ou a necessidade é uma clarificação
-na ficha existente (PATCH, não novo agente), ou a fronteira entre os dois tem de ser redesenhada antes
-de avançar. Nunca criar um agente que duplica responsabilidade (`MANIFESTO.md` §1,
-`knowledge/ai-pitfalls.md` §7).
+### 1. Confirm it really is a new agent
+**Do:** sweep `_meta/INVENTORY.md` and the category README looking for overlap. Apply the
+MANIFESTO's rule: if the responsibility needs an "and" to be described (two independent things),
+it is two agents; if it fits as a section of an existing agent spec, it is **not** a new agent.
+**Verify:** you can name the **single** responsibility in one sentence and point out why no current
+agent covers it.
+**If it fails:** if there is overlap with an existing agent, **stop** — either the need is a
+clarification in the existing spec (PATCH, not a new agent), or the boundary between the two must
+be redrawn before moving on. Never create an agent that duplicates responsibility (`MANIFESTO.md`
+§1, `knowledge/ai-pitfalls.md` §7).
 
-### 2. Copiar o template para a categoria certa
-**Faz:** copiar `agents/_template/AGENT-TEMPLATE.md` para `agents/NN-categoria/nome-do-agente.md`
-(nome em kebab-case PT-PT, alias internacional no título se existir — `_meta/STYLE-GUIDE.md`).
-**Verifica:** o ficheiro existe no sítio certo com o nome na convenção.
-**Se falhar:** se a categoria certa não existe, é preciso **adicionar uma categoria** primeiro (nova
-pasta + README + entradas nos índices — `core/extensibility.md`), não forçar o agente numa categoria
-que não é a sua.
+### 2. Copy the template into the right category
+**Do:** copy `agents/_template/AGENT-TEMPLATE.md` to `agents/NN-category/agent-name.md`
+(kebab-case name, international alias in the title if one exists — `_meta/STYLE-GUIDE.md`).
+**Verify:** the file exists in the right place with a name following the convention.
+**If it fails:** if the right category does not exist, you must **add a category** first (new
+folder + README + index entries — `core/extensibility.md`), not force the agent into a category
+that is not its own.
 
-### 3. Preencher **todas** as secções
-**Faz:** completar Identificação · Objetivo · Quando inicia · Quando termina · Inputs · Outputs ·
-Perguntas ao utilizador · Regras · Limitações · Workflow · Exemplos · Boas práticas · Anti-padrões ·
-Interações · Critérios de pronto. Nenhuma é opcional; se uma não se aplica, escrever "Não aplicável,
-porque …". Declarar inputs/outputs em termos de **artefactos existentes** (`core/artifact-protocol.md`);
-escolher a camada de modelo em `core/model-routing.md`.
-**Verifica:** nenhuma secção ficou com texto de *placeholder* do template; as **Limitações** nomeiam o
-agente vizinho responsável por cada coisa excluída (fronteiras explícitas, sem sobreposição).
-**Se falhar:** uma secção que não consegues preencher é sinal de que a responsabilidade ainda está
-difusa — voltar ao passo 1.
+### 3. Fill in **all** the sections
+**Do:** complete Identification · Objective · When it starts · When it ends · Inputs · Outputs ·
+Questions to the user · Rules · Limitations · Workflow · Examples · Best practices · Anti-patterns ·
+Interactions · Done criteria. None is optional; if one does not apply, write "Not applicable,
+because …". Declare inputs/outputs in terms of **existing artifacts** (`core/artifact-protocol.md`);
+pick the model tier in `core/model-routing.md`.
+**Verify:** no section still has *placeholder* text from the template; the **Limitations** name the
+neighboring agent responsible for each excluded item (explicit boundaries, no overlap).
+**If it fails:** a section you cannot fill in is a sign the responsibility is still fuzzy — go back
+to step 1.
 
-### 4. Tratar artefactos novos (se os houver)
-**Faz:** se o agente **cria** um artefacto que ainda não existe, acrescentá-lo ao
-`core/artifact-protocol.md` como **linha nova** (nunca alterar as linhas existentes).
-**Verifica:** o artefacto novo tem dono, localização e consumidores declarados; os existentes ficaram
-intactos.
-**Se falhar:** se parece preciso **alterar** um artefacto existente, isso é uma mudança de contrato
-(MAJOR — passo 7 de exceção da `core/extensibility.md`), não um simples "adicionar agente".
+### 4. Handle new artifacts (if any)
+**Do:** if the agent **creates** an artifact that does not yet exist, add it to
+`core/artifact-protocol.md` as a **new row** (never change the existing rows).
+**Verify:** the new artifact has an owner, a location and declared consumers; the existing ones
+remained intact.
+**If it fails:** if it seems necessary to **change** an existing artifact, that is a contract change
+(MAJOR — the exception path of step 7 in `core/extensibility.md`), not a simple "add an agent".
 
-### 5. Registar nos índices **no mesmo passo**
-**Faz:** adicionar a linha do agente ao README da categoria (`agents/NN-categoria/README.md`) **e** ao
-`_meta/INVENTORY.md`, com a mesma "uma linha". Se o agente entra num workflow, acrescentar o passo no
-workflow respetivo como **passo novo**, sem reordenar os existentes salvo razão registada.
-**Verifica:** o agente aparece nos **dois** índices com descrições coerentes entre si; registar = existir
-(`core/extensibility.md`). Um agente fora do inventário é invisível ao Orquestrador.
-**Se falhar:** se só ficou num índice, o agente fica meio-registado — corrigir antes de fechar (é a
-causa clássica de cross-refs partidas).
+### 5. Register in the indexes **in the same step**
+**Do:** add the agent's row to the category README (`agents/NN-category/README.md`) **and** to
+`_meta/INVENTORY.md`, with the same one-liner. If the agent joins a workflow, add the step in the
+respective workflow as a **new step**, without reordering the existing ones unless a reason is
+recorded.
+**Verify:** the agent appears in **both** indexes with mutually consistent descriptions;
+registering = existing (`core/extensibility.md`). An agent outside the inventory is invisible to
+the Orchestrator.
+**If it fails:** if it only landed in one index, the agent is half-registered — fix it before
+closing (it is the classic cause of broken cross-refs).
 
-### 6. Verificar as referências cruzadas
-**Faz:** confirmar que **todos** os caminhos citados na ficha nova existem no `_meta/INVENTORY.md`, e
-que as **Interações** declaradas batem certo com as fichas dos agentes vizinhos (a montante/jusante/
-paralelo). Confirmar que **nenhuma ficha existente foi editada** para acomodar o novo.
-**Verifica:** `grep` dos caminhos citados contra o inventário não deixa nenhum órfão; `git diff` mostra
-**apenas** ficheiros novos + as adições aos índices/protocolo, nunca alterações a fichas de agentes
-existentes.
-**Se falhar:** se a adição exigiu editar outra ficha, o Orquestrador ou o template, **o desenho está
-errado** — voltar ao passo 1 (`core/extensibility.md`: "o que nunca é preciso").
+### 6. Check the cross-references
+**Do:** confirm that **all** paths cited in the new spec exist in `_meta/INVENTORY.md`, and that
+the declared **Interactions** line up with the specs of the neighboring agents (upstream/
+downstream/parallel). Confirm that **no existing spec was edited** to accommodate the new one.
+**Verify:** a `grep` of the cited paths against the inventory leaves no orphan; `git diff` shows
+**only** new files + the additions to the indexes/protocol, never changes to existing agent
+specs.
+**If it fails:** if the addition required editing another spec, the Orchestrator or the template,
+**the design is wrong** — go back to step 1 (`core/extensibility.md`: "what is never needed").
 
-### 7. Bump de versão da framework
-**Faz:** incrementar a versão **MINOR** em `_meta/VERSION.md` (novo agente = extensão aditiva) e
-registar a entrada no changelog da framework.
-**Verifica:** `_meta/VERSION.md` reflete a nova versão MINOR com a linha do agente adicionado.
-**Se falhar:** se a mudança afinal quebrou um contrato entre agentes, não é MINOR — é MAJOR, e precisa
-da justificação escrita e do caminho expand-contract da `core/extensibility.md`.
+### 7. Bump the framework version
+**Do:** increment the **MINOR** version in `_meta/VERSION.md` (new agent = additive extension) and
+record the entry in the framework changelog.
+**Verify:** `_meta/VERSION.md` reflects the new MINOR version with the added agent's line.
+**If it fails:** if the change turns out to break a contract between agents, it is not MINOR — it
+is MAJOR, and needs the written justification and the expand-contract path of
+`core/extensibility.md`.
 
-## Reversão
+## Rollback
 
-Adição pura é trivialmente reversível: remover o ficheiro do agente e as **duas** linhas de índice
-(README da categoria + inventário), a linha de artefacto (se criada) e o bump de VERSÃO — nada mais foi
-tocado, por construção. Se um agente deixar de fazer sentido mais tarde, **não se apaga às cegas**:
-marca-se `obsoleto` no topo com apontador para o substituto e sai dos índices ativos
-(`core/extensibility.md` §Deprecating).
+Pure addition is trivially reversible: remove the agent's file and the **two** index rows
+(category README + inventory), the artifact row (if created) and the VERSION bump — nothing else
+was touched, by construction. If an agent stops making sense later, **it is not deleted blindly**:
+mark it `obsolete` at the top with a pointer to its replacement and take it out of the active
+indexes (`core/extensibility.md` §Deprecating).
 
-## Relacionados
+## Related
 
-- `agents/_template/AGENT-TEMPLATE.md` — o molde a copiar e preencher por inteiro.
-- `core/extensibility.md` — porque a adição é segura e o que nunca é preciso tocar.
-- `_meta/INVENTORY.md` · `agents/README.md` — os índices onde registar = existir.
-- `core/artifact-protocol.md` — onde se declaram artefactos novos (por adição).
-- `_meta/VERSION.md` — o bump MINOR e o changelog da framework.
-- `core/model-routing.md` — a camada de modelo do agente novo.
-- `MANIFESTO.md` — um agente, uma responsabilidade (o teste do passo 1).
+- `agents/_template/AGENT-TEMPLATE.md` — the mold to copy and fill in completely.
+- `core/extensibility.md` — why the addition is safe and what never needs touching.
+- `_meta/INVENTORY.md` · `agents/README.md` — the indexes where registering = existing.
+- `core/artifact-protocol.md` — where new artifacts are declared (by addition).
+- `_meta/VERSION.md` — the MINOR bump and the framework changelog.
+- `core/model-routing.md` — the new agent's model tier.
+- `MANIFESTO.md` — one agent, one responsibility (the test in step 1).

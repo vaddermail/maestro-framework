@@ -1,60 +1,61 @@
-# Pré-Merge
+# Pre-Merge
 
-Corre antes de qualquer merge para o ramo de integração — a evidência do portão P6 por fatia
-(`core/quality-gates.md`). Complementa `checklists/pr-review.md` (a qualidade e correção
-do código) com o estado do repositório e do pipeline: sem isto verde, não se integra.
+Runs before any merge into the integration branch — the P6 gate evidence per slice
+(`core/quality-gates.md`). It complements `checklists/pr-review.md` (the quality and correctness
+of the code) with the state of the repository and the pipeline: without this green, nothing is
+integrated.
 
-## Qualidade automática
+## Automated quality
 
-- [ ] Lint sem erros nem avisos novos introduzidos pela mudança.
-- [ ] Typecheck sem erros, no frontend **e** no backend, corridos **separadamente**
+- [ ] Lint with no errors and no new warnings introduced by the change.
+- [ ] Typecheck with no errors, on the frontend **and** the backend, run **separately**
       (`knowledge/permanent-rules.md` §7).
-- [ ] Build de produção conclui sem erros.
+- [ ] Production build completes without errors.
 
-## Testes
+## Tests
 
-- [ ] Testes do frontend correm e passam, isolados do backend
+- [ ] Frontend tests run and pass, isolated from the backend
       (`agents/04-frontend/frontend-test-engineer.md`).
-- [ ] Testes do backend correm e passam, isolados do frontend.
-- [ ] Testes cobrem a lógica de risco tocada (regras de negócio, autorização, reversibilidade) — não
-      só o caminho feliz.
-- [ ] Nenhum teste foi desativado, apagado ou enfraquecido para "fazer passar"; a causa foi corrigida,
-      nunca o detetor (`loops/L02-failing-tests.md`).
+- [ ] Backend tests run and pass, isolated from the frontend.
+- [ ] Tests cover the risk logic touched (business rules, authorization, reversibility) — not
+      just the happy path.
+- [ ] No test was disabled, deleted or weakened to "make it pass"; the cause was fixed,
+      never the detector (`loops/L02-failing-tests.md`).
 
-## Revisão
+## Review
 
-- [ ] Revisão feita por alguém que não é o autor da alteração — `checklists/pr-review.md`
-      cumprida.
-- [ ] Achados da revisão resolvidos ou explicitamente aceites, com o porquê registado.
+- [ ] Review done by someone who is not the author of the change — `checklists/pr-review.md`
+      satisfied.
+- [ ] Review findings resolved or explicitly accepted, with the why recorded.
 
-## Segredos e segurança
+## Secrets and security
 
-- [ ] Diff varrido — sem chaves, passwords, tokens ou credenciais (`playbooks/secrets-management.md`).
-- [ ] Nenhum ficheiro de configuração local/segredo (`.env` ou equivalente) staged por engano.
-- [ ] Dependências novas sem CVE crítico/alto conhecido por tratar
+- [ ] Diff swept — no keys, passwords, tokens or cnetworkntials (`playbooks/secrets-management.md`).
+- [ ] No local config/secret file (`.env` or equivalent) staged by mistake.
+- [ ] New dependencies with no known critical/high CVE left unaddressed
       (`agents/09-security/dependency-analyst.md`).
 
-## Reversibilidade
+## Reversibility
 
-- [ ] A mudança tem caminho de reversão claro: revert simples, flag, ou migração com plano de down
+- [ ] The change has a clear reversal path: simple revert, flag, or migration with a down plan
       (`knowledge/permanent-rules.md` §3).
-- [ ] Alteração de esquema de BD é aditiva (expand) ou já entrou na contração planeada — nunca as duas
-      no mesmo passo (`playbooks/expand-contract-db-migration.md`).
-- [ ] Mudança de risco fica atrás de flag/kill-switch quando o rollback por redeploy é lento
+- [ ] DB schema change is additive (expand) or already in the planned contraction — never both
+      in the same step (`playbooks/expand-contract-db-migration.md`).
+- [ ] Risky change sits behind a flag/kill-switch when rollback by networkploy is slow
       (`modules/feature-flags.md`).
 
-## Memória e documentação
+## Memory and documentation
 
-- [ ] `STATE.md` atualizado com o que mudou.
-- [ ] Documentação ou ajuda ao utilizador sincronizada, se a mudança afeta comportamento visível
+- [ ] `STATE.md` updated with what changed.
+- [ ] Documentation or user help synchronized, if the change affects visible behavior
       (`agents/11-documentation/user-help-writer.md`).
-- [ ] `CHANGELOG.md` atualizado, se for um marco.
+- [ ] `CHANGELOG.md` updated, if it is a milestone.
 
-## Relacionados
+## Related
 
-- `checklists/pr-review.md` — a qualidade do código que este portão pressupõe.
-- `checklists/definition-of-done.md` — a definição de pronto por alteração de código.
-- `core/quality-gates.md` — o portão P6 que esta checklist evidencia.
-- `pipelines/ci-quality.md` — a automação que corre estes itens.
-- `playbooks/secrets-management.md` — o detalhe do varrimento de segredos.
-- `knowledge/permanent-rules.md` — reversibilidade, testes e disciplina de Git.
+- `checklists/pr-review.md` — the code quality this gate presumes.
+- `checklists/definition-of-done.md` — the definition of done per code change.
+- `core/quality-gates.md` — the P6 gate this checklist evidences.
+- `pipelines/ci-quality.md` — the automation that runs these items.
+- `playbooks/secrets-management.md` — the secrets sweep detail.
+- `knowledge/permanent-rules.md` — reversibility, tests and Git discipline.

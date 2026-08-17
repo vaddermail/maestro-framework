@@ -1,67 +1,67 @@
-# Ideia
+# Idea
 
-> **Como usar:** estrutura a ideia bruta do utilizador numa descrição testável — o ponto de partida
-> que toda a descoberta (F1) consome. Instanciado pelo `agents/00-discovery/idea-analyst.md`,
-> logo a seguir a F0. Fica em `product/00-discovery/idea.md`.
+> **How to use:** structures the user's raw idea into a testable description — the starting point
+> all of discovery (F1) consumes. Instantiated by `agents/00-discovery/idea-analyst.md`,
+> right after F0. Lives at `product/00-discovery/idea.md`.
 
-> **Estado:** rascunho
-> **Dono:** `agents/00-discovery/idea-analyst.md`
-> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
-> **Consumidores:** todos os agentes de F1; base de F2
+> **Status:** draft
+> **Owner:** `agents/00-discovery/idea-analyst.md`
+> **Phase:** F1 · **Updated:** {{yyyy-mm-dd}}
+> **Consumers:** all F1 agents; foundation for F2
 
-## Conceito (uma frase)
+## Concept (one sentence)
 
-*Força a ideia a caber numa frase — se não couber, há duas ideias por separar.*
+*Forces the idea to fit in one sentence — if it doesn't fit, there are two ideas to separate.*
 
-{{conceito-numa-frase}}
+{{concept-in-one-sentence}}
 
-## Para quem
+## For whom
 
-*Público aparente — quem parece beneficiar, antes de qualquer stakeholder mapeado formalmente.*
+*Apparent audience — who seems to benefit, before any formally mapped stakeholder.*
 
-{{publico-aparente}}
+{{apparent-audience}}
 
-## Porquê agora
+## Why now
 
-*O que muda para que valha a pena construir isto agora e não noutra altura (janela de mercado,
-obrigação nova, dor recente, restrição a desaparecer).*
+*What changes so that building this is worth it now and not at another time (market window,
+new obligation, recent pain, constraint about to disappear).*
 
-{{porque-agora}}
+{{why-now}}
 
-## É / Não é
+## Is / Is not
 
-| É | Não é (ainda) |
+| Is | Is not (yet) |
 | --- | --- |
-| {{o-que-e}} | {{o-que-nao-e}} |
+| {{what-it-is}} | {{what-it-is-not}} |
 
-## Problema aparente
+## Apparent problem
 
-*Esboço apenas — aprofundado a seguir em `problema.md`.*
+*Sketch only — deepened next in `problem.md`.*
 
-{{problema-aparente}}
+{{apparent-problem}}
 
-## Valor aparente
+## Apparent value
 
-{{valor-aparente-para-quem-usa}}
+{{apparent-value-for-whoever-uses-it}}
 
-## Pressupostos e hipóteses a testar
+## Assumptions and hypotheses to test
 
-*Tudo o que a ideia assume em silêncio (quem paga, escala, plataforma, restrições legais) vira aqui
-um pressuposto explícito, marcado "a confirmar" — nunca assumido como facto.*
+*Everything the idea silently assumes (who pays, scale, platform, legal constraints) becomes an
+explicit assumption here, marked "to confirm" — never assumed as fact.*
 
-| Pressuposto / hipótese | Como se testa | Estado |
+| Assumption / hypothesis | How to test it | Status |
 | --- | --- | --- |
-| {{pressuposto-1}} | {{como-testar}} | a confirmar |
+| {{assumption-1}} | {{how-to-test}} | to confirm |
 
-## Perguntas-âncora
+## Anchor questions
 
-*O que, por responder, trava toda a descoberta seguinte. Registo completo em
+*What, while unanswered, blocks all the discovery that follows. Full log in
 `product/01-requirements/questions-and-answers.md`.*
 
-- (P-{{nnn}}) {{pergunta}}
+- (P-{{nnn}}) {{question}}
 
-## Relacionados
+## Related
 
 - `agents/00-discovery/idea-analyst.md` · `agents/00-discovery/README.md`
-- `templates/discovery/problem.md.template` — aprofunda o problema aqui esboçado.
+- `templates/discovery/problem.md.template` — deepens the problem sketched here.
 - `core/question-engine.md` · `core/artifact-protocol.md`

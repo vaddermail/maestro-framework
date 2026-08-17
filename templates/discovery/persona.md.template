@@ -1,53 +1,53 @@
-# Persona — {{nome-da-persona}}
+# Persona — {{persona-name}}
 
-> **Como usar:** um ficheiro por persona (arquétipo de utilizador por comportamento, não por cargo).
-> Instanciado pelo `agents/00-discovery/persona-builder.md` a partir de `stakeholders.md`.
-> Fica em `product/00-discovery/personas/{{nome-da-persona-em-kebab}}.md` — um ficheiro por persona.
+> **How to use:** one file per persona (a user archetype by behavior, not by job title).
+> Instantiated by `agents/00-discovery/persona-builder.md` from `stakeholders.md`.
+> Lives at `product/00-discovery/personas/{{persona-name-in-kebab}}.md` — one file per persona.
 
-> **Estado:** rascunho
-> **Dono:** `agents/00-discovery/persona-builder.md`
-> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
-> **Consumidores:** `modelador-de-casos-de-utilizacao`, `investigador-de-ux`, `revisor-de-ux`
+> **Status:** draft
+> **Owner:** `agents/00-discovery/persona-builder.md`
+> **Phase:** F1 · **Updated:** {{yyyy-mm-dd}}
+> **Consumers:** `use-case-modeler`, `ux-researcher`, `ux-reviewer`
 
-## Frase-âncora
+## Anchor sentence
 
-*A tensão central da persona numa frase ("quero X, mas tenho de Y") — é o que os revisores de UX vão
-testar contra cada decisão de desenho.*
+*The persona's central tension in one sentence ("I want X, but I have to Y") — it is what the UX
+reviewers will test against every design decision.*
 
-{{frase-de-tensao}}
+{{tension-sentence}}
 
-## Objetivo principal
+## Main goal
 
-{{objetivo}} *(observado / suposto)*
+{{goal}} *(observed / assumed)*
 
-## Dores atuais
+## Current pains
 
-*Ligadas a `problema.md` — nunca inventadas. O que for suposição marca-se "a validar".*
+*Linked to `problem.md` — never invented. Whatever is an assumption gets marked "to validate".*
 
-- {{dor-1}} *(observado / suposto)*
+- {{pain-1}} *(observed / assumed)*
 
-## Contexto de utilização
+## Usage context
 
-*É daqui que sai a exigência de mobile-first ou de acessibilidade, mais tarde — não de preferência
-estética.*
+*This is where the demand for mobile-first or accessibility comes from, later — not from aesthetic
+preference.*
 
-| Dimensão | Descrição |
+| Dimension | Description |
 | --- | --- |
-| Dispositivo | {{dispositivo}} |
-| Ambiente | {{ambiente-ruido-pressa-luvas-interrupcoes}} |
-| Frequência de uso | {{frequencia}} |
+| Device | {{device}} |
+| Environment | {{environment-noise-hurry-gloves-interruptions}} |
+| Frequency of use | {{frequency}} |
 
-## Literacia digital
+## Digital literacy
 
-{{nivel-de-a-vontade-com-tecnologia}}
+{{comfort-level-with-technology}}
 
-## Critério de sucesso pessoal
+## Personal success criterion
 
-*O que, para esta pessoa — não para a organização — conta como "correu bem hoje".*
+*What, for this person — not for the organization — counts as "today went well".*
 
-{{sucesso-pessoal}}
+{{personal-success}}
 
-## Relacionados
+## Related
 
 - `agents/00-discovery/persona-builder.md` · `templates/discovery/stakeholders.md.template`
-- `templates/discovery/use-case.md.template` — usa esta persona como ator.
+- `templates/discovery/use-case.md.template` — uses this persona as the actor.

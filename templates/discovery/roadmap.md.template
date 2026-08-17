@@ -1,49 +1,50 @@
 # Roadmap
 
-> **Como usar:** sequência por horizontes (não por datas) de tudo o que o produto quer ser, incluindo
-> explicitamente o que fica para mais tarde. Instanciado pelo
-> `agents/00-discovery/roadmap-planner.md`, depois do MVP fixado. Fica em
+> **How to use:** sequence, by horizons (not by dates), of everything the product wants to be,
+> explicitly including what is left for later. Instantiated by
+> `agents/00-discovery/roadmap-planner.md`, after the MVP is fixed. Lives at
 > `product/00-discovery/roadmap.md`.
 
-> **Estado:** rascunho
-> **Dono:** `agents/00-discovery/roadmap-planner.md`
-> **Fase:** F1 (fim da descoberta); revisitado em F9 · **Atualizado:** {{aaaa-mm-dd}}
-> **Consumidores:** utilizador, `agents/02-architecture/*`, `agente-de-evolucao-de-features`
+> **Status:** draft
+> **Owner:** `agents/00-discovery/roadmap-planner.md`
+> **Phase:** F1 (end of discovery); revisited in F9 · **Updated:** {{yyyy-mm-dd}}
+> **Consumers:** user, `agents/02-architecture/*`, `feature-evolution-agent`
 
-## H1 — Agora (= MVP)
+## H1 — Now (= MVP)
 
-*Idêntico ao que `mvp.md` fixou — este documento sequencia o que vem depois, não reabre o corte.*
+*Identical to what `mvp.md` fixed — this document sequences what comes next, it does not reopen
+the cut.*
 
-- {{item}} — move {{kpi}}
+- {{item}} — moves {{kpi}}
 
-## H2 — A seguir
+## H2 — Next
 
-| Item | Justificação (KPI que serve) | Depende de |
+| Item | Justification (KPI it serves) | Depends on |
 | --- | --- | --- |
-| {{item}} | {{kpi-associado}} | {{dependencia-ou-travessao}} |
+| {{item}} | {{associated-kpi}} | {{dependency-or-dash}} |
 
-## H3 — Mais tarde
+## H3 — Later
 
-*Precisão aqui é ficção — mantém a descrição vaga de propósito.*
+*Precision here is fiction — keep the description vague on purpose.*
 
-| Item | Justificação | Depende de |
+| Item | Justification | Depends on |
 | --- | --- | --- |
-| {{item}} | {{kpi-associado}} | {{dependencia-ou-travessao}} |
+| {{item}} | {{associated-kpi}} | {{dependency-or-dash}} |
 
-## Não planeado (revisitar)
+## Not planned (revisit)
 
-*O que ninguém quis em nenhum horizonte — não se decide "fora" para sempre, marca-se para revisitar.*
+*What nobody wanted in any horizon — it is not decided "out" forever, it is marked for revisiting.*
 
-- {{item}} — {{porque-ficou-fora}}
+- {{item}} — {{why-it-stayed-out}}
 
-## Funcionalidades futuras que condicionam decisões de hoje
+## Future features that condition today's decisions
 
-*Distintas de ideias sem compromisso — só estas justificam preparar a arquitetura de hoje para
-extensão (`MANIFESTO.md`), evitando tanto migração destrutiva como sobre-engenharia.*
+*Distinct from ideas with no commitment — only these justify preparing today's architecture for
+extension (`MANIFESTO.md`), avoiding both destructive migration and over-engineering.*
 
-- {{funcionalidade-futura}} — {{o-que-tem-de-ficar-preparado-agora}}
+- {{future-feature}} — {{what-must-be-prepared-now}}
 
-## Relacionados
+## Related
 
 - `agents/00-discovery/roadmap-planner.md` · `templates/discovery/mvp.md.template`
-- `agents/13-guardians/feature-evolution-agent.md` — reabre isto quando surge pedido em produção.
+- `agents/13-guardians/feature-evolution-agent.md` — reopens this when a production request arrives.

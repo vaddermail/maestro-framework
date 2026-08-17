@@ -1,74 +1,75 @@
-# Plano de Migração — `{{mudanca-de-schema}}`
+# Migration Plan — `{{schema-change}}`
 
-> **Como usar:** copia para `product/07-operations/data/migrations/{{fatia}}.md`. Segue sempre o padrão
-> **expand-contract**: aditivo → migrar dados/código → contrair; nunca largar ou renomear o que está
-> em uso no mesmo passo. Produzido pelo `agents/06-data/migration-engineer.md`.
+> **How to use:** copy to `product/07-operations/data/migrations/{{slice}}.md`. Always follow the
+> **expand-contract** pattern: additive → migrate data/code → contract; never drop or rename what is
+> in use in the same step. Produced by `agents/06-data/migration-engineer.md`.
 
-## Cabeçalho
+## Header
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| Mudança | {{descricao-da-mudanca}} |
-| Tabela/entidade afetada | {{entidade}} |
-| Data | {{aaaa-mm-dd}} |
-| Autor | {{agente-ou-pessoa}} |
-| Sequência de migração | {{numero-ou-referencia-do-gestor-de-versionamento}} |
+| Change | {{change-description}} |
+| Table/entity affected | {{entity}} |
+| Date | {{yyyy-mm-dd}} |
+| Author | {{agent-or-person}} |
+| Migration sequence | {{number-or-reference-from-the-versioning-manager}} |
 
-## Classificação da mudança
+## Change classification
 
-*Aditiva pura / aditiva com backfill / requer contração — determina quais fases abaixo se aplicam.*
+*Purely additive / additive with backfill / requires contraction — determines which phases below
+apply.*
 
-{{classificacao-e-justificacao}}
+{{classification-and-justification}}
 
-## Fase 1 — Expand (aditivo)
+## Phase 1 — Expand (additive)
 
-*Nova coluna/tabela/índice, sempre aditivo, com valores por defeito seguros; constraint nova como
-`NOT VALID` (ou equivalente) se houver dados legados.*
+*New column/table/index, always additive, with safe default values; a new constraint as
+`NOT VALID` (or equivalent) if there is legacy data.*
 
-| Mudança | Detalhe |
+| Change | Detail |
 | --- | --- |
-| {{ex-nova-coluna-x}} | {{tipo-default-nullable}} |
+| {{e.g.-new-column-x}} | {{type-default-nullable}} |
 
-**Down desta fase:** {{como-reverter-o-expand-sem-perder-dados}}
+**Down for this phase:** {{how-to-revert-the-expand-without-losing-data}}
 
-## Fase 2 — Migrar dados e código
+## Phase 2 — Migrate data and code
 
-*Backfill em lotes se o volume o exige — nunca um `UPDATE` único que bloqueia a tabela. Falhas de
-lote são logadas, não silenciosas.*
+*Backfill in batches if the volume demands it — never a single `UPDATE` that locks the table. Batch
+failures are logged, not silent.*
 
-| Passo | Tamanho do lote | Verificação de progresso |
+| Step | Batch size | Progress check |
 | --- | --- | --- |
-| {{backfill-de-x}} | {{ex-50k-linhas}} | {{como-medir-progresso}} |
+| {{backfill-of-x}} | {{e.g.-50k-rows}} | {{how-to-measure-progress}} |
 
-Runbook de backfill: instanciar `templates/technical/runbook.md.template` em
-`product/07-operations/runbooks/{{nome}}.md`.
+Backfill runbook: instantiate `templates/technical/runbook.md.template` at
+`product/07-operations/runbooks/{{name}}.md`.
 
-**Validação da constraint** (se aplicável): {{como-e-quando-se-valida-o-check-apos-o-backfill}}
+**Constraint validation** (if applicable): {{how-and-when-the-check-is-validated-after-backfill}}
 
-## Fase 3 — Contrair
+## Phase 3 — Contract
 
-*Só depois de provar "zero leitores" (grep no código e nas migrações) e com backup garantido pelo
+*Only after proving "zero readers" (grep in code and migrations) and with a backup guaranteed by
 `agents/06-data/backup-specialist.md`.*
 
-| O que se larga | Prova de zero leitores | Backup confirmado por |
+| What gets dropped | Proof of zero readers | Backup confirmed by |
 | --- | --- | --- |
-| {{coluna-ou-tabela-antiga}} | {{evidencia-do-grep-ou-auditoria}} | {{quem-confirmou-e-quando}} |
+| {{old-column-or-table}} | {{grep-or-audit-evidence}} | {{who-confirmed-and-when}} |
 
-**Down desta fase:** {{plano-de-reversao-ou-"irreversivel-a-partir-daqui-porque"}}
+**Down for this phase:** {{rollback-plan-or-"irreversible-from-here-because"}}
 
-## Ponto de não-retorno
+## Point of no return
 
-*Marca explicitamente a partir de que passo a reversão deixa de ser trivial (ex.: depois do `DROP`).*
+*Mark explicitly from which step onward the rollback stops being trivial (e.g. after the `DROP`).*
 
-{{descricao-do-ponto-de-nao-retorno}}
+{{description-of-the-point-of-no-return}}
 
-## Teste da migração
+## Migration test
 
-- [ ] `up` aplicado num ambiente com amostra de dados legados.
-- [ ] `down` testado — reverte sem perder dados.
-- [ ] `up` → `down` → `up` sem corrupção (idempotência confirmada).
+- [ ] `up` applied in an environment with a sample of legacy data.
+- [ ] `down` tested — reverts without losing data.
+- [ ] `up` → `down` → `up` without corruption (idempotency confirmed).
 
-## Relacionados
+## Related
 
 - `agents/06-data/migration-engineer.md` · `agents/06-data/schema-versioning-manager.md`
 - `agents/06-data/backup-specialist.md` · `playbooks/expand-contract-db-migration.md`

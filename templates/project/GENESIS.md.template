@@ -1,49 +1,50 @@
-# Dossier de Génese — {{nome-do-produto}}
+# Genesis Dossier — {{product-name}}
 
-> **Como usar:** instancia-se em F0 para `product/99-records/genesis.md`
-> (`workflows/W00-project-kickoff.md`) e ganha **uma linha no fecho de cada fase** — faz parte
-> do portão (`checklists/definition-of-done.md`). É o instrumento que mede a promessa da framework
-> ("cada produto mais barato e melhor que o anterior"): sem estes números, a melhoria é convicção;
-> com eles, é a curva de `knowledge/learning-curve.md`. Números honestos e aproximados
-> valem mais do que campos vazios — estimar é permitido, inventar não
-> (`knowledge/permanent-rules.md`).
+> **How to use:** instantiated in F0 to `product/99-records/genesis.md`
+> (`workflows/W00-project-kickoff.md`) and gains **one line at the close of each phase** — it
+> is part of the gate (`checklists/definition-of-done.md`). It is the instrument that measures
+> the framework's promise ("each product cheaper and better than the previous one"): without
+> these numbers, the improvement is conviction; with them, it is the curve in
+> `knowledge/learning-curve.md`. Honest, approximate numbers are worth more than empty fields
+> — estimating is allowed, inventing is not (`knowledge/permanent-rules.md`).
 
-## Fases
+## Phases
 
-*Preencher a linha ao fechar o portão da fase. "Custo IA": tokens ou €, o que a ferramenta der —
-consistente dentro do projeto. "Retrabalho": fatias/artefactos refeitos por causa de defeito ou de
-divergência com a spec. "1.ª?": o portão passou à primeira tentativa?*
+*Fill in the line when closing the phase gate. "AI cost": tokens or €, whatever the tool
+gives — consistent within the project. "Rework": slices/artifacts redone because of a defect
+or a divergence from the spec. "1st?": did the gate pass on the first attempt?*
 
-| Fase | Fechada em | Dias desde F0 | Custo IA | Perguntas ao utilizador | Retrabalho | 1.ª? | Notas |
+| Phase | Closed on | Days since F0 | AI cost | Questions to the user | Rework | 1st? | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| F1 | {{aaaa-mm-dd}} | {{n}} | {{…}} | {{n}} | {{…}} | {{sim/não}} | {{…}} |
+| F1 | {{yyyy-mm-dd}} | {{n}} | {{…}} | {{n}} | {{…}} | {{yes/no}} | {{…}} |
 
-## Qualidade em F7
+## Quality at F7
 
-| Métrica | Valor |
+| Metric | Value |
 | --- | --- |
-| Achados de auditoria/revisão (críticos / altos / médios / baixos) | {{n/n/n/n}} |
-| Achados que eram *retrofit* (faltava desde a fatia 0) | {{n}} |
-| Iterações de loops (L02–L08) até verde | {{n}} |
+| Audit/review findings (critical / high / medium / low) | {{n/n/n/n}} |
+| Findings that were *retrofit* (missing since slice 0) | {{n}} |
+| Loop iterations (L02–L08) until green | {{n}} |
 
-## Fecho (no aceite de F8)
+## Close (at F8 acceptance)
 
-| Métrica | Este produto | Produto anterior (da curva, na cópia) |
+| Metric | This product | Previous product (from the curve, in the copy) |
 | --- | --- | --- |
-| Dias F0 → produção | {{n}} | {{n}} |
-| Custo IA total | {{…}} | {{…}} |
-| Achados F7 (críticos+altos) | {{n}} | {{n}} |
-| Retrabalho total | {{…}} | {{…}} |
+| Days F0 → production | {{n}} | {{n}} |
+| Total AI cost | {{…}} | {{…}} |
+| F7 findings (critical+high) | {{n}} | {{n}} |
+| Total rework | {{…}} | {{…}} |
 
-**Leitura honesta em 3 linhas:** {{onde este produto foi mais barato/melhor que o anterior, onde
-foi pior, e a hipótese do porquê — é isto que a curadoria quer ler}}.
+**Honest 3-line reading:** {{where this product was cheaper/better than the previous one,
+where it was worse, and the hypothesis of why — this is what curation wants to read}}.
 
-> **Envio:** o bloco de Fecho segue no reporte de melhorias do fecho de F8
-> (`playbooks/report-framework-improvements.md`); a curadoria atualiza a curva da mãe com o código
-> do projeto (P-n) — nunca o nome (`knowledge/candidates.md` §Regras, regra 5).
+> **Sending:** the Close block goes in the improvement report at the F8 close
+> (`playbooks/report-framework-improvements.md`); curation updates the upstream curve with
+> the project's code (P-n) — never the name (`knowledge/candidates.md` §Entry and exit rules,
+> rule 5).
 
-## Relacionados
+## Related
 
-- `knowledge/learning-curve.md` — onde estes números se agregam, produto a produto.
-- `checklists/definition-of-done.md` — o fecho de fase que exige a linha.
-- `core/model-routing.md` — a disciplina que os números de custo informam.
+- `knowledge/learning-curve.md` — where these numbers aggregate, product by product.
+- `checklists/definition-of-done.md` — the phase close that requires the line.
+- `core/model-routing.md` — the discipline the cost numbers inform.

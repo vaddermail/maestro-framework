@@ -1,79 +1,79 @@
-# Atualização de Dependências
+# Dependency Updates
 
-Procedimento de atualização **deliberada** de bibliotecas, frameworks e runtimes — nunca "à deriva",
-nunca por reflexo de um bot. Executado pelo `agents/13-guardians/dependency-guardian.md` em
-cadência semanal (rotina) e mensal (majors/EOL), ou dentro de `workflows/W06-build.md` quando uma
-fatia precisa de uma versão mais recente. Majors com breaking changes sobem sempre ao utilizador.
+Procedure for **deliberate** updates of libraries, frameworks and runtimes — never by drift, never
+as a reflex to a bot. Executed by `agents/13-guardians/dependency-guardian.md` on a weekly
+cadence (routine) and monthly (majors/EOL), or inside `workflows/W06-build.md` when a slice
+needs a newer version. Majors with breaking changes always go up to the user.
 
-## Pré-condições
+## Preconditions
 
-- Lockfiles/manifests existentes e a verdade do que está instalado.
-- Harness de regressão a funcionar, com frontend e backend separados. Sem ele, este playbook **não
-  atualiza às cegas**: sinaliza a lacuna ao Orquestrador e regista-a.
-- `product/02-architecture/stack.md` com as versões-alvo e política de suporte.
+- Lockfiles/manifests in place, plus the truth of what is actually installed.
+- Working regression harness, with frontend and backend separated. Without it, this playbook does
+  **not update blindly**: it flags the gap to the Orchestrator and records it.
+- `product/02-architecture/stack.md` with the target versions and support policy.
 
-## Passos
+## Steps
 
-1. **Listar desatualizadas.** Comparar lockfile/manifest com o upstream; anotar o salto (patch/minor/
-   major) e o estado de suporte (EOL?) de cada uma. *Verifica-se* revendo manualmente o output da
-   ferramenta de dependências — nunca aceite tal-e-qual. *Se a lista vier de um bot automático*:
-   trata-se como input a triar, nunca como decisão pronta a fazer merge.
+1. **List outdated dependencies.** Compare lockfile/manifest against upstream; note the jump (patch/
+   minor/major) and the support status (EOL?) of each one. *Verified* by manually reviewing the
+   dependency tool's output — never accepted as-is. *If the list comes from an automated bot*:
+   treat it as input to triage, never as a decision ready to merge.
 
-2. **Priorizar.** EOL e majors de segurança adiadas primeiro; depois minors com correções úteis;
-   patches triviais agrupados em lote leve. *Verifica-se* que cada item tem uma prioridade escrita.
+2. **Prioritize.** EOL and deferred security majors first; then minors with useful fixes;
+   trivial patches grouped into a light batch. *Verified* by each item having a written priority.
 
-3. **Ler o changelog de cada dependência relevante — obrigatório antes de qualquer bump.** Procurar
-   breaking changes, funções removidas/depreciadas, mudanças de comportamento silenciosas (ex.:
-   mapeamento de erros que muda sem aviso — `knowledge/ai-pitfalls.md` §16). *Verifica-se* com
-   um resumo escrito do changelog, não uma impressão. *Se não houver changelog acessível*: trata-se
-   como major de risco (sobe ao utilizador) até prova em contrário.
+3. **Read the changelog of every relevant dependency — mandatory before any bump.** Look for
+   breaking changes, removed/deprecated functions, silent behavior changes (e.g.:
+   error mapping that changes without warning — `knowledge/ai-pitfalls.md` §16). *Verified* with
+   a written summary of the changelog, not an impression. *If no changelog is accessible*: treat it
+   as a risky major (goes up to the user) until proven otherwise.
 
-4. **Agrupar em lote pequeno e coerente.** Um PR por dependência, ou por grupo coeso (ex.: todas as
-   libs de teste de uma área) — nunca um "atualizar tudo" num PR só. *Verifica-se* que o diff toca
-   apenas lockfile + manifest + o código de adaptação estritamente necessário.
+4. **Group into a small, coherent batch.** One PR per dependency, or per cohesive group (e.g.: all
+   the test libs of one area) — never an "update everything" in a single PR. *Verified* by the diff
+   touching only lockfile + manifest + the strictly necessary adaptation code.
 
-5. **Aplicar o bump e regenerar o lockfile.** Subir a versão no manifest; regenerar o lockfile de
-   forma determinística. *Verifica-se* que um rebuild do lockfile dá o mesmo resultado. *Se a versão
-   não ficar fixada exatamente*: falhar o passo — sem versão fixada não há atualização deliberada
-   (`knowledge/permanent-rules.md` §6).
+5. **Apply the bump and regenerate the lockfile.** Raise the version in the manifest; regenerate the
+   lockfile deterministically. *Verified* by a lockfile rebuild giving the same result. *If the
+   version does not end up pinned exactly*: fail the step — without a pinned version there is no
+   deliberate update (`knowledge/permanent-rules.md` §6).
 
-6. **Correr o harness completo.** Regressão de frontend e de backend, em separado, ambos verdes, mais
-   a suíte específica do que a dependência toca. *Verifica-se* com o output real anexado. *Se falhar*:
-   investigar a causa antes de culpar a dependência por reflexo; se confirmado que é uma breaking
-   change não documentada, registar como lição.
+6. **Run the full harness.** Frontend and backend regression, separately, both green, plus the
+   suite specific to what the dependency touches. *Verified* with the real output attached. *If it
+   fails*: investigate the cause before blaming the dependency by reflex; if confirmed to be an
+   undocumented breaking change, record it as a lesson.
 
-7. **Smoke test live nos caminhos tocados.** Exercitar manualmente (ou via harness) os fluxos reais que
-   a dependência afeta, no ambiente-alvo. *Verifica-se* com evidência concreta (output/captura) — não
-   "deve funcionar".
+7. **Live smoke test on the touched paths.** Exercise manually (or via harness) the real flows the
+   dependency affects, in the target environment. *Verified* with concrete evidence (output/capture)
+   — not "it should work".
 
-8. **Decidir majors com breaking changes.** Nunca à deriva: escrever o plano (custo de migração, ganho,
-   janela sugerida) e subir ao utilizador via `core/question-engine.md`. *Verifica-se* pela
-   decisão explícita registada antes de aplicar. *Se a major chegar a EOL sem substituto*: escalar como
-   risco de segurança futura, não como rotina.
+8. **Decide majors with breaking changes.** Never by drift: write the plan (migration cost, gain,
+   suggested window) and raise it to the user via `core/question-engine.md`. *Verified* by the
+   explicit decision recorded before applying. *If the major reaches EOL with no replacement*:
+   escalate as a future security risk, not as routine.
 
-9. **Fixar deliberadamente quando não se sobe.** Se a versão nova larga uma funcionalidade em uso,
-   decide-se não subir — registar o porquê e um prazo de revisão em `STATE.md` /
-   `loops/L08-technical-debt.md`. *Verifica-se* que a justificação existe por escrito, para não
-   reaparecer como ruído na próxima cadência.
+9. **Pin deliberately when not upgrading.** If the new version drops a feature in use, the decision
+   is not to upgrade — record the why and a review deadline in `STATE.md` /
+   `loops/L08-technical-debt.md`. *Verified* by the justification existing in writing, so it does
+   not resurface as noise in the next cadence.
 
-10. **Merge via PR verde e documentar.** Relatório do ciclo em
-    `product/99-records/guardians/dependencias-AAAA-MM-DD.md`
-    (`templates/technical/guardian-report.md.template`); dívida adiada/fixada registada; lições
-    não-óbvias em `STATE.md`.
+10. **Merge via green PR and document.** Cycle report in
+    `product/99-records/guardians/dependencies-YYYY-MM-DD.md`
+    (`templates/technical/guardian-report.md.template`); deferred/pinned debt recorded; non-obvious
+    lessons in `STATE.md`.
 
-## Reversão
+## Rollback
 
-Cada bump é revertível por revert cirúrgico do PR + lockfile anterior — é por isso que o passo 4 isola
-cada dependência ou grupo coeso num PR próprio (um "bump geral" que parte algo obriga a bissetar à
-mão). Majors de risco que mudam comportamento entram atrás de `modules/feature-flags.md`, desligáveis
-sem novo deploy. Uma dependência fixada (passo 9) não é uma reversão pendente — é uma decisão registada
-com prazo de revisão, não um esquecimento.
+Each bump is reversible via a surgical revert of the PR + the previous lockfile — that is why step 4
+isolates each dependency or cohesive group in its own PR (a "general bump" that breaks something
+forces manual bisection). Risky majors that change behavior go behind `modules/feature-flags.md`,
+switchable off without a new deploy. A pinned dependency (step 9) is not a pending rollback — it is
+a recorded decision with a review deadline, not an oversight.
 
-## Relacionados
+## Related
 
-- `agents/13-guardians/dependency-guardian.md` — quem executa este playbook.
-- `agents/13-guardians/security-guardian.md` — passa as correções urgentes que exigem major.
-- `playbooks/cve-response.md` — quando a atualização é uma correção de segurança urgente, não rotina.
-- `loops/L08-technical-debt.md` — onde a dívida de versões adiada/fixada se reduz de forma planeada.
-- `checklists/pre-merge.md` — o gate comum a todo o PR antes de integrar.
+- `agents/13-guardians/dependency-guardian.md` — who executes this playbook.
+- `agents/13-guardians/security-guardian.md` — hands over the urgent fixes that require a major.
+- `playbooks/cve-response.md` — when the update is an urgent security fix, not routine.
+- `loops/L08-technical-debt.md` — where deferred/pinned version debt is reduced in a planned way.
+- `checklists/pre-merge.md` — the gate common to every PR before integrating.
 - `knowledge/permanent-rules.md` §6 · `knowledge/ai-pitfalls.md` §16.

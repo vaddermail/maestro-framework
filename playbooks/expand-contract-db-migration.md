@@ -1,82 +1,84 @@
-# Migração de BD — Expand-Contract
+# DB Migration — Expand-Contract
 
-Procedimento de mudança de esquema em três fases separadas: **expand** (aditivo), **migrar dados e
-código**, e só depois **contract** (largar/renomear o antigo) — nunca no mesmo passo. Executado pelo
-`agents/06-data/migration-engineer.md`, tanto dentro de uma fatia de `workflows/W06-build.md`
-como a acompanhar um release em `playbooks/release-and-rollback.md`. Cada fase tem *down* documentado;
-a fase Contract só corre depois de um **ponto de não-retorno** explícito.
+Procedure for schema changes in three separate phases: **expand** (additive), **migrate data and
+code**, and only then **contract** (drop/rename the old) — never in the same step. Executed by
+`agents/06-data/migration-engineer.md`, both inside a slice of `workflows/W06-build.md`
+and alongside a release in `playbooks/release-and-rollback.md`. Each phase has a documented *down*;
+the Contract phase only runs after an explicit **point of no return**.
 
-## Pré-condições
+## Preconditions
 
-- Modelo de dados lógico aprovado para o estado alvo (`agents/06-data/data-modeler.md`).
-- Harness de regressão a funcionar contra o motor de BD **real** (não um motor leve que serializa
-  corridas que a produção não serializa — `knowledge/ai-pitfalls.md` §15).
-- `templates/technical/migration-plan.md.template` disponível para instanciar.
+- Logical data model approved for the target state (`agents/06-data/data-modeler.md`).
+- Working regression harness against the **real** DB engine (not a lightweight engine that
+  serializes races production does not serialize — `knowledge/ai-pitfalls.md` §15).
+- `templates/technical/migration-plan.md.template` available to instantiate.
 
-## Passos
+## Steps
 
-1. **Escrever o plano de migração** a partir de `templates/technical/migration-plan.md.template`:
-   estado atual, estado alvo, as três fases, e o *down* de cada uma. *Verifica-se* que o plano existe
-   como ficheiro e cobre as 3 fases com reversão descrita. *Se não houver plano escrito*: não se aplica
-   nenhuma migração — o plano é pré-condição, não formalidade posterior.
+1. **Write the migration plan** from `templates/technical/migration-plan.md.template`:
+   current state, target state, the three phases, and each one's *down*. *Verified* by the plan
+   existing as a file and covering the 3 phases with rollback described. *If there is no written
+   plan*: no migration is applied — the plan is a precondition, not an after-the-fact formality.
 
-2. **Fase Expand — aditiva.** Criar a coluna/tabela/índice nova sem tocar no que está em uso; o
-   esquema antigo continua a funcionar inalterado. *Verifica-se* que o código antigo, sem qualquer
-   alteração, continua a passar nos testes existentes contra o esquema já com a adição. *Se falhar*: a
-   mudança não é puramente aditiva — corrigir antes de avançar.
+2. **Expand phase — additive.** Create the new column/table/index without touching what is in use;
+   the old schema keeps working unchanged. *Verified* by the old code, without any change, still
+   passing the existing tests against the schema with the addition in place. *If it fails*: the
+   change is not purely additive — fix it before moving on.
 
-3. **Validar a fase Expand isoladamente.** Aplicar em staging, correr a regressão completa (frontend +
-   backend), confirmar zero impacto no código ainda não migrado. *Verifica-se* com o harness verde e a
-   aplicação antiga a funcionar sem saber que a novidade existe.
+3. **Validate the Expand phase in isolation.** Apply in staging, run the full regression (frontend +
+   backend), confirm zero impact on code not yet migrated. *Verified* with the harness green and the
+   old application working without knowing the new thing exists.
 
-4. **Deploy da fase Expand como release própria**, seguindo `playbooks/release-and-rollback.md` (backup,
-   hard-block, rollback ensaiado). *Verifica-se* com release verde + smoke live.
+4. **Deploy the Expand phase as its own release**, following `playbooks/release-and-rollback.md`
+   (backup, hard-block, rehearsed rollback). *Verified* with a green release + live smoke.
 
-5. **Migrar os dados.** Backfill dos registos existentes para o novo esquema, em lote controlado — não
-   um `UPDATE` cego em massa (mudanças em dados sensíveis seguem plano + lista + motivo por item,
-   `knowledge/permanent-rules.md` §4). *Verifica-se* que a contagem de linhas migradas bate com a
-   origem, com amostra validada manualmente. *Se o backfill falhar a meio*: tem de ser retomável e
-   idempotente — nunca deixar o esquema num estado misto sem saber exatamente onde parou.
+5. **Migrate the data.** Backfill existing records into the new schema, in controlled batches — not
+   a blind mass `UPDATE` (changes to sensitive data follow plan + list + per-item reason,
+   `knowledge/permanent-rules.md` §4). *Verified* by the migrated row count matching the
+   source, with a manually validated sample. *If the backfill fails midway*: it must be resumable
+   and idempotent — never leave the schema in a mixed state without knowing exactly where it
+   stopped.
 
-6. **Migrar o código.** Atualizar a aplicação para ler/escrever no novo esquema, mantendo capacidade de
-   ler o antigo durante a transição quando necessário (dual-read). *Verifica-se* com testes que cobrem
-   ambos os caminhos — o novo já escrito, o antigo ainda lido por quem não migrou.
+6. **Migrate the code.** Update the application to read/write the new schema, keeping the ability
+   to read the old one during the transition when needed (dual-read). *Verified* with tests that
+   cover both paths — the new already written, the old still read by whoever has not migrated.
 
-7. **Validar as constraints em duas fases, com dados legados** (lição C7,
-   `knowledge/origin-lessons.md`). Aplicar `CHECK`/`NOT NULL`/FK novos **só depois** do backfill
-   confirmado — nunca antes, ou rejeita-se dados legados ainda por migrar. *Verifica-se* com um teste
-   que insere a linha "antiga" e confirma que passa antes da constraint entrar em vigor e falha depois.
-   Atenção a `NULL` vs `FALSE`: um `CHECK` só rejeita em `FALSE` estrito — `NULL` passa (lição C8).
+7. **Validate the constraints in two phases, with legacy data** (lesson C7,
+   `knowledge/origin-lessons.md`). Apply new `CHECK`/`NOT NULL`/FK **only after** the backfill is
+   confirmed — never before, or legacy data still to migrate gets rejected. *Verified* with a test
+   that inserts the "old" row and confirms it passes before the constraint takes effect and fails
+   after. Watch out for `NULL` vs `FALSE`: a `CHECK` only rejects on strict `FALSE` — `NULL` passes
+   (lesson C8).
 
-8. **Ponto de não-retorno explícito.** Antes de contrair, confirmar — com o utilizador ou um critério
-   objetivo acordado (ex.: N dias sem escrita no esquema antigo) — que já não há consumidor do antigo.
-   *Verifica-se* com log/métrica de acesso ao caminho antigo em zero durante a janela acordada.
-   *Se ainda houver consumidores* (outro serviço, relatório, integração externa): não contrair — mais
-   uma iteração do passo 6, ou aceitar manter os dois esquemas por mais tempo.
+8. **Explicit point of no return.** Before contracting, confirm — with the user or an agreed
+   objective criterion (e.g. N days without writes to the old schema) — that no consumer of the old
+   one remains. *Verified* with the old path's access log/metric at zero during the agreed window.
+   *If consumers remain* (another service, a report, an external integration): do not contract —
+   one more iteration of step 6, or accept keeping both schemas for longer.
 
-9. **Fase Contract — só depois do ponto de não-retorno, em release própria.** Largar/renomear a
-   coluna/tabela antiga. *Verifica-se* com regressão verde e zero referências ao esquema antigo no
-   código (confirmado por pesquisa exaustiva, não por memória). *Se algo ainda referenciar o antigo*:
-   abortar a contração — não é seguro avançar.
+9. **Contract phase — only after the point of no return, in its own release.** Drop/rename the old
+   column/table. *Verified* with green regression and zero references to the old schema in the
+   code (confirmed by exhaustive search, not by memory). *If something still references the old
+   one*: abort the contraction — it is not safe to proceed.
 
-10. **Documentar.** Plano de migração atualizado com o resultado de cada fase; lição em `STATE.md` se
-    algo surpreendeu; o template preenchido arquivado em `product/` para auditoria futura.
+10. **Document.** Migration plan updated with each phase's outcome; lesson in `STATE.md` if
+    anything surprised; the filled-in template archived in `product/` for future audit.
 
-## Reversão
+## Rollback
 
-Cada fase tem *down* documentado no plano do passo 1. **Expand** reverte-se removendo a coluna/tabela
-nova — sem perda, porque nada em produção dependia ainda dela. **Migrar dados/código** reverte-se
-voltando o código a ler só do esquema antigo (o antigo nunca foi tocado até à fase Contract, por
-desenho). **Contract** é a única fase com reversão cara (dados já largados) — por isso só corre depois
-do ponto de não-retorno explícito do passo 8; se ainda assim for preciso reverter depois da Contract,
-recorre-se ao backup verificado do release correspondente (`playbooks/release-and-rollback.md`), não a um
-*down* de esquema que já não existe.
+Each phase has a *down* documented in the step 1 plan. **Expand** is reverted by removing the new
+column/table — no loss, because nothing in production depended on it yet. **Migrate data/code** is
+reverted by returning the code to reading only the old schema (the old one was never touched until
+the Contract phase, by design). **Contract** is the only phase with an expensive rollback (data
+already dropped) — that is why it only runs after step 8's explicit point of no return; if a revert
+is still needed after Contract, fall back to the corresponding release's verified backup
+(`playbooks/release-and-rollback.md`), not to a schema *down* that no longer exists.
 
-## Relacionados
+## Related
 
-- `agents/06-data/migration-engineer.md` — quem executa este playbook.
-- `templates/technical/migration-plan.md.template` — o documento instanciado no passo 1.
-- `playbooks/release-and-rollback.md` — cada fase (Expand e Contract) é um release próprio.
-- `knowledge/origin-lessons.md` C7, C8 — as lições de origem desta disciplina.
-- `knowledge/permanent-rules.md` §3, §4 — reversibilidade e mudanças em massa.
-- `modules/state-machines.md` — quando a migração acompanha uma mudança de fluxo crítico.
+- `agents/06-data/migration-engineer.md` — who executes this playbook.
+- `templates/technical/migration-plan.md.template` — the document instantiated in step 1.
+- `playbooks/release-and-rollback.md` — each phase (Expand and Contract) is its own release.
+- `knowledge/origin-lessons.md` C7, C8 — the origin lessons behind this discipline.
+- `knowledge/permanent-rules.md` §3, §4 — reversibility and mass changes.
+- `modules/state-machines.md` — when the migration accompanies a critical flow change.

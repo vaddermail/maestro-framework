@@ -1,84 +1,85 @@
-# Templates — Documentos Prontos a Instanciar
+# Templates — Documents Ready to Instantiate
 
-Documentos-tipo em `.md.template` que qualquer agente (ou pessoa) preenche para produzir um
-artefacto real do projeto (`core/artifact-protocol.md`). Não se editam aqui — copiam-se
-para o projeto e preenchem-se lá.
+Standard documents in `.md.template` that any agent (or person) fills in to produce a real
+project artifact (`core/artifact-protocol.md`). They are not edited here — they are copied
+into the project and filled in there.
 
-## Como instanciar um template
+## How to instantiate a template
 
-1. **Copiar** o `.template` para o destino certo (ver tabela abaixo), **tirando o sufixo
-   `.template`** — ex.: `templates/project/STATE.md.template` → `STATE.md` na raiz do projeto.
-2. **Preencher os placeholders** `{{assim}}` — ver convenção abaixo. Nenhum `{{...}}` deve sobrar
-   no ficheiro final.
-3. **Remover as orientações**: o bloco inicial "**Como usar**" e os comentários em itálico dentro
-   das secções existem só para guiar o preenchimento — saem do documento instanciado.
-4. **Commitar** o ficheiro instanciado no projeto (nunca dentro de `Maestro/`, que fica
-   read-only como referência de processo).
+1. **Copy** the `.template` to the right destination (see table below), **dropping the
+   `.template` suffix** — e.g. `templates/project/STATE.md.template` → `STATE.md` at the
+   project root.
+2. **Fill in the placeholders** `{{like-this}}` — see the convention below. No `{{...}}` may
+   remain in the final file.
+3. **Remove the guidance**: the initial "**How to use**" block and the italic comments inside
+   the sections exist only to guide the filling-in — they leave the instantiated document.
+4. **Commit** the instantiated file in the project (never inside `Maestro/`, which stays
+   read-only as a process reference).
 
-## Convenção de placeholders
+## Placeholder convention
 
-Todo o texto entre chavetas duplas é para substituir: `{{nome-do-produto}}`, `{{aaaa-mm-dd}}`,
-`{{numero-adr}}`. O nome dentro das chavetas descreve o que lá vai, em kebab-case — não é código,
-é instrução de preenchimento. Um ficheiro instanciado nunca deve conter `{{ }}` por preencher; onde
-faltar informação, segue-se `core/question-engine.md` (pergunta-se ao utilizador, não se
-inventa — `MANIFESTO.md` §2).
+All text between double braces is to be replaced: `{{product-name}}`, `{{yyyy-mm-dd}}`,
+`{{adr-number}}`. The name inside the braces describes what goes there, in kebab-case — it is
+not code, it is a filling-in instruction. An instantiated file must never contain an unfilled
+`{{ }}`; where information is missing, follow `core/question-engine.md` (ask the user, do not
+make it up — `MANIFESTO.md` §2).
 
-## Índice de templates
+## Template index
 
-### `templates/project/` — memória e governação (raiz do projeto)
+### `templates/project/` — memory and governance (project root)
 
-| Template | Destino instanciado | O que é |
+| Template | Instantiated destination | What it is |
 | --- | --- | --- |
-| `CLAUDE.md.template` | `CLAUDE.md` | Instruções de projeto para agentes de IA (regras estáveis do produto novo). |
-| `STATE.md.template` | `STATE.md` | Memória viva partilhada: feito, em curso, a seguir, decisões pendentes, registo de lições. |
-| `DECISAO-ADR.md.template` | `product/02-architecture/decisions/ADR-nnn-title.md` | Registo de decisão de arquitetura (contexto, opções, decisão, consequências, reversão). |
-| `CHANGELOG.md.template` | `CHANGELOG.md` | Histórico do que mudou e porquê, por versão. |
-| `FRAMEWORK-IMPROVEMENTS.md.template` | `FRAMEWORK-IMPROVEMENTS.md` | Registo acumulado, desde o dia 0, do que o projeto ensina à framework; enviado à mãe nos fechos de fase (`playbooks/report-framework-improvements.md`). |
-| `GENESE.md.template` | `product/99-records/genesis.md` | Dossier de génese: os números da promessa (custo, dias, achados, retrabalho), fase a fase; o Fecho alimenta `knowledge/learning-curve.md`. |
+| `CLAUDE.md.template` | `CLAUDE.md` | Project instructions for AI agents (stable rules of the new product). |
+| `STATE.md.template` | `STATE.md` | Shared living memory: done, in progress, up next, pending decisions, lessons log. |
+| `ADR-DECISION.md.template` | `product/02-architecture/decisions/ADR-nnn-title.md` | Architecture decision record (context, options, decision, consequences, rollback). |
+| `CHANGELOG.md.template` | `CHANGELOG.md` | History of what changed and why, per version. |
+| `FRAMEWORK-IMPROVEMENTS.md.template` | `FRAMEWORK-IMPROVEMENTS.md` | Accumulated record, since day 0, of what the project teaches the framework; sent upstream at phase closes (`playbooks/report-framework-improvements.md`). |
+| `GENESIS.md.template` | `product/99-records/genesis.md` | Genesis dossier: the numbers behind the promise (cost, days, findings, rework), phase by phase; the Close feeds `knowledge/learning-curve.md`. |
 
 ### `templates/discovery/` — F1, `product/00-discovery/`
 
-| Template | O que é |
+| Template | What it is |
 | --- | --- |
-| `ideia.md.template` | Descrição estruturada da ideia. |
-| `problema.md.template` | Definição do problema e custo de não resolver. |
-| `stakeholders.md.template` | Mapa de stakeholders. |
-| `persona.md.template` | Persona individual. |
-| `caso-de-utilizacao.md.template` | Caso de utilização/jornada. |
-| `objetivos-e-kpis.md.template` | Objetivos de negócio e KPIs. |
-| `riscos.md.template` | Registo de riscos com dono e mitigação. |
-| `roadmap.md.template` | Roadmap por horizontes. |
-| `mvp.md.template` | Âmbito do MVP e cortes explícitos. |
+| `idea.md.template` | Structured description of the idea. |
+| `problem.md.template` | Definition of the problem and the cost of not solving it. |
+| `stakeholders.md.template` | Stakeholder map. |
+| `persona.md.template` | Individual persona. |
+| `use-case.md.template` | Use case/journey. |
+| `goals-and-kpis.md.template` | Business goals and KPIs. |
+| `risks.md.template` | Risk register with owner and mitigation. |
+| `roadmap.md.template` | Roadmap by horizons. |
+| `mvp.md.template` | MVP scope and explicit cuts. |
 
-### `templates/specification/` — F2/F5, `product/01-requirements/` e `product/04-specification/`
+### `templates/specification/` — F2/F5, `product/01-requirements/` and `product/04-specification/`
 
-| Template | O que é |
+| Template | What it is |
 | --- | --- |
-| `requisito-funcional.md.template` | Requisito com critérios de aceitação. |
-| `regras-de-negocio.md.template` | Regras e invariantes de um módulo. |
-| `maquina-de-estados.md.template` | Máquina de estados de um fluxo crítico. |
-| `modelo-de-dados-logico.md.template` | Entidades, relações e invariantes, agnóstico de BD. |
-| `contrato-backend.md.template` | Responsabilidades do servidor: authz, scoping, integridade, campos sensíveis. |
+| `functional-requirement.md.template` | Requirement with acceptance criteria. |
+| `business-rules.md.template` | Rules and invariants of a module. |
+| `state-machine.md.template` | State machine of a critical flow. |
+| `logical-data-model.md.template` | Entities, relations and invariants, database-agnostic. |
+| `backend-contract.md.template` | Server responsibilities: authz, scoping, integrity, sensitive fields. |
 
-### `templates/technical/` — segurança, testes, operação e revisão (várias fases)
+### `templates/technical/` — security, testing, operations and review (multiple phases)
 
-| Template | O que é |
+| Template | What it is |
 | --- | --- |
-| `threat-model.md.template` | Modelo de ameaças de uma funcionalidade/sistema. |
-| `plano-de-testes.md.template` | Plano de testes orientado ao risco. |
-| `runbook.md.template` | Runbook operacional de um procedimento. |
-| `plano-de-migracao.md.template` | Migração expand-contract com plano de reversão. |
-| `post-mortem.md.template` | Post-mortem sem culpados, com ações e donos. |
-| `relatorio-de-revisao.md.template` | Relatório de um revisor (formato comum ao painel). |
-| `relatorio-de-guardiao.md.template` | Relatório periódico de um guardião. |
+| `threat-model.md.template` | Threat model of a feature/system. |
+| `test-plan.md.template` | Risk-driven test plan. |
+| `runbook.md.template` | Operational runbook for a procedure. |
+| `migration-plan.md.template` | Expand-contract migration with a rollback plan. |
+| `post-mortem.md.template` | Blameless post-mortem, with actions and owners. |
+| `review-report.md.template` | Report from one reviewer (format shared across the panel). |
+| `guardian-report.md.template` | Periodic report from a guardian. |
 
-> Todos os templates do índice acima estão escritos e prontos a instanciar; o índice reflete o
-> `_meta/INVENTORY.md` completo.
+> All templates in the index above are written and ready to instantiate; the index reflects the
+> full `_meta/INVENTORY.md`.
 
-## Relacionados
+## Related
 
-- `_meta/INVENTORY.md` — a lista oficial de todos os ficheiros da framework.
-- `core/artifact-protocol.md` — a árvore `product/` onde cada instanciado vive.
-- `core/project-memory.md` — `CLAUDE.md`/`STATE.md` em detalhe.
-- `core/decision-engine.md` — o ADR em detalhe.
-- `workflows/W00-project-kickoff.md` — quando se instanciam os templates de `projeto/`.
+- `_meta/INVENTORY.md` — the official list of all framework files.
+- `core/artifact-protocol.md` — the `product/` tree where each instantiated file lives.
+- `core/project-memory.md` — `CLAUDE.md`/`STATE.md` in detail.
+- `core/decision-engine.md` — the ADR in detail.
+- `workflows/W00-project-kickoff.md` — when the `project/` templates are instantiated.

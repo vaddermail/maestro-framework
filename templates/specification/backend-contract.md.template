@@ -1,83 +1,83 @@
-# Contrato de Backend — {{nome-do-modulo-ou-sistema}}
+# Backend Contract — {{module-or-system-name}}
 
-> **Como usar:** instanciado pelo `agents/05-backend/authorization-specialist.md` em F5 (desenho)
-> e F6 (por cada fatia construída), com os campos sensíveis marcados pelo
-> `agents/05-backend/api-designer.md`. Fica em `product/04-specification/backend-contract.md`.
-> Descreve o que o **servidor** garante — nenhum endpoint com dados sai sem passar por este contrato.
+> **How to use:** instantiated by `agents/05-backend/authorization-specialist.md` in F5 (design)
+> and F6 (for each slice built), with the sensitive fields flagged by
+> `agents/05-backend/api-designer.md`. Lives at `product/04-specification/backend-contract.md`.
+> Describes what the **server** guarantees — no endpoint with data ships without this contract.
 
-> **Estado:** rascunho
-> **Dono:** `agents/05-backend/authorization-specialist.md`
-> **Fase:** F5 (desenho) · F6 (implementação por fatia) · **Atualizado:** {{aaaa-mm-dd}}
-> **Satisfaz:** {{rn-nnn-de-autoridade-e-scoping}}
-> **Consumidores:** todo o backend, `agents/12-reviewers/backend-reviewer.md`, `agents/09-security/authorization-and-least-privilege-specialist.md`
+> **Status:** draft
+> **Owner:** `agents/05-backend/authorization-specialist.md`
+> **Phase:** F5 (design) · F6 (implementation per slice) · **Updated:** {{yyyy-mm-dd}}
+> **Satisfies:** {{br-nnn-for-authority-and-scoping}}
+> **Consumers:** the whole backend, `agents/12-reviewers/backend-reviewer.md`, `agents/09-security/authorization-and-least-privilege-specialist.md`
 
-## Princípio
+## Principle
 
-*Não reescrever a doutrina — referenciá-la. O cliente **declara** intenção (perfil ativo); o servidor
-**confirma** contra os papéis realmente concedidos e falha fechado por defeito
-(`modules/rbac-and-scoping.md`, `knowledge/origin-lessons.md`). Nada neste documento depende de uma
-verificação feita só no cliente.*
+*Do not rewrite the doctrine — reference it. The client **declares** intent (active profile); the
+server **confirms** against the roles actually granted and fails closed by default
+(`modules/rbac-and-scoping.md`, `knowledge/origin-lessons.md`). Nothing in this document depends on
+a check done only on the client.*
 
-## Perfis e papéis
+## Profiles and roles
 
-| Perfil | Descrição | Âmbito organizacional (eixo de scoping) |
+| Profile | Description | Organizational scope (scoping axis) |
 | --- | --- | --- |
-| {{nome-do-perfil}} | {{quem-é-e-o-que-faz}} | {{ex.-a-sua-equipa-departamento-organizacao-tenant}} |
+| {{profile-name}} | {{who-they-are-and-what-they-do}} | {{e.g.-own-team-department-organization-tenant}} |
 
-## Autorização e scoping por recurso
+## Authorization and scoping per resource
 
-*Duas verificações distintas, sempre as duas: **autoridade** (que ações) e **scoping** (que
-subconjunto de dados). Scoping aplica-se **na query**, nunca em pós-filtro.*
+*Two distinct checks, always both: **authority** (which actions) and **scoping** (which subset of
+data). Scoping is applied **in the query**, never as a post-filter.*
 
-| Recurso / ação | Perfil | Autorizado? | Âmbito (scoping) | Notas |
+| Resource / action | Profile | Authorized? | Scope (scoping) | Notes |
 | --- | --- | --- | --- | --- |
-| {{recurso-e-verbo-ex.-listar-encomendas}} | {{perfil}} | {{sim/não}} | {{filtro-aplicado-na-query}} | {{gate-de-elegibilidade-ou-escalao-se-aplicavel}} |
+| {{resource-and-verb-e.g.-list-orders}} | {{profile}} | {{yes/no}} | {{filter-applied-in-the-query}} | {{eligibility-gate-or-tier-if-applicable}} |
 
-*Recurso fora do âmbito do requerente devolve **404, não 403** — não se revela que existe. Pedido sem
-perfil válido é **negado** (fail-closed); nunca se assume perfil por defeito.*
+*A resource outside the requester's scope returns **404, not 403** — its existence is not revealed.
+A request without a valid profile is **denied** (fail-closed); a default profile is never assumed.*
 
-## Campos sensíveis
+## Sensitive fields
 
-*Defesa em profundidade: o campo não sai da query **e** é redigido na saída — as duas camadas, não
-uma só.*
+*Defense in depth: the field is left out of the query **and** redacted on output — both layers, not
+just one.*
 
-| Campo | Entidade | Quem vê | Mecanismo de redação |
+| Field | Entity | Who sees it | Redaction mechanism |
 | --- | --- | --- | --- |
-| {{nome-do-campo}} | {{entidade}} | {{perfis-com-autoridade}} | {{omitido-na-query-e-redigido-na-serializacao}} |
+| {{field-name}} | {{entity}} | {{profiles-with-authority}} | {{omitted-in-query-and-redacted-in-serialization}} |
 
-## Integridade transacional
+## Transactional integrity
 
-*Que operações têm de ser atómicas e que lock evita a leitura-decisão-escrita corrida (TOCTOU) sobre
-o mesmo recurso.*
+*Which operations must be atomic and which lock prevents the read-decide-write race (TOCTOU) on the
+same resource.*
 
-| Operação | Transação / lock | Invariante protegido |
+| Operation | Transaction / lock | Invariant protected |
 | --- | --- | --- |
-| {{nome-da-operacao}} | {{ambito-da-transacao-e-tipo-de-lock}} | {{i-nnn-do-modelo-de-dados-logico}} |
+| {{operation-name}} | {{transaction-scope-and-lock-type}} | {{i-nnn-from-the-logical-data-model}} |
 
-## Erros e códigos
+## Errors and codes
 
-*Consistência é o que permite ao cliente não adivinhar. Situação de fora-de-âmbito é sempre 404.*
+*Consistency is what lets the client avoid guessing. An out-of-scope situation is always 404.*
 
-| Situação | Código | Corpo / mensagem | Nota |
+| Situation | Code | Body / message | Note |
 | --- | --- | --- | --- |
-| Sem perfil válido | {{401-ou-equivalente}} | {{mensagem-generica-sem-detalhe-interno}} | fail-closed |
-| Sem autoridade para a ação | {{403}} | {{mensagem-generica}} | recurso existe, ação recusada |
-| Recurso fora do âmbito (scoping) | {{404}} | {{mensagem-generica}} | nunca 403 — não revela existência |
-| {{situacao-de-validacao-de-negocio}} | {{422-ou-equivalente}} | {{mensagem-com-o-invariante-violado}} | liga a `RN-nnn` |
+| No valid profile | {{401-or-equivalent}} | {{generic-message-without-internal-detail}} | fail-closed |
+| No authority for the action | {{403}} | {{generic-message}} | resource exists, action refused |
+| Resource out of scope (scoping) | {{404}} | {{generic-message}} | never 403 — does not reveal existence |
+| {{business-validation-situation}} | {{422-or-equivalent}} | {{message-with-the-violated-invariant}} | links to `BR-nnn` |
 
-## Testes obrigatórios
+## Mandatory tests
 
-*Sem estes, o contrato não está imposto — está só descrito.*
+*Without these, the contract is not enforced — only described.*
 
-- [ ] Cada perfil listado vê exatamente o subconjunto esperado (teste "vê / não vê" por perfil).
-- [ ] Pedido sem perfil é negado (prova o fail-open impossível — nunca `perfil ?? "admin"`).
-- [ ] Recurso fora do âmbito devolve 404 em vez de 403.
-- [ ] Campos sensíveis ausentes da resposta para perfis sem autoridade.
-- [ ] Guardrail: teste que percorre todos os endpoints e falha se algum expõe dados sem passar pela
-      autorização/scoping.
-- [ ] Prova-live: dois perfis diferentes veem subconjuntos diferentes de dados reais.
+- [ ] Each listed profile sees exactly the expected subset ("sees / does not see" test per profile).
+- [ ] Requests without a profile are denied (fail-open impossible — never `profile ?? "admin"`).
+- [ ] A resource out of scope returns 404 instead of 403.
+- [ ] Sensitive fields are absent from the response for profiles without authority.
+- [ ] Guardrail: a test that walks every endpoint and fails if any exposes data without going
+      through authorization/scoping.
+- [ ] Live proof: two different profiles see different subsets of real data.
 
-## Relacionados
+## Related
 
 - `agents/05-backend/authorization-specialist.md` · `agents/05-backend/authentication-specialist.md`
 - `agents/05-backend/api-designer.md` · `agents/09-security/authorization-and-least-privilege-specialist.md`

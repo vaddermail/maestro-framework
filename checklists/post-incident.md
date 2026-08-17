@@ -1,46 +1,45 @@
-# Pós-Incidente
+# Post-Incident
 
-Corre depois de qualquer incidente mitigado, antes de o considerar encerrado
-(`workflows/W11-incident-response.md`). Garante que o incidente produz aprendizagem **verificada**
-— não só um relatório arquivado que ninguém volta a olhar.
+Runs after any mitigated incident, before considering it closed
+(`workflows/W11-incident-response.md`). Ensures the incident produces **verified** learning — not
+just an archived report nobody ever looks at again.
 
 ## Post-mortem
 
-- [ ] Post-mortem escrito (`templates/technical/post-mortem.md.template`) com linha do tempo factual
-      dos eventos.
-- [ ] Causa raiz identificada — não só o sintoma que disparou o alerta.
-- [ ] Post-mortem **sem culpados**: descreve o que falhou no sistema/processo, não quem "fez asneira"
-      (`knowledge/permanent-rules.md`).
-- [ ] Impacto quantificado (duração, utilizadores/pedidos afetados, dados perdidos se houver).
+- [ ] Post-mortem written (`templates/technical/post-mortem.md.template`) with a factual timeline
+      of the events.
+- [ ] Root cause identified — not just the symptom that fired the alert.
+- [ ] **Blameless** post-mortem: it describes what failed in the system/process, not who "messed
+      up" (`knowledge/permanent-rules.md`).
+- [ ] Impact quantified (duration, users/requests affected, data lost if any).
 
-## Ações de prevenção
+## Prevention actions
 
-- [ ] Cada ação de prevenção tem um dono nomeado e um prazo concreto.
-- [ ] Ações cobrem a causa raiz, não só um patch pontual do sintoma que disparou o alerta.
-- [ ] Ações destrutivas ou de alto risco propostas passam por aprovação humana antes de executar
+- [ ] Every prevention action has a named owner and a concrete deadline.
+- [ ] Actions cover the root cause, not just a one-off patch of the symptom that fired the alert.
+- [ ] Proposed destructive or high-risk actions go through human approval before executing
       (`knowledge/permanent-rules.md` §4).
 
-## Verificação
+## Verification
 
-- [ ] Cada ação marcada como concluída tem **evidência de verificação independente** — não a palavra
-      de quem a implementou (`core/quality-gates.md`).
-- [ ] Quando a prevenção é um teste novo, o teste reproduz o incidente original (falha antes da
-      correção, passa depois) — confirmado, não presumido.
-- [ ] Quando aplicável, um simulacro real confirma que as mesmas condições já não reproduzem o
-      incidente.
+- [ ] Every action marked as done has **evidence of independent verification** — not the word of
+      whoever implemented it (`core/quality-gates.md`).
+- [ ] When the prevention is a new test, the test reproduces the original incident (fails before
+      the fix, passes after) — confirmed, not presumed.
+- [ ] When applicable, a real drill confirms the same conditions no longer reproduce the incident.
 
-## Memória
+## Memory
 
-- [ ] Lição registada em `STATE.md` §Lições, com o **porquê** e o **como aplicar** — não só
-      "cuidado com X" (`core/project-memory.md`).
-- [ ] Verificado que a lição não duplica uma já existente — atualiza-se a existente em vez de
-      duplicar.
-- [ ] Post-mortem arquivado em local acessível a sessões futuras (`product/99-records/`).
+- [ ] Lesson recorded in `STATE.md` §Lessons, with the **why** and the **how to apply** — not
+      just "watch out for X" (`core/project-memory.md`).
+- [ ] Checked that the lesson does not duplicate an existing one — the existing one gets updated
+      instead of duplicated.
+- [ ] Post-mortem archived somewhere accessible to future sessions (`product/99-records/`).
 
-## Relacionados
+## Related
 
-- `workflows/W11-incident-response.md` — o workflow que abre esta checklist.
-- `templates/technical/post-mortem.md.template` — o formato do post-mortem.
-- `core/project-memory.md` — onde a lição fica registada.
-- `knowledge/permanent-rules.md` — honestidade e mudanças destrutivas.
-- `core/quality-gates.md` — a regra de verificação independente.
+- `workflows/W11-incident-response.md` — the workflow that opens this checklist.
+- `templates/technical/post-mortem.md.template` — the post-mortem format.
+- `core/project-memory.md` — where the lesson is recorded.
+- `knowledge/permanent-rules.md` — honesty and destructive changes.
+- `core/quality-gates.md` — the independent verification rule.

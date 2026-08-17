@@ -1,54 +1,54 @@
-# Relatório de Revisão — `{{dimensao-do-revisor}}`
+# Review Report — `{{reviewer-dimension}}`
 
-> **Como usar:** copia para `product/99-records/reviews/{{dimensao}}-{{fatia}}-AAAA-MM-DD.md`. Todo
-> o revisor de `agents/12-reviewers/` usa este molde **sem alterações**, para o
-> `agents/12-reviewers/review-consolidator.md` os poder fundir sem tradução. Formato definido em
+> **How to use:** copy to `product/99-records/reviews/{{dimension}}-{{slice}}-YYYY-MM-DD.md`. Every
+> reviewer in `agents/12-reviewers/` uses this template **without changes**, so the
+> `agents/12-reviewers/review-consolidator.md` can merge them without translation. Format defined in
 > `agents/12-reviewers/README.md` §Report format.
 
-## 1. Cabeçalho
+## 1. Header
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| Revisor (dimensão) | {{ex-revisor-de-backend}} |
-| Âmbito revisto | {{fatia-commits-ou-artefactos-revistos}} |
-| Data | {{aaaa-mm-dd}} |
-| Modelo e esforço usados | {{ex-topo-effort-high}} (`core/model-routing.md`) |
+| Reviewer (dimension) | {{e.g.-backend-reviewer}} |
+| Scope reviewed | {{slice-commits-or-artifacts-reviewed}} |
+| Date | {{yyyy-mm-dd}} |
+| Model and effort used | {{e.g.-top-effort-high}} (`core/model-routing.md`) |
 
-## 2. Veredicto global
+## 2. Overall verdict
 
-*Um único bloqueador basta para bloquear (`core/quality-gates.md`).*
+*A single blocker is enough to block (`core/quality-gates.md`).*
 
-**{{passa | passa-com-ressalvas | bloqueia}}**
+**{{pass | pass-with-reservations | block}}**
 
-{{uma-frase-de-justificacao-do-veredicto}}
+{{one-sentence-justification-of-the-verdict}}
 
-## 3. Achados (ordenados por severidade)
+## 3. Findings (ordered by severity)
 
-*Um achado confirmado vale mais do que dez suspeitas — ordenar por risco real, não por número de
-achados. Achados de correção, autorização, dinheiro, dados pessoais e fluxos irreversíveis recebem o
-máximo escrutínio (`MANIFESTO.md` §9).*
+*One confirmed finding is worth more than ten suspicions — order by real risk, not by number of
+findings. Findings on correctness, authorization, money, personal data and irreversible flows get
+maximum scrutiny (`MANIFESTO.md` §9).*
 
-| ID | Severidade | Localização | Defeito (uma frase) | Cenário de falha concreto | Recomendação | Confiança |
+| ID | Severity | Location | Defect (one sentence) | Concrete failure scenario | Recommendation | Confidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| A1 | {{bloqueador \| maior \| menor \| nit}} | `{{ficheiro:linha-ou-artefacto}}` | {{defeito-em-uma-frase}} | {{inputs-estado-resultado-errado-nunca-parece-fragil}} | {{recomendacao-concreta}} | {{confirmado \| plausivel}} |
+| A1 | {{blocker \| major \| minor \| nit}} | `{{file:line-or-artifact}}` | {{defect-in-one-sentence}} | {{inputs-state-wrong-outcome-never-looks-fragile}} | {{concrete-recommendation}} | {{confirmed \| plausible}} |
 
-## 4. O que foi verificado e passou
+## 4. What was checked and passed
 
-*Não só o negativo — dá confiança e diz ao consolidador o que já está coberto.*
+*Not just the negative — builds confidence and tells the consolidator what is already covered.*
 
-- {{item-verificado-1}}
-- {{item-verificado-2}}
+- {{checked-item-1}}
+- {{checked-item-2}}
 
-## 5. Fora de âmbito / não verificável
+## 5. Out of scope / not verifiable
 
-*Honestidade absoluta (`knowledge/permanent-rules.md` §2): o que este revisor não olhou e
-porquê — falta de artefacto ou dimensão de outro revisor.*
+*Absolute honesty (`knowledge/permanent-rules.md` §2): what this reviewer did not look at and
+why — missing artifact or another reviewer's dimension.*
 
-| O que não foi verificado | Porquê |
+| What was not checked | Why |
 | --- | --- |
-| {{ex-performance-sob-carga}} | {{dimensao-de-outro-revisor-ou-falta-de-artefacto}} |
+| {{e.g.-performance-under-load}} | {{another-reviewer's-dimension-or-missing-artifact}} |
 
-## Relacionados
+## Related
 
 - `agents/12-reviewers/README.md` · `agents/12-reviewers/review-consolidator.md`
 - `checklists/pr-review.md` · `checklists/pre-merge.md` · `core/quality-gates.md`

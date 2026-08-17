@@ -1,54 +1,54 @@
 # MVP
 
-> **Como usar:** o menor conjunto de funcionalidades que já entrega valor real e é demonstrável, com
-> os cortes registados a preto no branco. Instanciado pelo
-> `agents/00-discovery/mvp-scoper.md`, perto do fim de F1. Fica em
+> **How to use:** the smallest set of features that already delivers real value and is
+> demonstrable, with the cuts recorded in black and white. Instantiated by
+> `agents/00-discovery/mvp-scoper.md`, near the end of F1. Lives at
 > `product/00-discovery/mvp.md`.
 
-> **Estado:** rascunho
-> **Dono:** `agents/00-discovery/mvp-scoper.md`
-> **Fase:** F1 (fim da descoberta) · **Atualizado:** {{aaaa-mm-dd}}
-> **Consumidores:** utilizador, `planeador-de-roadmap`, F2 (requisitos), F3 (arquitetura)
+> **Status:** draft
+> **Owner:** `agents/00-discovery/mvp-scoper.md`
+> **Phase:** F1 (end of discovery) · **Updated:** {{yyyy-mm-dd}}
+> **Consumers:** user, `roadmap-planner`, F2 (requirements), F3 (architecture)
 
-## Âmbito do MVP
+## MVP scope
 
-*Tem de fechar pelo menos um caso de uso central de ponta a ponta e mover pelo menos um KPI — senão
-o corte está errado.*
+*Must close at least one core use case end to end and move at least one KPI — otherwise the cut
+is wrong.*
 
-| Funcionalidade | Caso de uso que fecha | KPI que move |
+| Feature | Use case it closes | KPI it moves |
 | --- | --- | --- |
-| {{funcionalidade}} | `CU-{{nnn}}` | {{kpi}} |
+| {{feature}} | `UC-{{nnn}}` | {{kpi}} |
 
-## Critério de "demonstrável"
+## "Demonstrable" criterion
 
-*O que se mostra numa demo de poucos minutos. Se não se consegue mostrar a funcionar, ainda há um
-buraco no fluxo.*
+*What gets shown in a few-minute demo. If it can't be shown working, there is still a hole in the
+flow.*
 
-{{cenario-de-demo}}
+{{demo-scenario}}
 
-## Exclusões explícitas
+## Explicit exclusions
 
-*Cada corte com motivo e destino — um corte silencioso volta como "pensei que estava incluído"
+*Every cut with a reason and a destination — a silent cut comes back as "I thought it was included"
 (`knowledge/ai-pitfalls.md`).*
 
-| Fora do MVP | Motivo | Destino |
+| Out of the MVP | Reason | Destination |
 | --- | --- | --- |
-| {{funcionalidade-excluida}} | {{motivo-do-corte}} | H2 / H3 / nunca |
+| {{excluded-feature}} | {{cut-reason}} | H2 / H3 / never |
 
-## Piso legal/ético/segurança verificado
+## Legal/ethical/security floor verified
 
-*Consentimento de dados, acessibilidade básica e segurança de autenticação nunca são "features de
-H2" — se um risco de `riscos.md` o exigir, entram no MVP mesmo custando ao prazo.*
+*Data consent, basic accessibility and authentication security are never "H2 features" — if a
+risk in `risks.md` requires it, they enter the MVP even at cost to the deadline.*
 
-- [ ] {{verificacao-1}}
+- [ ] {{check-1}}
 
-## Aprovação
+## Approval
 
-*O âmbito é decisão humana — o artefacto não passa a `aprovado` sem isto.*
+*Scope is a human decision — the artifact does not move to `approved` without this.*
 
-**Aprovado por:** {{utilizador}} · **Em:** {{aaaa-mm-dd}}
+**Approved by:** {{user}} · **On:** {{yyyy-mm-dd}}
 
-## Relacionados
+## Related
 
 - `agents/00-discovery/mvp-scoper.md` · `templates/discovery/roadmap.md.template`
 - `templates/discovery/use-case.md.template` · `templates/discovery/goals-and-kpis.md.template`

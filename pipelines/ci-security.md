@@ -1,95 +1,96 @@
-# CI de Segurança (Security CI)
+# Security CI
 
-Pipeline que corre em paralelo ao `pipelines/ci-quality.md`, dedicado a encontrar problemas de
-segurança antes de chegarem a produção: código, dependências, segredos, imagens e, em cadência
-própria, o próprio ambiente de teste em execução. Materializado por
-`agents/07-devops/github-actions-specialist.md` (ou fornecedor equivalente); as regras de scan
-concretas vêm de `agents/09-security/`.
+Pipeline that runs in parallel with `pipelines/ci-quality.md`, dedicated to finding security
+problems before they reach production: code, dependencies, secrets, images and, on its own cadence,
+the running test environment itself. Materialized by
+`agents/07-devops/github-actions-specialist.md` (or equivalent vendor); the concrete scan rules
+come from `agents/09-security/`.
 
-## Princípios
+## Principles
 
-- **Shift-left, mas sem fadiga de alertas.** Os scans correm o mais cedo possível (a cada push), mas
-  só **bloqueiam por severidade**, não por qualquer achado — ruído sem prioridade ensina a equipa a
-  ignorar o pipeline.
-- **Secrets scan cobre diff E histórico.** Um segredo commitado há 40 commits é tão real como um no
-  último — o scan de diff apanha o novo a cada push, o scan de histórico completo (periódico) apanha
-  o esquecido.
-- **Achado sem correção imediata não desaparece — vira loop.** O que não se resolve no próprio job
-  entra em `loops/L03-security-issues.md` (achados abertos) ou `loops/L07-cves.md` (CVEs de
-  dependências), com dono e prazo por severidade.
-- **SBOM é artefacto vivo**, gerado a cada build — não um documento produzido uma vez e esquecido; é a
-  base da resposta a um CVE anunciado no dia seguinte (`agents/09-security/sbom-manager.md`).
-- **DAST não corre em cada PR.** É lento e precisa de um ambiente implantado; corre agendado contra um
-  ambiente de teste estável, não a cada alteração de uma linha.
+- **Shift-left, but without alert fatigue.** Scans run as early as possible (on every push), but
+  they only **block by severity**, not on any finding — unprioritized noise teaches the team to
+  ignore the pipeline.
+- **Secrets scan covers diff AND history.** A secret committed 40 commits ago is as real as one in
+  the latest — the diff scan catches the new one on every push, the full-history scan (periodic)
+  catches the forgotten one.
+- **A finding without an immediate fix does not disappear — it becomes a loop.** Whatever is not
+  resolved in the job itself goes into `loops/L03-security-issues.md` (open findings) or
+  `loops/L07-cves.md` (dependency CVEs), with an owner and a deadline per severity.
+- **The SBOM is a living artifact**, generated on every build — not a document produced once and
+  forgotten; it is the basis for responding to a CVE announced the next day
+  (`agents/09-security/sbom-manager.md`).
+- **DAST does not run on every PR.** It is slow and needs a deployed environment; it runs on a
+  schedule against a stable test environment, not on every one-line change.
 
-## Estágios
+## Stages
 
-1. **Gatilho** — SAST, secrets scan (diff) e dependency scan correm em todo `push`/PR (suficientemente
-   rápidos). Container scan corre ao construir a imagem. DAST e o secrets scan de histórico completo
-   correm **agendados** (ex.: nocturno/semanal), nunca por PR.
-2. **SAST** — análise estática do código-fonte por regras de segurança
-   (`agents/09-security/sast-specialist.md`); bloqueia por limiar de severidade acordado.
-3. **Secrets scan (diff)** — em todo commit novo, verifica só o que mudou; qualquer segredo confirmado
-   bloqueia de imediato e dispara `playbooks/secrets-management.md` (rotação de emergência).
-4. **Secrets scan (histórico completo)** — periódico, varre o repositório inteiro
-   (`agents/09-security/exposed-secrets-hunter.md`). Um achado **confirmado real e vivo**
-   dispara de imediato a rotação de emergência (`playbooks/secrets-management.md` — revogar +
-   rodar), como no estágio 3; os restantes (falsos positivos, dummies, e a decisão de limpar ou
-   reescrever o histórico) abrem item em `loops/L03-security-issues.md` para triagem — não
-   se corrige sozinho o passado.
-5. **Dependency scan (SCA)** — CVEs conhecidas em dependências diretas e transitivas
-   (`agents/09-security/dependency-analyst.md`); bloqueia por severidade, alimenta
-   `loops/L07-cves.md` para o resto.
-6. **Container scan** — imagem construída, antes do *push* ao registry
-   (`agents/09-security/container-analyst.md`); bloqueia em crítico/alto.
-7. **Geração de SBOM** — a cada build, anexado ao artefacto e versionado
-   (`agents/09-security/sbom-manager.md`); consumido por resposta a CVE futura
+1. **Trigger** — SAST, secrets scan (diff) and dependency scan run on every `push`/PR (fast
+   enough). Container scan runs when the image is built. DAST and the full-history secrets scan
+   run **on a schedule** (e.g. nightly/weekly), never per PR.
+2. **SAST** — static analysis of the source code against security rules
+   (`agents/09-security/sast-specialist.md`); blocks at the agreed severity threshold.
+3. **Secrets scan (diff)** — on every new commit, checks only what changed; any confirmed secret
+   blocks immediately and triggers `playbooks/secrets-management.md` (emergency rotation).
+4. **Secrets scan (full history)** — periodic, sweeps the entire repository
+   (`agents/09-security/exposed-secrets-hunter.md`). A finding **confirmed real and live**
+   immediately triggers the emergency rotation (`playbooks/secrets-management.md` — revoke +
+   rotate), as in stage 3; the rest (false positives, dummies, and the decision to clean or
+   rewrite history) open an item in `loops/L03-security-issues.md` for triage — the past is
+   never fixed on its own.
+5. **Dependency scan (SCA)** — known CVEs in direct and transitive dependencies
+   (`agents/09-security/dependency-analyst.md`); blocks by severity, feeds
+   `loops/L07-cves.md` with the rest.
+6. **Container scan** — built image, before the *push* to the registry
+   (`agents/09-security/container-analyst.md`); blocks on critical/high.
+7. **SBOM generation** — on every build, attached to the artifact and versioned
+   (`agents/09-security/sbom-manager.md`); consumed by future CVE response
    (`playbooks/cve-response.md`).
-8. **DAST agendado** — contra o ambiente de teste, cadência regular (ex.: diária/semanal)
-   (`agents/09-security/dast-specialist.md`); achados entram na mesma triagem de severidade.
+8. **Scheduled DAST** — against the test environment, regular cadence (e.g. daily/weekly)
+   (`agents/09-security/dast-specialist.md`); findings enter the same severity triage.
 
-## Triagem de findings (o que bloqueia)
+## Findings triage (what blocks)
 
-| Severidade | Efeito |
+| Severity | Effect |
 | --- | --- |
-| Crítica / Alta | Bloqueia merge (código) ou promoção (container/DAST); corrige antes de avançar |
-| Média | Não bloqueia; entra em `loops/L03-security-issues.md` ou `loops/L07-cves.md` com prazo |
-| Baixa / informativa | Registada, revista em cadência pelo `agents/13-guardians/security-guardian.md`, sem bloquear |
+| Critical / High | Blocks merge (code) or promotion (container/DAST); fix before moving on |
+| Medium | Does not block; goes into `loops/L03-security-issues.md` or `loops/L07-cves.md` with a deadline |
+| Low / informational | Recorded, reviewed on cadence by `agents/13-guardians/security-guardian.md`, without blocking |
 
-Um segredo confirmado bloqueia sempre, independentemente da severidade atribuída pela ferramenta —
-não existe "segredo de baixa severidade" (`knowledge/permanent-rules.md` §5).
+A confirmed secret always blocks, regardless of the severity the tool assigns — there is no such
+thing as a "low-severity secret" (`knowledge/permanent-rules.md` §5).
 
-## Exemplo (pseudocódigo neutro, ilustrativo)
+## Example (neutral pseudocode, illustrative)
 
 ```yaml
-pipeline: ci-seguranca
-gatilhos: [push, pull_request, agendado(diario)]
-estagios:
+pipeline: ci-security
+triggers: [push, pull_request, scheduled(daily)]
+stages:
   - job: sast
-    corre_em: [push, pull_request]
-    bloqueia_se: severidade >= alta
+    runs_on: [push, pull_request]
+    blocks_if: severity >= high
   - job: secrets-scan-diff
-    corre_em: [push, pull_request]
-    bloqueia_se: achado_confirmado
+    runs_on: [push, pull_request]
+    blocks_if: confirmed_finding
   - job: dependency-scan
-    corre_em: [push, pull_request]
-    bloqueia_se: severidade >= alta
-    senao: abre_item(loops/L07-cves.md)
+    runs_on: [push, pull_request]
+    blocks_if: severity >= high
+    otherwise: open_item(loops/L07-cves.md)
   - job: container-scan
-    corre_em: [build_imagem]
-    bloqueia_se: severidade >= critica
-  - job: gerar-sbom
-    corre_em: [build_imagem]
-    produz: sbom-versionado
-  - job: secrets-scan-historico
-    corre_em: [agendado(semanal)]
-    senao: abre_item(loops/L03-security-issues.md)
+    runs_on: [image_build]
+    blocks_if: severity >= critical
+  - job: generate-sbom
+    runs_on: [image_build]
+    produces: versioned-sbom
+  - job: secrets-scan-history
+    runs_on: [scheduled(weekly)]
+    otherwise: open_item(loops/L03-security-issues.md)
   - job: dast
-    corre_em: [agendado(diario)]
-    alvo: ambiente-de-teste
+    runs_on: [scheduled(daily)]
+    target: test-environment
 ```
 
-## Relacionados
+## Related
 
 - `pipelines/README.md` · `pipelines/ci-quality.md` · `pipelines/cd-delivery.md`
 - `loops/L03-security-issues.md` · `loops/L07-cves.md`

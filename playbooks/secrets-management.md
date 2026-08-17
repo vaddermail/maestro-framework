@@ -1,107 +1,109 @@
-# Playbook — Gestão de Segredos
+# Playbook — Secrets Management
 
-Procedimento ponta a ponta para manter segredos (chaves, passwords, tokens, API keys, *connection
-strings*, certificados) **fora do controlo de versões** e fora de logs/output. Operacionaliza
-`knowledge/permanent-rules.md` §5 e é o passo-a-passo que o `agents/07-devops/secrets-manager.md`
-segue, executando a política do `agents/09-security/secrets-and-rotation-manager.md`.
+End-to-end procedure to keep secrets (keys, passwords, tokens, API keys, connection strings,
+certificates) **out of version control** and out of logs/output. It operationalizes
+`knowledge/permanent-rules.md` §5 and is the step-by-step that `agents/07-devops/secrets-manager.md`
+follows, executing the policy of `agents/09-security/secrets-and-rotation-manager.md`.
 
-**Quando se executa:** no arranque do fluxo de segredos (F8, `workflows/W08-launch.md`); ao
-integrar um novo segredo/ambiente/serviço; na rotação periódica; e — com prioridade máxima — perante
-suspeita ou confirmação de fuga. **Quem:** o Gestor de Segredos, sob a política de segurança. O
-utilizador aprova a escolha de *store* e é avisado antes de qualquer rotação que possa cortar serviço.
+**When it runs:** at the start of the secrets flow (F8, `workflows/W08-launch.md`); when
+integrating a new secret/environment/service; on periodic rotation; and — top priority — on
+suspected or confirmed leak. **Who:** the Secrets Manager, under the security policy. The user
+approves the choice of store and is warned before any rotation that could cut service.
 
-## Pré-condições
+## Preconditions
 
-- [ ] *Store*/vault decidido com o utilizador (ver passo 2) ou decisão registada em `STATE.md`.
-- [ ] Inventário das credenciais que os serviços precisam (de `agents/05-backend/*`, `agents/06-data/*`,
-      `agents/07-devops/deployment-strategist.md`).
-- [ ] Acessos entregues **por caminho de ficheiro**, nunca colados no chat (regra inegociável — passo 6).
+- [ ] Store/vault decided with the user (see step 2) or decision recorded in `STATE.md`.
+- [ ] Inventory of the cnetworkntials the services need (from `agents/05-backend/*`,
+      `agents/06-data/*`, `agents/07-devops/deployment-strategist.md`).
+- [ ] Access handed over **by file path**, never pasted in the chat (non-negotiable rule — step 6).
 
-## Passos
+## Steps
 
-### 1. Inventariar o que conta como segredo
-**Faz:** lista tudo o que, se vazar, dá acesso ou identidade — passwords, tokens, API keys, chaves
-SSH/privadas, *connection strings*, segredos de assinatura, certificados. Regista o inventário (nome,
-onde é usado, quem o emite, cadência de rotação) **sem valores**.
-**Verifica:** cada credencial usada em código/config aparece no inventário; nenhuma entrada tem o valor.
-**Se falhar:** se aparecer um valor no inventário, apaga-o e substitui por um caminho/nome; se houver
-credencial usada mas não inventariada, é uma lacuna — não avançar sem a fechar.
+### 1. Inventory what counts as a secret
+**Do:** list everything that, if leaked, grants access or identity — passwords, tokens, API keys,
+SSH/private keys, connection strings, signing secrets, certificates. Record the inventory (name,
+where it is used, who issues it, rotation cadence) **without values**.
+**Verify:** every cnetworkntial used in code/config appears in the inventory; no entry holds the value.
+**If it fails:** if a value shows up in the inventory, delete it and replace it with a path/name; if
+a cnetworkntial is used but not inventoried, that is a gap — do not proceed without closing it.
 
-### 2. Decidir onde vivem (pasta gitignored ou vault)
-**Faz:** escolhe com o utilizador (formato `core/question-engine.md`): **vault gerido** (cloud
-KMS/Secrets Manager) se já há cloud; **vault self-hosted** para on-prem com equipa; ou **ficheiros
-gitignored com `chmod 600`** como início honesto on-prem simples — sempre com caminho de migração para
-vault escrito, nunca como destino final.
-**Verifica:** a decisão está em `STATE.md`; a pasta de segredos local (se aplicável) está fora do repo
-ou coberta pelo `.gitignore` (passo 3).
-**Se falhar:** sem decisão, o agente termina **bloqueado** e regista em `STATE.md` → decisões pendentes.
+### 2. Decide where they live (gitignored folder or vault)
+**Do:** choose with the user (`core/question-engine.md` format): **managed vault** (cloud
+KMS/Secrets Manager) if cloud is already in play; **self-hosted vault** for on-prem with a team; or
+**gitignored files with `chmod 600`** as an honest simple on-prem start — always with a written
+migration path to a vault, never as a final destination.
+**Verify:** the decision is in `STATE.md`; the local secrets folder (if any) is outside the repo or
+covered by `.gitignore` (step 3).
+**If it fails:** without a decision, the agent finishes **blocked** and records it in `STATE.md` →
+pending decisions.
 
-### 3. Trancar o repositório
-**Faz:** `.gitignore` com *allowlist* — ignora a pasta/ficheiros de segredos e permite **só** os
-`*.example`. Instala um guardrail de *pre-commit* que barra padrões de segredo (ex.: `sk_live_`, chaves
-`BEGIN PRIVATE KEY`, *connection strings*) e o *scan* correspondente no `pipelines/ci-security.md`.
-**Verifica:** planta um segredo de teste falso num *commit* — o guardrail **rejeita-o**; `git status`
-não mostra ficheiros de segredo por rastrear.
-**Se falhar:** se o guardrail não morde, corrige o padrão antes de confiar nele (um guardrail que não
-rejeita é pior que nenhum — dá falsa confiança, `knowledge/ai-pitfalls.md`).
+### 3. Lock down the repository
+**Do:** `.gitignore` with an allowlist — ignore the secrets folder/files and allow **only** the
+`*.example` ones. Install a pre-commit guardrail that blocks secret patterns (e.g. `sk_live_`,
+`BEGIN PRIVATE KEY` keys, connection strings) and the matching scan in `pipelines/ci-security.md`.
+**Verify:** plant a fake test secret in a commit — the guardrail **rejects it**; `git status` shows
+no untracked secret files.
+**If it fails:** if the guardrail does not bite, fix the pattern before trusting it (a guardrail
+that does not reject is worse than none — it gives false confidence, `knowledge/ai-pitfalls.md`).
 
-### 4. Materializar *templates* `*.example`
-**Faz:** para cada ficheiro de segredos, cria o `*.example` com as **chaves** e valores fictícios
-(`API_KEY=coloca-aqui-a-tua`), versionado. Serve o `playbooks/developer-onboarding.md`.
-**Verifica:** o `*.example` não contém nenhum valor real; abrir o projeto de raiz com o `*.example`
-diz a um novo interveniente exatamente o que preencher.
-**Se falhar:** se um valor real escapou para o `*.example`, trata-o como fuga (passo 8).
+### 4. Materialize `*.example` templates
+**Do:** for each secrets file, create the `*.example` with the **keys** and dummy values
+(`API_KEY=put-yours-here`), versioned. It serves `playbooks/developer-onboarding.md`.
+**Verify:** the `*.example` contains no real value; opening the project from scratch with the
+`*.example` tells a newcomer exactly what to fill in.
+**If it fails:** if a real value slipped into the `*.example`, treat it as a leak (step 8).
 
-### 5. Injetar em runtime
-**Faz:** cada serviço/pipeline recebe os segredos do *store* por variável de ambiente ou ficheiro
-montado; o código referencia por **nome/caminho**, nunca o valor *hardcoded*.
-**Verifica:** prova-live — o serviço arranca lendo do *store*; procurar o valor no código/imagem/logs
-não devolve nada.
-**Se falhar:** se o serviço só arranca com o valor colado, o segredo não está a ser injetado — corrigir
-a injeção, não *hardcodar* "temporariamente".
+### 5. Inject at runtime
+**Do:** each service/pipeline receives its secrets from the store via environment variable or
+mounted file; the code references them by **name/path**, never a hardcoded value.
+**Verify:** live proof — the service starts up reading from the store; searching for the value in
+code/image/logs returns nothing.
+**If it fails:** if the service only starts with the value pasted in, the secret is not being
+injected — fix the injection, do not hardcode "temporarily".
 
-### 6. Aceder por caminho, nunca no chat/output
-**Faz:** sempre que precisares de um segredo, pede/usa o **caminho do ficheiro**; nunca o eco no chat,
-em logs, em mensagens de erro ou em artefactos.
-**Verifica:** varre o output da sessão e os logs — nenhum valor de segredo aparece.
-**Se falhar:** um valor colado numa conversa está comprometido — trata como fuga (passo 8).
+### 6. Access by path, never in chat/output
+**Do:** whenever you need a secret, ask for/use the **file path**; never echo it in chat, logs,
+error messages or artifacts.
+**Verify:** sweep the session output and the logs — no secret value appears.
+**If it fails:** a value pasted into a conversation is compromised — treat it as a leak (step 8).
 
-### 7. Rotação (periódica e sob evento)
-**Faz:** executa a cadência de rotação da política de segurança — gerar credencial nova, injetar,
-**verificar o serviço a funcionar com a nova**, e só depois revogar a antiga (expand-contract aplicado
-a segredos, `knowledge/permanent-rules.md` §3).
-**Verifica:** o serviço funciona com a credencial nova antes de a antiga ser revogada; a antiga fica
-inutilizada após revogação.
-**Se falhar:** se a nova não funciona, **não revogar a antiga** — reverter para a antiga (ainda válida)
-e investigar.
+### 7. Rotation (periodic and event-driven)
+**Do:** run the security policy's rotation cadence — generate the new cnetworkntial, inject it,
+**verify the service works with the new one**, and only then revoke the old one (expand-contract
+applied to secrets, `knowledge/permanent-rules.md` §3).
+**Verify:** the service works with the new cnetworkntial before the old one is revoked; the old one is
+unusable after revocation.
+**If it fails:** if the new one does not work, **do not revoke the old one** — fall back to the old
+(still valid) one and investigate.
 
-### 8. Resposta a fuga (irreversível — agir já)
-**Faz, por esta ordem:** (1) **revogar** a credencial exposta imediatamente; (2) **rodar** — emitir uma
-nova e injetá-la (passos 5/7); (3) **varrer o histórico** com o `agents/09-security/exposed-secrets-hunter.md`
-para achar todas as ocorrências e outras exposições; (4) **post-mortem** sem culpados
-(`templates/technical/post-mortem.md.template`) via `workflows/W11-incident-response.md`.
-**Verifica:** a credencial antiga já não autentica; o *scan* do histórico está limpo dali para a frente;
-o incidente está registado com a credencial rodada.
-**Se falhar / não esquecer:** **nunca** basta "apagar o *commit*" — o histórico Git é eterno e pode já
-estar clonado. Qualquer segredo que **alguma vez** esteve no Git conta como comprometido: rodar, não
-racionalizar.
+### 8. Leak response (irreversible — act now)
+**Do, in this order:** (1) **revoke** the exposed cnetworkntial immediately; (2) **rotate** — issue a
+new one and inject it (steps 5/7); (3) **sweep the history** with
+`agents/09-security/exposed-secrets-hunter.md` to find every occurrence and other exposures;
+(4) blameless **post-mortem** (`templates/technical/post-mortem.md.template`) via
+`workflows/W11-incident-response.md`.
+**Verify:** the old cnetworkntial no longer authenticates; the history scan is clean from there on;
+the incident is recorded with the cnetworkntial rotated.
+**If it fails / never forget:** "deleting the commit" is **never** enough — Git history is forever
+and may already be cloned. Any secret that was **ever** in Git counts as compromised: rotate, do
+not rationalize.
 
-## Reversão
+## Rollback
 
-- **Rotação/injeção** são reversíveis enquanto a credencial antiga não for revogada: reverter é
-  reapontar para a antiga. Por isso a ordem é sempre *nova a funcionar → revogar a antiga*, nunca o
-  inverso.
-- **Fuga não é reversível** — não se "desfaz" uma exposição; o único caminho é revogar+rodar. Daí a
-  prevenção (passos 3–6) valer mais que qualquer remediação.
-- **Escolha de *store*** é reversível por migração deliberada (ficheiros → vault), com o caminho escrito
-  desde o passo 2.
+- **Rotation/injection** are reversible while the old cnetworkntial is not revoked: reverting means
+  pointing back to the old one. That is why the order is always *new one working → revoke the old
+  one*, never the reverse.
+- **A leak is not reversible** — an exposure cannot be "undone"; the only path is revoke+rotate.
+  Hence prevention (steps 3–6) is worth more than any remediation.
+- **Store choice** is reversible via deliberate migration (files → vault), with the path written
+  down since step 2.
 
-## Relacionados
+## Related
 
-- `agents/07-devops/secrets-manager.md` — o agente que executa este playbook.
-- `agents/09-security/secrets-and-rotation-manager.md` — a política que este playbook concretiza.
-- `agents/09-security/exposed-secrets-hunter.md` — *scan* do histórico na resposta a fuga.
-- `knowledge/permanent-rules.md` — §5 (segredos fora do Git), §3 (reversibilidade).
-- `playbooks/developer-onboarding.md` — consome os `*.example`.
+- `agents/07-devops/secrets-manager.md` — the agent that executes this playbook.
+- `agents/09-security/secrets-and-rotation-manager.md` — the policy this playbook makes concrete.
+- `agents/09-security/exposed-secrets-hunter.md` — history scan in leak response.
+- `knowledge/permanent-rules.md` — §5 (secrets out of Git), §3 (reversibility).
+- `playbooks/developer-onboarding.md` — consumes the `*.example` files.
 - `workflows/W11-incident-response.md` · `templates/technical/post-mortem.md.template` · `pipelines/ci-security.md`
-- `checklists/pre-production-security.md` — o gate onde isto se verifica no go-live.
+- `checklists/pre-production-security.md` — the gate where this is verified at go-live.

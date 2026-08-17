@@ -44,7 +44,7 @@ here prevails.
 | **Post-mortem** | Blameless incident analysis: timeline, causes, actions with an owner (`templates/technical/post-mortem.md.template`). |
 | **RTO / RPO** | Recovery Time/Point Objective — how much downtime and how much data loss are tolerable (`agents/06-data/disaster-recovery-planner.md`). |
 | **Upstream framework** | Maestro's origin repository, where the framework evolves by SemVer; projects work on copies and re-sync deliberately (`_meta/VERSION.md`, `playbooks/sync-framework.md`). |
-| **Improvement report** | The consolidated, sanitized submission of a project's `FRAMEWORK-IMPROVEMENTS.md` to the upstream framework, as an issue with the `melhorias` label (`playbooks/report-framework-improvements.md`). |
+| **Improvement report** | The consolidated, sanitized submission of a project's `FRAMEWORK-IMPROVEMENTS.md` to the upstream framework, as an issue with the `improvements` label (`playbooks/report-framework-improvements.md`). |
 | **Candidate** | Lesson/pattern reported by a project, awaiting a second confirmation before being promoted into the framework (`knowledge/candidates.md`). |
 | **Curation (of the framework)** | The process that turns improvement reports into curated framework evolution — triage, candidates, promotions via PR with human merge (`playbooks/framework-curation.md`, `agents/14-meta/framework-curator.md`). |
 | **Genesis dossier** | The phase-by-phase record of a project's numbers (AI cost, days, findings, rework) that prove — or disprove — the framework's promise (`templates/project/GENESIS.md.template`). |

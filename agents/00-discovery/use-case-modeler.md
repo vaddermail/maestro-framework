@@ -51,7 +51,7 @@ Orchestrator.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Use cases UC-nnn | `product/00-discovery/use-cases/CU-nnn-{nome}.md` (`templates/discovery/use-case.md.template`) | `mvp-scoper`, `prioritizer`, `agents/01-requirements/requirements-engineer.md`, `agents/03-experience/ux-researcher.md` |
+| Use cases UC-nnn | `product/00-discovery/use-cases/UC-nnn-{name}.md` (`templates/discovery/use-case.md.template`) | `mvp-scoper`, `prioritizer`, `agents/01-requirements/requirements-engineer.md`, `agents/03-experience/ux-researcher.md` |
 | Business decision points to resolve | `STATE.md` → pending decisions | F2 |
 | Batch of questions | `product/01-requirements/questions-and-answers.md` | User (via Orchestrator) |
 

@@ -1,79 +1,80 @@
 # Go-Live
 
-O portão P8 (F8 → produção) — a única aprovação **sempre humana** do ciclo de vida
-(`core/quality-gates.md`). Dono da execução: `agents/07-devops/deployment-strategist.md`; a
-decisão final de promover é sempre do utilizador, nunca delegável a um agente.
+Gate P8 (F8 → production) — the lifecycle's only **always-human** approval
+(`core/quality-gates.md`). Execution owner: `agents/07-devops/deployment-strategist.md`; the
+final decision to promote is always the user's, never delegable to an agent.
 
-## Reconhecimento do alvo e pré-voo de ambiente
+## Target reconnaissance and environment pre-flight
 
-Corre **antes** de provisionar — nunca assumir campo verde. Um alvo mal caracterizado é onde os
-deploys partem o que já lá estava, ou onde a app não arranca por uma dependência que nunca se testou.
+Runs **before** provisioning — never assume a green field. A poorly characterized target is where
+deploys break what was already there, or where the app fails to start over a dependency that was
+never tested.
 
-- [ ] Alvo caracterizado: é dedicado ou **partilhado**? O que já lá corre? O novo serviço entra
-      **isolado** (BD/rede próprias) e qual é o *blast-radius* sobre o que já existe? A única alteração
-      ao que já lá está é aditiva e reversível?
-- [ ] Folga de recursos do alvo verificada e monitorizada (disco, memória, portos) — um alvo perto do
-      limite antes de arrancar é risco.
-- [ ] **Dependências de saída** de que a app precisa em runtime (portas de e-mail/SMTP, APIs externas,
-      filas) testadas **a partir do próprio alvo** — muitos fornecedores bloqueiam portas ou saídas por
-      omissão; descobre-se agora, não no primeiro utilizador. Atenção redobrada quando a autenticação
-      ou um fluxo crítico depende dessa saída.
-- [ ] Particularidades da plataforma-alvo verificadas: mudanças de comportamento entre **versões
-      maiores** de imagens/serviços, e que a configuração montada é mesmo a que o serviço **lê**
-      (não uma versão presa/antiga).
-- [ ] Acesso operacional ao alvo estável durante o deploy (reutilizar ligações; evitar disparar
-      proteções por excesso de tentativas) — para o próprio deploy não se auto-sabotar.
+- [ ] Target characterized: is it dedicated or **shared**? What already runs there? Does the new
+      service come in **isolated** (own DB/network) and what is the *blast-radius* on what already
+      exists? Is the only change to what is already there additive and reversible?
+- [ ] Target's resource headroom checked and monitored (disk, memory, ports) — a target near its
+      limit before starting is a risk.
+- [ ] **Outbound dependencies** the app needs at runtime (e-mail/SMTP ports, external APIs,
+      queues) tested **from the target itself** — many providers block ports or egress by
+      default; find out now, not with the first user. Extra attention when authentication or a
+      critical flow depends on that egress.
+- [ ] Target platform's particularities checked: behavior changes between **major versions** of
+      images/services, and that the mounted configuration is really the one the service **reads**
+      (not a stuck/old copy).
+- [ ] Operational access to the target stable during the deploy (reuse connections; avoid
+      tripping protections through excess attempts) — so the deploy itself does not self-sabotage.
 
-## Preparação
+## Preparation
 
-- [ ] Build/artefacto verde, com os gates de qualidade e segurança já passados
+- [ ] Build/artifact green, with the quality and security gates already passed
       (`checklists/pre-merge.md`, `checklists/pre-production-security.md`).
-- [ ] **Caminho de deploy exercido ponta-a-ponta** pelo menos uma vez antes do dia (staging ou
-      ensaio) — artefactos de deploy existirem **não** é o caminho estar exercido; só produção real
-      expõe o que falta.
-- [ ] Backup do estado atual (dados e infra) feito e **verificado** imediatamente antes do
-      lançamento; restauro **ensaiado** pelo menos uma vez — um backup que nunca se restaurou não
-      conta (`agents/06-data/backup-specialist.md`,
+- [ ] **Deploy path exercised end-to-end** at least once before the day (staging or rehearsal) —
+      deploy artifacts existing is **not** the path being exercised; only real production exposes
+      what is missing.
+- [ ] Backup of the current state (data and infra) taken and **verified** immediately before the
+      launch; restore **rehearsed** at least once — a backup that was never restored does not
+      count (`agents/06-data/backup-specialist.md`,
       `agents/08-infrastructure/infra-backup-specialist.md`).
-- [ ] Fluxo de autenticação **de produção** exercido de verdade (login real, não o atalho de
-      desenvolvimento) antes de haver utilizadores.
-- [ ] Migração de BD, se houver, em expand-contract — sem largar/renomear nada ainda em uso
+- [ ] **Production** authentication flow genuinely exercised (real login, not the development
+      shortcut) before there are users.
+- [ ] DB migration, if any, done expand-contract — nothing dropped/renamed while still in use
       (`playbooks/expand-contract-db-migration.md`).
 
 ## Rollback
 
-- [ ] Procedimento de rollback **ensaiado num ambiente equivalente**, não só escrito no runbook
-      (`playbooks/release-and-rollback.md`).
-- [ ] Critério objetivo de rollback definido antes do lançamento (ex.: taxa de erro > X%, latência >
-      Yms) — nunca decidido a olho durante o incidente.
-- [ ] Runbook de release/rollback atualizado e acessível (`templates/technical/runbook.md.template`).
+- [ ] Rollback procedure **rehearsed in an equivalent environment**, not just written in the
+      runbook (`playbooks/release-and-rollback.md`).
+- [ ] Objective rollback criterion defined before the launch (e.g. error rate > X%, latency >
+      Yms) — never eyeballed during the incident.
+- [ ] Release/rollback runbook updated and accessible (`templates/technical/runbook.md.template`).
 
-## Monitorização
+## Monitoring
 
-- [ ] Alertas de erro, latência e disponibilidade ativos e a apontar para os donos corretos antes de
-      o tráfego real começar.
-- [ ] Painel de observação disponível para acompanhar a janela de lançamento em tempo real.
+- [ ] Error, latency and availability alerts active and pointing at the right owners before real
+      traffic starts.
+- [ ] Observation dashboard available to follow the launch window in real time.
 
-## Pessoas e comunicação
+## People and communication
 
-- [ ] Donos contactáveis durante a janela de lançamento **confirmados**, não só nomeados numa lista.
-- [ ] Plano de comunicação definido: quem avisa quem, em caso de sucesso e em caso de rollback.
-- [ ] Aprovação humana explícita para produção registada em `STATE.md`, com nome e data — nunca
-      implícita ou assumida.
+- [ ] Owners reachable during the launch window **confirmed**, not just named on a list.
+- [ ] Communication plan defined: who tells whom, on success and on rollback.
+- [ ] Explicit human approval for production recorded in `STATE.md`, with name and date — never
+      implicit or assumed.
 
-## Infra e hard-block
+## Infra and hard-block
 
-- [ ] Pipeline confirma o ambiente/conta/cluster de destino e **aborta** se não corresponder ao
-      pretendido — testado a abortar de propósito pelo menos uma vez
+- [ ] Pipeline confirms the destination environment/account/cluster and **aborts** if it does not
+      match the intended one — tested to abort on purpose at least once
       (`agents/07-devops/deployment-strategist.md`).
-- [ ] Segredos de produção injetados em runtime, nunca embutidos no artefacto
+- [ ] Production secrets injected at runtime, never baked into the artifact
       (`agents/07-devops/secrets-manager.md`).
 
-## Relacionados
+## Related
 
-- `agents/07-devops/deployment-strategist.md` — dono da estratégia e da execução do release.
-- `playbooks/release-and-rollback.md` — o procedimento detalhado que esta checklist verifica.
-- `core/quality-gates.md` — o portão P8, aprovação sempre humana.
-- `checklists/pre-production-security.md` — pré-condição deste portão.
-- `pipelines/cd-delivery.md` — a automação de entrega e o hard-block.
-- `workflows/W08-launch.md` — o workflow completo de F8.
+- `agents/07-devops/deployment-strategist.md` — owner of the release strategy and execution.
+- `playbooks/release-and-rollback.md` — the detailed procedure this checklist verifies.
+- `core/quality-gates.md` — gate P8, always-human approval.
+- `checklists/pre-production-security.md` — precondition of this gate.
+- `pipelines/cd-delivery.md` — the delivery automation and the hard-block.
+- `workflows/W08-launch.md` — the full F8 workflow.

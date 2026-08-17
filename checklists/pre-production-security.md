@@ -1,66 +1,67 @@
-# Segurança Antes de Produção
+# Pre-Production Security
 
-O gate de segurança do portão P7 → F8 (`core/quality-gates.md`): nenhum produto avança para
-`checklists/go-live.md` sem esta checklist completa. Dono: `agents/09-security/security-coordinator.md`;
-corre em F7 e repete-se a cada release relevante em F9.
+The security gate for P7 → F8 (`core/quality-gates.md`): no product advances to
+`checklists/go-live.md` without this checklist complete. Owner:
+`agents/09-security/security-coordinator.md`; runs in F7 and repeats on every relevant release
+in F9.
 
-## Headers e transporte
+## Headers and transport
 
-- [ ] Headers de segurança configurados (CSP, HSTS, `X-Content-Type-Options`, `frame-ancestors`) —
+- [ ] Security headers configured (CSP, HSTS, `X-Content-Type-Options`, `frame-ancestors`) —
       `agents/09-security/http-headers-specialist.md`.
-- [ ] TLS moderno em todos os pontos de entrada (sem TLS 1.0/1.1, cifras atuais) —
+- [ ] Modern TLS on all entry points (no TLS 1.0/1.1, current ciphers) —
       `agents/09-security/tls-specialist.md`.
-- [ ] Certificados com renovação automática verificada, não dependente de ação manual.
+- [ ] Certificates with automatic renewal verified, not dependent on manual action.
 
-## Segredos
+## Secrets
 
-- [ ] Nenhum segredo no repositório Git, incluindo histórico — varrido por
+- [ ] No secret in the Git repository, including history — swept by
       `agents/09-security/exposed-secrets-hunter.md`.
-- [ ] Segredos de produção vivem fora do código, injetados em runtime, e são rodáveis sem novo deploy
-      (`playbooks/secrets-management.md`).
-- [ ] Rotação de segredos críticos tem procedimento e dono definidos
+- [ ] Production secrets live outside the code, injected at runtime, and are rotatable without a
+      new deploy (`playbooks/secrets-management.md`).
+- [ ] Rotation of critical secrets has a defined procedure and owner
       (`agents/09-security/secrets-and-rotation-manager.md`).
 
-## Scans automatizados
+## Automated scans
 
-- [ ] SAST corrido sobre o código atual, sem achados críticos/altos abertos
+- [ ] SAST run on the current code, with no critical/high findings open
       (`agents/09-security/sast-specialist.md`).
-- [ ] Dependency scan sem CVEs críticos/altos sem tratamento
+- [ ] Dependency scan with no unaddressed critical/high CVEs
       (`agents/09-security/dependency-analyst.md`).
-- [ ] Scan de containers/imagens sem vulnerabilidades críticas por corrigir
+- [ ] Container/image scan with no critical vulnerabilities left to fix
       (`agents/09-security/container-analyst.md`).
-- [ ] Secrets scan do pipeline de CI limpo (`pipelines/ci-security.md`).
-- [ ] Cada achado não corrigido tem risco aceite explicitamente pelo utilizador, com prazo de
-      remediação — nunca ignorado em silêncio.
+- [ ] Secrets scan of the CI pipeline clean (`pipelines/ci-security.md`).
+- [ ] Every unfixed finding has its risk explicitly accepted by the user, with a remediation
+      deadline — never silently ignored.
 
-## Autenticação, autorização e least privilege
+## Authentication, authorization and least privilege
 
-- [ ] Verificação ASVS no nível decidido para o produto corrida e sem falhas por resolver
+- [ ] ASVS verification at the level decided for the product run and with no failures unresolved
       (`agents/09-security/asvs-specialist.md`).
-- [ ] Cobertura OWASP Top 10 confirmada na revisão de código
+- [ ] OWASP Top 10 coverage confirmed in code review
       (`agents/09-security/owasp-top10-specialist.md`).
-- [ ] Autorização e scoping confirmados como responsabilidade exclusiva do servidor — nenhuma decisão
-      de acesso só no cliente (`modules/rbac-and-scoping.md`).
-- [ ] Contas de serviço, credenciais de BD e permissões de cloud/CI seguem o mínimo necessário,
-      verificado ponta a ponta (`agents/09-security/authorization-and-least-privilege-specialist.md`).
-- [ ] Nenhuma credencial partilhada entre ambientes (dev/staging/produção).
+- [ ] Authorization and scoping confirmed as the server's exclusive responsibility — no access
+      decision only on the client (`modules/rbac-and-scoping.md`).
+- [ ] Service accounts, DB cnetworkntials and cloud/CI permissions follow least privilege,
+      verified end to end (`agents/09-security/authorization-and-least-privilege-specialist.md`).
+- [ ] No cnetworkntial shared between environments (dev/staging/production).
 
-## Backups e recuperação
+## Backups and recovery
 
-- [ ] Backup automático configurado **e** testado com restauro real, não só agendado
+- [ ] Automatic backup configured **and** tested with a real restore, not just scheduled
       (`agents/06-data/backup-specialist.md`).
-- [ ] RTO/RPO definidos e aceites pelo utilizador (`agents/06-data/disaster-recovery-planner.md`).
+- [ ] RTO/RPO defined and accepted by the user (`agents/06-data/disaster-recovery-planner.md`).
 
-## Risco residual
+## Residual risk
 
-- [ ] Lista de achados aceites (não corrigidos) com justificação, **assinada explicitamente pelo
-      utilizador** — nunca uma decisão silenciosa do agente (`core/quality-gates.md`).
+- [ ] List of accepted (unfixed) findings with justification, **explicitly signed off by the
+      user** — never a silent decision by the agent (`core/quality-gates.md`).
 
-## Relacionados
+## Related
 
-- `core/quality-gates.md` — o portão P7 que esta checklist fecha.
-- `checklists/go-live.md` — o portão seguinte, que depende desta.
-- `pipelines/ci-security.md` — a automação dos scans.
-- `agents/09-security/README.md` — a categoria completa e o mapa de cobertura.
-- `playbooks/secrets-management.md` — detalhe de segredos e rotação.
-- `agents/13-guardians/security-guardian.md` — a continuação em produção.
+- `core/quality-gates.md` — the P7 gate this checklist closes.
+- `checklists/go-live.md` — the next gate, which depends on this one.
+- `pipelines/ci-security.md` — the automation of the scans.
+- `agents/09-security/README.md` — the full category and the coverage map.
+- `playbooks/secrets-management.md` — secrets and rotation detail.
+- `agents/13-guardians/security-guardian.md` — the continuation in production.

@@ -1,102 +1,103 @@
-# Reportar melhorias à framework-mãe
+# Report improvements to the upstream framework
 
-O lado do projeto no circuito de aprendizagem (`knowledge/README.md` §Como o conhecimento
-circula): consolidar o `FRAMEWORK-IMPROVEMENTS.md` do projeto e entregá-lo ao repositório-mãe
-como **issue** — sinais sobem, releases descem; um projeto nunca escreve diretamente na framework.
-Executa-o o Orquestrador do projeto (`core/orchestrator.md`) no fecho de F6/F7/F8 (item da
-`checklists/definition-of-done.md`) e, em F9, na cadência do perfil de esforço. Várias pessoas e
-projetos podem reportar em simultâneo sem conflito — issues são independentes; a serialização
-acontece depois, na curadoria (`playbooks/framework-curation.md`).
+The project's side of the learning circuit (`knowledge/README.md` §How knowledge circulates):
+consolidate the project's `FRAMEWORK-IMPROVEMENTS.md` and deliver it to the upstream repository
+as an **issue** — signals go up, releases come down; a project never writes directly to the
+framework. The project's Orchestrator (`core/orchestrator.md`) runs it at the close of F6/F7/F8
+(an item of `checklists/definition-of-done.md`) and, in F9, at the effort profile's cadence.
+Several people and projects can report simultaneously without conflict — issues are independent;
+serialization happens later, during curation (`playbooks/framework-curation.md`).
 
-## Pré-condições
+## Preconditions
 
-- `FRAMEWORK-IMPROVEMENTS.md` existe na raiz do projeto (instanciado em F0 a partir de
-  `templates/project/FRAMEWORK-IMPROVEMENTS.md.template`) e tem entradas novas desde o último
-  envio — **se não tem, não há envio**: este playbook nunca fabrica conteúdo para cumprir
-  calendário; a captura é por evento, só o envio é por marco.
-- O utilizador do projeto tem conta com permissão para **abrir issues** no repositório-mãe (mais
-  nada — não é preciso acesso de escrita ao código). Sem acesso, ver passo 5 (fallback).
-- O nome/URL do repositório-mãe está registado no `STATE.md` do projeto (fica lá desde o arranque,
-  junto à versão da framework copiada).
+- `FRAMEWORK-IMPROVEMENTS.md` exists at the project root (instantiated in F0 from
+  `templates/project/FRAMEWORK-IMPROVEMENTS.md.template`) and has new entries since the last
+  submission — **if it has none, there is no submission**: this playbook never fabricates content
+  to meet a calendar; capture is event-driven, only the submission is milestone-driven.
+- The project's user has an account with permission to **open issues** on the upstream repository
+  (nothing more — no write access to the code is needed). Without access, see step 5 (fallback).
+- The upstream repository's name/URL is recorded in the project's `STATE.md` (it lives there since
+  kickoff, next to the copied framework version).
 
-## Passos
+## Steps
 
-1. **Consolidar.** Reler as entradas novas (sem marca `(enviado #nnn)`) das cinco secções. Cada uma
-   tem o quê, porquê, evidência e destino sugerido? As incompletas completam-se agora ou ficam para
-   o próximo envio — nunca se enviam entradas sem porquê e evidência. **Varrimento de recuperação:**
-   antes de fechar a consolidação, cruzar o `STATE.md` (§Lições e §Feito desde o último envio) e,
-   se for barato, o `git log` do período com as entradas do ficheiro — qualquer lição da framework
-   que tenha escapado à captura no momento entra agora, marcada `(recuperada)`. Não substitui a
-   captura no momento; apanha o que lhe fugiu. **Confirmação de candidatas:** reler
-   `knowledge/candidates.md` da cópia e preencher a secção de confirmações do artefacto
-   (por ID `C-nnn`, com evidência) — confirmar ou infirmar o que outros projetos reportaram é
-   tão valioso como reportar de novo, e é o que destrava promoções. **No fecho de F8**, incluir
-   também o bloco "Fecho" do dossier de génese (`product/99-records/genesis.md`) — é com ele que a
-   curadoria atualiza a curva do ecossistema (`knowledge/learning-curve.md`).
-2. **Sanitizar.** Verificação explícita, entrada a entrada: sem dados pessoais, sem nomes de
-   clientes, sem segredos, sem detalhe confidencial do domínio. A lição na forma geral; a evidência
-   por caminho/commit, sem colar conteúdo sensível. Na dúvida sobre uma entrada, pergunta ao
-   utilizador antes de a incluir (`core/question-engine.md`). Fechar com um **varrimento
-   mecânico** do corpo consolidado ("portões, não sensações" — é o único passo irreversível do
-   circuito): padrões de segredos e PII (chaves, tokens, e-mails pessoais, IBAN/NIF) mais a lista
-   local de termos proibidos do projeto (nomes de clientes, termos confidenciais do domínio —
-   mantida num ficheiro do projeto, **nunca enviada**). Só se avança com o varrimento limpo; o
-   resultado anota-se no §Registo de envios.
-3. **Abrir o issue** no repositório-mãe, com label `melhorias`:
-
-   ```
-   gh issue create --repo {{repositorio-da-framework-mae, ex.: vaddermail/maestro-framework}} \
-     --label melhorias \
-     --title "[melhorias] {{nome-do-projeto}} — {{marco, ex.: fecho de F7}}" \
-     --body-file {{ficheiro-consolidado}}
-   ```
-
-   O corpo é autocontido (o curador pode não conseguir ler o repositório do projeto):
+1. **Consolidate.** Reread the new entries (without the `(submitted #nnn)` mark) across the five
+   sections. Does each have the what, the why, evidence and a suggested destination? Incomplete
+   ones are completed now or wait for the next submission — entries without a why and evidence are
+   never sent. **Recovery sweep:** before closing consolidation, cross-check `STATE.md` (§Lessons
+   and §Done since the last submission) and, if cheap, the period's `git log` against the file's
+   entries — any framework lesson that escaped in-the-moment capture goes in now, marked
+   `(recovered)`. This does not replace capture in the moment; it catches what slipped past it.
+   **Candidate confirmation:** reread the copy's `knowledge/candidates.md` and fill in the
+   artifact's confirmations section (by `C-nnn` ID, with evidence) — confirming or refuting what
+   other projects reported is as valuable as reporting anew, and it is what unblocks promotions.
+   **At the close of F8**, also include the "Close" block of the genesis dossier
+   (`product/99-records/genesis.md`) — it is what curation uses to update the ecosystem's curve
+   (`knowledge/learning-curve.md`).
+2. **Sanitize.** An explicit check, entry by entry: no personal data, no client names, no secrets,
+   no confidential domain detail. The lesson in its general form; the evidence by path/commit,
+   without pasting sensitive content. When in doubt about an entry, ask the user before including
+   it (`core/question-engine.md`). Close with a **mechanical sweep** of the consolidated body
+   ("Gates, not gut feelings" — it is the circuit's only irreversible step): secret and PII
+   patterns (keys, tokens, personal e-mails, IBAN/tax-ID numbers) plus the project's local list of
+   forbidden terms (client names, confidential domain terms — kept in a project file, **never
+   submitted**). Only proceed with a clean sweep; the result is noted in the §Submission log.
+3. **Open the issue** on the upstream repository, with the `improvements` label:
 
    ```
-   Projeto: {{nome}} · Domínio (1 linha, sanitizado): {{…}}
-   Versão da framework copiada: {{X.Y.Z}} · Marco: {{fase fechada / cadência}}
-
-   ## Armadilhas novas
-   {{entradas novas desta secção, completas}}
-
-   ## Padrões provados (com ganho medido)
-   ## Validação cruzada de padrões existentes
-   ## Atrito e omissões
-   ## Blocos reutilizáveis
-   {{idem — secções sem entradas novas omitem-se}}
+   gh issue create --repo {{upstream-framework-repo, e.g. vaddermail/maestro-framework}} \
+     --label improvements \
+     --title "[improvements] {{project-name}} — {{milestone, e.g. close of F7}}" \
+     --body-file {{consolidated-file}}
    ```
 
-4. **Registar o envio.** No `FRAMEWORK-IMPROVEMENTS.md`: marcar as entradas enviadas com
-   `(enviado #nnn)` e acrescentar a linha ao §Registo de envios. No `STATE.md`: uma linha em
-   "Feito" com o número do issue. Quando o veredito da curadoria chegar (comentário no issue),
-   atualizar a coluna "Resultado" do registo.
-5. **Fallback sem acesso a issues.** Se o utilizador não tem conta/permissão no repositório-mãe:
-   entregar o mesmo corpo consolidado ao dono da framework pelo canal combinado (e-mail, mensagem,
-   ficheiro partilhado) e registar o envio na mesma — quem o recebe abre ele próprio o issue,
-   **marcado como procuração** (ex.: `[proxy: e-mail]` no título), para a fila da curadoria ficar
-   completa e o veredito saber voltar pelo mesmo canal (`playbooks/framework-curation.md`
-   passo 8). O que não pode acontecer é a lição morrer no projeto.
+   The body is self-contained (the curator may not be able to read the project's repository):
 
-**Caso especial — edições locais à cópia da framework:** quando o passo 2 de
-`playbooks/sync-framework.md` encontra diferenças na cópia, cada diferença vira primeiro uma
-entrada em "Atrito e omissões" (ou "Blocos reutilizáveis") e segue neste playbook — só depois se
-reconcilia a cópia. Uma edição local é o reporte involuntário mais forte que existe: alguém
-precisou que a framework fosse diferente.
+   ```
+   Project: {{name}} · Domain (1 line, sanitized): {{…}}
+   Copied framework version: {{X.Y.Z}} · Milestone: {{phase closed / cadence}}
 
-## Reversão
+   ## New pitfalls
+   {{new entries from this section, complete}}
 
-Enviar um issue não muda nada no projeto nem na framework — um envio por engano fecha-se com um
-comentário a explicar, e as marcas `(enviado #nnn)` corrigem-se no ficheiro. Risco irreversível
-real só há um: **conteúdo sensível publicado no issue** — por isso a sanitização é um passo
-explícito e anterior ao envio; se acontecer, apagar/editar o issue imediatamente e tratar como
-incidente de dados no projeto (`workflows/W11-incident-response.md`).
+   ## Proven patterns (with measured gain)
+   ## Cross-validation of existing patterns
+   ## Friction and omissions
+   ## Reusable blocks
+   {{same — sections with no new entries are omitted}}
+   ```
 
-## Relacionados
+4. **Record the submission.** In `FRAMEWORK-IMPROVEMENTS.md`: mark the submitted entries with
+   `(submitted #nnn)` and append the line to the §Submission log. In `STATE.md`: one line under
+   "Done" with the issue number. When the curation verdict arrives (a comment on the issue),
+   update the log's "Result" column.
+5. **Fallback without issue access.** If the user has no account/permission on the upstream
+   repository: deliver the same consolidated body to the framework owner through the agreed
+   channel (e-mail, message, shared file) and record the submission all the same — the recipient
+   opens the issue themselves, **marked as proxy** (e.g. `[proxy: e-mail]` in the title), so the
+   curation queue stays complete and the verdict knows how to return through the same channel
+   (`playbooks/framework-curation.md` step 8). What must not happen is the lesson dying in the
+   project.
 
-- `templates/project/FRAMEWORK-IMPROVEMENTS.md.template` — o artefacto que este playbook envia.
-- `playbooks/framework-curation.md` — o que acontece do outro lado ao teu reporte.
-- `knowledge/README.md` — o circuito completo; `knowledge/candidates.md` — onde as lições
-  de 1 projeto esperam a segunda confirmação.
-- `checklists/definition-of-done.md` — os fechos de fase que exigem este envio.
-- `playbooks/sync-framework.md` — o caminho inverso: como as promoções voltam ao projeto.
+**Special case — local edits to the framework copy:** when step 2 of
+`playbooks/sync-framework.md` finds differences in the copy, each difference first becomes an
+entry in "Friction and omissions" (or "Reusable blocks") and follows this playbook — only then is
+the copy reconciled. A local edit is the strongest involuntary report there is: someone needed the
+framework to be different.
+
+## Rollback
+
+Submitting an issue changes nothing in the project or the framework — a mistaken submission is
+closed with an explanatory comment, and the `(submitted #nnn)` marks are corrected in the file.
+There is only one real irreversible risk: **sensitive content published in the issue** — which is
+why sanitization is an explicit step before submission; if it happens, delete/edit the issue
+immediately and treat it as a data incident in the project (`workflows/W11-incident-response.md`).
+
+## Related
+
+- `templates/project/FRAMEWORK-IMPROVEMENTS.md.template` — the artifact this playbook submits.
+- `playbooks/framework-curation.md` — what happens to your report on the other side.
+- `knowledge/README.md` — the full circuit; `knowledge/candidates.md` — where single-project
+  lessons wait for the second confirmation.
+- `checklists/definition-of-done.md` — the phase closes that require this submission.
+- `playbooks/sync-framework.md` — the reverse path: how promotions come back to the project.

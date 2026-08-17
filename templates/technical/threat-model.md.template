@@ -1,74 +1,74 @@
-# Modelo de Ameaças — `{{nome-da-funcionalidade}}`
+# Threat Model — `{{feature-name}}`
 
-> **Como usar:** copia para `product/05-security/threat-model.md` — uma instância por
-> funcionalidade crítica do plano de cobertura. Preenche todas as secções; toda a ameaça listada
-> tem de terminar com uma decisão (mitigada/transferida/aceite/eliminada) — nada fica "em aberto".
-> Produzido pelo `agents/09-security/threat-modeler.md`.
+> **How to use:** copy to `product/05-security/threat-model.md` — one instance per critical feature
+> of the coverage plan. Fill in every section; every listed threat must end with a decision
+> (mitigated/transferred/accepted/eliminated) — nothing stays "open".
+> Produced by `agents/09-security/threat-modeler.md`.
 
-## Cabeçalho
+## Header
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| Funcionalidade | {{nome-da-funcionalidade}} |
-| Âmbito coberto | {{o-que-entra-e-o-que-fica-de-fora}} |
-| Perfil de risco de referência | {{link-para-perfil-de-risco}} |
-| Data | {{aaaa-mm-dd}} |
-| Autor | {{agente-ou-pessoa}} |
-| Revisão prevista | {{aaaa-mm-dd-ou-gatilho}} |
+| Feature | {{feature-name}} |
+| Scope covered | {{what-is-in-and-what-stays-out}} |
+| Reference risk profile | {{link-to-risk-profile}} |
+| Date | {{yyyy-mm-dd}} |
+| Author | {{agent-or-person}} |
+| Planned review | {{yyyy-mm-dd-or-trigger}} |
 
-## Ativos
+## Assets
 
-*O que se protege — dados, credenciais, dinheiro, disponibilidade.*
+*What is being protected — data, cnetworkntials, money, availability.*
 
-| Ativo | Onde vive | Dano se comprometido |
+| Asset | Where it lives | Harm if compromised |
 | --- | --- | --- |
-| {{ex-dados-pessoais-de-clientes}} | {{servico-ou-tabela}} | {{reputacional-legal-financeiro}} |
+| {{e.g.-customer-personal-data}} | {{service-or-table}} | {{reputational-legal-financial}} |
 
-## Atores / agentes de ameaça
+## Threat actors / agents
 
-| Ator | Capacidade | Motivação | Plausível neste sistema? |
+| Actor | Capability | Motivation | Plausible in this system? |
 | --- | --- | --- | --- |
-| {{ex-utilizador-autenticado-a-escalar-privilegios}} | {{capacidade-tecnica}} | {{o-que-ganha}} | {{sim-nao-porque}} |
+| {{e.g.-authenticated-user-escalating-privileges}} | {{technical-capability}} | {{what-they-gain}} | {{yes-no-why}} |
 
-## Fronteiras de confiança (DFD textual)
+## Trust boundaries (textual DFD)
 
-*Todo o ponto onde os dados atravessam um limite de confiança — cliente→servidor, serviço→serviço,
-produto→integração externa. É aqui que as ameaças se concentram (`modules/rbac-and-scoping.md`).*
+*Every point where data crosses a trust boundary — client→server, service→service,
+product→external integration. This is where threats concentrate (`modules/rbac-and-scoping.md`).*
 
-1. `{{fronteira-1-ex-cliente-para-api}}` — {{o-que-atravessa}}
-2. `{{fronteira-2-ex-api-para-fila}}` — {{o-que-atravessa}}
-3. `{{fronteira-3-ex-worker-para-bd-ou-integracao-externa}}` — {{o-que-atravessa}}
+1. `{{boundary-1-e.g.-client-to-api}}` — {{what-crosses}}
+2. `{{boundary-2-e.g.-api-to-queue}}` — {{what-crosses}}
+3. `{{boundary-3-e.g.-worker-to-db-or-external-integration}}` — {{what-crosses}}
 
-## Ameaças por categoria (STRIDE)
+## Threats by category (STRIDE)
 
-*Passar cada elemento/fronteira pela taxonomia; registar só as ameaças credíveis dado o perfil de
-risco. Uma categoria descartada regista-se com o porquê — não se omite em silêncio.*
+*Run each element/boundary through the taxonomy; record only the threats credible given the risk
+profile. A discarded category is recorded with the why — it is not omitted in silence.*
 
-| ID | Categoria | Elemento afetado | Ameaça (o que pode correr mal) | Severidade × probabilidade | Controlo (nomeado, atribuível) | Decisão | Dono |
+| ID | Category | Element affected | Threat (what can go wrong) | Severity × likelihood | Control (named, assignable) | Decision | Owner |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| T1 | Spoofing | {{fronteira-x}} | {{descricao-concreta}} | {{alta-media-baixa}} | {{controlo-atribuivel-a-um-agente}} | {{mitigada-transferida-aceite-eliminada}} | {{agente-responsavel}} |
+| T1 | Spoofing | {{boundary-x}} | {{concrete-description}} | {{high-medium-low}} | {{control-assignable-to-an-agent}} | {{mitigated-transferred-accepted-eliminated}} | {{responsible-agent}} |
 | T2 | Tampering | | | | | | |
 | T3 | Repudiation | | | | | | |
 | T4 | Information disclosure | | | | | | |
 | T5 | Denial of service | | | | | | |
 | T6 | Elevation of privilege | | | | | | |
 
-## Risco residual aceite
+## Residual risk accepted
 
-*Só o utilizador aceita risco residual (`MANIFESTO.md` §8) — nunca o agente sozinho.*
+*Only the user accepts residual risk (`MANIFESTO.md` §8) — never the agent alone.*
 
-| Ameaça (ID) | Porque não se mitiga agora | Aceite por | Data | Revisão |
+| Threat (ID) | Why it is not mitigated now | Accepted by | Date | Review |
 | --- | --- | --- | --- | --- |
-| {{id-da-ameaca}} | {{custo-do-controlo-vs-exposicao}} | {{utilizador}} | {{aaaa-mm-dd}} | {{quando-reavaliar}} |
+| {{threat-id}} | {{cost-of-the-control-vs-exposure}} | {{user}} | {{yyyy-mm-dd}} | {{when-to-reassess}} |
 
-## Lacunas / não modelado
+## Gaps / not modeled
 
-*Honestidade: não se inventa a superfície. O que não foi modelado e porquê (fluxo não especificado,
-fora do âmbito desta versão) — registar em `STATE.md` se bloquear o resto da equipa.*
+*Honesty: the surface is not invented. What was not modeled and why (unspecified flow, out of scope
+for this version) — record it in `STATE.md` if it blocks the rest of the team.*
 
-- {{lacuna-1-e-o-que-falta-para-fechar}}
+- {{gap-1-and-what-is-missing-to-close-it}}
 
-## Relacionados
+## Related
 
 - `agents/09-security/threat-modeler.md` · `agents/09-security/security-coordinator.md`
 - `agents/09-security/owasp-top10-specialist.md` · `agents/09-security/pentester.md`

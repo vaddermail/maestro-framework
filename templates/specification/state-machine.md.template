@@ -1,84 +1,84 @@
-# Máquina de Estados — {{nome-do-fluxo-critico}}
+# State Machine — {{critical-flow-name}}
 
-> **Como usar:** um ficheiro (ou secção) por fluxo crítico com ciclo de vida próprio (encomenda,
-> subscrição, ticket, devolução…), instanciado pelo `agents/01-requirements/business-rules-modeler.md`
-> em F5, com `modules/state-machines.md` como método. Fica em
-> `product/04-specification/state-machines.md` (uma secção por fluxo; em projetos grandes, um
-> ficheiro por fluxo em `product/04-specification/maquinas-de-estado/{{nome-do-fluxo}}.md`).
+> **How to use:** one file (or section) per critical flow with its own lifecycle (order,
+> subscription, ticket, return…), instantiated by `agents/01-requirements/business-rules-modeler.md`
+> in F5, with `modules/state-machines.md` as the method. Lives at
+> `product/04-specification/state-machines.md` (one section per flow; large projects use one file
+> per flow at `product/04-specification/state-machines/{{flow-name}}.md`).
 
-> **Estado:** rascunho
-> **Dono:** `agents/01-requirements/business-rules-modeler.md`
-> **Fase:** F5 · **Atualizado:** {{aaaa-mm-dd}}
-> **Satisfaz:** {{rf-nnn}}, {{rn-nnn}}
-> **Consumidores:** Backend (F6), `agents/05-backend/authorization-specialist.md`, testes (F6/F7)
+> **Status:** draft
+> **Owner:** `agents/01-requirements/business-rules-modeler.md`
+> **Phase:** F5 · **Updated:** {{yyyy-mm-dd}}
+> **Satisfies:** {{fr-nnn}}, {{br-nnn}}
+> **Consumers:** Backend (F6), `agents/05-backend/authorization-specialist.md`, tests (F6/F7)
 
-## Entidade modelada
+## Modeled entity
 
-*Que entidade tem este ciclo de vida e porque precisa de máquina de estado explícita em vez de um
-campo livre — normalmente porque transições erradas corrompem dados ou o negócio.*
+*Which entity has this lifecycle and why it needs an explicit state machine instead of a free-form
+field — usually because wrong transitions corrupt data or the business.*
 
-{{nome-da-entidade}} — {{razao-para-ser-fluxo-critico}}
+{{entity-name}} — {{reason-it-is-a-critical-flow}}
 
-## Estados
+## States
 
-| Estado | Descrição | Terminal? |
+| State | Description | Terminal? |
 | --- | --- | --- |
-| {{nome-do-estado}} | {{o-que-significa-estar-neste-estado}} | {{sim/não}} |
+| {{state-name}} | {{what-being-in-this-state-means}} | {{yes/no}} |
 
-*Um estado terminal não tem transições de saída — se parecer precisar de uma, é sinal de que falta um
-estado ou de que não é terminal.*
+*A terminal state has no outgoing transitions — if it seems to need one, that is a sign a state is
+missing or it is not terminal.*
 
-## Diagrama
+## Diagram
 
-*Mermaid (versionável, legível por agentes). Manter sincronizado com a tabela de transições abaixo —
-o diagrama é vista, a tabela é fonte de verdade.*
+*Mermaid (versionable, readable by agents). Keep it in sync with the transitions table below — the
+diagram is a view, the table is the source of truth.*
 
 ```mermaid
 stateDiagram-v2
-    [*] --> {{estado-inicial}}
-    {{estado-inicial}} --> {{estado-seguinte}}: {{nome-da-transicao}}
-    {{estado-seguinte}} --> [*]
+    [*] --> {{initial-state}}
+    {{initial-state}} --> {{next-state}}: {{transition-name}}
+    {{next-state}} --> [*]
 ```
 
-## Tabela de transições
+## Transitions table
 
-*Cada transição tem nome próprio (usa-se no código e nos logs, não "mudar estado"). "Quem pode" é
-autoridade (`modules/rbac-and-scoping.md`), não scoping. A guarda é a pré-condição verificada no
-servidor antes de aceitar a transição.*
+*Every transition has its own name (used in code and logs, not "change state"). "Who can" is
+authority (`modules/rbac-and-scoping.md`), not scoping. The guard is the precondition checked on the
+server before accepting the transition.*
 
-| Transição | De | Para | Quem pode | Guarda (pré-condição) | Efeitos |
+| Transition | From | To | Who can | Guard (precondition) | Effects |
 | --- | --- | --- | --- | --- | --- |
-| {{nome-da-transicao}} | {{estado-de-origem}} | {{estado-de-destino}} | {{papel-ou-ator}} | {{condicao-que-tem-de-ser-verdade}} | {{o-que-mais-muda-no-sistema}} |
+| {{transition-name}} | {{source-state}} | {{target-state}} | {{role-or-actor}} | {{condition-that-must-be-true}} | {{what-else-changes-in-the-system}} |
 
-## Transições inválidas
+## Invalid transitions
 
-*Tão explícitas como as válidas — o servidor tem de as rejeitar (nunca ignorar em silêncio), e são a
-base do critério de rejeição em `templates/specification/functional-requirement.md.template`.*
+*As explicit as the valid ones — the server must reject them (never ignore silently), and they are
+the basis for the rejection criterion in `templates/specification/functional-requirement.md.template`.*
 
-| De | Para (tentativa) | Porque é inválida | Resposta do servidor |
+| From | To (attempted) | Why it is invalid | Server response |
 | --- | --- | --- | --- |
-| {{estado-de-origem}} | {{estado-de-destino-proibido}} | {{razao}} | {{erro-ou-codigo-devolvido}} |
+| {{source-state}} | {{forbidden-target-state}} | {{reason}} | {{error-or-code-returned}} |
 
-## Estados terminais
+## Terminal states
 
-- {{estado-terminal-1}} — {{o-que-impede-daqui-em-diante}}
+- {{terminal-state-1}} — {{what-it-prevents-from-here-on}}
 
-## Base + overlay (se aplicável)
+## Base + overlay (if applicable)
 
-*Só quando uma ação temporária compete com estado permanente pelo mesmo campo (ex.: um empréstimo não
-pode apagar o responsável de base). Se não se aplica, escrever "Não aplicável — sem estado temporário
-em competição com estado permanente".*
+*Only when a temporary action competes with permanent state for the same field (e.g. a loan cannot
+erase the base owner). If it does not apply, write "Not applicable — no temporary state competing
+with permanent state".*
 
-{{descricao-da-camada-temporaria-e-como-reverte-a-base}}
+{{description-of-the-temporary-layer-and-how-it-reverts-to-base}}
 
-## Notas de concorrência
+## Concurrency notes
 
-*Duas transições simultâneas sobre a mesma instância — que lock/transação impede o estado inconsistente
-(TOCTOU). Se não há risco de concorrência relevante, dizê-lo explicitamente.*
+*Two simultaneous transitions on the same instance — which lock/transaction prevents the
+inconsistent state (TOCTOU). If there is no relevant concurrency risk, say so explicitly.*
 
-{{nota-de-lock-ou-transacao-quando-aplicavel}}
+{{lock-or-transaction-note-when-applicable}}
 
-## Relacionados
+## Related
 
 - `modules/state-machines.md` · `agents/01-requirements/business-rules-modeler.md`
 - `agents/05-backend/authorization-specialist.md` · `agents/06-data/data-modeler.md`

@@ -1,41 +1,41 @@
-# CHANGELOG — {{nome-do-produto}}
+# CHANGELOG — {{product-name}}
 
-> **Como usar:** atualiza-se a cada **marco** (não a cada commit — commits pequenos vivem no
-> histórico Git; aqui só o que interessa a quem lê a história do produto sem ter visto as sessões).
-> Fica na **raiz do projeto**. Mais recente primeiro.
-
----
-
-Todas as datas em AAAA-MM-DD. Formato de versão deste projeto: {{semver | vNN | data — escolher um
-e manter}}.
-
-## [{{versao}}] — {{aaaa-mm-dd}}
-
-*Preencher com o essencial do quê e do porquê — não é o log do Git.*
-
-### Adicionado
-- {{funcionalidade nova}} — {{porquê; RF-nnn de origem, se aplicável}}.
-
-### Alterado
-- {{mudança de comportamento existente}} — {{porquê}}.
-
-### Corrigido
-- {{defeito resolvido}} — {{causa raiz, não só o sintoma}}.
-
-### Removido
-- {{o que saiu e porquê}}.
-
-### Segurança
-- {{correções/atualizações relevantes de segurança}}.
+> **How to use:** updated at each **milestone** (not each commit — small commits live in the
+> Git history; here only what matters to someone reading the product's story without having
+> seen the sessions). Lives at the **project root**. Most recent first.
 
 ---
 
-## [{{versao-anterior}}] — {{aaaa-mm-dd}}
+All dates in YYYY-MM-DD. Version format for this project: {{semver | vNN | date — pick one
+and stick to it}}.
+
+## [{{version}}] — {{yyyy-mm-dd}}
+
+*Fill in with the essence of the what and the why — this is not the Git log.*
+
+### Added
+- {{new feature}} — {{why; originating FR-nnn, if applicable}}.
+
+### Changed
+- {{change to existing behavior}} — {{why}}.
+
+### Fixed
+- {{defect resolved}} — {{root cause, not just the symptom}}.
+
+### Removed
+- {{what left and why}}.
+
+### Security
+- {{relevant security fixes/updates}}.
+
+---
+
+## [{{previous-version}}] — {{yyyy-mm-dd}}
 
 {{...}}
 
-## Relacionados
+## Related
 
-- `STATE.md` — o presente; este ficheiro é o histórico.
-- `product/02-architecture/decisions/` — ADRs por trás das mudanças estruturais.
-- `Maestro/core/project-memory.md` — onde vive cada tipo de conhecimento.
+- `STATE.md` — the present; this file is the history.
+- `product/02-architecture/decisions/` — ADRs behind the structural changes.
+- `Maestro/core/project-memory.md` — where each kind of knowledge lives.

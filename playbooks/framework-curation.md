@@ -1,93 +1,98 @@
-# Curadoria da framework
+# Framework curation
 
-O lado da framework-mãe no circuito de aprendizagem: transformar a fila de issues `melhorias` em
-evolução curada — candidatas, promoções por PR e vereditos — sem nunca deixar um reporte sem
-resposta. Executa-o o `agents/14-meta/framework-curator.md` **no repositório-mãe**, com o dono
-da framework como aprovador único. A cadência vive aqui, não nos projetos: os projetos reportam
-quando fecham marcos; a mãe cura quando os gatilhos abaixo disparam.
+The upstream framework's side of the learning circuit: turning the queue of `improvements` issues
+into curated evolution — candidates, promotions via PR and verdicts — without ever leaving a
+report unanswered. It is executed by `agents/14-meta/framework-curator.md` **in the upstream
+repository**, with the framework owner as sole approver. The cadence lives here, not in the
+projects: projects report when they close milestones; the upstream curates when the triggers
+below fire.
 
-## Pré-condições
+## Preconditions
 
-- **Gatilho de cadência** (qualquer um; o que vier primeiro): ≥3 issues abertos com label
-  `melhorias` · um projeto fechou F6 (P6b), F7 ou F8 e reportou · 3 meses desde a data em
-  `knowledge/candidates.md`, tabela do topo · pedido do dono.
-- Clone do repositório-mãe limpo e atualizado (`git status` limpo, `main` ao dia); `gh` autenticado
-  com acesso ao repositório.
-- `_meta/verify.sh` verde **antes de começar** — não se cura sobre uma framework inconsistente.
-- `knowledge/candidates.md` lido, incluindo as rejeitadas (não reabrir sem novidade material).
+- **Cadence trigger** (any one; whichever comes first): ≥3 open issues with the
+  `improvements` label · a project closed F6 (P6b), F7 or F8 and reported · 3 months since the
+  date in `knowledge/candidates.md`, top table · owner's request.
+- Clean, up-to-date clone of the upstream repository (`git status` clean, `main` current); `gh`
+  authenticated with access to the repository.
+- `_meta/verify.sh` green **before starting** — no curating on top of an inconsistent framework.
+- `knowledge/candidates.md` read, including the declined ones (never reopen without material news).
 
-## Passos
+## Steps
 
-1. **Recolher a fila e triar:** `gh issue list --label melhorias --state open`. Ler todos antes de
-   julgar qualquer um — o sinal mais forte é a repetição entre projetos, e só aparece no conjunto.
-   **Triagem de entrada** quando a fila excede o lote: primeiro segurança/dados/portões, depois por
-   idade. **Lote máximo: 10 issues por ronda** — os restantes recebem o comentário "agendado para a
-   próxima ronda" (com data prevista) e **nenhum issue passa 2 rondas sem destino**.
-2. **Validar à entrada,** issue a issue: formato (o quê + porquê + evidência + destino sugerido) e
-   sanitização — **re-correr o varrimento mecânico** de segredos/PII sobre o corpo do issue (o
-   segundo portão independente do único passo irreversível do circuito; o primeiro correu no
-   projeto, `playbooks/report-framework-improvements.md` passo 2). Incompleto → comentar a pedir
-   os campos e saltar nesta ronda. Com dados sensíveis → pedir reenvio sanitizado, editar/apagar o
-   conteúdo exposto, saltar.
-3. **Deduplicar e agrupar** por tema: entre os issues da ronda, contra `knowledge/candidates.md`
-   e contra o conhecimento já promovido (`knowledge/`, módulos, checklists, templates). Anotar
-   por item: novo · reforço de candidata (as confirmações/infirmações por ID `C-nnn` da secção de
-   confirmação dos reportes somam-se diretamente à candidata certa) · cross-validação de
-   conhecimento existente · repetição de
-   rejeitada.
-4. **Classificar cada item** num branch de curadoria (`git checkout -b curadoria/AAAA-MM`):
-   - **Duplicado/cross-validação** → somar a confirmação (na candidata, ou nota de "confirmado
-     também em {…}" no ficheiro promovido). Sem conteúdo novo, é PATCH.
-   - **Específico do domínio** → veredito escrito no issue; registar como rejeitada em candidatas.
-   - **Novo, 1 projeto** → entrada em candidatas (`aguarda-confirmação`, contagem 1, link ao issue).
-   - **Confirmado (≥2 projetos)** → promover no passo 5. Exceção "obviamente geral com 1": só com
-     pergunta explícita ao dono, nunca por iniciativa (`agents/14-meta/framework-curator.md`
-     §Regras).
-5. **Redigir as promoções,** por adição (`core/extensibility.md`): o conteúdo no destino certo,
-   generalizado mas com evidência e proveniência **por código de projeto** (P2, P3, … + issue —
-   nunca o nome nem a stack, porque candidatas e anotações viajam nas cópias:
-   `knowledge/candidates.md` §Regras); entrada de changelog e salto
-   de versão proposto em `_meta/VERSION.md` (MINOR para conteúdo novo, PATCH para clarificações;
-   qualquer coisa que mude contratos para de imediato → pergunta de MAJOR ao dono). Atualizar
-   `knowledge/candidates.md` (linhas promovidas/novas/rejeitadas + cabeçalho da ronda;
-   **re-avaliar as candidatas expiradas** pela regra 6 — corre mesmo quando a ronda disparou por
-   outro gatilho — e **mover para o §Arquivo** as promovidas/rejeitadas com mais de 2 rondas).
-   Verificar também a validade da tabela camadas→modelos de `adapters/claude-code.md` (carimbo
-   com mais de 3 meses → a ronda inclui a sua atualização em PATCH). Se algum reporte da ronda é um
-   **fecho de F8** com bloco de génese, acrescentar a linha do produto (por código P-n) a
-   `knowledge/learning-curve.md` e escrever a leitura no PR. Correr
-   `_meta/verify.sh` — verde obrigatório.
-6. **Abrir o PR** (nunca commit direto a `main`): tabela-resumo *item → origem → destino →
-   classificação*, um bloco **"Métricas da ronda"** (issues processados/adiados, tempo mediano
-   issue→veredito, candidatas ativas e idade média, promoções/rejeições/adormecidas — os
-   cumulativos atualizam-se no cabeçalho de `knowledge/candidates.md`), perguntas pendentes em
-   formato de lote (`core/question-engine.md`), e a nota de versão proposta. Curadorias grandes dividem-se em PRs temáticos revisáveis em ~10
-   minutos — cada um em branch `curadoria/AAAA-MM-<tema>` e a tocar **só** nos ficheiros do seu
-   tema; um **PR final de fecho de ronda** agrega o salto de versão (`_meta/VERSION.md`), o
-   changelog e o `knowledge/candidates.md`, e faz merge em último — é o único PR da ronda
-   autorizado a tocar nesses ficheiros partilhados.
-7. **Portão humano:** o dono revê, ajusta e faz merge — ou devolve com comentários. O curador nunca
-   faz merge nem responde às próprias perguntas.
-8. **Fechar o ciclo, após o merge:** comentar e fechar cada issue com o veredito e a versão que o
-   incorporou (promovida em X.Y.Z / candidata à espera de confirmação / rejeitada porque {…}). O
-   projeto de origem atualiza a coluna "Resultado" do seu registo de envios quando sincronizar.
-   Para issues marcados como procuração (`[proxy: …]`), o fecho inclui **reencaminhar o
-   comentário-veredito pelo mesmo canal de entrada** — o ciclo só conta como fechado quando o
-   veredito chega a quem reportou. Um issue fechado sem veredito é curadoria que não aconteceu.
+1. **Collect the queue and triage:** `gh issue list --label improvements --state open`. Read all of
+   them before judging any one — the strongest signal is repetition across projects, and it only
+   shows in the whole set. **Entry triage** when the queue exceeds the batch: security/data/gates
+   first, then by age. **Maximum batch: 10 issues per round** — the rest get the comment
+   "scheduled for the next round" (with expected date) and **no issue goes 2 rounds without an
+   outcome**.
+2. **Validate on entry,** issue by issue: format (what + why + evidence + suggested destination)
+   and sanitization — **re-run the mechanical scan** for secrets/PII over the issue body (the
+   second independent gate of the circuit's only irreversible step; the first ran in the
+   project, `playbooks/report-framework-improvements.md` step 2). Incomplete → comment asking for
+   the fields and skip it this round. With sensitive data → ask for a sanitized resend, edit/delete
+   the exposed content, skip.
+3. **Deduplicate and group** by theme: across the round's issues, against `knowledge/candidates.md`
+   and against knowledge already promoted (`knowledge/`, modules, checklists, templates). Note
+   per item: new · reinforcement of a candidate (the confirmations/refutations by `C-nnn` ID from
+   the reports' confirmation section add directly to the right candidate) · cross-validation of
+   existing knowledge · repeat of a
+   declined one.
+4. **Classify each item** on a curation branch (`git checkout -b curation/YYYY-MM`):
+   - **Duplicate/cross-validation** → add the confirmation (on the candidate, or an "also
+     confirmed in {…}" note in the promoted file). With no new content, it is a PATCH.
+   - **Domain-specific** → written verdict on the issue; record as declined in candidates.
+   - **New, 1 project** → entry in candidates (`awaiting-confirmation`, count 1, link to the issue).
+   - **Confirmed (≥2 projects)** → promote in step 5. "Obviously general with 1" exception: only
+     with an explicit question to the owner, never on own initiative
+     (`agents/14-meta/framework-curator.md`
+     §Rules).
+5. **Draft the promotions,** by addition (`core/extensibility.md`): the content in the right
+   destination, generalized but with evidence and provenance **by project code** (P2, P3, … +
+   issue — never the name or the stack, because candidates and notes travel in the copies:
+   `knowledge/candidates.md` §Entry and exit rules); changelog entry and proposed version
+   bump in `_meta/VERSION.md` (MINOR for new content, PATCH for clarifications;
+   anything that changes contracts stops immediately → MAJOR question to the owner). Update
+   `knowledge/candidates.md` (promoted/new/declined rows + round header;
+   **re-evaluate the expired candidates** per rule 6 — it runs even when the round fired on
+   another trigger — and **move to §Archive** the promoted/declined ones older than 2 rounds).
+   Also check the validity of the layers→models table in `adapters/claude-code.md` (stamp
+   older than 3 months → the round includes its update as a PATCH). If any report in the round is
+   an **F8 closure** with a genesis block, add the product's row (by P-n code) to
+   `knowledge/learning-curve.md` and write the reading in the PR. Run
+   `_meta/verify.sh` — green mandatory.
+6. **Open the PR** (never a direct commit to `main`): summary table *item → origin → destination →
+   classification*, a **"Round metrics"** block (issues processed/deferred, median
+   issue→verdict time, active candidates and average age, promotions/declines/dormant — the
+   cumulatives are updated in the `knowledge/candidates.md` header), pending questions in
+   batch format (`core/question-engine.md`), and the proposed version note. Large curation
+   rounds split into thematic PRs reviewable in ~10
+   minutes — each on a `curation/YYYY-MM-<theme>` branch and touching **only** the files of its
+   theme; a final **round-closing PR** aggregates the version bump (`_meta/VERSION.md`), the
+   changelog and `knowledge/candidates.md`, and merges last — it is the round's only PR
+   authorized to touch those shared files.
+7. **Human gate:** the owner reviews, adjusts and merges — or returns it with comments. The curator
+   never merges nor answers its own questions.
+8. **Close the loop, after the merge:** comment on and close each issue with the verdict and the
+   version that incorporated it (promoted in X.Y.Z / candidate awaiting confirmation / declined
+   because {…}). The origin project updates the "Result" column of its submissions record when it
+   syncs. For issues marked as proxied (`[proxy: …]`), closing includes **forwarding the
+   verdict comment through the same entry channel** — the loop only counts as closed when the
+   verdict reaches whoever reported. An issue closed without a verdict is curation that did not
+   happen.
 
-## Reversão
+## Rollback
 
-A unidade de reversão é o merge do PR: `git revert` devolve a framework ao estado anterior e os
-issues afetados reabrem-se com um comentário a explicar. Nada nos projetos é tocado por este
-playbook — eles só recebem mudanças quando re-sincronizam deliberadamente
-(`playbooks/sync-framework.md`), o que torna qualquer reversão da mãe sem efeitos colaterais
-imediatos no terreno.
+The unit of rollback is the PR merge: `git revert` returns the framework to the previous state and
+the affected issues are reopened with an explanatory comment. Nothing in the projects is touched by
+this playbook — they only receive changes when they deliberately re-sync
+(`playbooks/sync-framework.md`), which makes any upstream rollback free of immediate side
+effects on the ground.
 
-## Relacionados
+## Related
 
-- `agents/14-meta/framework-curator.md` — a ficha de quem executa (regras e limitações).
-- `knowledge/candidates.md` — a sala de espera que este playbook mantém.
-- `playbooks/report-framework-improvements.md` — de onde vem a fila de issues.
-- `core/extensibility.md` — as regras de adição que as promoções respeitam.
-- `_meta/VERSION.md` — SemVer e changelog; `_meta/verify.sh` — o portão técnico do PR.
-- `playbooks/sync-framework.md` — como as promoções chegam finalmente aos projetos.
+- `agents/14-meta/framework-curator.md` — the agent spec of who executes (rules and limitations).
+- `knowledge/candidates.md` — the waiting room this playbook maintains.
+- `playbooks/report-framework-improvements.md` — where the issue queue comes from.
+- `core/extensibility.md` — the addition rules the promotions respect.
+- `_meta/VERSION.md` — SemVer and changelog; `_meta/verify.sh` — the PR's technical gate.
+- `playbooks/sync-framework.md` — how the promotions finally reach the projects.

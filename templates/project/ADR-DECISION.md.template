@@ -1,83 +1,84 @@
-# ADR-{{numero-adr}} — {{titulo-da-decisao}}
+# ADR-{{adr-number}} — {{decision-title}}
 
-> **Como usar:** uma cópia por decisão **estrutural** (`Maestro/core/decision-engine.md`
-> §Decision types — estilo arquitetural, stack, cloud, modelo de identidade, estratégia de dados).
-> Nomeia-se `ADR-{{numero-com-3-digitos}}-{{titulo-em-kebab}}.md`, em
-> `product/02-architecture/decisions/`. Nunca se apaga: quando substituída, marca-se
-> `substituída por ADR-{{numero-adr}}` e cria-se um ADR novo.
+> **How to use:** one copy per **structural** decision (`Maestro/core/decision-engine.md`
+> §Decision types — architectural style, stack, cloud, identity model, data strategy).
+> Named `ADR-{{3-digit-number}}-{{kebab-title}}.md`, in
+> `product/02-architecture/decisions/`. Never deleted: when superseded, it is marked
+> `superseded by ADR-{{adr-number}}` and a new ADR is created.
 
 ---
 
-> **Estado:** proposta | aprovada | substituída por ADR-{{numero-adr}}
-> **Data:** {{aaaa-mm-dd}} · **Decidido por:** {{árbitro/agente responsável}} + validado por
-> {{utilizador/papel que aprovou}}
-> **Satisfaz:** {{RF-nnn, RN-nnn, RNF-nnn relevantes — remover a linha se não aplicável}}
+> **Status:** proposed | approved | superseded by ADR-{{adr-number}}
+> **Date:** {{yyyy-mm-dd}} · **Decided by:** {{arbiter/agent responsible}} + validated by
+> {{user/role that approved}}
+> **Satisfies:** {{relevant FR-nnn, BR-nnn, NFR-nnn — remove the line if not applicable}}
 
-## Contexto
+## Context
 
-*O problema e as forças em jogo — que requisitos/RNF/riscos pressionam esta decisão, e porque se
-decide agora.*
+*The problem and the forces at play — which requirements/NFRs/risks push on this decision,
+and why it is being decided now.*
 
-{{descrição do problema a decidir}}
+{{description of the problem to decide}}
 
-## Critérios (com peso)
+## Criteria (weighted)
 
-*Derivados dos artefactos de requisitos/riscos/custos (`Maestro/core/decision-engine.md`
-§The process for structural decisions). Exemplos típicos: adequação funcional, custo total
-(construção + operação), complexidade operacional, competência da equipa, reversibilidade,
-maturidade/estabilidade, lock-in.*
+*Derived from the requirements/risks/costs artifacts (`Maestro/core/decision-engine.md`
+§The process for structural decisions). Typical examples: functional fit, total cost
+(build + operation), operational complexity, team competence, reversibility,
+maturity/stability, lock-in.*
 
-| Critério | Peso |
+| Criterion | Weight |
 | --- | --- |
-| {{critério 1}} | {{alto / médio / baixo}} |
-| {{critério 2}} | {{alto / médio / baixo}} |
+| {{criterion 1}} | {{high / medium / low}} |
+| {{criterion 2}} | {{high / medium / low}} |
 
-## Opções consideradas
+## Options considered
 
-*Todas as propostas do painel — incluindo as rejeitadas, para ninguém as re-propor sem novidade. O
-"não fazer nada"/manter o que existe é sempre uma opção avaliada, mesmo que rejeitada em uma linha.*
+*Every proposal from the panel — including the rejected ones, so nobody re-proposes them
+without new information. "Do nothing"/keep what exists is always an evaluated option, even if
+rejected in one line.*
 
-### Opção A — {{nome-da-opcao}}
+### Option A — {{option-name}}
 
-- **Desenho:** {{resumo}}
-- **Prós:** {{lista}}
-- **Contras:** {{lista, honestos — inclui "não serve porque X" se for o caso}}
-- **Custo estimado:** {{construção + operação}}
-- **Reversibilidade:** {{o que custaria voltar atrás}}
+- **Design:** {{summary}}
+- **Pros:** {{list}}
+- **Cons:** {{list, honest — include "does not fit because X" if that is the case}}
+- **Estimated cost:** {{build + operation}}
+- **Reversibility:** {{what going back would cost}}
 
-### Opção B — {{nome-da-opcao}}
+### Option B — {{option-name}}
 
-- **Desenho:** {{resumo}}
-- **Prós:** {{lista}}
-- **Contras:** {{lista}}
-- **Custo estimado:** {{construção + operação}}
-- **Reversibilidade:** {{o que custaria voltar atrás}}
+- **Design:** {{summary}}
+- **Pros:** {{list}}
+- **Cons:** {{list}}
+- **Estimated cost:** {{build + operation}}
+- **Reversibility:** {{what going back would cost}}
 
-### Opção C — manter o que existe / não fazer nada
+### Option C — keep what exists / do nothing
 
-- **Prós:** {{...}}
-- **Contras:** {{...}}
+- **Pros:** {{...}}
+- **Cons:** {{...}}
 
-## Decisão
+## Decision
 
-**Escolhida: {{opção-escolhida}}.**
+**Chosen: {{chosen-option}}.**
 
-{{fundamentação — que critérios pesaram mais e porquê; se fundiu ideias de mais de uma opção,
-dizê-lo explicitamente}}
+{{rationale — which criteria weighed most and why; if it merged ideas from more than one
+option, say so explicitly}}
 
-## Consequências
+## Consequences
 
-- **Fica mais fácil:** {{...}}
-- **Fica mais difícil / dívida assumida:** {{...}}
+- **Gets easier:** {{...}}
+- **Gets harder / debt taken on:** {{...}}
 
-## Reversão
+## Rollback
 
-- **Custo de mudar mais tarde:** {{...}}
-- **Sinais de alerta que justificariam revisitar:** {{...}}
+- **Cost of changing later:** {{...}}
+- **Warning signs that would justify revisiting:** {{...}}
 
-## Relacionados
+## Related
 
-- `product/01-requirements/functional-requirements.md` — requisitos satisfeitos.
-- `product/02-architecture/architecture-vision.md` — visão consolidada onde este ADR se insere.
-- `Maestro/core/decision-engine.md` — o processo que gerou esta decisão.
-- `STATE.md` — onde se regista a validação do utilizador.
+- `product/01-requirements/functional-requirements.md` — requirements satisfied.
+- `product/02-architecture/architecture-vision.md` — consolidated vision this ADR fits into.
+- `Maestro/core/decision-engine.md` — the process that produced this decision.
+- `STATE.md` — where the user's validation is recorded.

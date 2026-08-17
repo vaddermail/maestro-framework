@@ -1,34 +1,35 @@
-# Registo de Riscos
+# Risk Register
 
-> **Como usar:** registo vivo de riscos de negócio, técnicos e legais, com identificador estável —
-> reaberto em cada portão de fase, não só em F1. Instanciado pelo
-> `agents/00-discovery/risk-analyst.md`. Fica em `product/00-discovery/risks.md`.
+> **How to use:** living register of business, technical and legal risks, with a stable
+> identifier — reopened at every phase gate, not only in F1. Instantiated by
+> `agents/00-discovery/risk-analyst.md`. Lives at `product/00-discovery/risks.md`.
 
-> **Estado:** rascunho
-> **Dono:** `agents/00-discovery/risk-analyst.md`
-> **Fase:** F1 (registo inicial); revisitado em cada portão e em F9 · **Atualizado:** {{aaaa-mm-dd}}
-> **Consumidores:** `delimitador-de-mvp`, `planeador-de-roadmap`, `estimador-de-custos`, fases seguintes
+> **Status:** draft
+> **Owner:** `agents/00-discovery/risk-analyst.md`
+> **Phase:** F1 (initial register); revisited at every gate and in F9 · **Updated:** {{yyyy-mm-dd}}
+> **Consumers:** `mvp-scoper`, `roadmap-planner`, `cost-estimator`, later phases
 
-## Registo
+## Register
 
-*Cobre sempre as três dimensões: negócio, técnico, legal/conformidade. Todo risco tem dono e
-próximo passo — "risco: pode falhar" sem mitigação nem dono é decoração, não entra.*
+*Always covers the three dimensions: business, technical, legal/compliance. Every risk has an
+owner and a next step — "risk: it may fail" with no mitigation and no owner is decoration, it
+doesn't get in.*
 
-| ID | Categoria | Descrição | Probabilidade × Impacto | Mitigação | Dono | Estado | Gatilho de revisão |
+| ID | Category | Description | Probability × Impact | Mitigation | Owner | Status | Review trigger |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| R-001 | negócio / técnico / legal | {{descricao-ancorada-no-produto}} | {{baixa-media-alta}} × {{baixa-media-alta}} | {{acao-com-dono-e-momento}} | {{responsavel}} | aberto | {{portao-de-fase-ou-evento}} |
+| R-001 | business / technical / legal | {{description-anchored-in-the-product}} | {{low-medium-high}} × {{low-medium-high}} | {{action-with-owner-and-moment}} | {{responsible}} | open | {{phase-gate-or-event}} |
 
-*Estados possíveis: aberto (com mitigação e dono) · mitigado · aceite pelo utilizador · fechado.*
+*Possible statuses: open (with mitigation and owner) · mitigated · accepted by the user · closed.*
 
-## Escalados ao utilizador
+## Escalated to the user
 
-*Riscos que exigem decisão de negócio/âmbito, ou aceitação de risco residual — nunca aceites sozinhos
-pelo agente; a aprovação fica registada.*
+*Risks that require a business/scope decision, or acceptance of residual risk — never accepted by
+the agent alone; the approval is recorded.*
 
-- {{risco-id}} — {{decisao-pedida}} — **aceite por:** {{utilizador}}, em {{data}}
+- {{risk-id}} — {{decision-requested}} — **accepted by:** {{user}}, on {{date}}
 
-## Relacionados
+## Related
 
 - `agents/00-discovery/risk-analyst.md`
-- `agents/09-security/threat-modeler.md` — recebe o testemunho dos riscos de segurança.
+- `agents/09-security/threat-modeler.md` — receives the handover of the security risks.
 - `templates/discovery/mvp.md.template` · `templates/discovery/roadmap.md.template`

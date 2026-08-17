@@ -1,48 +1,49 @@
-# Objetivos de Negócio e KPIs
+# Business Goals and KPIs
 
-> **Como usar:** um ficheiro, duas secções — objetivos mensuráveis (instanciados pelo
-> `agents/00-discovery/business-goals-analyst.md`) e os KPIs que os medem, com baseline e
-> alvo (instanciados a jusante pelo `agents/00-discovery/kpi-definer.md`). Fica em
+> **How to use:** one file, two sections — measurable goals (instantiated by
+> `agents/00-discovery/business-goals-analyst.md`) and the KPIs that measure them, with baseline
+> and target (instantiated downstream by `agents/00-discovery/kpi-definer.md`). Lives at
 > `product/00-discovery/goals-and-kpis.md`.
 
-> **Estado:** rascunho
-> **Dono:** `agents/00-discovery/business-goals-analyst.md` (Objetivos) · `agents/00-discovery/kpi-definer.md` (KPIs)
-> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
-> **Consumidores:** `priorizador`, `delimitador-de-mvp`, `analista-de-riscos`, `especialista-de-metricas`, F2
+> **Status:** draft
+> **Owner:** `agents/00-discovery/business-goals-analyst.md` (Goals) ·
+> `agents/00-discovery/kpi-definer.md` (KPIs)
+> **Phase:** F1 · **Updated:** {{yyyy-mm-dd}}
+> **Consumers:** `prioritizer`, `mvp-scoper`, `risk-analyst`, `metrics-specialist`, F2
 
-## Objetivos de negócio
+## Business goals
 
-*Resultado de negócio, não funcionalidade. "Reduzir o tempo de aprovação" é objetivo; "ter um botão
-de aprovação em lote" é solução disfarçada.*
+*Business outcome, not feature. "Reduce approval time" is a goal; "have a batch approval button"
+is a solution in disguise.*
 
-| ID | Objetivo (direção + resultado observável) | Dono | Liga-se a | Prioridade |
+| ID | Goal (direction + observable outcome) | Owner | Links to | Priority |
 | --- | --- | --- | --- | --- |
-| OB-1 | {{objetivo-mensuravel}} | {{stakeholder-dono}} | `problema.md` | alta / média / baixa |
+| BG-1 | {{measurable-goal}} | {{owner-stakeholder}} | `problem.md` | high / medium / low |
 
-## Restrições
+## Constraints
 
-*Prazo, orçamento, conformidade legal, capacidade da equipa, tecnologia imposta — limites dados,
-não estimados aqui.*
+*Deadline, budget, legal compliance, team capacity, imposed technology — given limits, not
+estimated here.*
 
-- {{restricao}}
+- {{constraint}}
 
-## Conflitos expostos ao utilizador
+## Conflicts surfaced to the user
 
-*Quando dois objetivos ou restrições colidem (qualidade × prazo × custo), o conflito sobe ao
-utilizador com os trade-offs explicados — nunca se escolhe por ele.*
+*When two goals or constraints collide (quality × deadline × cost), the conflict goes up to the
+user with the trade-offs explained — it is never decided on their behalf.*
 
-- {{objetivo-a}} vs {{objetivo-b}} — {{trade-off}} — **decisão pendente / resolvida: {{decisao}}**
+- {{goal-a}} vs {{goal-b}} — {{trade-off}} — **pending decision / resolved: {{decision}}**
 
 ## KPIs
 
-*1–2 por objetivo. Baseline antes de alvo: sem baseline, o entregável é um plano de medição, nunca um
-número inventado (`knowledge/permanent-rules.md`).*
+*1–2 per goal. Baseline before target: without a baseline, the deliverable is a measurement plan,
+never an invented number (`knowledge/permanent-rules.md`).*
 
-| KPI | Mede o objetivo | Baseline | Alvo (valor + prazo) | Fonte | Cadência |
+| KPI | Measures goal | Baseline | Target (value + deadline) | Source | Cadence |
 | --- | --- | --- | --- | --- | --- |
-| {{kpi}} | OB-1 | {{valor-atual-ou-"por medir"}} | {{valor-alvo-ate-quando}} | {{de-onde-vem-o-numero}} | {{semanal-mensal}} |
+| {{kpi}} | BG-1 | {{current-value-or-"to-measure"}} | {{target-value-by-when}} | {{where-the-number-comes-from}} | {{weekly-monthly}} |
 
-## Relacionados
+## Related
 
 - `agents/00-discovery/business-goals-analyst.md` · `agents/00-discovery/kpi-definer.md`
 - `templates/discovery/problem.md.template` · `templates/discovery/mvp.md.template`

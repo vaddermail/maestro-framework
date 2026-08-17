@@ -1,49 +1,49 @@
-# Performance Web
+# Web Performance
 
-Orçamentos e medições reais, não estimativas. Definida em F4 pelo
-`agents/03-experience/web-performance-specialist.md`, medida ao longo de F6 e verificada em F7
-antes do portão P7 (`core/quality-gates.md`). Em produção, o dono contínuo passa a ser o
+Budgets and real measurements, not estimates. Defined in F4 by the
+`agents/03-experience/web-performance-specialist.md`, measured throughout F6 and verified in F7
+before the P7 gate (`core/quality-gates.md`). In production, continuous ownership passes to the
 `agents/13-guardians/performance-guardian.md`.
 
-## Orçamentos definidos
+## Budgets defined
 
-- [ ] Alvos de LCP, CLS, INP e TTFB definidos por **tipo de rota** — nunca um alvo global único.
-- [ ] Orçamento de peso (KB de JS/CSS) e número de pedidos por rota definido e tratado como limite
-      **bloqueante**, não aspiracional.
-- [ ] Dispositivo e rede de referência confirmados com o utilizador (ex.: gama média + 4G para rotas
-      públicas; ver `agents/03-experience/web-performance-specialist.md`).
+- [ ] LCP, CLS, INP and TTFB targets defined per **route type** — never a single global target.
+- [ ] Weight budget (KB of JS/CSS) and request count per route defined and treated as a
+      **blocking** limit, not an aspirational one.
+- [ ] Reference device and network confirmed with the user (e.g. mid-range + 4G for public
+      routes; see `agents/03-experience/web-performance-specialist.md`).
 
-## Condições de medição
+## Measurement conditions
 
-- [ ] Medido em viewport pequeno (~390px) **e** grande — não só num dos dois
+- [ ] Measured in a small viewport (~390px) **and** a large one — not just one of the two
       (`knowledge/permanent-rules.md` §7).
-- [ ] Medido com throttling de CPU/rede ativo, simulando o dispositivo/rede de referência — nunca só
-      no portátil do developer em fibra.
-- [ ] Medido com cache fria (primeira visita), não só com recursos já em cache.
+- [ ] Measured with CPU/network throttling active, simulating the reference device/network — never
+      only on the developer's laptop on fiber.
+- [ ] Measured with a cold cache (first visit), not just with resources already cached.
 
 ## Core Web Vitals
 
-- [ ] LCP dentro do orçamento na rota medida; o recurso do LCP nunca depende de lazy-load nem de JS.
-- [ ] INP dentro do orçamento nas interações críticas (formulários, listas densas).
-- [ ] TTFB dentro do orçamento, com a origem do tempo confirmada (servidor vs. rede).
+- [ ] LCP within budget on the measured route; the LCP resource never depends on lazy-load or JS.
+- [ ] INP within budget on the critical interactions (forms, dense lists).
+- [ ] TTFB within budget, with the source of the time confirmed (server vs. network).
 
-## Imagens e bundles
+## Images and bundles
 
-- [ ] Imagens em formato moderno, dimensões responsivas, `lazy` fora do primeiro ecrã.
-- [ ] Bundle de JS por rota dentro do orçamento definido; código não crítico adiado
+- [ ] Images in a modern format, responsive dimensions, `lazy` outside the first screen.
+- [ ] JS bundle per route within the defined budget; non-critical code deferred
       (code-splitting).
-- [ ] Fontes web com `font-display` e fallback métrico, sem bloquear a renderização.
+- [ ] Web fonts with `font-display` and a metric fallback, without blocking rendering.
 
-## Estabilidade visual
+## Visual stability
 
-- [ ] CLS dentro do orçamento (idealmente próximo de zero); dimensões reservadas para
-      imagens/embeds/anúncios antes de carregarem.
-- [ ] Nada visível salta de posição depois do carregamento inicial nos fluxos críticos.
+- [ ] CLS within budget (ideally near zero); dimensions reserved for
+      images/embeds/ads before they load.
+- [ ] Nothing visible jumps position after the initial load in the critical flows.
 
-## Relacionados
+## Related
 
-- `agents/03-experience/web-performance-specialist.md` — dono dos orçamentos e da verificação.
-- `agents/03-experience/responsiveness-specialist.md` — o layout que a medição em ~390px cobre.
-- `agents/13-guardians/performance-guardian.md` — a monitorização contínua a partir desta base.
-- `agents/12-reviewers/performance-reviewer.md` — quem revê contra os orçamentos.
-- `checklists/definition-of-done.md` — performance como critério de F4.
+- `agents/03-experience/web-performance-specialist.md` — owner of the budgets and the verification.
+- `agents/03-experience/responsiveness-specialist.md` — the layout the ~390px measurement covers.
+- `agents/13-guardians/performance-guardian.md` — continuous monitoring from this baseline.
+- `agents/12-reviewers/performance-reviewer.md` — who reviews against the budgets.
+- `checklists/definition-of-done.md` — performance as an F4 criterion.

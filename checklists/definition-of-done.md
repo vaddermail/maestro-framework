@@ -1,132 +1,134 @@
-# Definição de Pronto
+# Definition of Done
 
-O que fecha cada fase do ciclo de vida (`core/lifecycle.md`, F1–F9) e o que fecha qualquer
-alteração de código dentro de F6. É a base factual do portão de cada fase
-(`core/quality-gates.md`) — a checklist não decide sozinha a passagem, mas sem ela o portão
-não tem evidência para decidir. **Transversal a todos os fechos de fase:** a linha da fase no
-dossier de génese (`product/99-records/genesis.md` — `templates/project/GENESIS.md.template`) faz
-parte do portão; e `bash Maestro/_meta/verify-project.sh` verde confirma que o processo está a
-ser seguido, não só declarado.
+What closes each phase of the lifecycle (`core/lifecycle.md`, F1–F9) and what closes any code
+change within F6. It is the factual basis of each phase's gate (`core/quality-gates.md`) — the
+checklist does not decide the passage on its own, but without it the gate has no evidence to
+decide with. **Cross-cutting to every phase close:** the phase's line in the genesis dossier
+(`product/99-records/genesis.md` — `templates/project/GENESIS.md.template`) is part of the gate;
+and a green `bash Maestro/_meta/verify-project.sh` confirms the process is being followed, not
+just declared.
 
-## F1 — Descoberta
+## F1 — Discovery
 
-- [ ] Dossier de descoberta completo em `product/00-discovery/`: stakeholders, personas, casos de
-      utilização, objetivos, KPIs, riscos, roadmap e MVP escritos.
-- [ ] MVP delimitado e aprovado explicitamente pelo utilizador (registo em `STATE.md`).
-- [ ] Cada risco tem dono nomeado e mitigação descrita.
-- [ ] Zero lacunas críticas por fechar — perguntas da fase respondidas ou registadas como pendentes.
+- [ ] Discovery dossier complete in `product/00-discovery/`: stakeholders, personas, use cases,
+      goals, KPIs, risks, roadmap and MVP written.
+- [ ] MVP scoped and explicitly approved by the user (recorded in `STATE.md`).
+- [ ] Every risk has a named owner and a described mitigation.
+- [ ] Zero critical gaps left open — the phase's questions answered or recorded as pending.
 
-## F2 — Requisitos
+## F2 — Requirements
 
-- [ ] Zero ambiguidades **críticas** abertas no `loops/L01-ambiguous-requirements.md`; não-críticas
-      registadas com risco aceite pelo utilizador (o critério que L01 operacionaliza).
-- [ ] Requisitos não-funcionais quantificados com números concretos (ex.: "P95 < 300ms", não "rápido").
-- [ ] Regras de negócio numeradas e aprovadas pelo utilizador.
-- [ ] Todo o requisito funcional tem critério de aceitação verificável associado.
+- [ ] Zero **critical** ambiguities open in `loops/L01-ambiguous-requirements.md`; non-critical
+      ones recorded with the risk accepted by the user (the criterion L01 operationalizes).
+- [ ] Non-functional requirements quantified with concrete numbers (e.g. "P95 < 300ms", not
+      "fast").
+- [ ] Business rules numbered and approved by the user.
+- [ ] Every functional requirement has an associated verifiable acceptance criterion.
 
-## F3 — Arquitetura
+## F3 — Architecture
 
-- [ ] Cada ADR escrito com alternativas comparadas e plano de reversão explícito
+- [ ] Every ADR written with compared alternatives and an explicit rollback plan
       (`templates/project/ADR-DECISION.md.template`).
-- [ ] Stack fixada em versões estáveis (LTS/GA); nenhuma alpha/beta/RC sem justificação registada
+- [ ] Stack pinned to stable versions (LTS/GA); no alpha/beta/RC without a recorded justification
       (`knowledge/permanent-rules.md` §6).
-- [ ] Utilizador validou custos e trade-offs em linguagem simples, com o registo da decisão em
+- [ ] User validated costs and trade-offs in plain language, with the decision recorded in
       `STATE.md`.
 
-## F4 — Experiência
+## F4 — Experience
 
-- [ ] Wireframes dos fluxos críticos validados pelo utilizador.
-- [ ] Tokens do design system definidos (cor, tipografia, espaçamento) — nenhum valor hardcoded.
-- [ ] Nível WCAG alvo confirmado e plano de acessibilidade escrito
+- [ ] Wireframes of the critical flows validated by the user.
+- [ ] Design system tokens defined (color, typography, spacing) — no hardcoded values.
+- [ ] Target WCAG level confirmed and accessibility plan written
       (`agents/03-experience/accessibility-specialist.md`).
-- [ ] Orçamentos de performance por tipo de rota definidos
-      (`agents/03-experience/web-performance-specialist.md`). *(dispensável em: protótipo)*
+- [ ] Performance budgets per route type defined
+      (`agents/03-experience/web-performance-specialist.md`). *(waivable in: prototype)*
 
-## F5 — Especificação
+## F5 — Specification
 
-- [ ] Especificação revista pelo painel mínimo (arquitetura + segurança + UX) e aprovada pelo
-      utilizador (`agents/12-reviewers/review-consolidator.md`). *(em protótipo, a revisão
-      pelo Orquestrador + OK do utilizador substitui o painel — `core/quality-gates.md`)*
-- [ ] Máquinas de estado de todos os fluxos críticos escritas (`modules/state-machines.md`).
-- [ ] Modelo de dados lógico completo, com invariantes explícitos.
-- [ ] Contrato do backend escrito: autorização, scoping, integridade transacional, campos sensíveis.
+- [ ] Specification reviewed by the minimum panel (architecture + security + UX) and approved by
+      the user (`agents/12-reviewers/review-consolidator.md`). *(in a prototype, review by the
+      Orchestrator + the user's OK replaces the panel — `core/quality-gates.md`)*
+- [ ] State machines of all critical flows written (`modules/state-machines.md`).
+- [ ] Logical data model complete, with explicit invariants.
+- [ ] Backend contract written: authorization, scoping, transactional integrity, sensitive fields.
 
-## F6 — Esqueleto (fatia 0), uma vez antes das fatias de funcionalidade
+## F6 — Skeleton (slice 0), once before the feature slices
 
-O que muitos portões pressupõem mas que só se descobre em falta tarde — um lado sem *runner* de
-testes, um guardrail que nunca foi ligado — tem de existir **antes** da primeira fatia de
-funcionalidade. É critério de **entrada**, não só de saída: uma regra que só se verifica no fim de
-F7 já foi contornada durante toda a construção.
+What many gates presuppose but is only found missing late — one surface with no test *runner*, a
+guardrail that was never wired up — must exist **before** the first feature slice. It is an
+**entry** criterion, not just an exit one: a rule only checked at the end of F7 has already been
+bypassed throughout the entire build.
 
-- [ ] Cada superfície testável (frontend, backend, …) tem um *runner* de testes **configurado e a
-      correr em CI** — typecheck e build a passar **não** contam como testado (`checklists/pre-merge.md`).
-- [ ] Os guardrails que o produto vai exigir estão ligados no CI desde já (lint, análise estática,
-      fronteiras de arquitetura, varrimento de segredos), mesmo que ainda apanhem pouco — ligam-se
-      cedo, não na véspera do go-live.
-- [ ] O pipeline corre em todas as superfícies, separadas, e está verde antes de a primeira fatia
-      começar.
+- [ ] Every testable surface (frontend, backend, …) has a test *runner* **configured and running
+      in CI** — a passing typecheck and build do **not** count as tested
+      (`checklists/pre-merge.md`).
+- [ ] The guardrails the product will demand are wired into CI from the start (lint, static
+      analysis, architecture boundaries, secrets scanning), even if they still catch little — they
+      get wired early, not on the eve of go-live.
+- [ ] The pipeline runs on all surfaces, separately, and is green before the first slice starts.
 
-## F6 — Construção (por fatia)
+## F6 — Build (per slice)
 
-- [ ] Secção "Por alteração de código" (abaixo) cumprida.
-- [ ] `checklists/pre-merge.md` cumprida.
-- [ ] A fatia respeita a especificação — ou a especificação foi atualizada primeiro, às claras.
-- [ ] Progresso da fatia registado em `STATE.md`; o não-óbvio que é da **framework** (não do
-      produto) registado no momento em `FRAMEWORK-IMPROVEMENTS.md`
+- [ ] "Per code change" section (below) satisfied.
+- [ ] `checklists/pre-merge.md` satisfied.
+- [ ] The slice honors the specification — or the specification was updated first, in the open.
+- [ ] Slice progress recorded in `STATE.md`; the non-obvious that belongs to the **framework**
+      (not the product) recorded in the moment in `FRAMEWORK-IMPROVEMENTS.md`
       (`templates/project/FRAMEWORK-IMPROVEMENTS.md.template`).
 
-## P6b — Fecho de F6 (aceitação do MVP)
+## P6b — F6 close (MVP acceptance)
 
-- [ ] Todos os RF do MVP com código e teste rastreável; harness de regressão verde no ambiente-alvo
-      (`workflows/W06-build.md` §O portão por fatia (P6) e o da fase (P6b)).
-- [ ] Dívida técnica não resolvida **registada** (`loops/L08-technical-debt.md`), não escondida.
-- [ ] `FRAMEWORK-IMPROVEMENTS.md` consolidado e reporte enviado à framework-mãe
-      (`playbooks/report-framework-improvements.md`) — em construções longas, as lições sobem no
-      aceite do MVP, não meses depois.
-- [ ] Aceitação do MVP pelo utilizador registada em `STATE.md`.
+- [ ] Every MVP FR with traceable code and test; regression harness green in the target
+      environment (`workflows/W06-build.md` §The per-slice gate (P6) and the phase gate (P6b)).
+- [ ] Unresolved technical debt **recorded** (`loops/L08-technical-debt.md`), not hidden.
+- [ ] `FRAMEWORK-IMPROVEMENTS.md` consolidated and report sent to the upstream framework
+      (`playbooks/report-framework-improvements.md`) — in long builds, the lessons go upstream at
+      MVP acceptance, not months later.
+- [ ] MVP acceptance by the user recorded in `STATE.md`.
 
-## F7 — Qualidade & Segurança
+## F7 — Quality & Security
 
-- [ ] Zero achados críticos ou altos por resolver.
-- [ ] `checklists/pre-production-security.md` completa.
-- [ ] Auditoria adversarial corrida quando o perfil de esforço o exige
+- [ ] Zero critical or high findings left unresolved.
+- [ ] `checklists/pre-production-security.md` complete.
+- [ ] Adversarial audit run when the effort profile demands it
       (`playbooks/adversarial-audit.md`).
-- [ ] Risco residual assinado explicitamente pelo utilizador.
-- [ ] `FRAMEWORK-IMPROVEMENTS.md` consolidado e reporte enviado à framework-mãe
+- [ ] Residual risk explicitly signed off by the user.
+- [ ] `FRAMEWORK-IMPROVEMENTS.md` consolidated and report sent to the upstream framework
       (`playbooks/report-framework-improvements.md`).
 
-## F8 — Lançamento
+## F8 — Launch
 
-- [ ] `checklists/go-live.md` completa.
-- [ ] Aprovação humana explícita para produção registada em `STATE.md` — nunca delegável a agentes.
-- [ ] Lições do go-live (as que só produção expõe) registadas e reporte enviado
+- [ ] `checklists/go-live.md` complete.
+- [ ] Explicit human approval for production recorded in `STATE.md` — never delegable to agents.
+- [ ] Go-live lessons (the ones only production exposes) recorded and report sent
       (`playbooks/report-framework-improvements.md`).
 
-## F9 — Operação contínua
+## F9 — Continuous operation
 
-- [ ] Cadências dos guardiões cumpridas na periodicidade definida (`agents/13-guardians/README.md`).
-- [ ] Nenhum loop com pendência crítica aberta além do teto definido (`loops/README.md`).
-- [ ] Post-mortems de incidentes fechados têm ações verificadas, não só planeadas
+- [ ] Guardian cadences met at the defined periodicity (`agents/13-guardians/README.md`).
+- [ ] No loop with a critical pending item open beyond the defined ceiling (`loops/README.md`).
+- [ ] Post-mortems of closed incidents have verified actions, not just planned ones
       (`checklists/post-incident.md`).
-- [ ] Reporte de melhorias enviado na cadência do perfil
+- [ ] Improvement report sent at the profile's cadence
       (`playbooks/report-framework-improvements.md`).
 
-## Por alteração de código
+## Per code change
 
-Aplica-se a qualquer fatia, PR ou hotfix, do primeiro commit de F6 em diante:
+Applies to any slice, PR or hotfix, from the first commit of F6 onward:
 
-- [ ] Sintaxe válida e build/compilação sem erros.
-- [ ] Sem erros de consola/log ao exercitar os ecrãs ou endpoints afetados, nos perfis/papéis
-      afetados.
-- [ ] Integridade de relações e invariantes de negócio mantida (regras de `product/04-specification/`).
-- [ ] Scoping e autorização preservados nas listas/endpoints tocados.
-- [ ] `STATE.md` atualizado; `CHANGELOG.md` também se for marco.
+- [ ] Valid syntax and build/compilation without errors.
+- [ ] No console/log errors while exercising the affected screens or endpoints, under the affected
+      profiles/roles.
+- [ ] Relationship integrity and business invariants preserved (rules in
+      `product/04-specification/`).
+- [ ] Scoping and authorization preserved on the touched lists/endpoints.
+- [ ] `STATE.md` updated; `CHANGELOG.md` too if it is a milestone.
 
-## Relacionados
+## Related
 
-- `core/lifecycle.md` — as fases que esta checklist fecha.
-- `core/quality-gates.md` — como o resultado decide a passagem.
-- `checklists/pre-merge.md` — o portão seguinte de cada fatia.
-- `checklists/README.md` — como se usa e quem executa.
-- `core/project-memory.md` — onde se regista o resultado.
-- `knowledge/permanent-rules.md` — os princípios que os itens operacionalizam.
+- `core/lifecycle.md` — the phases this checklist closes.
+- `core/quality-gates.md` — how the outcome decides the passage.
+- `checklists/pre-merge.md` — each slice's next gate.
+- `checklists/README.md` — how it is used and who runs it.
+- `core/project-memory.md` — where the outcome is recorded.
+- `knowledge/permanent-rules.md` — the principles the items operationalize.

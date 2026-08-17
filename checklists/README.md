@@ -1,45 +1,46 @@
-# Checklists — Verificação Objetiva
+# Checklists — Objective Verification
 
-Uma checklist é o critério concreto de um portão (`core/quality-gates.md`) ou de um loop
-(`loops/README.md`): transforma "parece pronto" em itens que se confirmam um a um. Usa-se sempre no
-fim de uma fase, de uma fatia de código ou de um evento (incidente, lançamento) — nunca a meio, como
-substituto do trabalho em si. A exceção deliberada é o bloco **"F6 — Esqueleto (fatia 0)"** da
-`checklists/definition-of-done.md`, que corre **à entrada** da construção: guardas e runners
-ligam-se antes da primeira fatia, não na véspera do go-live (promoção da 1.3.0, 2 confirmações).
+A checklist is the concrete criterion of a gate (`core/quality-gates.md`) or a loop
+(`loops/README.md`): it turns "looks done" into items confirmed one by one. It always runs at the
+end of a phase, a code slice, or an event (incident, launch) — never midway, as a substitute for
+the work itself. The deliberate exception is the **"F6 — Skeleton (slice 0)"** block of
+`checklists/definition-of-done.md`, which runs **on entry** to the build: guards and runners get
+wired before the first slice, not on the eve of go-live (1.3.0 promotion, 2 confirmations).
 
-## Como se usa uma checklist
+## How a checklist is used
 
-- Cada portão do ciclo de vida (`core/lifecycle.md`) referencia uma ou mais checklists nos seus
-  critérios (`core/quality-gates.md`).
-- Confirma-se **item a item**, marcando `- [ ]` → `- [x]` só com evidência real. Um item sem evidência
-  fica por marcar — não se marca "por confiança" (`knowledge/permanent-rules.md` §2).
-- **Quem verifica nunca é quem produziu** o trabalho: revisor independente, harness de testes, ou o
-  Orquestrador para critérios formais. É a mesma regra da anti-auto-validação em
+- Each lifecycle gate (`core/lifecycle.md`) references one or more checklists in its criteria
+  (`core/quality-gates.md`).
+- Items are confirmed **one by one**, flipping `- [ ]` → `- [x]` only with real evidence. An item
+  without evidence stays unchecked — it is never checked "on trust" (`knowledge/permanent-rules.md`
+  §2).
+- **The verifier is never whoever produced** the work: an independent reviewer, a test harness, or
+  the Orchestrator for formal criteria. It is the same anti-self-validation rule as in
   `core/quality-gates.md`.
-- **Uma checklist chumbada bloqueia o portão.** Não há passagem parcial: ou todos os itens passam, ou
-  o portão fica. A única saída é a **derrogação explícita do utilizador**, registada com o porquê e o
-  risco assumido — nunca um atalho silencioso do agente.
-- O resultado (passou / chumbou + itens falhados) regista-se em `STATE.md` e, quando produz relatório
-  formal, em `product/99-records/`.
+- **A failed checklist blocks the gate.** There is no partial pass: either every item passes, or
+  the gate stays shut. The only way out is an **explicit waiver from the user**, recorded with the
+  why and the risk assumed — never a silent shortcut by the agent.
+- The outcome (passed / failed + failed items) is recorded in `STATE.md` and, when it produces a
+  formal report, in `product/99-records/`.
 
-## Quem executa cada checklist
+## Who runs each checklist
 
-| Checklist | Quando corre | Quem executa |
+| Checklist | When it runs | Who runs it |
 | --- | --- | --- |
-| `checklists/definition-of-done.md` | entrada de F6 (fatia 0), fim de cada fase e a cada alteração de código | Orquestrador confirma; o agente dono da fase reúne a evidência — nunca marca os próprios itens (`core/quality-gates.md`) |
-| `checklists/pre-merge.md` | antes de qualquer merge para o ramo de integração | revisor independente (`agents/12-reviewers/`) |
-| `checklists/pre-production-security.md` | portão P7 (F7→F8) e a cada release relevante | `agents/09-security/security-coordinator.md` |
-| `checklists/accessibility.md` | por ecrã, em F4 (definição) e F7 (verificação) | `agents/03-experience/accessibility-specialist.md` |
-| `checklists/web-performance.md` | por rota, em F4 (orçamento) e F7 (medição) | `agents/03-experience/web-performance-specialist.md` |
-| `checklists/go-live.md` | portão P8 (F8 → produção) | `agents/07-devops/deployment-strategist.md` + aprovação do utilizador |
-| `checklists/post-incident.md` | após a mitigação de qualquer incidente, antes de o fechar | dono do post-mortem (`workflows/W11-incident-response.md`) |
-| `checklists/pr-review.md` | cada PR, antes de `checklists/pre-merge.md` | revisor independente do autor |
+| `checklists/definition-of-done.md` | F6 entry (slice 0), end of each phase and on every code change | Orchestrator confirms; the agent owning the phase gathers the evidence — never checks its own items (`core/quality-gates.md`) |
+| `checklists/pre-merge.md` | before any merge to the integration branch | independent reviewer (`agents/12-reviewers/`) |
+| `checklists/pre-production-security.md` | gate P7 (F7→F8) and on every relevant release | `agents/09-security/security-coordinator.md` |
+| `checklists/accessibility.md` | per screen, in F4 (definition) and F7 (verification) | `agents/03-experience/accessibility-specialist.md` |
+| `checklists/web-performance.md` | per route, in F4 (budget) and F7 (measurement) | `agents/03-experience/web-performance-specialist.md` |
+| `checklists/go-live.md` | gate P8 (F8 → production) | `agents/07-devops/deployment-strategist.md` + user approval |
+| `checklists/post-incident.md` | after mitigating any incident, before closing it | post-mortem owner (`workflows/W11-incident-response.md`) |
+| `checklists/pr-review.md` | every PR, before `checklists/pre-merge.md` | reviewer independent of the author |
 
-## Relacionados
+## Related
 
-- `core/quality-gates.md` — os portões que estas checklists servem.
-- `core/lifecycle.md` — as fases onde cada portão se encaixa.
-- `loops/README.md` — o outro consumidor de checklists (condição de saída de um loop).
-- `core/project-memory.md` — onde se regista o resultado de cada verificação.
-- `agents/12-reviewers/README.md` — quem tipicamente executa as checklists de revisão.
-- `_meta/STYLE-GUIDE.md` — convenção `- [ ]` e formato de todos os documentos.
+- `core/quality-gates.md` — the gates these checklists serve.
+- `core/lifecycle.md` — the phases where each gate fits.
+- `loops/README.md` — the other consumer of checklists (a loop's exit condition).
+- `core/project-memory.md` — where the outcome of each verification is recorded.
+- `agents/12-reviewers/README.md` — who typically runs the review checklists.
+- `_meta/STYLE-GUIDE.md` — the `- [ ]` convention and the format of all documents.

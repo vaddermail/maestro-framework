@@ -1,108 +1,111 @@
-# Playbook — Onboarding de Developer
+# Playbook — Developer Onboarding
 
-Levar um **novo interveniente** de zero a operacional **com um comando**, e depois arrancar cada
-sessão de forma disciplinada. "Interveniente" é tanto um **humano** (developer que se junta à equipa)
-como um **agente de IA** (nova sessão do Claude Code/Cowork/outro) — ambos precisam do mesmo: código
-sincronizado, ambiente reproduzível, acessos dedicados e a memória do projeto lida antes de tocar em
-nada.
+Take a **new participant** from zero to operational **with one command**, and then start every
+session in a disciplined way. "Participant" means both a **human** (a developer joining the team)
+and an **AI agent** (a new Claude Code/Cowork/other session) — both need the same: synchronized
+code, a reproducible environment, dedicated access and the project memory read before touching
+anything.
 
-**Quando se executa:** quando alguém/algo se junta ao projeto (kit de arranque, passos 1–5); e **no
-início de cada sessão de trabalho** (protocolo de arranque, passos 6–8). **Quem:** o próprio novo
-interveniente, guiado por este playbook; um humano da equipa aprova a criação de acessos dedicados.
+**When it runs:** when someone/something joins the project (starter kit, steps 1–5); and **at the
+start of every work session** (session-start protocol, steps 6–8). **Who:** the new participant
+themselves, guided by this playbook; a human on the team approves the creation of dedicated access.
 
-## Pré-condições
+## Preconditions
 
-- [ ] Repositório acessível (clone por chave/deploy key, nunca token colado — `playbooks/secrets-management.md`).
-- [ ] Existe um script de setup **idempotente** na raiz (ex.: `setup.sh`) — se não existir, criá-lo é o
-      primeiro contributo (passo 3).
-- [ ] `STATE.md`, `CLAUDE.md` (ou instruções da ferramenta — `adapters/`) e a árvore `product/`
-      existem no projeto (criados no arranque, `workflows/W00-project-kickoff.md`).
+- [ ] Repository accessible (clone via key/deploy key, never a pasted token —
+      `playbooks/secrets-management.md`).
+- [ ] An **idempotent** setup script exists at the root (e.g. `setup.sh`) — if it does not, creating
+      it is the first contribution (step 3).
+- [ ] `STATE.md`, `CLAUDE.md` (or the tool's instructions — `adapters/`) and the `product/` tree
+      exist in the project (created at kickoff, `workflows/W00-project-kickoff.md`).
 
-## Passos
+## Steps
 
-**Kit de arranque (uma vez, ao juntar-se):**
+**Starter kit (once, on joining):**
 
-### 1. Obter o código
-**Faz:** clonar o repositório pelo acesso dedicado (chave/deploy key). Confirmar que se está no
-ambiente-alvo (ex.: VS Code sobre WSL, nunca PowerShell — regra de origem do projeto-mãe).
-**Verifica:** `git status` limpo; `git log -1` mostra o commit mais recente do ramo de integração.
-**Se falhar:** se o acesso não funciona, não colar tokens no chat — pedir/criar uma credencial
-dedicada (passo 4) e registar o caminho, não o valor.
+### 1. Get the code
+**Do:** clone the repository via the dedicated access (key/deploy key). Confirm you are in the
+target environment (e.g. VS Code over WSL, never PowerShell — an origin rule from the origin
+project).
+**Check:** clean `git status`; `git log -1` shows the latest commit of the integration branch.
+**If it fails:** if the access does not work, do not paste tokens into the chat — request/create a
+dedicated cnetworkntial (step 4) and record the path, not the value.
 
-### 2. Ler a memória do projeto **antes** de mexer
-**Faz:** ler, por esta ordem, `CLAUDE.md` (regras estáveis), `STATE.md` (feito/em curso/a seguir/
-decisões pendentes/lições) e o índice de `product/`. Um agente de IA lê ainda o `START-HERE.md` e o
-adaptador da sua ferramenta (`adapters/claude-code.md` ou `adapters/other-assistants.md`).
-**Verifica:** consegues dizer em duas frases em que ponto está o projeto e qual é a próxima tarefa —
-sem perguntar a ninguém.
-**Se falhar:** se `STATE.md` não chega para retomar, é uma lacuna de memória — registá-la e pedir
-contexto, **nunca adivinhar** (`knowledge/ai-pitfalls.md` §3, §8).
+### 2. Read the project memory **before** touching anything
+**Do:** read, in this order, `CLAUDE.md` (stable rules), `STATE.md` (done/in progress/up next/
+pending decisions/lessons) and the `product/` index. An AI agent also reads `START-HERE.md` and the
+adapter for its tool (`adapters/claude-code.md` or `adapters/other-assistants.md`).
+**Check:** you can say in two sentences where the project stands and what the next task is —
+without asking anyone.
+**If it fails:** if `STATE.md` is not enough to resume, that is a memory gap — record it and ask
+for context, **never guess** (`knowledge/ai-pitfalls.md` §3, §8).
 
-### 3. Sincronizar o ambiente com um comando
-**Faz:** correr o script de setup idempotente (`./setup.sh`): instala runtime na versão fixada
-(lockfile/`.nvmrc`/`engines` — `knowledge/permanent-rules.md` §6), dependências, extensões e
-ferramentas. Correr duas vezes **não** deve partir nada.
-**Verifica:** o script termina com código 0; correr uma segunda vez é idempotente (sem erros, sem
-duplicados); lint e testes locais correm (`pipelines/ci-quality.md`).
-**Se falhar:** se o setup não é idempotente ou falta um passo, **corrigir o script** (para o próximo
-não tropeçar), não remendar à mão a máquina local — a correção do script é o valor.
+### 3. Sync the environment with one command
+**Do:** run the idempotent setup script (`./setup.sh`): it installs the runtime at the pinned
+version (lockfile/`.nvmrc`/`engines` — `knowledge/permanent-rules.md` §6), dependencies, extensions
+and tools. Running it twice must **not** break anything.
+**Check:** the script exits with code 0; a second run is idempotent (no errors, no duplicates);
+lint and local tests run (`pipelines/ci-quality.md`).
+**If it fails:** if the setup is not idempotent or a step is missing, **fix the script** (so the
+next person does not trip), do not hand-patch the local machine — fixing the script is the value.
 
-### 4. Obter acessos dedicados e revogáveis
-**Faz:** criar/receber credenciais **próprias** do interveniente (deploy key, token de escopo mínimo),
-distintas das de outras pessoas e **revogáveis** sem partir as dos outros. Preencher segredos locais a
-partir dos `*.example` (`playbooks/secrets-management.md`).
-**Verifica:** o interveniente acede ao que precisa e **só** ao que precisa (least privilege); revogar a
-sua credencial não afeta ninguém.
-**Se falhar:** partilhar uma credencial "para ser rápido" é dívida de segurança — criar a dedicada,
-mesmo que custe minutos.
+### 4. Get dedicated, revocable access
+**Do:** create/receive the participant's **own** cnetworkntials (deploy key, minimal-scope token),
+distinct from other people's and **revocable** without breaking anyone else's. Fill in local
+secrets from the `*.example` files (`playbooks/secrets-management.md`).
+**Check:** the participant can access what they need and **only** what they need (least privilege);
+revoking their cnetworkntial affects no one.
+**If it fails:** sharing a cnetworkntial "to be quick" is security debt — create the dedicated one,
+even if it costs minutes.
 
-### 5. Primeiro contributo guiado
-**Faz:** escolher uma fatia **pequena e aditiva** (um fix, um teste, uma clarificação de doc) para
-exercitar o ciclo completo: branch dedicado → alteração → verificação → PR verde → aviso ao colega
+### 5. First guided contribution
+**Do:** pick a **small, additive** slice (a fix, a test, a doc clarification) to exercise the full
+cycle: dedicated branch → change → verification → green PR → heads-up to the colleague
 (`knowledge/permanent-rules.md` §8, `checklists/pre-merge.md`).
-**Verifica:** o PR passa lint+testes (front e back correm separados — correr ambos); é revisto por
-alguém que **não** é o autor (`knowledge/ai-pitfalls.md` §20).
-**Se falhar:** se o primeiro PR não fica verde, é sinal de ambiente mal sincronizado (voltar ao passo 3)
-ou de regra não lida (voltar ao passo 2) — resolver a causa, não forçar o merge.
+**Check:** the PR passes lint+tests (front and back run separately — run both); it is reviewed by
+someone who is **not** the author (`knowledge/ai-pitfalls.md` §20).
+**If it fails:** if the first PR does not go green, it signals a badly synced environment (back to
+step 3) or an unread rule (back to step 2) — fix the cause, do not force the merge.
 
-**Protocolo de arranque de sessão (todas as vezes):**
+**Session-start protocol (every time):**
 
-### 6. Sincronizar código
-**Faz:** `git fetch` + `git pull --rebase` do ramo de integração. Nunca assumir que o local é o mais
-recente.
-**Verifica:** o local está à frente ou igual ao remoto do ramo de integração, sem divergência por
-resolver.
-**Se falhar:** em divergência ou *working tree* partilhado sujo, **parar e esclarecer** em vez de
-sobrescrever (`knowledge/permanent-rules.md` §8).
+### 6. Sync the code
+**Do:** `git fetch` + `git pull --rebase` on the integration branch. Never assume local is the most
+recent.
+**Check:** local is ahead of or equal to the integration branch's remote, with no unresolved
+divergence.
+**If it fails:** on divergence or a dirty shared *working tree*, **stop and clarify** instead of
+overwriting (`knowledge/permanent-rules.md` §8).
 
-### 7. Sincronizar ambiente e ler o estado
-**Faz:** correr o setup se houve mudanças de dependências; reler `STATE.md` (as lições e decisões
-podem ter mudado desde a última sessão).
-**Verifica:** ambiente verde (lint/testes locais) e estado lido antes de tocar em código.
-**Se falhar:** se o ambiente não fica verde, resolver antes de avançar — não construir sobre base
-partida.
+### 7. Sync the environment and read the state
+**Do:** run the setup if dependencies changed; reread `STATE.md` (lessons and decisions may have
+changed since the last session).
+**Check:** environment green (local lint/tests) and state read before touching code.
+**If it fails:** if the environment will not go green, fix it before moving on — do not build on a
+broken base.
 
-### 8. Encerrar a sessão (sempre)
-**Faz:** atualizar `STATE.md` (feito/em curso/a seguir, decisões tomadas e pendentes, lições
-não-óbvias com o porquê); confirmar que tudo o tocado está em ficheiros, nada só na conversa
-(`START-HERE.md` §2.5, `core/project-memory.md`).
-**Verifica:** a próxima sessão (humana ou IA) consegue retomar só a partir do `STATE.md`.
-**Se falhar:** trabalho meio-feito sem rasto perde-se entre sessões — registar o bloqueio com contexto
-suficiente para retomar sem re-perguntar.
+### 8. Close the session (always)
+**Do:** update `STATE.md` (done/in progress/up next, decisions made and pending, non-obvious
+lessons with the why); confirm that everything touched is in files, nothing only in the
+conversation (`START-HERE.md` §2.5, `core/project-memory.md`).
+**Check:** the next session (human or AI) can resume from `STATE.md` alone.
+**If it fails:** half-done work with no trace gets lost between sessions — record the blocker with
+enough context to resume without re-asking.
 
-## Reversão
+## Rollback
 
-- Um interveniente que sai reverte-se **revogando os acessos dedicados** (passo 4) — por isso serem
-  dedicados e revogáveis (o offboarding é o espelho deste playbook: `modules/entity-lifecycle.md`).
-- O ambiente é descartável: o setup idempotente (passo 3) reconstrói do zero, logo não há estado
-  manual a preservar na máquina.
+- A departing participant is rolled back by **revoking their dedicated access** (step 4) — that is
+  why it is dedicated and revocable (offboarding is this playbook's mirror image:
+  `modules/entity-lifecycle.md`).
+- The environment is disposable: the idempotent setup (step 3) rebuilds from scratch, so there is
+  no manual state to preserve on the machine.
 
-## Relacionados
+## Related
 
-- `START-HERE.md` — arranque do projeto (a primeira sessão de todas).
-- `workflows/W00-project-kickoff.md` — instanciação da memória que este playbook pressupõe.
-- `core/project-memory.md` — `STATE.md` e passagem de testemunho entre sessões/pessoas/ferramentas.
-- `playbooks/secrets-management.md` — os `*.example` e as credenciais dedicadas.
-- `adapters/claude-code.md` · `adapters/other-assistants.md` — arranque específico por ferramenta de IA.
-- `knowledge/permanent-rules.md` — §6 (versões fixadas), §8 (Git colaborativo).
-- `checklists/pre-merge.md` · `pipelines/ci-quality.md` — o gate do primeiro contributo.
+- `START-HERE.md` — project start (the first session of all).
+- `workflows/W00-project-kickoff.md` — instantiation of the memory this playbook assumes.
+- `core/project-memory.md` — `STATE.md` and handover between sessions/people/tools.
+- `playbooks/secrets-management.md` — the `*.example` files and the dedicated cnetworkntials.
+- `adapters/claude-code.md` · `adapters/other-assistants.md` — AI-tool-specific startup.
+- `knowledge/permanent-rules.md` — §6 (pinned versions), §8 (collaborative Git).
+- `checklists/pre-merge.md` · `pipelines/ci-quality.md` — the first contribution's gate.

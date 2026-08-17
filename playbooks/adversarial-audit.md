@@ -1,106 +1,111 @@
-# Playbook — Auditoria Adversarial
+# Playbook — Adversarial Audit
 
-Uma revisão **extensa, adversarial e multidisciplinar** do produto, com **verificação independente de
-cada conclusão** antes de a aceitar. Operacionaliza `knowledge/permanent-rules.md` §7 e as
-armadilhas `knowledge/ai-pitfalls.md` §20 (auto-validação) e §21 (uma só perspetiva não chega).
-É a escalada do painel de revisão normal (`agents/12-reviewers/README.md`): mais lentes, mandato de
-**refutar**, e um filtro de verificação que só deixa entrar no relatório o que foi reproduzido.
+An **extensive, adversarial, multidisciplinary** review of the product, with **independent
+verification of every finding** before accepting it. It operationalizes
+`knowledge/permanent-rules.md` §7 and the pitfalls `knowledge/ai-pitfalls.md` §20
+(self-validation) and §21 (a single perspective is not enough). It is the escalation of the normal
+review panel (`agents/12-reviewers/README.md`): more lenses, a mandate to **refute**, and a
+verification filter that only lets into the report what has been reproduced.
 
-**Quando se executa:** em **marcos** importantes, em **pré-produção** (antes do go-live,
-`workflows/W07-quality-and-security.md`), na revisão global sob pedido
-(`workflows/W12-global-review.md`), e sempre que o utilizador a pedir. **Quem:** o Orquestrador
-(`core/orchestrator.md`) monta o painel; os auditores são agentes independentes, **nenhum autor do
-que audita**.
+**When it runs:** at important **milestones**, in **pre-production** (before go-live,
+`workflows/W07-quality-and-security.md`), in the global review on request
+(`workflows/W12-global-review.md`), and whenever the user asks for it. **Who:** the Orchestrator
+(`core/orchestrator.md`) assembles the panel; the auditors are independent agents, **none an
+author of what it audits**.
 
-## O que a distingue do painel normal de F7
+## What sets it apart from the normal F7 panel
 
-| Painel normal (F7) | Auditoria adversarial |
+| Normal panel (F7) | Adversarial audit |
 | --- | --- |
-| Cada revisor procura o que pode estar mal na **sua dimensão** | Cada auditor tem **mandato explícito de refutar** — a hipótese nula é "isto está errado" |
-| Um achado plausível por inspeção pode entrar no relatório | Um achado **não reproduzido não entra** — verificação independente é gate |
-| Convocado a cada fatia/release | Reservado a marcos, pré-produção e pedido (é caro por desenho) |
-| Consolidação funde relatórios | Consolidação funde **e** re-verifica os bloqueadores antes de os promover |
+| Each reviewer looks for what may be wrong in **their dimension** | Each auditor has an **explicit mandate to refute** — the null hypothesis is "this is wrong" |
+| A finding plausible by inspection may enter the report | A finding **not reproduced does not enter** — independent verification is the gate |
+| Convened for every slice/release | Reserved for milestones, pre-production and requests (it is expensive by design) |
+| Consolidation merges reports | Consolidation merges **and** re-verifies the blockers before promoting them |
 
-## Pré-condições
+## Preconditions
 
-- [ ] Âmbito congelado: que fatia/release/commits se auditam, com os artefactos disponíveis
+- [ ] Scope frozen: which slice/release/commits are audited, with the artifacts available
       (`core/artifact-protocol.md`).
-- [ ] Ambiente de prova-live real disponível (não só testes — `knowledge/ai-pitfalls.md` §2, §18).
-- [ ] Camada de modelo por lente escolhida (`core/model-routing.md`); a verificação/juízo
-      adversarial mais difícil justifica o tier de topo.
+- [ ] A real live-proof environment available (not just tests — `knowledge/ai-pitfalls.md` §2,
+      §18).
+- [ ] Model tier chosen per lens (`core/model-routing.md`); the hardest adversarial
+      verification/judgment justifies the top tier.
 
-## Passos
+## Steps
 
-### 1. Fixar âmbito e lentes
-**Faz:** definir o âmbito exato e as **lentes** — no mínimo: **correção**, **segurança**,
-**integridade de dados**, **silent failures**, **UX**, **testes** (acrescentar performance, arquitetura,
-docs conforme o risco). Uma lente por auditor.
-**Verifica:** cada lente tem um auditor atribuído e os artefactos de que precisa; nenhuma lente crítica
-para este marco ficou sem dono.
-**Se falhar:** se falta artefacto para uma lente, registar como "não verificável" (honestidade absoluta),
-não deixar o auditor **assumir** (`knowledge/ai-pitfalls.md` §3).
+### 1. Fix the scope and the lenses
+**Do:** define the exact scope and the **lenses** — at minimum: **correctness**, **security**,
+**data integrity**, **silent failures**, **UX**, **tests** (add performance, architecture, docs
+according to risk). One lens per auditor.
+**Verify:** each lens has an assigned auditor and the artifacts it needs; no lens critical to this
+milestone was left without an owner.
+**If it fails:** if an artifact is missing for a lens, record it as "not verifiable" (absolute
+honesty), do not let the auditor **assume** (`knowledge/ai-pitfalls.md` §3).
 
-### 2. Lançar auditores independentes, às cegas, um por lente
-**Faz:** lançar os auditores **em paralelo**, cada um com o mesmo âmbito mas **sem ler os relatórios dos
-outros** (a convergência de dois pareceres separados é sinal forte; a contaminação destrói-o —
-`agents/12-reviewers/README.md`). Mandato a cada um: **encontrar o que está mal, não confirmar que está
-bem.**
-**Verifica:** nenhum auditor é autor do que audita; nenhum recebeu o relatório de outro enquanto
-trabalhava.
-**Se falhar:** se só há uma perspetiva disponível, isso **não** é auditoria adversarial — é uma revisão
-simples; dizê-lo como tal (`knowledge/ai-pitfalls.md` §21).
+### 2. Launch independent auditors, blind, one per lens
+**Do:** launch the auditors **in parallel**, each with the same scope but **without reading the
+others' reports** (the convergence of two separate opinions is a strong signal; contamination
+destroys it — `agents/12-reviewers/README.md`). Mandate to each: **find what is wrong, not
+confirm that it is right.**
+**Verify:** no auditor is an author of what it audits; none received another's report while
+working.
+**If it fails:** if only one perspective is available, that is **not** an adversarial audit — it is
+a simple review; call it that (`knowledge/ai-pitfalls.md` §21).
 
-### 3. Cada achado com cenário de falha concreto
-**Faz:** cada auditor escreve no molde comum (`templates/technical/review-report.md.template`):
-`id`, severidade (**bloqueador · maior · menor · nit**), localização (`ficheiro:linha`/artefacto), o
-defeito em uma frase, o **cenário de falha concreto** (inputs/estado → resultado errado), a recomendação
-e a **confiança** (`confirmado` se reproduzido, `plausível` se por inspeção).
-**Verifica:** nenhum achado é vago ("parece frágil") — cada um diz **como** falha, com inputs.
-**Se falhar:** um achado sem cenário concreto volta ao auditor; não avança para verificação sem os
-inputs que o reproduzem.
+### 3. Every finding with a concrete failure scenario
+**Do:** each auditor writes in the common mold (`templates/technical/review-report.md.template`):
+`id`, severity (**blocker · major · minor · nit**), location (`file:line`/artifact), the defect in
+one sentence, the **concrete failure scenario** (inputs/state → wrong result), the recommendation
+and the **confidence** (`confirmed` if reproduced, `plausible` if by inspection).
+**Verify:** no finding is vague ("looks fragile") — each one says **how** it fails, with inputs.
+**If it fails:** a finding without a concrete scenario goes back to the auditor; it does not move
+on to verification without the inputs that reproduce it.
 
-### 4. Verificação independente de cada conclusão (o gate)
-**Faz:** para cada achado, **um verificador que não é o autor do achado** tenta reproduzi-lo a partir do
-cenário concreto. Achado reproduzido → `confirmado`. Não reproduzido → fica **fora do relatório** (ou
-como pista a investigar, nunca como conclusão).
-**Verifica:** todo o achado no relatório final é `confirmado` por reprodução independente; achados de
-correção, autorização, dinheiro, dados pessoais e fluxos irreversíveis receberam o máximo escrutínio
-(`MANIFESTO.md` §9).
-**Se falhar:** **um achado não verificado não entra no relatório** — é a regra central deste playbook.
-Reportar suspeitas como factos é a mesma falha que a auto-validação que a auditoria existe para evitar.
+### 4. Independent verification of every finding (the gate)
+**Do:** for each finding, **a verifier who is not the finding's author** tries to reproduce it from
+the concrete scenario. Finding reproduced → `confirmed`. Not reproduced → it stays **out of the
+report** (or as a lead to investigate, never as a conclusion).
+**Verify:** every finding in the final report is `confirmed` by independent reproduction; findings
+about correctness, authorization, money, personal data and irreversible flows received the
+utmost scrutiny (`MANIFESTO.md` §9).
+**If it fails:** **an unverified finding does not enter the report** — it is this playbook's
+central rule. Reporting suspicions as facts is the same failure as the self-validation the audit
+exists to prevent.
 
-### 5. Consolidar num plano único priorizado
-**Faz:** o `agents/12-reviewers/review-consolidator.md` funde os relatórios num plano único, sem
-duplicados nem contradições, ordenado por **risco real** (um `confirmado` vale mais que dez suspeitas),
-não por número de achados. Re-verificar os bloqueadores antes de os promover.
-**Verifica:** o plano não tem achados repetidos por lentes diferentes nem recomendações que se
-contradizem; cada bloqueador liga ao portão de qualidade (`core/quality-gates.md`).
-**Se falhar:** contradições entre lentes resolvem-se re-verificando, não escolhendo a mais conveniente.
+### 5. Consolidate into a single prioritized plan
+**Do:** the `agents/12-reviewers/review-consolidator.md` merges the reports into a single plan,
+without duplicates or contradictions, ordered by **real risk** (one `confirmed` is worth more than
+ten suspicions), not by number of findings. Re-verify the blockers before promoting them.
+**Verify:** the plan has no findings repeated across lenses nor recommendations that contradict
+each other; each blocker links to the quality gate (`core/quality-gates.md`).
+**If it fails:** contradictions between lenses are resolved by re-verifying, not by picking the
+most convenient one.
 
-### 6. Encaminhar e fechar
-**Faz:** os bloqueadores voltam à construção pelos loops respetivos (`loops/L02-failing-tests.md`,
-`loops/L03-security-issues.md`, `loops/L04-code-smells.md`, `loops/L05-inconsistencies.md`); a
-auditoria fecha quando o portão de F7 passa (`core/quality-gates.md`). Para segurança, o painel
-integra o `agents/09-security/pentester.md`.
-**Verifica:** cada bloqueador tem um loop/dono; o veredicto global (`passa` · `passa-com-ressalvas` ·
-`bloqueia`) está registado — um único bloqueador basta para bloquear.
-**Se falhar:** se um bloqueador não tem dono nem loop, a auditoria **não** fechou; não dar go-live com
-bloqueadores por resolver.
+### 6. Route and close
+**Do:** the blockers go back to the build through their loops (`loops/L02-failing-tests.md`,
+`loops/L03-security-issues.md`, `loops/L04-code-smells.md`, `loops/L05-inconsistencies.md`); the
+audit closes when the F7 gate passes (`core/quality-gates.md`). For security, the panel brings in
+`agents/09-security/pentester.md`.
+**Verify:** each blocker has a loop/owner; the overall verdict (`pass` · `pass-with-reservations` ·
+`block`) is recorded — a single blocker is enough to block.
+**If it fails:** if a blocker has neither owner nor loop, the audit did **not** close; do not
+go live with unresolved blockers.
 
-## Reversão
+## Rollback
 
-A auditoria é **não-destrutiva por natureza** — só lê e relata, não altera o produto; não há o que
-reverter no ato de auditar. As **correções** que ela desencadeia seguem a reversibilidade normal (branch,
-PR verde, flags/kill-switch para mudanças de risco — `knowledge/permanent-rules.md` §3). A
-convergência de **duas** auditorias independentes é confiança alta; mesmo essa se volta a verificar
-antes de um go-live irreversível.
+The audit is **non-destructive by nature** — it only reads and reports, it does not change the
+product; there is nothing to revert in the act of auditing. The **fixes** it triggers follow the
+normal reversibility (branch, green PR, flags/kill-switch for risky changes —
+`knowledge/permanent-rules.md` §3). The convergence of **two** independent audits is high
+confidence; even that is verified again before an irreversible go-live.
 
-## Relacionados
+## Related
 
-- `agents/12-reviewers/README.md` — o painel de revisão que esta auditoria escala.
-- `agents/12-reviewers/review-consolidator.md` — a consolidação num plano único.
-- `knowledge/ai-pitfalls.md` — §20 (auto-validação), §21 (uma só perspetiva).
-- `knowledge/permanent-rules.md` §7 — verificação e auditoria com máxima abrangência.
-- `workflows/W07-quality-and-security.md` · `workflows/W12-global-review.md` · `core/quality-gates.md`
+- `agents/12-reviewers/README.md` — the review panel this audit escalates.
+- `agents/12-reviewers/review-consolidator.md` — the consolidation into a single plan.
+- `knowledge/ai-pitfalls.md` — §20 (self-validation), §21 (a single perspective).
+- `knowledge/permanent-rules.md` §7 — verification and audit with maximum breadth.
+- `workflows/W07-quality-and-security.md` · `workflows/W12-global-review.md` ·
+  `core/quality-gates.md`
 - `templates/technical/review-report.md.template` · `agents/09-security/pentester.md`
 - `loops/L02-failing-tests.md` · `loops/L03-security-issues.md` · `loops/L05-inconsistencies.md`

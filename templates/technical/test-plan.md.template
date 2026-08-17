@@ -1,71 +1,72 @@
-# Plano de Testes — `{{fatia-ou-funcionalidade}}`
+# Test Plan — `{{slice-or-feature}}`
 
-> **Como usar:** copia para `product/06-tests/test-plans/{{fatia}}.md`. O plano é orientado
-> ao **risco**: cobre primeiro regras de negócio, invariantes e fluxos irreversíveis; não persegue
-> percentagem de cobertura cega. Produzido pelo `agents/10-quality/test-strategist.md`.
+> **How to use:** copy to `product/06-tests/test-plans/{{slice}}.md`. The plan is **risk**-driven:
+> it covers business rules, invariants and irreversible flows first; it does not chase blind
+> coverage percentage. Produced by `agents/10-quality/test-strategist.md`.
 
-## Cabeçalho
+## Header
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| Fatia / funcionalidade | {{nome}} |
-| Âmbito | {{o-que-cobre-e-o-que-fica-de-fora}} |
-| Data | {{aaaa-mm-dd}} |
-| Autor | {{agente-ou-pessoa}} |
+| Slice / feature | {{name}} |
+| Scope | {{what-it-covers-and-what-stays-out}} |
+| Date | {{yyyy-mm-dd}} |
+| Author | {{agent-or-person}} |
 
-## Lógica de risco a cobrir
+## Risk logic to cover
 
-*O que tem de estar certo — não "testar tudo", testar o que dói se falhar: correção, autorização,
-dinheiro, dados pessoais, irreversibilidade (`MANIFESTO.md` §9).*
+*What must be right — not "test everything", test what hurts if it fails: correctness,
+authorization, money, personal data, irreversibility (`MANIFESTO.md` §9).*
 
-| Regra / invariante | Porque é risco | Nível de teste | Prioridade |
+| Rule / invariant | Why it is a risk | Test level | Priority |
 | --- | --- | --- | --- |
-| {{ex-um-ativo-um-responsavel-de-cada-vez}} | {{consequencia-concreta-se-falhar}} | {{unitario-integracao-e2e}} | {{alta-media-baixa}} |
+| {{e.g.-one-asset-one-owner-at-a-time}} | {{concrete-consequence-if-it-fails}} | {{unit-integration-e2e}} | {{high-medium-low}} |
 
-## Estratégia por nível
+## Strategy per level
 
-| Nível | Cobre | Fica fora |
+| Level | Covers | Stays out |
 | --- | --- | --- |
-| Unitário | {{regras-de-negocio-e-invariantes-isoladas}} | {{io-externo-real}} |
-| Integração | {{bd-real-contratos-transacoes}} | {{interface-visual}} |
-| E2E | {{fluxos-criticos-multi-perfil-x-paginas}} | {{combinatoria-exaustiva-de-casos}} |
+| Unit | {{business-rules-and-isolated-invariants}} | {{real-external-io}} |
+| Integration | {{real-db-contracts-transactions}} | {{visual-interface}} |
+| E2E | {{critical-multi-profile-flows-x-pages}} | {{exhaustive-case-combinatorics}} |
 
-## Fakes/mocks para I/O externo
+## Fakes/mocks for external I/O
 
-*Nunca bater em serviços externos reais nos testes automáticos — fake com contrato espelhado ao real.*
+*Never hit real external services in automated tests — a fake with a contract mirrored to the real
+one.*
 
-| Dependência externa | Real ou fake nos testes | Porquê | Onde vive o fake |
+| External dependency | Real or fake in tests | Why | Where the fake lives |
 | --- | --- | --- | --- |
-| {{ex-gateway-de-pagamentos}} | fake | {{custo-latencia-flakiness}} | {{caminho-do-fake}} |
+| {{e.g.-payments-gateway}} | fake | {{cost-latency-flakiness}} | {{path-to-the-fake}} |
 
-## Dados de teste
+## Test data
 
-| Cenário | Estado inicial | Resultado esperado |
+| Scenario | Initial state | Expected result |
 | --- | --- | --- |
-| {{caminho-feliz}} | {{estado-inicial}} | {{resultado}} |
-| {{caso-limite-1}} | {{estado-inicial}} | {{resultado}} |
-| {{caso-de-erro-1}} | {{estado-inicial}} | {{resultado}} |
+| {{happy-path}} | {{initial-state}} | {{result}} |
+| {{edge-case-1}} | {{initial-state}} | {{result}} |
+| {{error-case-1}} | {{initial-state}} | {{result}} |
 
-## Smoke test live
+## Live smoke test
 
-*Depois do deploy — passo humano ou automatizado curto que confirma o sistema real (não o mock) de
-ponta a ponta.*
+*After the deploy — a short human or automated step that confirms the real system (not the mock)
+end to end.*
 
-1. {{passo-1}}
-2. {{passo-2}}
-3. {{verificacao-final}}
+1. {{step-1}}
+2. {{step-2}}
+3. {{final-check}}
 
-## Critérios de saída
+## Exit criteria
 
-- [ ] Toda a lógica de risco de prioridade alta tem teste que falha se a regra for quebrada.
-- [ ] {{criterio-especifico-2}}
-- [ ] Smoke test live corrido e verde, com evidência anexada (não "parece bem").
+- [ ] All high-priority risk logic has a test that fails if the rule is broken.
+- [ ] {{specific-criterion-2}}
+- [ ] Live smoke test run and green, with evidence attached (not "looks fine").
 
-## Fora de âmbito
+## Out of scope
 
-- {{o-que-este-plano-nao-cobre-e-quem-cobre}}
+- {{what-this-plan-does-not-cover-and-who-covers-it}}
 
-## Relacionados
+## Related
 
 - `agents/10-quality/test-strategist.md` · `agents/10-quality/coverage-auditor.md`
 - `agents/10-quality/unit-test-engineer.md` · `agents/10-quality/integration-test-engineer.md`

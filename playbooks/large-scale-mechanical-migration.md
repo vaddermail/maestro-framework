@@ -1,47 +1,50 @@
-# Migração Mecânica em Larga Escala
+# Large-Scale Mechanical Migration
 
-Como fazer uma varredura mecânica que toca **muitos ficheiros/call-sites** de uma vez — renomear um
-conceito, mudar a forma de um contrato/serialização, substituir um mecanismo transversal, trocar uma
-biblioteca de UI — sem partir o ramo a meio. Distinto de `playbooks/expand-contract-db-migration.md`
-(que é sobre esquema e dados): aqui o risco é o **código** ficar meio-migrado e observável. Executado
-pelo agente da camada em causa (frontend, backend, dados), tipicamente dentro de uma fatia de
-`workflows/W06-build.md`.
+How to run a mechanical sweep that touches **many files/call-sites** at once — renaming a
+concept, changing the shape of a contract/serialization, replacing a cross-cutting mechanism,
+swapping a UI library — without breaking the branch midway. Distinct from
+`playbooks/expand-contract-db-migration.md` (which is about schema and data): here the risk is the
+**code** ending up half-migrated and observable. Executed by the agent of the layer in question
+(frontend, backend, data), typically inside a slice of `workflows/W06-build.md`.
 
-## Pré-condições
+## Preconditions
 
-- Estado final decidido; se muda um contrato ou uma decisão fechada, a especificação/ADR é atualizada
-  **primeiro** (`core/decision-engine.md`).
-- Gates verdes antes de começar (a linha de base): sem verde inicial, não se sabe o que a migração
-  partiu.
-- Uma forma rápida de correr todos os gates (o oráculo de correção da varredura).
+- Final state decided; if it changes a contract or a closed decision, the specification/ADR is
+  updated **first** (`core/decision-engine.md`).
+- Gates green before starting (the baseline): without an initial green, there is no telling what
+  the migration broke.
+- A fast way to run all the gates (the sweep's correctness oracle).
 
-## Passos
+## Steps
 
-1. **Construir a GUARDA primeiro.** Um teste/guardrail que *falha* enquanto a migração não estiver
-   completa e que apanha reintroduções depois (ex.: um teste de arquitetura/fronteiras, um typecheck
-   estrito, um scanner de padrão proibido). *Verifica-se* que a guarda **falha** no estado atual. *Se
-   não falhar*: a guarda não mede o que interessa — reescrevê-la antes de tocar no resto.
-2. **Superfície pública antes da interna.** Mudar primeiro o que o exterior vê (o contrato, a
-   serialização, a rota) e só depois o interno — evita um estado meio-migrado *observável* por quem
-   consome.
-3. **Varrer de forma automatizável mas verificada.** Preferir transformações mecânicas (script/codemod)
-   com os gates como oráculo, a edição manual sítio a sítio — e correr os gates **a seguir a cada
-   varredura**, não só no fim. *Se um passo parte centenas de testes*: falta um passo intermédio
-   aditivo — não é para "arranjar no fim".
-4. **Manter os gates verdes ao longo do caminho.** O ramo nunca fica partido entre passos. Cada fase
-   temática é um commit revertível; a migração deve poder recomeçar (idempotência).
-5. **Fechar com a guarda a proteger.** Terminada a migração, a guarda passa a defender contra a
-   reintrodução do padrão antigo e fica no CI — a varredura de hoje é o guardrail de amanhã.
+1. **Build the GUARD first.** A test/guardrail that *fails* while the migration is not complete
+   and that catches reintroductions afterwards (e.g. an architecture/boundary test, a strict
+   typecheck, a forbidden-pattern scanner). *Verified* by the guard **failing** in the current
+   state. *If it does not fail*: the guard does not measure what matters — rewrite it before
+   touching anything else.
+2. **Public surface before the internal one.** Change what the outside sees first (the contract,
+   the serialization, the route) and only then the internals — this avoids a half-migrated state
+   *observable* by consumers.
+3. **Sweep in an automatable but verified way.** Prefer mechanical transformations (script/codemod)
+   with the gates as the oracle, over site-by-site manual editing — and run the gates **after each
+   sweep**, not only at the end. *If one step breaks hundreds of tests*: an additive intermediate
+   step is missing — it is not something to "fix at the end".
+4. **Keep the gates green along the way.** The branch is never broken between steps. Each thematic
+   phase is a revertible commit; the migration must be restartable (idempotence).
+5. **Finish with the guard protecting.** Once the migration is done, the guard switches to
+   defending against reintroduction of the old pattern and stays in CI — today's sweep is
+   tomorrow's guardrail.
 
-## Reversão
+## Rollback
 
-Revert por fase temática. A guarda garante que um revert parcial (que reintroduza o padrão antigo) é
-detetado em vez de passar despercebido.
+Revert by thematic phase. The guard ensures that a partial revert (one that reintroduces the old
+pattern) is detected instead of slipping through unnoticed.
 
-## Relacionados
+## Related
 
-- `playbooks/expand-contract-db-migration.md` — o irmão para esquema/dados; muitas migrações usam os dois.
-- `checklists/pre-merge.md` — os gates que se mantêm verdes ao longo da varredura.
-- `checklists/pr-review.md` — a guarda como "teste que falha sem a alteração".
-- `loops/L02-failing-tests.md` — corrigir a causa, nunca o detetor, quando a varredura acende vermelho.
-- `loops/L05-inconsistencies.md` — reconciliar docs↔código↔dados que a migração possa desalinhar.
+- `playbooks/expand-contract-db-migration.md` — the sibling for schema/data; many migrations use
+  both.
+- `checklists/pre-merge.md` — the gates kept green throughout the sweep.
+- `checklists/pr-review.md` — the guard as a "test that fails without the change".
+- `loops/L02-failing-tests.md` — fix the cause, never the detector, when the sweep goes red.
+- `loops/L05-inconsistencies.md` — reconcile docs↔code↔data the migration may misalign.

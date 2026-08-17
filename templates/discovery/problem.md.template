@@ -1,55 +1,56 @@
-# Problema
+# Problem
 
-> **Como usar:** isola o problema real que o produto ataca — distinto de qualquer solução —, quem o
-> vive e o custo de o não resolver. Instanciado pelo `agents/00-discovery/problem-definer.md`
-> logo após `ideia.md` existir. Fica em `product/00-discovery/problem.md`.
+> **How to use:** isolates the real problem the product attacks — distinct from any solution —,
+> who lives with it and the cost of not solving it. Instantiated by
+> `agents/00-discovery/problem-definer.md` right after `idea.md` exists. Lives at
+> `product/00-discovery/problem.md`.
 
-> **Estado:** rascunho
-> **Dono:** `agents/00-discovery/problem-definer.md`
-> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
-> **Consumidores:** `analista-de-objetivos-de-negocio`, `delimitador-de-mvp`, `priorizador`, F2
+> **Status:** draft
+> **Owner:** `agents/00-discovery/problem-definer.md`
+> **Phase:** F1 · **Updated:** {{yyyy-mm-dd}}
+> **Consumers:** `business-goals-analyst`, `mvp-scoper`, `prioritizer`, F2
 
-## Problema (uma frase)
+## Problem (one sentence)
 
-*Sujeito humano, sem menção a nenhuma solução. "Não temos uma app" não é um problema — é a ausência
-de uma solução. Se a frase nomeia a solução, ainda não isolaste o problema.*
+*Human subject, no mention of any solution. "We don't have an app" is not a problem — it is the
+absence of a solution. If the sentence names the solution, you haven't isolated the problem yet.*
 
-{{problema-numa-frase}}
+{{problem-in-one-sentence}}
 
-## Público afetado
+## Affected audience
 
-| Quem (papel) | Ordem de grandeza | Frequência / intensidade |
+| Who (role) | Order of magnitude | Frequency / intensity |
 | --- | --- | --- |
-| {{papel}} | {{numero-aproximado}} | {{com-que-frequencia-vive-o-problema}} |
+| {{role}} | {{approximate-number}} | {{how-often-they-live-the-problem}} |
 
-## Como se resolve hoje
+## How it is solved today
 
-*O status quo antes de qualquer solução — folha de cálculo, processo manual, ou nada.*
+*The status quo before any solution — a spreadsheet, a manual process, or nothing.*
 
-{{alternativa-atual}}
+{{current-alternative}}
 
-## Custo do status quo
+## Cost of the status quo
 
-*Tempo, dinheiro, risco ou oportunidade perdida por o problema continuar por resolver. Um problema
-sem custo estimado não justifica investimento nem dá base a KPIs a jusante.*
+*Time, money, risk or opportunity lost because the problem stays unsolved. A problem with no
+estimated cost justifies no investment and gives downstream KPIs no basis.*
 
-| Custo | Valor / estimativa | Origem |
+| Cost | Value / estimate | Origin |
 | --- | --- | --- |
-| {{tipo-de-custo}} | {{valor-ou-ordem-de-grandeza}} | evidência / **pressuposto a validar** |
+| {{cost-type}} | {{value-or-order-of-magnitude}} | evidence / **assumption to validate** |
 
-## Evidências vs. suposições
+## Evidence vs. assumptions
 
-*Cada afirmação sobre o público ou o custo traz a fonte. Honestidade tem tolerância zero — o que não
-tem fonte marca-se, não se inventa (`knowledge/permanent-rules.md`).*
+*Every claim about the audience or the cost carries its source. Honesty has zero tolerance — what
+has no source gets marked, not invented (`knowledge/permanent-rules.md`).*
 
-- {{afirmacao}} — {{fonte-utilizador-disse-dados-ou-suposicao-a-validar}}
+- {{claim}} — {{source-user-said-data-or-assumption-to-validate}}
 
-## Perguntas-âncora
+## Anchor questions
 
-- (P-{{nnn}}) {{pergunta}}
+- (P-{{nnn}}) {{question}}
 
-## Relacionados
+## Related
 
 - `agents/00-discovery/problem-definer.md` · `templates/discovery/idea.md.template`
-- `templates/discovery/goals-and-kpis.md.template` — usa este custo para fundamentar objetivos.
+- `templates/discovery/goals-and-kpis.md.template` — uses this cost to ground goals.
 - `core/question-engine.md`
