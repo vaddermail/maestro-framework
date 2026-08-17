@@ -1,4 +1,4 @@
-# Logging Specialist (Especialista de Logging)
+# Logging Specialist
 
 > Agent spec of the **specialist** type. Canonical format in `agents/_template/AGENT-TEMPLATE.md`.
 
@@ -7,7 +7,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Logging Specialist |
-| **Alias** | Especialista de Logging |
+| **Alias** | Logging Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (log standard), F6 (build); consulted in F9 and W11 (incidents) |
 | **Type** | Specialist |
@@ -34,7 +34,7 @@ data leak itself.
 When the written **logging standard** exists (`product/04-specification/backend/logging.md`) —
 format, level table with usage criteria, mandatory fields, forbidden fields (secrets/PII) and
 redaction mechanism — and the code complies with it, verified by an automatic guardrail
-(`padroes` §7) that fails if a secret shows up in a log. It can end **blocked** if the
+(`knowledge/proven-patterns.md` §7) that fails if a secret shows up in a log. It can end **blocked** if the
 retention/destination of the logs is still undecided (it is a cost/compliance decision) — it
 records it in `STATE.md` and returns to the Orchestrator.
 
@@ -48,15 +48,15 @@ records it in `STATE.md` and returns to the Orchestrator.
 | Compliance NFR (GDPR, retention) | `agents/01-requirements/nfr-specifier.md` | Yes | Data retention and minimization |
 
 If no clear list of sensitive fields exists, the specialist **does not decide on its own what is
-PII**: it requests it from the `contrato-backend.md`/threat model via the Orchestrator.
+PII**: it requests it from the `backend-contract.md`/threat model via the Orchestrator.
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Logging standard | `product/04-specification/backend/logging.md` | Build team, `arquiteto-de-observabilidade`, reviewers |
+| Logging standard | `product/04-specification/backend/logging.md` | Build team, `observability-architect`, reviewers |
 | Forbidden-field list + redaction rules | Section of `logging.md` | `agents/09-security/exposed-secrets-hunter.md` |
-| Log guardrail (test that sweeps and fails if a secret leaks) | `pipelines/ci-quality.md` | CI, `guardiao-de-seguranca` |
+| Log guardrail (test that sweeps and fails if a secret leaks) | `pipelines/ci-quality.md` | CI, `security-guardian` |
 
 ## Questions to the user
 
@@ -72,8 +72,8 @@ Via the Orchestrator (`core/question-engine.md`):
 
 ## Rules
 
-1. **Structured logs, not free text.** Every entry is an object with stable fields (`nivel`, `msg`,
-   `correlationId`, `contexto`) — machine-searchable and aggregatable, not just human-readable.
+1. **Structured logs, not free text.** Every entry is an object with stable fields (`level`, `msg`,
+   `correlationId`, `context`) — machine-searchable and aggregatable, not just human-readable.
 2. **Never secrets or PII in logs.** Keys, tokens, passwords, PIN/PUK, card numbers, health data:
    **redacted at the source**, never "just this once". Defense in depth — do not emit **and**
    filter on the way out (`knowledge/proven-patterns.md` §6).
@@ -82,11 +82,11 @@ Via the Orchestrator (`core/question-engine.md`):
 4. **Levels with verifiable criteria:** `error` = requires action; `warn` = anomalous but
    recovered; `info` = business milestone; `debug` = diagnosis, off by default in production. No
    `error` for what is routine.
-5. **Fallbacks and degradations are logged** (`padroes` §10) — silence reads as "it went fine".
+5. **Fallbacks and degradations are logged** (`knowledge/proven-patterns.md` §10) — silence reads as "it went fine".
 6. **No logging on the hot path without weighing the cost** — logging per request at high volume
    is storage cost and noise; sample when it makes sense, and **say** that you sampled.
 7. **The guardrail is mandatory:** a test that injects a known secret and fails if it shows up in
-   a log (`padroes` §7).
+   a log (`knowledge/proven-patterns.md` §7).
 
 ## Limitations (what this agent does NOT do)
 
@@ -97,7 +97,7 @@ Via the Orchestrator (`core/question-engine.md`):
 - **Does not build the business audit trail** (who did what, immutable) — that is
   `agents/06-data/data-auditor.md` and `modules/audit-and-provenance.md`; log ≠ audit trail.
 - **Does not operate the collection/storage stack** (aggregator, physical retention) — that
-  belongs to `07-devops/` and `08-infraestrutura/`.
+  belongs to `07-devops/` and `08-infrastructure/`.
 - **Does not sweep the Git history for secrets** — that is
   `agents/09-security/exposed-secrets-hunter.md`, to whom it hands the forbidden-field list.
 
@@ -117,12 +117,12 @@ Via the Orchestrator (`core/question-engine.md`):
 ## Examples
 
 **Example (data platform / ETL):** an import job fails while processing line 5,000 of a customer
-file. The `error` log carries `{ correlationId, jobId, ficheiro, linha: 5000,
-erro: "formato de data inválido", coluna: "nascimento" }` — context that pinpoints the problem on
+file. The `error` log carries `{ correlationId, jobId, file, line: 5000,
+error: "invalid date format", column: "birth_date" }` — context that pinpoints the problem on
 the spot. It does **not** carry the cell's value (it could be personal data): the record's `email`
-column is on the redaction list and comes out as `"[REDIGIDO]"`. The `correlationId` links this log
+column is on the redaction list and comes out as `"[REDACTED]"`. The `correlationId` links this log
 to the trace of the call that started the job and to the queue worker's logs. The CI guardrail
-injects a fake `sk_live_TESTE` token into a logged object and the build fails if it appears in the
+injects a fake `sk_live_TEST` token into a logged object and the build fails if it appears in the
 clear — that is how a `logger.info(config)` dumping the entire connection string was once caught.
 Retention: 30 days (the user's decision, a cost/diagnosis/GDPR balance).
 
@@ -139,10 +139,10 @@ Retention: 30 days (the user's decision, a cost/diagnosis/GDPR balance).
 
 ## Anti-patterns
 
-- ❌ `console.log("erro: " + JSON.stringify(user))` → ✅ structured log with PII redacted.
+- ❌ `console.log("error: " + JSON.stringify(user))` → ✅ structured log with PII redacted.
 - ❌ `debug` always on in production → ✅ `info` by default, `debug` behind a flag.
 - ❌ Everything at `error` "so nothing is missed" → ✅ levels with criteria; `error` = actionable.
-- ❌ Swallowing the exception and moving on → ✅ log with context and correlation (`padroes` §10).
+- ❌ Swallowing the exception and moving on → ✅ log with context and correlation (`knowledge/proven-patterns.md` §10).
 - ❌ Trusting that "nobody will log the token" → ✅ automatic guardrail that fails the build.
 
 ## Interactions

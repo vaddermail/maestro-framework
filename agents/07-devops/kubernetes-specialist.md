@@ -1,4 +1,4 @@
-# Kubernetes Specialist (Kubernetes Specialist)
+# Kubernetes Specialist
 
 > **Specialist** agent spec for F8. Orchestrates workloads on Kubernetes — **and** helps decide
 > whether Kubernetes is justified. Follows the `agents/_template/AGENT-TEMPLATE.md`.
@@ -42,9 +42,9 @@ not yet closed — in that case it delivers the assessment and writes no manifes
 | Artifact | Source | Required? | Notes |
 | --- | --- | --- | --- |
 | Container image | `agents/07-devops/docker-specialist.md` | Yes | By digest, non-root, with health check |
-| Architecture decision (k8s approved) | F3 (`arbitro-de-arquitetura`) | Yes | Without it, only produces the assessment |
+| Architecture decision (k8s approved) | F3 (`architecture-arbiter`) | Yes | Without it, only produces the assessment |
 | Provisioned target cluster | `agents/08-infrastructure/` | Yes (in F8) | Managed (EKS/AKS/GKE) or self-hosted |
-| Resource and scale requirements | F1/F3 (`arquiteto-de-escalabilidade`) | Yes | Grounds `requests`/`limits`/HPA |
+| Resource and scale requirements | F1/F3 (`scalability-architect`) | Yes | Grounds `requests`/`limits`/HPA |
 | Environment secrets and config | `agents/07-devops/secrets-manager.md` | Yes | Injected as Secret/CSI, not in git |
 
 ## Outputs
@@ -52,7 +52,7 @@ not yet closed — in that case it delivers the assessment and writes no manifes
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Manifests (Deployment/Service/Ingress/HPA/RBAC) | `deploy/k8s/` in the repository | Delivery pipeline, deploy |
-| "Use/don't use Kubernetes" assessment (in F3) | `product/02-architecture/opcao-kubernetes.md` | `arbitro-de-arquitetura` |
+| "Use/don't use Kubernetes" assessment (in F3) | `product/02-architecture/kubernetes-option.md` | `architecture-arbiter` |
 | Operations notes (namespaces, RBAC, scale) | `product/07-operations/kubernetes.md` | Reviewers, `13-guardioes` |
 
 ## Questions to the user
@@ -85,7 +85,7 @@ Via the Orchestrator (`core/question-engine.md`):
 6. **Reversibility:** every deploy has a rehearsed rollback (`kubectl rollout undo` or a GitOps
    revert); risky changes behind a flag (`modules/feature-flags.md`).
 7. **Non-root and hardened `securityContext`** (read-only FS, dropped capabilities) — the image
-   already comes non-root from the `especialista-docker`.
+   already comes non-root from the `docker-specialist`.
 
 ## Limitations (what this agent does NOT do)
 
@@ -116,13 +116,13 @@ Via the Orchestrator (`core/question-engine.md`):
 
 **Example A (data platform, 12 microservices, irregular load):** k8s is justified. The agent writes
 one Deployment per service, HPA on the three ingestion services (they scale with the queue),
-`requests`/`limits` calibrated from the load profile of the `arquiteto-de-escalabilidade`,
+`requests`/`limits` calibrated from the load profile of the `scalability-architect`,
 ServiceAccounts with no control-plane access and NetworkPolicies that only let the ingestion
 services talk to the queue. It rehearses a rollback: kills a pod, readiness pulls it out of the
 Service, a new one comes up, zero requests lost.
 
 **Example B (internal app, 1 API + 1 frontend, ~50 users):** the agent **recommends against
-Kubernetes** — two containers on a VM managed by `especialista-ansible` (or a PaaS) deliver the
+Kubernetes** — two containers on a VM managed by `ansible-specialist` (or a PaaS) deliver the
 same at a fraction of the operational cost. It hands the assessment to the arbiter; writes no
 manifests. This "no" is valid output and the most valuable result the agent can give here.
 

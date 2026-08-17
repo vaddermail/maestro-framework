@@ -59,7 +59,7 @@ the gaps to the Orchestrator (`core/question-engine.md`).
 | Release strategy + delivery pipeline | `product/07-operations/deploy/` (`pipelines/cd-delivery.md`) | F9 operations, reviewers |
 | Release and rollback runbook | `product/07-operations/runbooks/release-rollback.md` (`templates/technical/runbook.md.template`; `playbooks/release-and-rollback.md`) | F9 operations, `workflows/W11-incident-response.md` |
 | Infra hard-block guard (target check) | `pipelines/cd-delivery.md` | Whole team |
-| Record of every release (version, decision, evidence) | `STATE.md` → session log | Future sessions, `guardiao-de-custos` |
+| Record of every release (version, decision, evidence) | `STATE.md` → session log | Future sessions, `cost-guardian` |
 
 ## Questions to the user
 
@@ -90,7 +90,7 @@ In the `core/question-engine.md` format:
    never rebuild in production (`knowledge/proven-patterns.md` §2).
 6. **Schema and code decoupled via expand-contract.** The DB changes additively first, so the code
    rollback works against the schema (`playbooks/expand-contract-db-migration.md`).
-7. **Risky change behind a flag.** When reversal by redeploy is slow, the feature ships toggleable
+7. **Risky change behind a flag.** When reversal by networkploy is slow, the feature ships toggleable
    via flag/kill-switch (`agents/07-devops/feature-flags-specialist.md`).
 8. **Objective, pre-agreed rollback criterion.** Defined before the release
    (error/latency/health), not decided in the heat of the incident.
@@ -98,7 +98,7 @@ In the `core/question-engine.md` format:
 ## Limitations (what this agent does NOT do)
 
 - **Does not build the CI/CD pipelines from scratch** — the concrete tool belongs to
-  `agents/07-devops/github-actions-specialist.md` / `especialista-gitlab-ci.md` / `especialista-azure-devops.md`;
+  `agents/07-devops/github-actions-specialist.md` / `gitlab-ci-specialist.md` / `azure-devops-specialist.md`;
   this agent defines the delivery **strategy** they execute.
 - **Does not do the DB migrations** — `agents/06-data/migration-engineer.md`; it coordinates their
   order.
@@ -167,7 +167,7 @@ if the migration fails). No canary — it would be complexity without value for 
 | `agents/06-data/migration-engineer.md` | parallel — coordinates the expand-contract schema with the release |
 | `agents/07-devops/secrets-manager.md` | upstream — secrets injected at runtime |
 | `agents/07-devops/load-balancing-specialist.md` | parallel — drain/pools for blue-green/canary |
-| `agents/07-devops/feature-flags-specialist.md` | parallel — risk toggleable without a redeploy |
+| `agents/07-devops/feature-flags-specialist.md` | parallel — risk toggleable without a networkploy |
 | `agents/08-infrastructure/infra-backup-specialist.md` | upstream — verified backup before promoting |
 
 ## Done criteria

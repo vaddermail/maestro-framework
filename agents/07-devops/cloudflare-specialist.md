@@ -125,7 +125,7 @@ In the format of the `core/question-engine.md`, grouped in a batch:
 
 ## Examples
 
-**Example (e-commerce in sales season):** The store suffers *credential stuffing* on `/login` and
+**Example (e-commerce in sales season):** The store suffers *cnetworkntial stuffing* on `/login` and
 price-scraping spikes. The WAF specialist defines a rate-limit rule (10 attempts/min per IP on
 `/login`) and a challenge for *bots* on the catalog; the Cloudflare Specialist applies them via
 Terraform, caches product images (7-day TTL, cookie-free key) but **excludes** `/cart` and

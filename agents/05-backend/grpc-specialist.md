@@ -1,4 +1,4 @@
-# gRPC Specialist (Especialista gRPC)
+# gRPC Specialist
 
 > **Specialist** agent spec: implements gRPC services with Protobuf and streaming.
 
@@ -7,9 +7,9 @@
 | Field | Value |
 | --- | --- |
 | **Name** | gRPC Specialist |
-| **Alias** | Especialista gRPC |
+| **Alias** | gRPC Specialist |
 | **Category** | `05-backend` |
-| **Phases** | F6 (build); consulted in F5 when the `desenhador-de-apis` is considering gRPC |
+| **Phases** | F6 (build); consulted in F5 when the `api-designer` is considering gRPC |
 | **Type** | Specialist |
 | **Suggested model** | Standard, medium effort; raise it for streaming design and message evolution (`core/model-routing.md`) |
 
@@ -23,7 +23,7 @@ in the pure domain.
 
 ## When it starts
 
-In F6, when the `desenhador-de-apis` chose gRPC (typically: high-throughput **service-to-service**
+In F6, when the `api-designer` chose gRPC (typically: high-throughput **service-to-service**
 communication, strongly typed contracts, streaming) and the `.proto` files exist. Invoked by the
 Orchestrator per vertical slice.
 
@@ -38,8 +38,8 @@ streaming (if any) handles cancellation/backpressure, and the contract tests pas
 
 | Artifact | Source (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/04-specification/api-contract.md` + `.proto` files | `desenhador-de-apis.md` (F5) | Yes | Services, messages, RPC modes |
-| Authn middleware (mTLS/token) and authz | `especialista-de-autenticacao.md`, `especialista-de-autorizacao.md` | Yes | Interceptors; the stub does not decide access |
+| `product/04-specification/api-contract.md` + `.proto` files | `api-designer.md` (F5) | Yes | Services, messages, RPC modes |
+| Authn middleware (mTLS/token) and authz | `authentication-specialist.md`, `authorization-specialist.md` | Yes | Interceptors; the stub does not decide access |
 | Slice domain/persistence | `agents/06-data/` (F6) | Yes | The function the service orchestrates |
 
 ## Outputs
@@ -47,7 +47,7 @@ streaming (if any) handles cancellation/backpressure, and the contract tests pas
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Slice gRPC services | Code repository | Consumer services; `agents/04-frontend/api-integrator.md` (via gateway, if web) |
-| Versioned `.proto` + generated stubs | `product/04-specification/api/proto/` | Client/server generators; `documentador-de-apis.md` |
+| Versioned `.proto` + generated stubs | `product/04-specification/api/proto/` | Client/server generators; `api-documenter.md` |
 | Contract + compatibility tests | Code repository | `agents/10-quality/`, CI |
 
 ## Questions to the user
@@ -82,13 +82,13 @@ Via the Orchestrator, when the contract leaves it open:
 ## Limitations (what this agent does NOT do)
 
 - **Does not design the contract** — `agents/05-backend/api-designer.md`.
-- **Does not decide authn/authz** — `especialista-de-autenticacao.md` (incl. mTLS),
-  `especialista-de-autorizacao.md`.
-- **Does not implement REST or GraphQL** — `especialista-rest.md`, `especialista-graphql.md`.
+- **Does not decide authn/authz** — `authentication-specialist.md` (incl. mTLS),
+  `authorization-specialist.md`.
+- **Does not implement REST or GraphQL** — `rest-specialist.md`, `graphql-specialist.md`.
 - **Does not configure infrastructure mTLS** — the certificate policy belongs to the
   `agents/08-infrastructure/tls-ssl-specialist.md`; here they are only consumed.
 - **Does not version the service publicly** — the deprecation strategy belongs to the
-  `especialista-de-versionamento-de-api.md`.
+  `api-versioning-specialist.md`.
 
 ## Workflow
 
@@ -100,7 +100,7 @@ Via the Orchestrator, when the contract leaves it open:
 5. Apply the field **numbering rules**; mark removed fields `reserved`.
 6. Tests: contract (shape), compatibility (old message → new server and vice versa), integration.
 7. Live proof of a unary call and, if any, of a stream with cancellation.
-8. Return to the Orchestrator; flag streaming ambiguities to the `desenhador-de-apis`.
+8. Return to the Orchestrator; flag streaming ambiguities to the `api-designer`.
 
 ## Examples
 

@@ -10,7 +10,7 @@ declares intent, the server confirms and decides (`knowledge/origin-lessons.md` 
 
 Dominant phase **F5–F6** (`core/lifecycle.md`). It splits into two moments:
 
-- **F5 (specification):** `desenhador-de-apis.md` fixes the **contract** — resources, errors,
+- **F5 (specification):** `api-designer.md` fixes the **contract** — resources, errors,
   pagination, versioning — as the single source feeding validation, server types, client types and
   the documentation (`knowledge/origin-lessons.md` §C2). No code yet; it is the *what* of the API.
 - **F6 (build):** the specialists implement that contract in vertical slices
@@ -59,9 +59,9 @@ verify this separation in `agents/12-reviewers/backend-reviewer.md`.
 
 ## Recommended order of work
 
-1. **Contract first** (`desenhador-de-apis`) — decides the style with the user and writes the
+1. **Contract first** (`api-designer`) — decides the style with the user and writes the
    contract; it is everyone else's input.
-2. **Identity and access** (`especialista-de-autenticacao` → `especialista-de-autorizacao`) — before
+2. **Identity and access** (`authentication-specialist` → `authorization-specialist`) — before
    any endpoint that returns data; authn establishes *who*, authz decides *what/which subset*.
 3. **Implementation of the chosen style** (one of `rest`/`graphql`/`grpc`) on top of the three-layer
    anatomy, slice by slice.
@@ -71,7 +71,7 @@ verify this separation in `agents/12-reviewers/backend-reviewer.md`.
 ## How the Orchestrator summons it
 
 `core/orchestrator.md` assembles the dependency graph from the **Inputs**/**Interactions** sections
-of each agent spec. In F5 it calls only the `desenhador-de-apis`; in F6 it calls the specialists in
+of each agent spec. In F5 it calls only the `api-designer`; in F6 it calls the specialists in
 the order above, per vertical slice, coordinating with `agents/06-data/` (upstream — the persisted
 model) and `agents/04-frontend/` (downstream — the consumer of the contract). Authorization,
 scoping, integrity and the redaction of sensitive fields are the **exclusive responsibility** of

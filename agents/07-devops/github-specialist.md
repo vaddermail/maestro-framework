@@ -41,7 +41,7 @@ protections that require "green checks" need the `agents/07-devops/github-action
 | Artifact | Source | Required? | Notes |
 | --- | --- | --- | --- |
 | GitHub repository | F0 | Yes | The target of the configuration |
-| Team structure / owners per area | User (`mapeador-de-stakeholders`, F1) | Yes | Basis for `CODEOWNERS` |
+| Team structure / owners per area | User (`stakeholder-mapper`, F1) | Yes | Basis for `CODEOWNERS` |
 | CI checks to require | `agents/07-devops/github-actions-specialist.md` | No | Which jobs block the merge |
 | Versioning convention | Team decision | Yes | SemVer by default |
 
@@ -51,8 +51,8 @@ protections that require "green checks" need the `agents/07-devops/github-action
 | --- | --- | --- |
 | Branch protection rules | Repository config (documented) | Whole team |
 | `CODEOWNERS` + PR template | `.github/` in the repository | Authors and reviewers |
-| `product/07-operations/git-workflow.md` | Repository | New contributors, `onboarding-de-developer` |
-| Tag-based release process | `product/07-operations/releases.md` | `estratega-de-deploy`, team |
+| `product/07-operations/git-workflow.md` | Repository | New contributors, `developer-onboarding` |
+| Tag-based release process | `product/07-operations/releases.md` | `deployment-strategist`, team |
 
 ## Questions to the user
 
@@ -115,7 +115,7 @@ Via the Orchestrator (`core/question-engine.md`):
 ## Examples
 
 **Example (B2B SaaS, team of 5 + AI agents):** the agent configures trunk-based: protected
-`main`, 1 mandatory human approval, `ci-qualidade` and `ci-seguranca` checks required, squash
+`main`, 1 mandatory human approval, `ci-quality` and `ci-security` checks required, squash
 merge. `CODEOWNERS` makes the data team owner of `infra/terraform/` and `db/migrations/`, and the
 security team owner of `.github/workflows/`. The PR template requires linking to the requirement
 and ticking the `checklists/pr-review.md` checklist. Active push protection blocks a commit that
@@ -149,7 +149,7 @@ platform guarantee.
 | `agents/09-security/exposed-secrets-hunter.md` | parallel — the history scan complements push protection |
 | `agents/12-reviewers/devops-reviewer.md` | consumes — reviews the flow/protection configuration |
 | `agents/07-devops/deployment-strategist.md` | downstream — uses the tags/releases to promote to production |
-| `playbooks/developer-onboarding.md` | consumes `fluxo-git.md` to bring a new contributor up to speed |
+| `playbooks/developer-onboarding.md` | consumes `git-workflow.md` to bring a new contributor up to speed |
 
 ## Done criteria
 

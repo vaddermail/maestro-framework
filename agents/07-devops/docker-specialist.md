@@ -39,10 +39,10 @@ the gap in `STATE.md`).
 
 | Artifact | Source | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/02-architecture/stack.md` | F3 (`selecionador-de-stack`) | Yes | Runtime and exact versions |
+| `product/02-architecture/stack.md` | F3 (`stack-selector`) | Yes | Runtime and exact versions |
 | Build artifact / start command | F6 (`agents/05-backend/`, `04-frontend/`) | Yes | What the image has to run |
 | Runtime requirements (ports, variables, volumes) | F5/F8 | Yes | Execution contract |
-| Approved base-image policy | User / `09-seguranca` | No | Distroless vs slim vs Alpine |
+| Approved base-image policy | User / `09-security` | No | Distroless vs slim vs Alpine |
 
 ## Outputs
 
@@ -50,7 +50,7 @@ the gap in `STATE.md`).
 | --- | --- | --- |
 | `Dockerfile` (multi-stage) + `.dockerignore` | Repository root | Pipelines, Kubernetes, deploy |
 | Image notes (base, size, user, ports) | `product/07-operations/container-image.md` | `agents/09-security/container-analyst.md`, reviewers |
-| Image built and tagged | Registry (referenced, not committed) | `estratega-de-deploy`, `especialista-kubernetes` |
+| Image built and tagged | Registry (referenced, not committed) | `deployment-strategist`, `kubernetes-specialist` |
 
 Every relevant output is written to a versioned file; the image itself lives in the registry,
 referenced by digest.
@@ -62,7 +62,7 @@ Via the Orchestrator, in a batch (`core/question-engine.md`):
 - *Base image:* **distroless/scratch** (minimal, no shell — more secure, harder to debug) vs
   **slim** (has a shell and a package manager — easier to operate, larger surface)? Default
   recommendation: distroless for production, slim if the team has no remote-debug tooling yet.
-- *Target registry:* which one, and is it private? (affects pipeline credentials and the
+- *Target registry:* which one, and is it private? (affects pipeline cnetworkntials and the
   `agents/07-devops/secrets-manager.md`).
 - *Multi-architecture* (amd64 + arm64)? Only if the target demands it — it doubles build time.
 
@@ -107,7 +107,7 @@ Via the Orchestrator, in a batch (`core/question-engine.md`):
 7. **Live proof:** run the container, hit the health check, serve a real request.
 8. Confirm the absence of secrets (`docker history`, layer inspection).
 9. Write the notes in `product/07-operations/container-image.md`; return to the Orchestrator so
-   the `analista-de-containers` runs the scan.
+   the `container-analyst` runs the scan.
 
 ## Examples
 
@@ -117,8 +117,8 @@ a three-stage Dockerfile: (1) `deps` installs production dependencies from the l
 copies only the production `node_modules` and the `dist`, sets `USER nonroot`, `EXPOSE 8080` and a
 `HEALTHCHECK` that hits `/healthz`. Result: a ~120 MB image (vs ~1.1 GB for a naive single-stage
 image), no shell, no toolchain, no `.env`. Live proof: `docker run` starts, `/healthz` answers
-200, an authenticated `GET /clientes` returns data. `docker history` reveals no secrets. Handed to
-the `analista-de-containers` for the scan — which confirms zero critical CVEs.
+200, an authenticated `GET /customers` returns data. `docker history` reveals no secrets. Handed to
+the `container-analyst` for the scan — which confirms zero critical CVEs.
 
 ## Best practices
 
@@ -158,7 +158,7 @@ the `analista-de-containers` for the scan — which confirms zero critical CVEs.
 - [ ] Base and dependencies pinned (digest/lockfile); no `latest`.
 - [ ] `docker history`/layer inspection free of secrets.
 - [ ] Live proof: container starts, health check green, serves a real request.
-- [ ] Notes in `product/07-operations/container-image.md`; image handed to the `analista-de-containers`.
+- [ ] Notes in `product/07-operations/container-image.md`; image handed to the `container-analyst`.
 
 ## Related
 

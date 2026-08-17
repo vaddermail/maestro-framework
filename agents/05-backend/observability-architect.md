@@ -48,16 +48,16 @@ Orchestrator for `core/decision-engine.md`.
 | Logging pattern | `agents/05-backend/logging-specialist.md` | Yes | Logs carry the `correlationId` this agent defines |
 | `product/01-requirements/nfr.md` | F2 | Yes | Promised reliability → error budget |
 | The product's AI consumption | `modules/ai-observability.md` | If the product uses AI | Tokens/cost per feature/model |
-| Queue/event signals | `especialista-de-filas`, `especialista-de-eventos` | Yes if they exist | Backlog, DLQ, consumer lag |
+| Queue/event signals | `queue-specialist`, `events-specialist` | Yes if they exist | Backlog, DLQ, consumer lag |
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Observability strategy | `product/04-specification/backend/observability.md` | All of engineering, F9 guardians |
-| Correlation pattern (`traceId`/`correlationId`) | Section of `observabilidade.md` | `especialista-de-logging`, `especialista-de-metricas` |
-| Alerting policy (symptom→severity→owner→runbook) | `observabilidade.md` | `agents/13-guardians/`, operations |
-| AI cost panel (if applicable) | `observabilidade.md` | `agents/13-guardians/cost-guardian.md` |
+| Correlation pattern (`traceId`/`correlationId`) | Section of `observability.md` | `logging-specialist`, `metrics-specialist` |
+| Alerting policy (symptom→severity→owner→runbook) | `observability.md` | `agents/13-guardians/`, operations |
+| AI cost panel (if applicable) | `observability.md` | `agents/13-guardians/cost-guardian.md` |
 
 ## Questions to the user
 
@@ -85,12 +85,12 @@ Via the Orchestrator (`core/question-engine.md`):
 3. **The error budget governs alerting.** It derives from the SLO; burning the budget escalates,
    within it nobody is bothered.
 4. **Declared sampling.** Traces sampled by explicit policy (and 100% of those that fail); the
-   sampling **is recorded** — silence reads as "I saw everything" (`padroes` §10).
+   sampling **is recorded** — silence reads as "I saw everything" (`knowledge/proven-patterns.md` §10).
 5. **AI cost is a first-class signal** when the product uses AI: tokens and cost per feature/model,
    with alerts and a per-model kill-switch (`modules/ai-observability.md`) — the same principle of
    accounting per unit of work.
 6. **Zero PII/secrets in any pillar** — reinforces and verifies the logging and metrics rule across
-   the board (`padroes` §6).
+   the board (`knowledge/proven-patterns.md` §6).
 7. **Dashboards tied to decisions.** Every panel answers an operational question; a decorative panel
    is debt.
 
@@ -113,7 +113,7 @@ Via the Orchestrator (`core/question-engine.md`):
 
 1. **Define the correlation pattern** — how the `traceId` is born, propagates (HTTP, queue, events)
    and where it appears.
-2. **Collect the SLIs** from the `especialista-de-metricas` and **agree the SLOs** with the user →
+2. **Collect the SLIs** from the `metrics-specialist` and **agree the SLOs** with the user →
    error budget.
 3. **Design the alerting policy**: for each SLO, the symptom that fires, the severity, the owner and
    the runbook (`templates/technical/runbook.md.template`).
@@ -133,7 +133,7 @@ alert fires — a **symptom** the user feels — with an owner (platform team) a
 alert, the operator jumps to trace `abc` and sees that 2.4 s were spent in the model call; the
 correlated logs show a retry to the AI provider. On the same dashboard, the AI cost panel (via
 `modules/ai-observability.md`) shows that the "automatic summary" feature doubled its token
-consumption in the last day — a signal the `guardiao-de-custos` investigates, and which has a
+consumption in the last day — a signal the `cost-guardian` investigates, and which has a
 per-model kill-switch in case it runs away. Traces sampled at 5% (100% of those that error); no log
 or metric carries the conversation content (PII).
 

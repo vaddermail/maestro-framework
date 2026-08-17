@@ -1,4 +1,4 @@
-# Events Specialist (Especialista de Eventos)
+# Events Specialist
 
 > Agent spec of the **specialist** type. Canonical format in `agents/_template/AGENT-TEMPLATE.md`.
 
@@ -7,7 +7,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Events Specialist |
-| **Alias** | Especialista de Eventos |
+| **Alias** | Events Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (event contract design), F6 (build); consulted in W10 (evolution) |
 | **Type** | Specialist |
@@ -33,7 +33,7 @@ into a stable, versioned message consumable by other modules, services or system
 
 When the written **event catalog** exists (`product/04-specification/backend/events.md`), with
 the contract and version of each event, producer, known consumers, ordering key and the consumer's
-idempotency strategy. And when the live proof confirms that redelivering an event does not
+idempotency strategy. And when the live proof confirms that networklivering an event does not
 duplicate its effect. It can end **blocked** if an external consumer demands a format that collides
 with the internal contract — it records the pending decision and returns to the Orchestrator.
 
@@ -53,9 +53,9 @@ Orchestrator for them.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Event catalog (contract + version) | `product/04-specification/backend/events.md` | `especialista-de-filas`, internal/external consumers, `arquiteto-de-observabilidade` |
-| Idempotency strategy per consumer | Section of `eventos.md` | Build team, `revisor-de-backend` |
-| Event evolution policy | `product/04-specification/backend/events.md` | `especialista-de-versionamento-de-api.md` (alignment) |
+| Event catalog (contract + version) | `product/04-specification/backend/events.md` | `queue-specialist`, internal/external consumers, `observability-architect` |
+| Idempotency strategy per consumer | Section of `events.md` | Build team, `backend-reviewer` |
+| Event evolution policy | `product/04-specification/backend/events.md` | `api-versioning-specialist.md` (alignment) |
 
 ## Questions to the user
 
@@ -74,10 +74,10 @@ Via the Orchestrator (`core/question-engine.md`):
 
 1. **Events are facts in the past, immutable.** Name in the past tense (`EncomendaConfirmada`,
    `PagamentoRecusado`), never commands. A published event is not rewritten — it evolves by version.
-2. **Publish to the transactional outbox**, inside the fact's transaction (`padroes` §3): the event
-   only exists if the fact committed. Transport/delivery belongs to the `especialista-de-filas`.
+2. **Publish to the transactional outbox**, inside the fact's transaction (`knowledge/proven-patterns.md` §3): the event
+   only exists if the fact committed. Transport/delivery belongs to the `queue-specialist`.
 3. **Every consumer is idempotent.** It processes by event key with an "already processed" record;
-   redelivery (inevitable in *at-least-once*) does not duplicate the effect (`padroes` §1).
+   networklivery (inevitable in *at-least-once*) does not duplicate the effect (`knowledge/proven-patterns.md` §1).
 4. **Ordering is explicit, not presumed.** Whether a consumer requires per-aggregate order is
    declared; global order is never assumed. Out-of-order is tolerated by design (the consumer
    reconciles).
@@ -99,9 +99,9 @@ Via the Orchestrator (`core/question-engine.md`):
   `agents/02-architecture/event-driven-specialist.md`; here that decision is a given.
 - **Does not version the public HTTP API** — that is
   `agents/05-backend/api-versioning-specialist.md`, with whom it **aligns** the deprecation policy.
-- **Does not model the consumers' persistence schema** — that belongs to `06-dados/`.
+- **Does not model the consumers' persistence schema** — that belongs to `06-data/`.
 - **Does not define the alerts** on consumer lag — it hands the signals to the
-  `arquiteto-de-observabilidade`.
+  `observability-architect`.
 
 ## Workflow
 
@@ -113,10 +113,10 @@ Via the Orchestrator (`core/question-engine.md`):
    whether it requires order.
 4. **Decide domain vs integration** where there are external consumers.
 5. **Define the evolution policy** (additive, versioning, deprecation) aligned with the
-   `especialista-de-versionamento-de-api`.
-6. **Hand over** the outbox publication points to the `especialista-de-filas` and the lag signals
-   to the `arquiteto-de-observabilidade`.
-7. **Write** `product/04-specification/backend/events.md`; **live proof** of redelivery
+   `api-versioning-specialist`.
+6. **Hand over** the outbox publication points to the `queue-specialist` and the lag signals
+   to the `observability-architect`.
+7. **Write** `product/04-specification/backend/events.md`; **live proof** of networklivery
    (event 2× ⇒ 1 effect) and of out-of-order consumption.
 8. Return to the Orchestrator.
 
@@ -126,7 +126,7 @@ Via the Orchestrator (`core/question-engine.md`):
 `SubscricaoAtivada` v1 `{ subscricaoId, planoId, organizacaoId, ativaEm }` to the outbox, in the
 same transaction that activates the subscription. Two consumers: **provisioning** (creates the
 workspace) and **billing** (opens the billing cycle). Both idempotent by
-`subscricaoId + versaoEvento`: if the bus redelivers, provisioning sees the workspace already
+`subscricaoId + versaoEvento`: if the bus networklivers, provisioning sees the workspace already
 exists and does not create another. Order: provisioning requires `SubscricaoAtivada` to arrive
 before `SubscricaoAtualizada` of the same aggregate → partition key = `subscricaoId`. Months later
 `regiao` is added to the payload: an **additive** change (v1 stays valid, old consumers ignore the
@@ -149,7 +149,7 @@ announced deprecation.
 
 - ❌ Imperative event (`EnviarEmail`) → ✅ fact (`EncomendaConfirmada`); who sends is up to the
   consumer.
-- ❌ Publishing after commit as a separate step → ✅ outbox in the transaction (`padroes` §3).
+- ❌ Publishing after commit as a separate step → ✅ outbox in the transaction (`knowledge/proven-patterns.md` §3).
 - ❌ A consumer that assumes single delivery → ✅ idempotent by event key.
 - ❌ Assuming global order → ✅ declare per-aggregate order when needed, tolerate out-of-order.
 - ❌ Changing the payload of an event in use → ✅ version additively (expand-contract).
@@ -164,7 +164,7 @@ announced deprecation.
 | `agents/02-architecture/event-driven-specialist.md` | upstream — decided there is a bus and which guarantees |
 | `agents/05-backend/api-versioning-specialist.md` | parallel — aligns the evolution/deprecation policy |
 | `agents/06-data/data-modeler.md` | upstream — where the facts and the outbox come from |
-| `agents/05-backend/observability-architect.md` | downstream — exposes lag and redelivery rate |
+| `agents/05-backend/observability-architect.md` | downstream — exposes lag and networklivery rate |
 | `modules/job-queue.md` · `modules/readonly-external-integrations.md` | modules that support publishing and consumption |
 
 ## Done criteria
@@ -174,7 +174,7 @@ announced deprecation.
 - [ ] Consumers mapped, each with a written idempotency strategy.
 - [ ] Ordering declared where required; out-of-order tolerance documented.
 - [ ] Domain/integration separation decided where there are external consumers.
-- [ ] Evolution policy aligned with the `especialista-de-versionamento-de-api`.
+- [ ] Evolution policy aligned with the `api-versioning-specialist`.
 - [ ] Redelivery live proof (2× ⇒ 1 effect) passed, with recorded output.
 
 ## Related

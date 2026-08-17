@@ -1,4 +1,4 @@
-# DigitalOcean Specialist (DigitalOcean Specialist)
+# DigitalOcean Specialist
 
 > Agent spec of the platform **specialist** type. Proposes to the panel of
 > `agents/08-infrastructure/hosting-arbiter.md`; **evaluates** DigitalOcean, does not sell it.
@@ -9,7 +9,7 @@
 | --- | --- |
 | **Name** | DigitalOcean Specialist |
 | **Alias** | DigitalOcean Specialist |
-| **Category** | `08-infraestrutura` |
+| **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if DO is chosen) |
 | **Type** | specialist |
 | **Suggested model** | **Standard**, medium effort (`core/model-routing.md`) |
@@ -25,7 +25,7 @@ preferable.
 
 ## When it starts
 
-Convened by `arbitro-de-alojamento.md` when DO enters the panel — typically for **small teams**
+Convened by `hosting-arbiter.md` when DO enters the panel — typically for **small teams**
 or early-stage products that value launching fast with little operations work and predictable
 cost. Proposes **blind** (`core/decision-engine.md`). Reactivated in F8 if chosen.
 
@@ -41,14 +41,14 @@ missing (target scale, required region) — it records the gap without presuming
 | --- | --- | --- | --- |
 | `product/01-requirements/nfr.md` | F2 | Yes | Scale, availability, latency, region |
 | `product/02-architecture/stack.md` | F3 | Yes | Runtime, DB, cache |
-| Team size/maturity | `arbitro-de-alojamento.md` | Yes | DO's argument is saving small teams operations work |
+| Team size/maturity | `hosting-arbiter.md` | Yes | DO's argument is saving small teams operations work |
 | Data classification / required region | User / `agents/09-security/` | Yes | Confirm one of DO's regions serves |
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| DigitalOcean proposal | Annex to the hosting ADR | `arbitro-de-alojamento.md` |
+| DigitalOcean proposal | Annex to the hosting ADR | `hosting-arbiter.md` |
 | Detailed DO design (only if chosen) | `product/07-operations/infra/digitalocean.md` | `agents/07-devops/deployment-strategist.md`, `agents/07-devops/terraform-specialist.md` |
 
 ## Questions to the user
@@ -80,13 +80,13 @@ Via the arbiter (`core/question-engine.md`):
 
 ## Limitations (what this agent does NOT do)
 
-- **Does not decide** the platform — `arbitro-de-alojamento.md`.
+- **Does not decide** the platform — `hosting-arbiter.md`.
 - **Does not write the final IaC** — `agents/07-devops/terraform-specialist.md`.
 - **Does not configure DOKS in detail** — `agents/07-devops/kubernetes-specialist.md`.
 - **Does not design the edge CDN/DNS** — `agents/07-devops/cdn-specialist.md`,
   `agents/07-devops/cloudflare-specialist.md`.
 - **Does not design the backup strategy** beyond the managed one —
-  `especialista-de-backup-de-infra.md`.
+  `infra-backup-specialist.md`.
 - **Does not propose for the other platforms** — each one has its own specialist.
 
 ## Workflow

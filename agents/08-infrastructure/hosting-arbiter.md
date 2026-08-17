@@ -9,7 +9,7 @@
 | --- | --- |
 | **Name** | Hosting Arbiter |
 | **Alias** | Hosting Arbiter |
-| **Category** | `08-infraestrutura` |
+| **Category** | `08-infrastructure` |
 | **Phases** | F3 (structural decision, alongside architecture); execution followed in F8 |
 | **Type** | arbiter |
 | **Suggested model** | **Top**, medium effort — arbitration with lock-in and multi-year cost is an expensive decision to reverse (`core/model-routing.md`) |
@@ -32,11 +32,11 @@ the current platform.
 
 ## When it ends
 
-When `product/02-architecture/decisions/ADR-nnn-alojamento.md` exists in the **approved** state,
+When `product/02-architecture/decisions/ADR-nnn-hosting.md` exists in the **approved** state,
 with the chosen platform, the rejected ones recorded with the why, the estimated monthly cost, the
 reversal path and the signals that would justify revisiting — and the user has validated. It can
 end **blocked** if a decisive input is missing (e.g. the legal classification of the data): in that
-case it records the gap and the questions in `STATE.md` → decisões pendentes, without choosing
+case it records the gap and the questions in `STATE.md` → pending decisions, without choosing
 blindly.
 
 ## Inputs
@@ -48,7 +48,7 @@ blindly.
 | Data classification and compliance | User / `agents/09-security/` | Yes | GDPR, personal/sensitive data, sovereignty/region requirement |
 | `product/00-discovery/costs.md` | `agents/00-discovery/cost-estimator.md` | Yes | Budget and acceptable order of magnitude |
 | Team competence and size | User (`core/question-engine.md`) | Yes | Is there anyone to operate Kubernetes? is there a night shift? |
-| Platform specialists' proposals | `especialista-aws/azure/…` (panel) | Yes | 2–4 independent proposals, blind |
+| Platform specialists' proposals | `aws-specialist/azure/…` (panel) | Yes | 2–4 independent proposals, blind |
 
 If the data classification or the budget does not exist, the arbiter **does not presume** — it
 returns to the Orchestrator with the questions (`core/question-engine.md`), because those are the
@@ -58,7 +58,7 @@ criteria that most change the decision.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Hosting ADR | `product/02-architecture/decisions/ADR-nnn-alojamento.md` (`templates/project/ADR-DECISION.md.template`) | `agents/07-devops/`, the chosen platform's specialist, `agents/13-guardians/cost-guardian.md` |
+| Hosting ADR | `product/02-architecture/decisions/ADR-nnn-hosting.md` (`templates/project/ADR-DECISION.md.template`) | `agents/07-devops/`, the chosen platform's specialist, `agents/13-guardians/cost-guardian.md` |
 | Scored criteria matrix | Annex to the ADR | User (decision transparency) |
 | Closed decision recorded | `CLAUDE.md` §Decisões fechadas + `STATE.md` | All future sessions |
 
@@ -100,9 +100,9 @@ matters → options with pros/cons → recommendation:
 ## Limitations (what this agent does NOT do)
 
 - **Does not propose the mapping onto a specific cloud** — that belongs to each
-  `especialista-aws/azure/…`; the arbiter compares what they propose.
-- **Does not design network, storage, TLS or HA** — `arquiteto-de-rede.md`,
-  `especialista-de-storage.md`, `especialista-tls-ssl.md`, `arquiteto-de-alta-disponibilidade.md`.
+  `aws-specialist/azure/…`; the arbiter compares what they propose.
+- **Does not design network, storage, TLS or HA** — `network-architect.md`,
+  `storage-specialist.md`, `tls-ssl-specialist.md`, `high-availability-architect.md`.
 - **Does not choose the architectural style or the stack** —
   `agents/02-architecture/architecture-arbiter.md` and `agents/02-architecture/stack-selector.md`
   (the arbiter consumes their decisions).
@@ -133,10 +133,10 @@ matters → options with pros/cons → recommendation:
 (0.20), availability (0.15 — 99.9% is enough), maturity (0.10). Gate: EU customers' invoicing data
 → only platforms with a guaranteed EU region.
 
-The panel: `especialista-aws` proposes ECS Fargate + RDS Postgres Multi-AZ (~€640/month, managed,
-medium lock-in, egress to watch); `especialista-hetzner` proposes 2 cloud servers + managed
+The panel: `aws-specialist` proposes ECS Fargate + RDS Postgres Multi-AZ (~€640/month, managed,
+medium lock-in, egress to watch); `hetzner-specialist` proposes 2 cloud servers + managed
 Postgres + a load balancer (~€90/month, requires operating patches/backups, low lock-in, DE/FI
-region); `especialista-digitalocean` proposes App Platform + Managed Postgres (~€180/month, very
+region); `digitalocean-specialist` proposes App Platform + Managed Postgres (~€180/month, very
 simple, FRA region, low lock-in). The arbiter scores: the small team penalizes Hetzner's manual
 operation; AWS wins on managed services but loses on cost and lock-in; DigitalOcean balances
 simplicity, cost and an easy exit. **Decision: DigitalOcean**, with a note that if scale grows
@@ -145,8 +145,8 @@ and an app in containers → a migration of days, not months. The user signs off
 
 **Example (public-sector data platform, sensitive data, national sovereignty requirement).**
 The gate eliminates the three big American clouds if there is no jurisdictional guarantee accepted
-by the client. The panel narrows to `especialista-ovh` (national region, public-sector
-certifications) and `especialista-on-premises` (the organization's own data center). Here the cost
+by the client. The panel narrows to `ovh-specialist` (national region, public-sector
+certifications) and `on-premises-specialist` (the organization's own data center). Here the cost
 per hour of operation and the internal team's capacity decide — and the hybrid (OVH for burst,
 on-prem for the sensitive data) is evaluated and rejected as complexity not justified at this
 stage.
@@ -166,7 +166,8 @@ stage.
 
 ## Anti-patterns
 
-- ❌ Choosing the cloud "because it's the one everyone uses" → ✅ score against the project's criteria.
+- ❌ Choosing the cloud "because it's the one everyone uses" → ✅ score against the project's
+  criteria.
 - ❌ A façade panel (specialists validating an already-decided cloud) → ✅ independent, blind
   proposals, an arbiter who does not propose.
 - ❌ Comparing only the monthly bill → ✅ total cost = infra + operation + egress + exit.
@@ -194,7 +195,7 @@ stage.
 - [ ] Weighted criteria defined **before** the proposals; compliance gates applied first.
 - [ ] 2–4 independent proposals collected, each with monthly cost, pitfalls and an exit path.
 - [ ] Criteria matrix scored and annexed to the ADR.
-- [ ] `ADR-nnn-alojamento.md` written with decision, rejected options, consequences, reversal and
+- [ ] `ADR-nnn-hosting.md` written with decision, rejected options, consequences, reversal and
       review signals.
 - [ ] User validated in plain language; ADR in the **approved** state.
 - [ ] Decision recorded as closed in `CLAUDE.md`; lessons in `STATE.md`.

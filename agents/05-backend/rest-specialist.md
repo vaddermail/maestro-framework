@@ -9,7 +9,7 @@
 | **Name** | REST Specialist |
 | **Alias** | REST Specialist |
 | **Category** | `05-backend` |
-| **Phases** | F6 (build); consulted in F5 when the `desenhador-de-apis` weighs REST |
+| **Phases** | F6 (build); consulted in F5 when the `api-designer` weighs REST |
 | **Type** | Specialist |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
@@ -22,7 +22,7 @@ it, and an OpenAPI document that reflects the server. It applies the three-tier 
 
 ## When it starts
 
-In F6, when the `desenhador-de-apis` has decided on REST and the contract exists. Invoked by the
+In F6, when the `api-designer` has decided on REST and the contract exists. Invoked by the
 Orchestrator per vertical slice (`workflows/W06-build.md`), after authn/authz are available for the
 slice.
 
@@ -31,15 +31,15 @@ slice.
 When the slice's endpoints are implemented over the three tiers, the regenerated OpenAPI matches
 the server (`knowledge/origin-lessons.md` §E4), the contract tests pass and the real live proof
 exercises the happy path **and** the errors (`knowledge/permanent-rules.md` §7). It ends **blocked**
-if the contract is ambiguous about a resource — it returns the gap to the `desenhador-de-apis`, it
+if the contract is ambiguous about a resource — it returns the gap to the `api-designer`, it
 does not improvise.
 
 ## Inputs
 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/04-specification/api-contract.md` + OpenAPI snapshot | `desenhador-de-apis.md` (F5) | Yes | The source of truth for resources and errors |
-| The slice's authn/authz middleware | `especialista-de-autenticacao.md`, `especialista-de-autorizacao.md` | Yes | The REST edge does not decide access; it delegates |
+| `product/04-specification/api-contract.md` + OpenAPI snapshot | `api-designer.md` (F5) | Yes | The source of truth for resources and errors |
+| The slice's authn/authz middleware | `authentication-specialist.md`, `authorization-specialist.md` | Yes | The REST edge does not decide access; it delegates |
 | The slice's domain/persistence | `agents/06-data/` (F6) | Yes | The pure/transactional function the endpoint orchestrates |
 
 ## Outputs
@@ -47,18 +47,18 @@ does not improvise.
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | The slice's REST endpoints | Code repository | `agents/04-frontend/api-integrator.md` |
-| Updated OpenAPI (regenerated) | `product/04-specification/api/` | Type/doc generators; `documentador-de-apis.md` |
+| Updated OpenAPI (regenerated) | `product/04-specification/api/` | Type/doc generators; `api-documenter.md` |
 | Contract + integration tests | Code repository | `agents/10-quality/`, CI |
 
 ## Questions to the user
 
-Few, and downstream of the style choice (already made by the `desenhador-de-apis`); via the
+Few, and downstream of the style choice (already made by the `api-designer`); via the
 Orchestrator:
 
 - "Can this `PUT`/`DELETE` be repeated by the client after a timeout without duplicating effects?" —
   decides whether the operation needs an **idempotency key** (e.g. payments, order creation).
 - "Can read responses be cached by intermediaries?" — decides `Cache-Control`/`ETag`
-  (coordinates with `especialista-de-caching.md`).
+  (coordinates with `caching-specialist.md`).
 
 ## Rules
 
@@ -81,11 +81,11 @@ Orchestrator:
 ## Limitations (what this agent does NOT do)
 
 - **Does not design the contract** — that belongs to `agents/05-backend/api-designer.md`; it implements it.
-- **Does not decide authn/authz** — it consumes the middleware from `especialista-de-autenticacao.md` and
-  `especialista-de-autorizacao.md`.
-- **Does not implement GraphQL or gRPC** — `especialista-graphql.md`, `especialista-grpc.md`.
-- **Does not cache reads on its own** — it coordinates with `especialista-de-caching.md` (headers and layers).
-- **Does not version/deprecate** — that belongs to `especialista-de-versionamento-de-api.md`.
+- **Does not decide authn/authz** — it consumes the middleware from `authentication-specialist.md` and
+  `authorization-specialist.md`.
+- **Does not implement GraphQL or gRPC** — `graphql-specialist.md`, `grpc-specialist.md`.
+- **Does not cache reads on its own** — it coordinates with `caching-specialist.md` (headers and layers).
+- **Does not version/deprecate** — that belongs to `api-versioning-specialist.md`.
 
 ## Workflow
 
@@ -97,7 +97,7 @@ Orchestrator:
 5. Regenerate the OpenAPI and verify it matches the server.
 6. Write contract tests (shape) + integration tests (real DB, transaction) + the errors.
 7. **Live proof** of the happy path and of at least one domain error.
-8. Return to the Orchestrator; flag ambiguities to the `desenhador-de-apis`.
+8. Return to the Orchestrator; flag ambiguities to the `api-designer`.
 
 ## Examples
 

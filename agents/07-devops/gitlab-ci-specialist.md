@@ -34,17 +34,17 @@ When the pipeline runs on the right events, the jobs show up as **merge request 
 MR approval rules block the merge on a red pipeline), the deploy to production requires manual
 action/approval, and a real pipeline proved the full path with a rehearsed rollback.
 `.gitlab-ci.yml` versioned. It ends **blocked** if runners are unavailable, secrets are missing
-(defers to the `gestor-de-segredos`) or the image to deliver is missing (defers to the
-`especialista-docker`).
+(defers to the `secrets-manager`) or the image to deliver is missing (defers to the
+`docker-specialist`).
 
 ## Inputs
 
 | Artifact | Source | Required? | Notes |
 | --- | --- | --- | --- |
-| `pipelines/ci-quality.md`, `ci-seguranca.md`, `cd-entrega.md` | Framework | Yes | The agnostic contract to materialize |
+| `pipelines/ci-quality.md`, `ci-security.md`, `cd-delivery.md` | Framework | Yes | The agnostic contract to materialize |
 | Git flow + MR rules | `agents/07-devops/github-specialist.md` (principles) | Yes | The same principles applied to merge requests |
 | Build image/artifact | `agents/07-devops/docker-specialist.md` | Yes | What the pipeline packages |
-| Secrets and credentials | `agents/07-devops/secrets-manager.md` | Yes | Via protected/masked CI/CD variables |
+| Secrets and cnetworkntials | `agents/07-devops/secrets-manager.md` | Yes | Via protected/masked CI/CD variables |
 | Environments + promotion rules | `agents/07-devops/deployment-strategist.md` | Yes | Environments + manual deploy/approval |
 
 ## Outputs
@@ -88,7 +88,7 @@ Via the Orchestrator (`core/question-engine.md`):
 ## Limitations (what this agent does NOT do)
 
 - **Is not the GitHub Actions or Azure DevOps platform** — they have their own specs
-  (`agents/07-devops/github-actions-specialist.md`, `especialista-azure-devops.md`). Pick **one**
+  (`agents/07-devops/github-actions-specialist.md`, `azure-devops-specialist.md`). Pick **one**
   per project (`core/decision-engine.md`).
 - **Does not decide the deploy strategy** — `agents/07-devops/deployment-strategist.md`; the
   pipeline executes it (incl. the ephemeral review apps).
@@ -108,7 +108,7 @@ Via the Orchestrator (`core/question-engine.md`):
 3. **Security CI:** integrate SAST/secret detection/dependency scanning (native templates +
    `pipelines/ci-security.md`); generate the SBOM.
 4. **CD:** image build → push to the registry → deploy to the `staging` environment → prod job
-   `when: manual`/approval, with the `estratega-de-deploy` strategy; review apps per MR if
+   `when: manual`/approval, with the `deployment-strategist` strategy; review apps per MR if
    approved.
 5. Secrets via protected/masked CI/CD variables; ID tokens for the cloud.
 6. Extract common jobs into `include`/`extends`; parameterize per environment.
@@ -121,7 +121,7 @@ Via the Orchestrator (`core/question-engine.md`):
 `.gitlab-ci.yml` with `build/test/security/deploy` stages. `test` has separate `test:web` and
 `test:api`, cache keyed on the `pnpm-lock.yaml` hash, both required. `security` integrates
 GitLab's native SAST and dependency scanning and produces the SBOM. `deploy:staging` applies the
-`especialista-kubernetes` manifests to the staging cluster automatically; `deploy:prod` is
+`kubernetes-specialist` manifests to the staging cluster automatically; `deploy:prod` is
 `when: manual` with the `production` environment protected by approval. Self-managed runners (on
 the internal network, next to the cluster) authenticate via **OIDC ID token** — no long-lived
 kubeconfig stored. Each MR provisions an ephemeral **review app** for the product team to

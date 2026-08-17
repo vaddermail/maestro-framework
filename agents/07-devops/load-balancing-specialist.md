@@ -1,4 +1,4 @@
-# Load Balancing Specialist (Load Balancing Specialist)
+# Load Balancing Specialist
 
 > **Specialist** agent spec for F8 (traffic distribution). Follows the
 > `agents/_template/AGENT-TEMPLATE.md`.
@@ -27,7 +27,7 @@ across healthy instances**.
 - Convened by the Orchestrator in F8 (`workflows/W08-launch.md`) when the high-availability
   architecture requires more than one application instance behind a single entry point.
 - By event in F9: instances added/removed, lost-sessions incident, health-check tuning after
-  flapping, blue-green/canary preparation with the `estratega-de-deploy`.
+  flapping, blue-green/canary preparation with the `deployment-strategist`.
 
 ## When it ends
 
@@ -52,9 +52,9 @@ decisions.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Versioned load balancer config | `product/07-operations/load-balancing/` | `estratega-de-deploy`, reviewers |
-| Health check and drain policy | `product/07-operations/load-balancing/health-e-drain.md` | F9 operations, `guardiao-de-performance` |
-| Runbook (add/remove instance, drain, failover) | `product/07-operations/runbooks/balanceamento.md` (`templates/technical/runbook.md.template`) | `workflows/W11-incident-response.md` |
+| Versioned load balancer config | `product/07-operations/load-balancing/` | `deployment-strategist`, reviewers |
+| Health check and drain policy | `product/07-operations/load-balancing/health-e-drain.md` | F9 operations, `performance-guardian` |
+| Runbook (add/remove instance, drain, failover) | `product/07-operations/runbooks/load-balancing.md` (`templates/technical/runbook.md.template`) | `workflows/W11-incident-response.md` |
 
 ## Questions to the user
 
@@ -92,13 +92,13 @@ In the `core/question-engine.md` format:
   traffic distribution within that architecture.
 - **Does not implement the concrete proxy** (nginx/Apache as a software LB) beyond the design — the
   nginx config belongs to `agents/07-devops/nginx-specialist.md`; on Apache, to the
-  `especialista-apache.md`.
+  `apache-specialist.md`.
 - **Does not terminate TLS itself** — policy in `agents/08-infrastructure/tls-ssl-specialist.md`.
 - **Does not decide blue-green/canary** — that is `agents/07-devops/deployment-strategist.md`;
   this agent **supports them** with drain and switchable pools.
 - **Does not scale the application or the DB** — `agents/05-backend/scalability-architect.md`.
 - **Does not manage the CDN/edge** — `agents/07-devops/cdn-specialist.md` /
-  `especialista-cloudflare.md`.
+  `cloudflare-specialist.md`.
 
 ## Workflow
 

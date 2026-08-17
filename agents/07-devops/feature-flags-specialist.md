@@ -26,7 +26,7 @@ concretizes the `modules/feature-flags.md` module.
 
 - Convened by the Orchestrator in F6 when a slice introduces a risky change (a new flow, a
   notification channel, an external integration) that should be born toggleable.
-- In F8 by the `agents/07-devops/deployment-strategist.md` when reversal by redeploy is slow and
+- In F8 by the `agents/07-devops/deployment-strategist.md` when reversal by networkploy is slow and
   the change needs a kill-switch.
 - In F9: exposing a feature to a % of users, cutting consumption when a limit is hit, or the
   periodic hygiene review (removing dead flags).
@@ -44,7 +44,7 @@ missing — it records it in `STATE.md` → pending decisions.
 
 | Artifact | Source | Required? | Notes |
 | --- | --- | --- | --- |
-| Risky change to protect | `workflows/W06-build.md` / `estratega-de-deploy` | Yes | What needs to be toggleable and why |
+| Risky change to protect | `workflows/W06-build.md` / `deployment-strategist` | Yes | What needs to be toggleable and why |
 | Feature flags module | `modules/feature-flags.md` | Yes | The pattern this agent concretizes |
 | Deploy strategy | `agents/07-devops/deployment-strategist.md` (F8) | As needed | Flags supporting canary/reversal |
 | Config vs secret policy | `agents/07-devops/secrets-manager.md` | Yes | Flags are **non-secret** config; never store secrets in a flag |
@@ -54,7 +54,7 @@ missing — it records it in `STATE.md` → pending decisions.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Flag catalog (name, purpose, default, owner, retirement date) | `product/07-operations/flags/catalogo.md` | Whole team, reviewers, `guardiao-de-qualidade` |
+| Flag catalog (name, purpose, default, owner, retirement date) | `product/07-operations/flags/catalog.md` | Whole team, reviewers, `quality-guardian` |
 | Flag evaluator (SSOT) + naming convention | `product/07-operations/flags/` (config + read code) | Backend/frontend |
 | Kill-switch runbook (how to cut in an emergency) | `product/07-operations/runbooks/kill-switch.md` (`templates/technical/runbook.md.template`) | F9 operations, `workflows/W11-incident-response.md` |
 | Hygiene guardrail (test that calls out dead/orphaned flags) | `pipelines/ci-quality.md` | CI, `loops/L08-technical-debt.md` |
@@ -79,14 +79,14 @@ In the `core/question-engine.md` format:
 1. **Safe default.** The new/risky starts OFF; whatever generates cost starts OFF with backlog
    draining on enable (`knowledge/proven-patterns.md` §10; `modules/feature-flags.md`).
 2. **Toggleable without a deploy.** The flag is read at runtime; changing its value requires no
-   rebuild/redeploy — that is its reason to exist (`knowledge/permanent-rules.md` §3).
+   rebuild/networkploy — that is its reason to exist (`knowledge/permanent-rules.md` §3).
 3. **Evaluated in a single place (SSOT).** One central evaluator, not scattered `if`s; a
    verifiable naming convention (`knowledge/proven-patterns.md` §4).
 4. **Two-level kill-switch** for cost/risk: persisted granular config **+** environment
    master-switch — two independent cuts (`modules/feature-flags.md`).
 5. **The old path does not break with the flag OFF.** With the flag off, the previous behavior
    works intact — otherwise it is not reversible.
-6. **Flags hold no secrets.** They are non-secret config; credentials belong to the
+6. **Flags hold no secrets.** They are non-secret config; cnetworkntials belong to the
    `agents/07-devops/secrets-manager.md`.
 7. **Mandatory hygiene.** Every flag has an owner, a purpose and a retirement deadline; a
    guardrail calls out dead/orphaned flags and feeds `loops/L08-technical-debt.md`.
@@ -131,7 +131,7 @@ removed → default OFF, logged.
 
 **Example (platform with AI summaries):** The summary feature calls a paid LLM. The specialist
 designs a two-level kill-switch: `IA_RESUMO_ATIVO` (per-organization config) **+**
-`IA_MASTER_ENABLED` (env). The `guardiao-de-custos` cuts the master-switch if the daily cost
+`IA_MASTER_ENABLED` (env). The `cost-guardian` cuts the master-switch if the daily cost
 passes the ceiling — consumption stops **without a deploy**, the request backlog accumulates and
 drains on re-enable. Live proof: with the master OFF, requests queue and nothing calls the LLM;
 once re-enabled, they drain.
@@ -139,14 +139,14 @@ once re-enabled, they drain.
 ## Best practices
 
 - Every risky change is born behind a flag — removing a flag is cheaper than reverting an incident
-  by redeploy.
+  by networkploy.
 - Default OFF for the new and for what costs money; exposure ramps deliberately, not by omission.
 - Date the flag's death the day it is born; hygiene is what prevents the eternal `if`.
 - A single evaluator — scattered flag `if`s are the runtime version of duplicated code.
 
 ## Anti-patterns
 
-- ❌ A flag that requires a redeploy to change → ✅ read at runtime, hot-toggleable.
+- ❌ A flag that requires a networkploy to change → ✅ read at runtime, hot-toggleable.
 - ❌ New behavior on by default → ✅ default OFF; turn on once validated.
 - ❌ Flag OFF breaking the old path → ✅ the old path works intact with OFF.
 - ❌ Flags piling up ownerless, dateless → ✅ catalog with owner/purpose/retirement date + guardrail.

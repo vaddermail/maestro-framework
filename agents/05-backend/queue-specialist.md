@@ -50,14 +50,14 @@ queue technology is still undecided (broker vs table in the DB) — it records t
 | Latency/volume NFRs | `agents/01-requirements/nfr-specifier.md` | Yes | Sizes the number of workers and the backoff |
 
 If there is no data model to anchor the outbox to, the specialist **does not invent an ad-hoc
-table**: it records the gap and triggers the `modelador-de-dados` via the Orchestrator.
+table**: it records the gap and triggers the `data-modeler` via the Orchestrator.
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Queue design | `product/04-specification/backend/queues.md` | Build team, `agents/12-reviewers/backend-reviewer.md` |
-| Catalog of job types (dedupe key, retry, DLQ) | Section of `filas.md` | `especialista-de-eventos`, `arquiteto-de-observabilidade` |
+| Catalog of job types (dedupe key, retry, DLQ) | Section of `queues.md` | `events-specialist`, `observability-architect` |
 | DLQ reprocessing runbook | `templates/technical/runbook.md.template` → `product/07-operations/` | `agents/13-guardians/`, operations |
 
 All output is written to file (`core/project-memory.md`).
@@ -80,16 +80,16 @@ Via the Orchestrator, batched (`core/question-engine.md`):
 1. **One executor per channel.** Multiple producers submit; **one** logical consumer executes.
    Concurrency is controlled by item *locking*, not by multiple workers competing blindly
    (`knowledge/proven-patterns.md` §1).
-2. **Dedupe by stable fingerprint** (`evento:origem:destinatário:contexto`) with *insert-if-not-exists*:
+2. **Dedupe by stable fingerprint** (`event:origin:recipient:context`) with *insert-if-not-exists*:
    submitting the same work twice produces **one** effect.
 3. **Enqueue inside the fact's transaction** (transactional outbox): the job only exists if the fact
    that originated it committed; rollback ⇒ zero effects (§3 of the proven patterns). The specialist
-   **designs** this coupling; event semantics belong to the `especialista-de-eventos`.
+   **designs** this coupling; event semantics belong to the `events-specialist`.
 4. **Retry with backoff and a cap**, plus error classification: *transient* (retry) vs *permanent*
    (straight to the DLQ, don't burn attempts). Every job idempotent by construction — a retry never
    duplicates an effect.
 5. **Visible DLQ, never a black hole.** An exhausted item goes to the DLQ with the error and the
-   payload; there is a manual reprocessing path by ID. Failures **logged** (`padroes` §10).
+   payload; there is a manual reprocessing path by ID. Failures **logged** (`knowledge/proven-patterns.md` §10).
 6. **One failure never aborts the batch.** The executor drains item by item; a poisoned item does
    not stop the rest.
 7. **Per-channel kill-switch** (`modules/feature-flags.md`): being able to stop a job type without a
@@ -115,25 +115,25 @@ Via the Orchestrator, batched (`core/question-engine.md`):
 2. **Classify each job:** idempotent? order-sensitive? transient vs permanent error? target
    volume/latency?
 3. **Define the stable dedupe key** per job type — the step that prevents the most bugs.
-4. **Design the coupling to the outbox** with the `modelador-de-dados` (enqueue in the fact's
+4. **Design the coupling to the outbox** with the `data-modeler` (enqueue in the fact's
    transaction).
 5. **Define retry** (attempts, backoff, cap) and the DLQ condition.
 6. **Design DLQ reprocessing** (runbook) and the per-channel kill-switch.
 7. **Specify the signals** to expose (backlog, age of the oldest item, DLQ rate) and hand them to
-   the `arquiteto-de-observabilidade`.
+   the `observability-architect`.
 8. **Write** `product/04-specification/backend/queues.md` + runbook; **live proof** of idempotency and of the DLQ.
 9. Return control to the Orchestrator with the summary.
 
 ## Examples
 
 **Example (e-commerce, order confirmation):** on committing the order, the transaction writes three
-jobs to the outbox: `email-confirmacao`, `reservar-stock`, `notificar-armazem`. The email's dedupe
-key: `email-confirmacao:encomenda:8842`. If the user clicks "Pay" twice and the order is the same,
-the *insert-if-not-exists* guarantees a single email. `reservar-stock` classifies an "out of stock"
+jobs to the outbox: `confirmation-email`, `reserve-stock`, `notify-warehouse`. The email's dedupe
+key: `confirmation-email:order:8842`. If the user clicks "Pay" twice and the order is the same,
+the *insert-if-not-exists* guarantees a single email. `reserve-stock` classifies an "out of stock"
 error as **permanent** → straight to the DLQ (retrying is pointless) and fires the stock-out flow; a
 timeout from the stock service is **transient** → retry with backoff 1s→2s→4s, cap 5. On the 6th
 failure it goes to the DLQ with the payload and the error; the runbook allows reprocessing by ID
-once the service is back. Kill-switch: `notificar-armazem` switched off during a WMS migration, with
+once the service is back. Kill-switch: `notify-warehouse` switched off during a WMS migration, with
 no deploy. Live proof: submitting the same order 50×
 concurrently ⇒ one email, one reservation.
 
@@ -172,11 +172,11 @@ concurrently ⇒ one email, one reservation.
 ## Done criteria
 
 - [ ] `product/04-specification/backend/queues.md` written with the catalog of jobs (dedupe, retry, DLQ) per type.
-- [ ] Coupling to the transactional outbox designed with the `modelador-de-dados`.
+- [ ] Coupling to the transactional outbox designed with the `data-modeler`.
 - [ ] DLQ reprocessing runbook created.
 - [ ] Per-channel kill-switch defined.
 - [ ] Live proofs of idempotency (submit N× ⇒ 1 effect) and of the DLQ passed, with output recorded.
-- [ ] Backlog/DLQ signals handed to the `arquiteto-de-observabilidade`.
+- [ ] Backlog/DLQ signals handed to the `observability-architect`.
 
 ## Related
 

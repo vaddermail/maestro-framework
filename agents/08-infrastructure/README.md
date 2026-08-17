@@ -10,7 +10,7 @@ commit there" (that is `agents/07-devops/`).
 ## Dominant phase
 
 **F8 — launch** (`workflows/W08-launch.md`). The hosting **decision**, however, is structural and
-expensive to reverse, which is why `arbitro-de-alojamento.md` is convened as early as **F3**
+expensive to reverse, which is why `hosting-arbiter.md` is convened as early as **F3**
 (`workflows/W03-architecture.md`), alongside the architecture, and only **executed** in F8.
 Storage, network and HA are revisited whenever scale or availability requirements change (F9).
 
@@ -34,7 +34,7 @@ Storage, network and HA are revisited whenever scale or availability requirement
 
 ## How the arbiter uses the specialists
 
-`arbitro-de-alojamento.md` **sells no platform** — it applies `core/decision-engine.md`: it frames
+`hosting-arbiter.md` **sells no platform** — it applies `core/decision-engine.md`: it frames
 the question with weighted criteria (total cost, team competence, compliance/data sovereignty,
 reversibility/lock-in, maturity), convenes 2–4 specialists to propose **blind** the mapping of the
 product's needs onto their platform (with monthly cost and honest pitfalls), compares and writes
@@ -43,7 +43,7 @@ this case my platform is expensive or excessive" is delivering a valid proposal.
 
 ## Recommended order of work
 
-1. **F3 —** `arbitro-de-alojamento` runs the specialist panel → approved hosting ADR.
+1. **F3 —** `hosting-arbiter` runs the specialist panel → approved hosting ADR.
 2. **F8 —** the chosen platform's specialist details the design (network, storage, TLS, HA) in
    coordination with `agents/07-devops/` (IaC, containers, deploy).
 3. **F9 —** revisit cost (`agents/13-guardians/cost-guardian.md`) and availability when scale

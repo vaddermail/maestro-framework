@@ -26,10 +26,10 @@ timeouts) that protect the system from itself and from its clients. It is the ag
 ## When it starts
 
 - **F3:** consulted when the architecture chooses the style — gives the scalability opinion the
-  `arbitro-de-arquitetura` weighs (e.g. a monolith scales horizontally if it is stateless).
+  `architecture-arbiter` weighs (e.g. a monolith scales horizontally if it is stateless).
 - **F5:** designs for scale from the volumes expected in the NFRs.
 - **F6:** applies backpressure and limits in the slices.
-- **F9:** event-driven — the `guardiao-de-performance` detects a bottleneck, or a predictable peak
+- **F9:** event-driven — the `performance-guardian` detects a bottleneck, or a predictable peak
   approaches (launch, campaign, high season).
 
 ## When it ends
@@ -37,7 +37,7 @@ timeouts) that protect the system from itself and from its clients. It is the ag
 When the **scalability plan** is written (`product/04-specification/backend/scalability.md`) — capacity model
 per component (horizontal/vertical), bottlenecks identified and mitigated, backpressure strategy,
 and limits (rate limits, quotas, timeouts, pool sizes) — and a load test
-(`engenheiro-de-testes-de-performance`) confirms the behavior up to the target limit **and**
+(`performance-test-engineer`) confirms the behavior up to the target limit **and**
 gracefully beyond it. It can end **blocked** if the acceptable cost of scale is still undecided
 (overprovisioning is money) — it records the pending decision in `STATE.md`.
 
@@ -58,10 +58,10 @@ order of magnitude — scaling for imagined traffic is expensive over-engineerin
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Scalability plan + capacity model | `product/04-specification/backend/scalability.md` | `07-devops/`, `08-infraestrutura/`, guardians |
-| Backpressure strategy and limits | Section of `escalabilidade.md` | Build team, `especialista-de-filas` |
-| Identified bottlenecks + mitigation | `escalabilidade.md` | `arbitro-de-arquitetura` (F3), `guardiao-de-performance` |
-| Load test parameters | `engenheiro-de-testes-de-performance` | Capacity validation |
+| Scalability plan + capacity model | `product/04-specification/backend/scalability.md` | `07-devops/`, `08-infrastructure/`, guardians |
+| Backpressure strategy and limits | Section of `scalability.md` | Build team, `queue-specialist` |
+| Identified bottlenecks + mitigation | `scalability.md` | `architecture-arbiter` (F3), `performance-guardian` |
+| Load test parameters | `performance-test-engineer` | Capacity validation |
 
 ## Questions to the user
 
@@ -80,7 +80,7 @@ Via the Orchestrator (`core/question-engine.md`):
 
 1. **Stateless by default.** What keeps no local state scales horizontally without drama; state
    (sessions, temporary files, local caches) is pushed off the node (shared store) — state on the
-   node is the most common bottleneck (`padroes` §9, camadas ortogonais).
+   node is the most common bottleneck (`knowledge/proven-patterns.md` §9, camadas ortogonais).
 2. **Scale horizontally what you can, vertically what you must.** Stateless services →
    horizontal (more replicas). Strongly stateful resources (the primary DB) → vertical first + read
    replicas + partitioning **only when proven necessary**.
@@ -106,12 +106,12 @@ Via the Orchestrator (`core/question-engine.md`):
 - **Does not implement the queue or the DLQ** — that belongs to `agents/05-backend/queue-specialist.md`; here
   the queue's **cap** and the backpressure policy are defined, not the mechanics.
 - **Does not provision the infra** (auto-scaling groups, k8s nodes, load balancers) — that is for `07-devops/`
-  (`especialista-kubernetes.md`, `especialista-load-balancing.md`) and `08-infraestrutura/`
-  (`arquiteto-de-alta-disponibilidade.md`); here the capacity **requirement** is produced.
+  (`kubernetes-specialist.md`, `load-balancing-specialist.md`) and `08-infrastructure/`
+  (`high-availability-architect.md`); here the capacity **requirement** is produced.
 - **Does not run the load tests** — that belongs to `agents/10-quality/performance-test-engineer.md`;
   here what to test is defined and the limit is interpreted.
 - **Does not optimize queries or indexes** — that is for `agents/06-data/db-performance-optimizer.md` and
-  `especialista-de-indexes.md`.
+  `indexing-specialist.md`.
 - **Does not watch performance in production** — that belongs to `agents/13-guardians/performance-guardian.md`.
 
 ## Workflow
@@ -125,7 +125,7 @@ Via the Orchestrator (`core/question-engine.md`):
    reject and what to degrade gracefully.
 5. **Define the capacity model**: how many replicas/resources for the target load, with a justified
    margin.
-6. **Commission the load test** from the `engenheiro-de-testes-de-performance` (up to the target and
+6. **Commission the load test** from the `performance-test-engineer` (up to the target and
    beyond) and interpret where it breaks.
 7. **Write** `product/04-specification/backend/scalability.md`; hand the infra requirements to `07-devops/`.
 8. Return to the Orchestrator; in F9, reopen on a bottleneck or a predictable peak.
@@ -138,7 +138,7 @@ the load balancer); the session lives in a shared store, not on the node, so any
 any request. The real bottleneck, revealed by the load test and the `db_pool_saturation` metric, was
 **not** the services' CPU — it was the inventory DB connection pool exhausting itself at 8×.
 Mitigation: a bigger pool + a read replica for catalog queries + a catalog cache (via
-`especialista-de-caching`) that cuts 70% of reads before they touch the DB. Backpressure: the
+`caching-specialist`) that cuts 70% of reads before they touch the DB. Backpressure: the
 *checkout* applies per-client rate limiting and, if the stock reservation queue hits its cap,
 returns 429 with "try again" — it protects those already paying instead of letting everything fall.
 The "recommendations" feature (non-critical) has a kill-switch: under an extreme peak, it is
@@ -154,8 +154,8 @@ and graceful degradation (not collapse) at 25×.
 - Design **backpressure** as a feature, not an accident: decide *a priori* what gets rejected and
   what gets degraded, with the user.
 - Size for the **realistic + justified margin**, not for the imaginary hero — scale over-engineering
-  is a recurring cost the `guardiao-de-custos` will question.
-- Validate with **real load** (`regras-permanentes` §7): an unproven capacity model is a hypothesis.
+  is a recurring cost the `cost-guardian` will question.
+- Validate with **real load** (`knowledge/permanent-rules.md` §7): an unproven capacity model is a hypothesis.
 
 ## Anti-patterns
 
@@ -188,7 +188,7 @@ and graceful degradation (not collapse) at 25×.
 - [ ] Backpressure and limits (rate, quota, timeout, pool/queue caps) defined.
 - [ ] Graceful degradation of the non-critical via kill-switch.
 - [ ] Load test confirms stability up to the target and degradation (not collapse) beyond it.
-- [ ] Capacity requirements handed to `07-devops/`/`08-infraestrutura/`.
+- [ ] Capacity requirements handed to `07-devops/`/`08-infrastructure/`.
 
 ## Related
 

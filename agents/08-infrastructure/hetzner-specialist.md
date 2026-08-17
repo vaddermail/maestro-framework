@@ -1,4 +1,4 @@
-# Hetzner Specialist (Hetzner Specialist)
+# Hetzner Specialist
 
 > Agent spec of the platform **specialist** type. Proposes to the panel of
 > `agents/08-infrastructure/hosting-arbiter.md`; **evaluates** Hetzner, does not sell it.
@@ -9,7 +9,7 @@
 | --- | --- |
 | **Name** | Hetzner Specialist |
 | **Alias** | Hetzner Specialist |
-| **Category** | `08-infraestrutura` |
+| **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if Hetzner is chosen) |
 | **Type** | specialist |
 | **Suggested model** | **Standard**, medium effort (`core/model-routing.md`) |
@@ -25,7 +25,7 @@ elastic scale).
 
 ## When it starts
 
-Convened by `arbitro-de-alojamento.md` when Hetzner enters the panel — typically in
+Convened by `hosting-arbiter.md` when Hetzner enters the panel — typically in
 **cost**-sensitive cases, with data staying in the **EU** (DE/FI data centers) and a team willing
 to operate. Proposes **blind** (`core/decision-engine.md`). Reactivated in F8 if chosen.
 
@@ -42,14 +42,14 @@ availability, the team's operations capacity) — it records the gap without pre
 | --- | --- | --- | --- |
 | `product/01-requirements/nfr.md` | F2 | Yes | Scale, availability, latency (EU region) |
 | `product/02-architecture/stack.md` | F3 | Yes | Runtime, DB, cache — what runs on the machines |
-| Team's operations capacity | `arbitro-de-alojamento.md` | Yes | Is there someone for patches, backups, monitoring? |
+| Team's operations capacity | `hosting-arbiter.md` | Yes | Is there someone for patches, backups, monitoring? |
 | Data classification / required region | User / `agents/09-security/` | Yes | EU by default; confirm it is enough |
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Hetzner proposal | Annex to the hosting ADR | `arbitro-de-alojamento.md` |
+| Hetzner proposal | Annex to the hosting ADR | `hosting-arbiter.md` |
 | Detailed Hetzner design (only if chosen) | `product/07-operations/infra/hetzner.md` | `agents/07-devops/ansible-specialist.md`, `agents/07-devops/terraform-specialist.md` |
 
 ## Questions to the user
@@ -83,12 +83,12 @@ Via the arbiter (`core/question-engine.md`):
 
 ## Limitations (what this agent does NOT do)
 
-- **Does not decide** the platform — `arbitro-de-alojamento.md`.
+- **Does not decide** the platform — `hosting-arbiter.md`.
 - **Does not write the Ansible playbooks / IaC** — `agents/07-devops/ansible-specialist.md`,
   `agents/07-devops/terraform-specialist.md`.
-- **Does not design the backup strategy in detail** — `especialista-de-backup-de-infra.md` (here
+- **Does not design the backup strategy in detail** — `infra-backup-specialist.md` (here
   it is only flagged as the team's).
-- **Does not design the network/firewall in detail** — `arquiteto-de-rede.md`.
+- **Does not design the network/firewall in detail** — `network-architect.md`.
 - **Does not harden the OS** — `agents/09-security/hardening-specialist.md`,
   `agents/09-security/cis-benchmarks-specialist.md`.
 - **Does not propose for the other platforms** — each one has its own specialist.

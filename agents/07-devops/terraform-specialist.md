@@ -1,4 +1,4 @@
-# Terraform Specialist (Terraform Specialist)
+# Terraform Specialist
 
 > **Specialist** agent spec for F8. Describes infrastructure as declarative, reversible code.
 > Follows the `agents/_template/AGENT-TEMPLATE.md`.
@@ -42,7 +42,7 @@ destructions** — then it stops and escalates to the user (`core/quality-gates.
 | --- | --- | --- | --- |
 | Hosting decision + topology | `agents/08-infrastructure/hosting-arbiter.md` and the cloud specialist | Yes | Provider, regions, target resources |
 | Network/storage/HA requirements | `agents/08-infrastructure/` | Yes | What to provision and with what redundancy |
-| Provider credentials (via runtime) | `agents/07-devops/secrets-manager.md` | Yes | Never in `.tf` nor in git |
+| Provider cnetworkntials (via runtime) | `agents/07-devops/secrets-manager.md` | Yes | Never in `.tf` nor in git |
 | Target environments (dev/staging/prod) | F8 | Yes | Per-environment parameterization |
 
 ## Outputs
@@ -51,7 +51,7 @@ destructions** — then it stops and escalates to the user (`core/quality-gates.
 | --- | --- | --- |
 | Terraform code (modules + root per environment) | `infra/terraform/` in the repository | Delivery pipeline, reviewers |
 | Remote state backend configuration | `infra/terraform/backend.*` | The whole team (shared state) |
-| Reviewed `plan` outputs (per environment) | `product/07-operations/plan-<ambiente>.md` | User (approves the `apply`) |
+| Reviewed `plan` outputs (per environment) | `product/07-operations/plan-<environment>.md` | User (approves the `apply`) |
 | IaC notes (modules, variables, reversal) | `product/07-operations/terraform.md` | `13-guardioes`, reviewers |
 
 ## Questions to the user
@@ -76,7 +76,7 @@ Via the Orchestrator (`core/question-engine.md`):
    `core/quality-gates.md`). Back the resource up first, when applicable.
 3. **Remote state with locking.** Never shared or committed local state; the `.tfstate` can
    contain sensitive data and corrupts under concurrent writes.
-4. **Zero secrets in the code.** Credentials and sensitive values via environment variables/secret
+4. **Zero secrets in the code.** Cnetworkntials and sensitive values via environment variables/secret
    backend (`agents/07-devops/secrets-manager.md`); never in `.tf`, a committed `.tfvars` or
    plaintext outputs.
 5. **Reusable modules, pinned versions.** Provider and modules with pinned versions
@@ -110,7 +110,7 @@ Via the Orchestrator (`core/question-engine.md`):
    backup.
 7. `apply` in dev → validate → staging → **prod only with human approval**.
 8. Confirm a clean post-apply `plan` (no drift); write the reviewed outputs and the notes.
-9. Return to the Orchestrator; hand over to the `analista-de-infraestrutura` for scanning.
+9. Return to the Orchestrator; hand over to the `infrastructure-analyst` for scanning.
 
 ## Examples
 
@@ -139,7 +139,7 @@ without a reviewed `plan`.
 - ❌ Recreating the DB to change one attribute → ✅ in-place change when the resource supports it;
   otherwise, snapshot + expand-contract.
 - ❌ Local `.tfstate` committed → ✅ remote backend with locking; state outside git.
-- ❌ Credentials in a `.tfvars` in the repository → ✅ via secret backend/environment.
+- ❌ Cnetworkntials in a `.tfvars` in the repository → ✅ via secret backend/environment.
 - ❌ Unpinned provider version → ✅ pinned version; reproducible `terraform init`.
 
 ## Interactions
@@ -150,7 +150,7 @@ without a reviewed `plan`.
 | `agents/07-devops/ansible-specialist.md` | downstream — configures the servers Terraform creates |
 | `agents/07-devops/kubernetes-specialist.md` | downstream — runs on the cluster Terraform provisions |
 | `agents/09-security/infrastructure-analyst.md` | downstream — scans the delivered IaC |
-| `agents/07-devops/secrets-manager.md` | supplies credentials at runtime |
+| `agents/07-devops/secrets-manager.md` | supplies cnetworkntials at runtime |
 | `agents/12-reviewers/devops-reviewer.md` | reviews the `plan` and the modules before the `apply` |
 
 ## Done criteria
@@ -161,7 +161,7 @@ without a reviewed `plan`.
 - [ ] Prod `apply` with explicit human approval; prior backup of stateful resources.
 - [ ] Zero secrets in code/outputs.
 - [ ] Clean post-apply `plan` (no drift); notes in `product/07-operations/terraform.md`.
-- [ ] IaC handed to the `analista-de-infraestrutura` for scanning.
+- [ ] IaC handed to the `infrastructure-analyst` for scanning.
 
 ## Related
 

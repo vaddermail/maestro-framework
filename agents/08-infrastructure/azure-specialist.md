@@ -1,4 +1,4 @@
-# Azure Specialist (Azure Specialist)
+# Azure Specialist
 
 > Agent spec of the cloud-platform **specialist** type. Proposes to the panel of
 > `agents/08-infrastructure/hosting-arbiter.md`; **evaluates** Azure, does not sell it.
@@ -9,7 +9,7 @@
 | --- | --- |
 | **Name** | Azure Specialist |
 | **Alias** | Azure Specialist |
-| **Category** | `08-infraestrutura` |
+| **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if Azure is chosen) |
 | **Type** | specialist |
 | **Suggested model** | **Standard**, medium effort; raise to **Top** for complex identity integration or multi-year cost (`core/model-routing.md`) |
@@ -23,7 +23,7 @@ honestly when Azure brings no advantage over cheaper alternatives.
 
 ## When it starts
 
-Convened by `arbitro-de-alojamento.md` when Azure enters the panel — especially if the user's
+Convened by `hosting-arbiter.md` when Azure enters the panel — especially if the user's
 input mentions Microsoft 365, Entra ID (formerly Azure AD), an Enterprise Agreement or existing
 Azure credits. Proposes **blind** (`core/decision-engine.md`). Reactivated in F8 if chosen.
 
@@ -48,8 +48,8 @@ missing — it records the gap, does not presume "there is M365".
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Azure proposal | Annex to the hosting ADR | `arbitro-de-alojamento.md` |
-| Detailed Azure design (only if chosen) | `product/07-operations/infra/azure.md` | `agents/07-devops/terraform-specialist.md`, `especialista-azure-devops.md` |
+| Azure proposal | Annex to the hosting ADR | `hosting-arbiter.md` |
+| Detailed Azure design (only if chosen) | `product/07-operations/infra/azure.md` | `agents/07-devops/terraform-specialist.md`, `azure-devops-specialist.md` |
 
 ## Questions to the user
 
@@ -80,7 +80,7 @@ Via the arbiter (`core/question-engine.md`):
 
 ## Limitations (what this agent does NOT do)
 
-- **Does not decide** the platform — `arbitro-de-alojamento.md`.
+- **Does not decide** the platform — `hosting-arbiter.md`.
 - **Does not design the Azure DevOps pipeline** — `agents/07-devops/azure-devops-specialist.md`.
 - **Does not write the final IaC** — `agents/07-devops/terraform-specialist.md`.
 - **Does not configure AKS in detail** — `agents/07-devops/kubernetes-specialist.md`.

@@ -1,4 +1,4 @@
-# AWS Specialist (AWS Specialist)
+# AWS Specialist
 
 > Agent spec of the cloud-platform **specialist** type. Proposes to the panel of
 > `agents/08-infrastructure/hosting-arbiter.md`; **evaluates** AWS, does not sell it.
@@ -9,7 +9,7 @@
 | --- | --- |
 | **Name** | AWS Specialist |
 | **Alias** | AWS Specialist |
-| **Category** | `08-infraestrutura` |
+| **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if AWS is chosen) |
 | **Type** | specialist |
 | **Suggested model** | **Standard**, medium effort; raise to **Top** for multi-year/egress cost analysis on large architectures (`core/model-routing.md`) |
@@ -23,7 +23,7 @@ proposal the arbiter can compare against the other platforms'.
 
 ## When it starts
 
-Convened by `arbitro-de-alojamento.md` (via `core/orchestrator.md`) when AWS enters the candidate
+Convened by `hosting-arbiter.md` (via `core/orchestrator.md`) when AWS enters the candidate
 panel. It receives the NFRs, the stack and the data classification, and proposes **blind** —
 without seeing the other platforms' proposals (`core/decision-engine.md`). In F8, reactivated if
 AWS wins, to detail the design.
@@ -43,18 +43,18 @@ presume.
 | `product/01-requirements/nfr.md` | F2 | Yes | Scale, peaks, latency, availability, retention |
 | `product/02-architecture/stack.md` | F3 | Yes | Runtime, DB, queues, cache — what has to run |
 | Data classification / required region | User / `agents/09-security/` | Yes | Determines the region and eligible services |
-| Cost/operations profile | `arbitro-de-alojamento.md` | Yes | Budget and appetite for managed services |
+| Cost/operations profile | `hosting-arbiter.md` | Yes | Budget and appetite for managed services |
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| AWS proposal | Annex to the hosting ADR (`product/02-architecture/decisions/`) | `arbitro-de-alojamento.md` |
-| Detailed AWS design (only if chosen) | `product/07-operations/infra/aws.md` | `agents/07-devops/terraform-specialist.md`, `arquiteto-de-rede.md` |
+| AWS proposal | Annex to the hosting ADR (`product/02-architecture/decisions/`) | `hosting-arbiter.md` |
+| Detailed AWS design (only if chosen) | `product/07-operations/infra/aws.md` | `agents/07-devops/terraform-specialist.md`, `network-architect.md` |
 
 ## Questions to the user
 
-Via `arbitro-de-alojamento.md`, which batches them (`core/question-engine.md`):
+Via `hosting-arbiter.md`, which batches them (`core/question-engine.md`):
 
 - "Expected outbound traffic (egress) — how many GB/month served to users or to another cloud?" —
   on AWS, egress is among the costs that surprise the most.
@@ -81,7 +81,7 @@ Via `arbitro-de-alojamento.md`, which batches them (`core/question-engine.md`):
 
 ## Limitations (what this agent does NOT do)
 
-- **Does not decide** that AWS is the chosen one — that belongs to `arbitro-de-alojamento.md`.
+- **Does not decide** that AWS is the chosen one — that belongs to `hosting-arbiter.md`.
 - **Does not write the final Terraform** — it delivers the design; the IaC belongs to
   `agents/07-devops/terraform-specialist.md`.
 - **Does not configure the Kubernetes cluster** (EKS) in detail —

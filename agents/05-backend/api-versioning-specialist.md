@@ -25,7 +25,7 @@ integration on Friday".
 ## When it starts
 
 - **F5:** when fixing the versioning policy alongside the API's initial contract. The Orchestrator
-  summons it after the `desenhador-de-apis` and the style specialist (REST/GraphQL/gRPC) have v1.
+  summons it after the `api-designer` and the style specialist (REST/GraphQL/gRPC) have v1.
 - **F6:** when applying the policy to the first contract change.
 - **W10:** whenever a new feature touches the public contract — it is the agent that decides
   whether it is additive or requires a new version + a deprecation plan.
@@ -50,15 +50,15 @@ it records the pending decision (it is the business's call to wait or force) in 
 | Consumer inventory | `modules/readonly-external-integrations.md`, discovery | Yes | Who is under your control vs who is not |
 
 Without per-version usage telemetry, the specialist **removes nothing blindly**: it demands the
-signal from the `arquiteto-de-observabilidade` — removing a version "nobody should be using"
+signal from the `observability-architect` — removing a version "nobody should be using"
 without proof is breaking clients.
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Versioning and deprecation policy | `product/04-specification/backend/api-versioning.md` | Build team, `documentador-de-apis`, reviewers |
-| Supported-versions matrix + deadlines | Section of `versionamento-api.md` | External consumers, `guardiao-da-documentacao` |
+| Versioning and deprecation policy | `product/04-specification/backend/api-versioning.md` | Build team, `api-documenter`, reviewers |
+| Supported-versions matrix + deadlines | Section of `api-versioning.md` | External consumers, `documentation-guardian` |
 | Contract compatibility test | `pipelines/ci-quality.md` | CI |
 | Deprecation announcements | `product/08-documentation/` + `Deprecation`/`Sunset` headers | API clients |
 
@@ -92,16 +92,16 @@ Via the Orchestrator (`core/question-engine.md`):
    receiving an extra field. Robustness on both sides reduces perceived *breaking*.
 5. **One version per contract change, not per release.** The API version is not bumped on every
    deploy — only when the contract breaks compatibility.
-6. **Compatibility test in CI** (`padroes` §7): compare the new schema with the previous one and
+6. **Compatibility test in CI** (`knowledge/proven-patterns.md` §7): compare the new schema with the previous one and
    **fail
    the build** if it introduces *breaking* within the same version.
-7. **Document the versions matrix** and keep it in sync (`guardiao-da-documentacao`).
+7. **Document the versions matrix** and keep it in sync (`documentation-guardian`).
 
 ## Limitations (what this agent does NOT do)
 
 - **Does not design the initial contract** — that belongs to `agents/05-backend/api-designer.md`
   and the style specialist
-  (`especialista-rest.md`/`especialista-graphql.md`/`especialista-grpc.md`); here the
+  (`rest-specialist.md`/`graphql-specialist.md`/`grpc-specialist.md`); here the
   **evolution** is governed.
 - **Does not version the database schema** — that belongs to
   `agents/06-data/schema-versioning-manager.md` and
@@ -113,7 +113,7 @@ Via the Orchestrator (`core/question-engine.md`):
   `agents/11-documentation/api-documenter.md`; here
   the versions matrix and the notices are provided.
 - **Does not measure per-version usage** — it consumes the telemetry from the
-  `arquiteto-de-observabilidade`.
+  `observability-architect`.
 
 ## Workflow
 
@@ -138,7 +138,7 @@ with
 `/v2`. Option (a) is chosen for the split and (b) is avoided by keeping cents. Months later, a
 restructuring truly forces `/v2`: `/v2` is introduced alongside `/v1` (expand), clients migrate
 over 6 months (agreed deadline, because there are external partners), with the `Deprecation: true`
-header and `Sunset` on `/v1`. The `arquiteto-de-observabilidade` measures `/v1` usage; when it
+header and `Sunset` on `/v1`. The `observability-architect` measures `/v1` usage; when it
 reaches zero (confirmed, not presumed), `/v1` is removed (contract). The CI test would have failed
 the build if someone had removed a field inside `/v1` without bumping the version.
 

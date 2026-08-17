@@ -87,7 +87,7 @@ Raised to the Orchestrator, which batches them (`core/question-engine.md`):
    finding (`agents/12-reviewers/architecture-reviewer.md` §Rules).
 3. **Fix the cause, never lower the smell threshold to "pass".** Raising the threshold or
    deleting the test that catches the smell is gaming the metric, not solving it
-   (`loops/README.md` §Princípios transversais).
+   (`loops/README.md` §Cross-cutting principles).
 4. **Never apply a refactor without proof that behavior did not change** — green regression +
    live proof before calling it fixed (`knowledge/permanent-rules.md` §7).
 5. **All cleanup is reversible** — one small PR per finding, never a "big refactor" nobody can

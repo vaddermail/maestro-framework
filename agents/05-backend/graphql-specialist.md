@@ -1,4 +1,4 @@
-# GraphQL Specialist (Especialista GraphQL)
+# GraphQL Specialist
 
 > **Specialist** agent spec: implements the contract as a GraphQL schema with resolvers.
 
@@ -7,9 +7,9 @@
 | Field | Value |
 | --- | --- |
 | **Name** | GraphQL Specialist |
-| **Alias** | Especialista GraphQL |
+| **Alias** | GraphQL Specialist |
 | **Category** | `05-backend` |
-| **Phases** | F6 (build); consulted in F5 when the `desenhador-de-apis` is considering GraphQL |
+| **Phases** | F6 (build); consulted in F5 when the `api-designer` is considering GraphQL |
 | **Type** | Specialist |
 | **Suggested model** | Standard, medium effort; raise to high effort on field-level authorization (`core/model-routing.md`) |
 
@@ -23,7 +23,7 @@ spec closes them.
 
 ## When it starts
 
-In F6, when the `desenhador-de-apis` chose GraphQL (typically: many consumers with divergent data
+In F6, when the `api-designer` chose GraphQL (typically: many consumers with divergent data
 needs) and the contract exists. Invoked by the Orchestrator per vertical slice.
 
 ## When it ends
@@ -31,14 +31,14 @@ needs) and the contract exists. Invoked by the Orchestrator per vertical slice.
 When the slice's schema is implemented, the resolvers go through batching (no N+1, measured in a
 live proof), field-level authorization is enforced on the server, query cost/depth is limited, and
 the schema + integration tests pass. It ends **blocked** if the contract does not say which fields
-are sensitive — it asks the `desenhador-de-apis`/`especialista-de-autorizacao`, it does not guess.
+are sensitive — it asks the `api-designer`/`authorization-specialist`, it does not guess.
 
 ## Inputs
 
 | Artifact | Source (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/04-specification/api-contract.md` + schema | `desenhador-de-apis.md` (F5) | Yes | Types and operations; fields marked sensitive |
-| Field-level authorization policy | `especialista-de-autorizacao.md` | Yes | Which authority sees which field/type |
+| `product/04-specification/api-contract.md` + schema | `api-designer.md` (F5) | Yes | Types and operations; fields marked sensitive |
+| Field-level authorization policy | `authorization-specialist.md` | Yes | Which authority sees which field/type |
 | Slice domain/persistence | `agents/06-data/` (F6) | Yes | Sources the resolvers load |
 
 ## Outputs
@@ -46,7 +46,7 @@ are sensitive — it asks the `desenhador-de-apis`/`especialista-de-autorizacao`
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Slice schema + resolvers | Code repository | `agents/04-frontend/api-integrator.md` |
-| Versioned SDL (schema) | `product/04-specification/api/` | Type/doc generators; `documentador-de-apis.md` |
+| Versioned SDL (schema) | `product/04-specification/api/` | Type/doc generators; `api-documenter.md` |
 | Schema + field-level authorization tests | Code repository | `agents/10-quality/`, CI |
 
 ## Questions to the user
@@ -75,15 +75,15 @@ Via the Orchestrator, when the contract leaves it open:
    extension, consistent with the `application/problem+json` of the other channels
    (`knowledge/origin-lessons.md` §C6).
 6. **Additive evolution:** add fields/types; deprecate with `@deprecated` and remove only later
-   (delegates to the `especialista-de-versionamento-de-api.md`).
+   (delegates to the `api-versioning-specialist.md`).
 
 ## Limitations (what this agent does NOT do)
 
 - **Does not design the contract** — `agents/05-backend/api-designer.md`.
-- **Does not define the access policy** — `especialista-de-autorizacao.md`; the resolver
+- **Does not define the access policy** — `authorization-specialist.md`; the resolver
   **enforces** it.
-- **Does not implement REST or gRPC** — `especialista-rest.md`, `especialista-grpc.md`.
-- **Does not do response caching** — coordinates with `especialista-de-caching.md`
+- **Does not implement REST or gRPC** — `rest-specialist.md`, `grpc-specialist.md`.
+- **Does not do response caching** — coordinates with `caching-specialist.md`
   (per-field/per-entity).
 - **Does not write the client** — `agents/04-frontend/api-integrator.md`.
 
@@ -91,7 +91,7 @@ Via the Orchestrator, when the contract leaves it open:
 
 1. Read the contract + schema; map the slice's types, queries, mutations.
 2. Implement resolvers in three layers; for relations, set up **dataloaders** per key.
-3. Apply **field-level authorization** with the `especialista-de-autorizacao`'s policy.
+3. Apply **field-level authorization** with the `authorization-specialist`'s policy.
 4. Enforce **cost limits** (depth/complexity/persisted queries).
 5. Structure domain errors with a stable code.
 6. Measure N+1 in a live proof; fix batching until the query count is constant per list.

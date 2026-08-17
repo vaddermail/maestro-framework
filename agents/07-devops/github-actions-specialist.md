@@ -36,13 +36,13 @@ When the workflows run on the right events, the required jobs show up as checks 
 promotes across environments with human approval for production, and a **real run** proved the
 full path (PR → checks → merge → deploy to staging → approval → production). Workflows versioned
 in `.github/workflows/`. It ends **blocked** if the image/artifact to deliver is missing (defers
-to the `especialista-docker`) or the CI secrets are missing (defers to the `gestor-de-segredos`).
+to the `docker-specialist`) or the CI secrets are missing (defers to the `secrets-manager`).
 
 ## Inputs
 
 | Artifact | Source | Required? | Notes |
 | --- | --- | --- | --- |
-| `pipelines/ci-quality.md`, `ci-seguranca.md`, `cd-entrega.md` | Framework | Yes | The agnostic contract to materialize |
+| `pipelines/ci-quality.md`, `ci-security.md`, `cd-delivery.md` | Framework | Yes | The agnostic contract to materialize |
 | Git flow + required checks | `agents/07-devops/github-specialist.md` | Yes | Which events trigger, which jobs block |
 | Build image/artifact | `agents/07-devops/docker-specialist.md` | Yes | What the pipeline packages and delivers |
 | CI secrets (registry, cloud, tokens) | `agents/07-devops/secrets-manager.md` | Yes | Via GitHub Secrets/OIDC, never in the yaml |
@@ -96,17 +96,17 @@ Via the Orchestrator (`core/question-engine.md`):
   `agents/09-security/`; the pipeline **orchestrates** them.
 - **Does not manage secrets** (rotation, inventory) — `agents/07-devops/secrets-manager.md`.
 - **Is not the alternative platform** — Azure DevOps and GitLab CI have their own specs
-  (`agents/07-devops/azure-devops-specialist.md`, `especialista-gitlab-ci.md`).
+  (`agents/07-devops/azure-devops-specialist.md`, `gitlab-ci-specialist.md`).
 
 ## Workflow
 
 1. Read the three agnostic pipelines and the Git flow; map events → jobs.
 2. **Quality CI:** **separate** front and back lint/typecheck/test jobs, with a lockfile-based
-   cache; mark them as required checks (coordinate with the `especialista-github`).
+   cache; mark them as required checks (coordinate with the `github-specialist`).
 3. **Security CI:** SAST, secrets scan, dependency and container scan jobs, SBOM
    (`pipelines/ci-security.md`).
-4. **CD:** image build (`especialista-docker`) → push to the registry → deploy to staging →
-   **`production` Environment with approval** → promotion with the `estratega-de-deploy` strategy.
+4. **CD:** image build (`docker-specialist`) → push to the registry → deploy to staging →
+   **`production` Environment with approval** → promotion with the `deployment-strategist` strategy.
 5. Secrets via Secrets/OIDC; minimal `permissions:`; external actions pinned by SHA.
 6. Matrices where there is real variation (runtime versions, OSes) — not by reflex.
 7. **Real run:** prove PR→checks→merge→staging→approval→prod, with a rehearsed rollback.
@@ -122,7 +122,7 @@ generates the SBOM. `cd.yml` builds the image, authenticates to AWS via **OIDC**
 keys), deploys to `staging` automatically and stops at the `production` Environment, which
 requires approval from two reviewers. A third-party deploy action is pinned by SHA. Proof run: a
 PR with a red API test gets the `api` check failed and the merge blocked; once fixed, it promotes
-to staging, gets approved, goes to production; the rollback (redeploy of the previous tag) is
+to staging, gets approved, goes to production; the rollback (networkploy of the previous tag) is
 rehearsed and works.
 
 ## Best practices

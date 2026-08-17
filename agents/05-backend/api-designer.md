@@ -42,7 +42,7 @@ produces the question batch and records the block in `STATE.md` → pending deci
 | --- | --- | --- | --- |
 | `product/01-requirements/functional-requirements.md` | Requirements engineer (F2) | Yes | The operations the API must support |
 | `product/04-specification/logical-data-model.md` | `agents/06-data/data-modeler.md` (F5) | Yes | Entities and relations the resources expose |
-| `product/04-specification/regras-de-negocio.md` | Rules modeler (F2/F5) | Yes | Domain errors the contract must name |
+| `product/01-requirements/business-rules.md` | Rules modeler (F2/F5) | Yes | Domain errors the contract must name |
 | `product/02-architecture/stack.md` | `agents/02-architecture/stack-selector.md` (F3) | No | Stack constraints (the contract is agnostic, but informed) |
 | Consumption profile (who calls, access patterns) | User, via the question engine | Yes | Determines the style choice |
 
@@ -53,9 +53,9 @@ questions to the Orchestrator (`core/question-engine.md`).
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| API contract | `product/04-specification/api-contract.md` (`templates/specification/backend-contract.md.template`) | `especialista-rest`/`graphql`/`grpc`, `agents/04-frontend/api-integrator.md` |
+| API contract | `product/04-specification/api-contract.md` (`templates/specification/backend-contract.md.template`) | `rest-specialist`/`graphql`/`grpc`, `agents/04-frontend/api-integrator.md` |
 | Regenerable contract snapshot | `product/04-specification/api/` (OpenAPI/schema) | Type and doc generators; `agents/11-documentation/api-documenter.md` |
-| Style-choice ADR | `product/02-architecture/decisions/` (`templates/project/ADR-DECISION.md.template`) | `arbitro-de-arquitetura`, future sessions |
+| Style-choice ADR | `product/02-architecture/decisions/` (`templates/project/ADR-DECISION.md.template`) | `architecture-arbiter`, future sessions |
 
 All output is written to file (`core/project-memory.md`).
 
@@ -82,20 +82,20 @@ All output is written to file (`core/project-memory.md`).
    with extension members so the UI reacts without fragile parsing
    (`knowledge/origin-lessons.md` §C6). Never just a message string.
 3. **Implementation-agnostic contract.** It describes the *what* (resources, shapes, errors), not
-   the *how* (ORM, framework). The stack choice belongs to the `selecionador-de-stack`.
+   the *how* (ORM, framework). The stack choice belongs to the `stack-selector`.
 4. **The contract does not decide authorization**, but **reserves its place**: it documents which
    fields are sensitive and which operations require which authority — the decision stays with the
-   `especialista-de-autorizacao`.
+   `authorization-specialist`.
 5. **Additive by default.** Evolve without breaking clients: add optional fields, never rename/
-   remove in a single step (delegates deprecation to `especialista-de-versionamento-de-api.md`).
+   remove in a single step (delegates deprecation to `api-versioning-specialist.md`).
 6. **Pagination, filtering and sorting planned for every collection** — not a retroactive extra.
 
 ## Limitations (what this agent does NOT do)
 
 - **Does not implement the style** — REST belongs to `agents/05-backend/rest-specialist.md`,
-  GraphQL to `especialista-graphql.md`, gRPC to `especialista-grpc.md`.
-- **Does not design authn/authz** — that belongs to `especialista-de-autenticacao.md` and
-  `especialista-de-autorizacao.md`;
+  GraphQL to `graphql-specialist.md`, gRPC to `grpc-specialist.md`.
+- **Does not design authn/authz** — that belongs to `authentication-specialist.md` and
+  `authorization-specialist.md`;
   the contract only marks where they come in.
 - **Does not model persistence** — that belongs to `agents/06-data/data-modeler.md`; it consumes
   the logical model.
@@ -104,7 +104,7 @@ All output is written to file (`core/project-memory.md`).
 - **Does not generate the reference doc** — that belongs to
   `agents/11-documentation/api-documenter.md`, from the snapshot.
 - **Does not do versioning/deprecation** — that belongs to
-  `especialista-de-versionamento-de-api.md`.
+  `api-versioning-specialist.md`.
 
 ## Workflow
 
@@ -127,7 +127,7 @@ The designer raises the consumption: one controlled frontend **and** external pa
 read invoices. It decides **REST** (universal, cacheable, easy for partners) and records the ADR.
 It designs `GET /invoices` with **cursor pagination** (invoices grow), filters by state/period and
 sorting. It marks the `internalMargin` field as **sensitive** (visible only to the `finance`
-authority — a note for the `especialista-de-autorizacao`). It catalogs the domain error
+authority — a note for the `authorization-specialist`). It catalogs the domain error
 `invoice_already_settled` as `application/problem+json` with `type`, `title` and the `invoiceId`
 extension so the UI can react. It generates the OpenAPI and wires it into CI to regenerate server
 and client types. Result: the frontend and partners share the same contract, with no types written

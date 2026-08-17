@@ -1,4 +1,4 @@
-# Metrics Specialist (Especialista de Métricas)
+# Metrics Specialist
 
 > Agent spec of the **specialist** type. Canonical format in `agents/_template/AGENT-TEMPLATE.md`.
 
@@ -7,7 +7,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Metrics Specialist |
-| **Alias** | Especialista de Métricas |
+| **Alias** | Metrics Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (metrics and SLI design), F6 (instrumentation); consulted in F9 |
 | **Type** | Specialist |
@@ -26,7 +26,7 @@ that answers "is it healthy?" with numbers, not feelings.
 - **F5:** when designing what gets measured. The Orchestrator convenes it after the
   performance/availability NFRs exist (they are where the SLIs come from).
 - **F6:** when instrumenting each service/resource.
-- **F9:** when the `guardiao-de-performance` or the `guardiao-de-custos` needs a metric that does
+- **F9:** when the `performance-guardian` or the `cost-guardian` needs a metric that does
   not exist, or when cardinality has blown up the observability bill.
 
 ## When it ends
@@ -45,7 +45,7 @@ still need to be agreed with the user (how much unavailability is tolerated is a
 | `product/01-requirements/nfr.md` | `agents/01-requirements/nfr-specifier.md` | Yes | Performance/availability → SLIs |
 | `product/00-discovery/kpis.md` | `agents/00-discovery/kpi-definer.md` | No | Business KPIs that may become metrics |
 | API contract / event catalog | `agents/05-backend/*` | Yes | Which endpoints/consumers to measure (RED) |
-| Resource model (DB, queue, cache) | `agents/06-data/`, `especialista-de-filas` | Yes | Which resources to measure (USE) |
+| Resource model (DB, queue, cache) | `agents/06-data/`, `queue-specialist` | Yes | Which resources to measure (USE) |
 
 Without performance NFRs, the specialist **does not invent targets**: it asks the Orchestrator for
 them — an SLI without a target is a number without meaning.
@@ -54,9 +54,9 @@ them — an SLI without a target is a number without meaning.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Metrics catalog (RED/USE) + cardinality limits | `product/04-specification/backend/metrics.md` | `arquiteto-de-observabilidade`, `guardiao-de-performance`, `guardiao-de-custos` |
-| SLI definition tied to NFRs | Section of `metricas.md` | `arquiteto-de-observabilidade` (defines SLOs and alerts) |
-| Label/cardinality rules | `metricas.md` | Build team, reviewers |
+| Metrics catalog (RED/USE) + cardinality limits | `product/04-specification/backend/metrics.md` | `observability-architect`, `performance-guardian`, `cost-guardian` |
+| SLI definition tied to NFRs | Section of `metrics.md` | `observability-architect` (defines SLOs and alerts) |
+| Label/cardinality rules | `metrics.md` | Build team, reviewers |
 
 ## Questions to the user
 
@@ -84,10 +84,10 @@ Via the Orchestrator (`core/question-engine.md`):
    percentiles; aggregate at the collection point, do not store everything raw.
 5. **Name by convention** (`http_requests_total`, `db_pool_saturation`) — predictable names for
    consistent dashboards and alerts.
-6. **No PII in metrics or labels** — the same principle as logs (`especialista-de-logging`); a
+6. **No PII in metrics or labels** — the same principle as logs (`logging-specialist`); a
    metric with an email in a label is a leak *and* a cardinality bomb.
 7. **Resource errors are counted** (queue `saturation`, DB `pool exhausted`) — they are the first
-   bottleneck signals the `arquiteto-de-escalabilidade` needs.
+   bottleneck signals the `scalability-architect` needs.
 
 ## Limitations (what this agent does NOT do)
 
@@ -95,11 +95,11 @@ Via the Orchestrator (`core/question-engine.md`):
   `agents/05-backend/observability-architect.md`, which turns them into actionable alerts.
 - **Does not do structured logging** — that is `agents/05-backend/logging-specialist.md`; a metric
   aggregates (how many, how fast), a log tells one case's story.
-- **Does not design distributed tracing** — that is the `arquiteto-de-observabilidade`.
+- **Does not design distributed tracing** — that is the `observability-architect`.
 - **Does not operate the metrics backend** (Prometheus/OTel Collector/hosted) on the infra — that
   belongs to `agents/07-devops/` and `agents/08-infrastructure/`.
 - **Does not interpret the cost/performance trend in production** — that belongs to the guardians
-  `agents/13-guardians/performance-guardian.md` and `guardiao-de-custos.md`, which consume these
+  `agents/13-guardians/performance-guardian.md` and `cost-guardian.md`, which consume these
   metrics.
 
 ## Workflow
@@ -113,7 +113,7 @@ Via the Orchestrator (`core/question-engine.md`):
 5. **Instrument** the slices; ensure the resource metrics (queue/pool saturation) exist.
 6. **Write** `product/04-specification/backend/metrics.md`; **live proof**: generate controlled
    load and confirm that *rate*, *errors* and *duration* move coherently.
-7. Hand the SLIs to the `arquiteto-de-observabilidade` and return to the Orchestrator.
+7. Hand the SLIs to the `observability-architect` and return to the Orchestrator.
 
 ## Examples
 
@@ -125,7 +125,7 @@ manifests served in <300 ms" → alert (defined by the observability architect) 
 300 ms for 5 min. On the USE side, the catalog DB's connection pool exposes `db_pool_saturation`
 and `db_pool_errors_total{tipo="exhausted"}`; it was the latter that showed, during an audience
 spike, that the bottleneck was the exhausted pool and not the CPU — information the
-`arquiteto-de-escalabilidade` used for sizing. An attempt to add `label=userId` to the rate was
+`scalability-architect` used for sizing. An attempt to add `label=userId` to the rate was
 rejected: 4 million users = 4 million series.
 
 ## Best practices
@@ -164,7 +164,7 @@ rejected: 4 million users = 4 million series.
 - [ ] Every SLI tied to an NFR; SLO targets agreed with the user (or the block recorded).
 - [ ] Resource saturation metrics (pool, queue, memory) present.
 - [ ] Live proof: controlled load moves rate/errors/duration coherently.
-- [ ] SLIs handed to the `arquiteto-de-observabilidade`.
+- [ ] SLIs handed to the `observability-architect`.
 
 ## Related
 

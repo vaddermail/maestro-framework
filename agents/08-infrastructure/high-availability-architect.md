@@ -1,6 +1,6 @@
-# High Availability Architect (High Availability Architect)
+# High Availability Architect
 
-> Agent spec of the **specialist** type in the `08-infraestrutura` category. Follows the
+> Agent spec of the **specialist** type in the `08-infrastructure` category. Follows the
 > `agents/_template/AGENT-TEMPLATE.md`.
 
 ## Identification
@@ -9,7 +9,7 @@
 | --- | --- |
 | **Name** | High Availability Architect |
 | **Alias** | High Availability Architect |
-| **Category** | `08-infraestrutura` |
+| **Category** | `08-infrastructure` |
 | **Phases** | F3 (HA design as an architecture constraint) and F8 (materialization) |
 | **Type** | specialist |
 | **Suggested model** | **Top, medium effort** — designing failover, quorum and graceful degradation is distinctive reasoning where getting it right the first time saves outages (`core/model-routing.md`) |
@@ -28,7 +28,7 @@ availability made explicit.
 - **In F3:** `agents/02-architecture/architecture-arbiter.md` calls it to say what redundancy the
   architecture demands and at what cost — HA is a design constraint, not a final band-aid.
 - **In F8:** the Orchestrator (`core/orchestrator.md`) invokes it to materialize the redundancy on
-  the provisioned infra (`especialista-on-premises.md`/cloud) — `workflows/W08-launch.md`.
+  the provisioned infra (`on-premises-specialist.md`/cloud) — `workflows/W08-launch.md`.
 
 ## When it ends
 
@@ -53,11 +53,11 @@ decisions with the achievable vs. desired SLA.
 
 | Artifact | Destination (location in the project) | Consumers |
 | --- | --- | --- |
-| HA design (redundancy, failover, zones) | `product/07-operations/infra/alta-disponibilidade.md` | DevOps, operations, architecture |
-| Graceful-degradation plan per feature | `product/07-operations/infra/degradacao.md` | `agents/05-backend/`, frontend, operations |
-| Load-balancing/failover config as code | `product/07-operations/infra/iac/ha/` | `agents/07-devops/load-balancing-specialist.md`, `especialista-terraform.md` |
-| Achievable vs. desired SLA (with cost) | `product/07-operations/infra/sla.md` | User (decides), `guardiao-de-custos.md` |
-| Failure-test record (failover exercised) | `product/99-records/ha/teste-de-falha-YYYY-MM-DD.md` | Operations, `agents/13-guardians/` |
+| HA design (redundancy, failover, zones) | `product/07-operations/infra/high-availability.md` | DevOps, operations, architecture |
+| Graceful-degradation plan per feature | `product/07-operations/infra/degradation.md` | `agents/05-backend/`, frontend, operations |
+| Load-balancing/failover config as code | `product/07-operations/infra/iac/ha/` | `agents/07-devops/load-balancing-specialist.md`, `terraform-specialist.md` |
+| Achievable vs. desired SLA (with cost) | `product/07-operations/infra/sla.md` | User (decides), `cost-guardian.md` |
+| Failure-test record (failover exercised) | `product/99-records/ha/failure-test-YYYY-MM-DD.md` | Operations, `agents/13-guardians/` |
 
 ## Questions to the user
 
@@ -75,7 +75,7 @@ To the Orchestrator (`core/question-engine.md`):
   non-critical parts.
 - **Context:** replicating data across zones has a latency/consistency cost. **Question:** do we
   tolerate eventual consistency between replicas or do we require strong consistency? (coordinate
-  with `modelador-de-dados.md`). **Recommended default:** strong for the transactional DB,
+  with `data-modeler.md`). **Recommended default:** strong for the transactional DB,
   eventual for caches/reads.
 
 ## Rules
@@ -84,7 +84,7 @@ To the Orchestrator (`core/question-engine.md`):
    redundancy; a leftover SPOF gets **written down as an accepted risk**, never hidden.
 2. **Redundancy across independent failure domains.** Replicas separated by zone/host/power — two
    replicas on the same host are not HA (use the failure domains from
-   `especialista-on-premises.md`/cloud).
+   `on-premises-specialist.md`/cloud).
 3. **Failover proven, not presumed.** The design is only ready after a **real failure test** (take
    down a node and watch the service continue) — the promise does not count
    (`knowledge/permanent-rules.md` §7).
@@ -111,7 +111,7 @@ To the Orchestrator (`core/question-engine.md`):
 - **Does not design the network topology** — that is
   `agents/08-infrastructure/network-architect.md`; it uses the redundant network it provides.
 - **Does not define the DB replication in detail** (mode, consistency) — that is
-  `agents/06-data/data-modeler.md`/`otimizador-de-desempenho-de-bd.md`; here it is decided how
+  `agents/06-data/data-modeler.md`/`db-performance-optimizer.md`; here it is decided how
   many replicas and where.
 
 ## Workflow
@@ -125,7 +125,7 @@ To the Orchestrator (`core/question-engine.md`):
 4. **Design the failover** (detection, switchover, quorum where applicable) and the **graceful
    degradation** per feature.
 5. **Write** the load-balancing/failover config as code (executed by
-   `especialista-load-balancing.md`/Terraform).
+   `load-balancing-specialist.md`/Terraform).
 6. **Test the failure:** take down a node/zone in a test environment, measure the impact and
    confirm the service continues (or degrades as designed).
 7. **Document** the design, the achievable vs. desired SLA with cost, and the failure-test record.

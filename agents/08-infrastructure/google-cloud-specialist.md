@@ -9,7 +9,7 @@
 | --- | --- |
 | **Name** | Google Cloud Specialist |
 | **Alias** | GCP Specialist |
-| **Category** | `08-infraestrutura` |
+| **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if GCP is chosen) |
 | **Type** | specialist |
 | **Suggested model** | **Standard**, medium effort; raise to **Top** for scale data/analytics pipelines (`core/model-routing.md`) |
@@ -23,7 +23,7 @@ alternatives for common web workloads.
 
 ## When it starts
 
-Convened by `arbitro-de-alojamento.md` when GCP enters the panel — especially when there is a
+Convened by `hosting-arbiter.md` when GCP enters the panel — especially when there is a
 strong **data/analytics** component, ML, or a preference for Cloud Run/GKE. Proposes **blind**
 (`core/decision-engine.md`). Reactivated in F8 if chosen.
 
@@ -46,7 +46,7 @@ suitability). **In F8:** detailed design written. It ends **blocked** if a decis
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| GCP proposal | Annex to the hosting ADR | `arbitro-de-alojamento.md` |
+| GCP proposal | Annex to the hosting ADR | `hosting-arbiter.md` |
 | Detailed GCP design (only if chosen) | `product/07-operations/infra/gcp.md` | `agents/07-devops/terraform-specialist.md`, `agents/07-devops/kubernetes-specialist.md` |
 
 ## Questions to the user
@@ -76,7 +76,7 @@ Via the arbiter (`core/question-engine.md`):
 
 ## Limitations (what this agent does NOT do)
 
-- **Does not decide** the platform — `arbitro-de-alojamento.md`.
+- **Does not decide** the platform — `hosting-arbiter.md`.
 - **Does not write the final IaC** — `agents/07-devops/terraform-specialist.md`.
 - **Does not configure GKE in detail** — `agents/07-devops/kubernetes-specialist.md`.
 - **Does not model the analytical schema** — the data model belongs to
@@ -127,7 +127,7 @@ recommend the arbiter consider cheaper platforms." — a valid proposal.
 - Set per-query cost limits in BigQuery from the start — it is the analog of the cost kill-switch
   (`knowledge/origin-lessons.md`).
 - Workload Identity instead of service-account JSON keys — it eliminates the most common
-  credential leak on GCP (`agents/07-devops/secrets-manager.md`).
+  cnetworkntial leak on GCP (`agents/07-devops/secrets-manager.md`).
 
 ## Anti-patterns
 

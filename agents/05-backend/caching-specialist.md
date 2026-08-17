@@ -24,7 +24,7 @@ truth — and it never serves an identity data it could not see.
 ## When it starts
 
 In F6, when a read is expensive and frequent and a latency/load NFR justifies it, or when the
-`guardiao-de-performance.md` flags a bottleneck. Invoked by the Orchestrator. Never "by reflex":
+`performance-guardian.md` flags a bottleneck. Invoked by the Orchestrator. Never "by reflex":
 caching
 adds a class of bugs (stale data, leaks); it only enters with a measured problem to solve.
 
@@ -41,17 +41,17 @@ it does **not cache** (`knowledge/permanent-rules.md` §2: in doubt, do not degr
 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| Measured bottleneck (slow query, hot endpoint) | `guardiao-de-performance.md`, `otimizador-de-desempenho-de-bd.md` | Yes | Caching without measurement is guessing |
-| Scoping/authorization model | `especialista-de-autorizacao.md` (F6) | Yes | The key must include the scope dimension |
-| Write/mutation events | `especialista-de-eventos.md`, slice domain | Yes | What triggers invalidation |
-| `product/02-architecture/stack.md` | `selecionador-de-stack.md` (F3) | No | Available store (Redis, memory, CDN) |
+| Measured bottleneck (slow query, hot endpoint) | `performance-guardian.md`, `db-performance-optimizer.md` | Yes | Caching without measurement is guessing |
+| Scoping/authorization model | `authorization-specialist.md` (F6) | Yes | The key must include the scope dimension |
+| Write/mutation events | `events-specialist.md`, slice domain | Yes | What triggers invalidation |
+| `product/02-architecture/stack.md` | `stack-selector.md` (F3) | No | Available store (Redis, memory, CDN) |
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Cache layer (code: key, TTL, invalidation, anti-stampede) | Code repository | `especialista-rest`/`graphql`/`grpc` |
-| Documented cache policy (what, key, TTL, invalidation) | `product/04-specification/backend-contract.md` (cache section) | Reviewers, `guardiao-de-performance.md` |
+| Cache layer (code: key, TTL, invalidation, anti-stampede) | Code repository | `rest-specialist`/`graphql`/`grpc` |
+| Documented cache policy (what, key, TTL, invalidation) | `product/04-specification/backend-contract.md` (cache section) | Reviewers, `performance-guardian.md` |
 | Tests: hit/miss, invalidation after write, isolation by scope | Code repository | `agents/10-quality/`, CI |
 
 ## Questions to the user
@@ -99,16 +99,16 @@ Via the Orchestrator, when the freshness requirement is ambiguous:
 - **Does not optimize the query itself** (indexes, plan) — that belongs to
   `agents/06-data/indexing-specialist.md` and
   `agents/06-data/db-performance-optimizer.md`; caching is the step **after** the query is sane.
-- **Does not define authorization** — it consumes the scoping from `especialista-de-autorizacao.md`
+- **Does not define authorization** — it consumes the scoping from `authorization-specialist.md`
   for keying.
-- **Does not manage queues/events** — it uses the events from `especialista-de-eventos.md` to
+- **Does not manage queues/events** — it uses the events from `events-specialist.md` to
   invalidate.
 
 ## Workflow
 
 1. Confirm the **measured bottleneck** (do not cache on intuition); if there is no measurement,
    return it to the
-   `guardiao-de-performance`.
+   `performance-guardian`.
 2. Classify the data: shared vs per-identity; required freshness (tolerable TTL vs immediate).
 3. Choose the appropriate **layer** (memoization / in-process / distributed / CDN).
 4. Define the **key** (including scope when applicable) and the **TTL**.

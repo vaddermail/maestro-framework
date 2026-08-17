@@ -25,7 +25,7 @@ against the roles actually granted — and it fails closed by default (`knowledg
 
 ## When it starts
 
-In F5, right after `especialista-de-autenticacao.md` establishes the trusted identity, to design the
+In F5, right after `authentication-specialist.md` establishes the trusted identity, to design the
 access model (profiles, actions, scopes). It re-enters in F6 in **every slice** that exposes data or
 actions —
 no endpoint with data ships without passing through here. Invoked by the Orchestrator.
@@ -43,10 +43,10 @@ requirements.
 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| Trusted identity per request | `especialista-de-autenticacao.md` (F6) | Yes | Without a trusted *who* there is no trusted *what* |
-| `product/01-requirements/business-rules.md` (profiles, actions, scopes) | `modelador-de-regras-de-negocio.md` (F2) | Yes | The authority × scoping matrix |
-| `product/04-specification/api-contract.md` (sensitive fields marked) | `desenhador-de-apis.md` (F5) | Yes | What to redact on output |
-| `product/04-specification/logical-data-model.md` | `modelador-de-dados.md` (F5) | Yes | The organizational unit that defines the scope |
+| Trusted identity per request | `authentication-specialist.md` (F6) | Yes | Without a trusted *who* there is no trusted *what* |
+| `product/01-requirements/business-rules.md` (profiles, actions, scopes) | `business-rules-modeler.md` (F2) | Yes | The authority × scoping matrix |
+| `product/04-specification/api-contract.md` (sensitive fields marked) | `api-designer.md` (F5) | Yes | What to redact on output |
+| `product/04-specification/logical-data-model.md` | `data-modeler.md` (F5) | Yes | The organizational unit that defines the scope |
 | `product/05-security/threat-model.md` | `agents/09-security/threat-modeler.md` | No | Privilege-escalation vectors |
 
 ## Outputs
@@ -54,7 +54,7 @@ requirements.
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Access model (profiles, actions, scopes, matrix) | `product/04-specification/backend-contract.md` (`templates/specification/backend-contract.md.template`) | The whole backend, reviewers |
-| Authorization policy + guards (code) | Code repository | `especialista-rest`/`graphql`/`grpc` |
+| Authorization policy + guards (code) | Code repository | `rest-specialist`/`graphql`/`grpc` |
 | Per-query scoping filters + redaction of sensitive fields | Code repository | All data reads |
 | Authorization tests (sees / does not see / fail-closed) | Code repository | `agents/10-quality/`, CI |
 
@@ -68,7 +68,7 @@ requirements.
 - "Do permissions come from the role (e.g. a `gestor` can approve) or from resource attributes
   (e.g. only the owner edits)?" — decides **RBAC** vs **ABAC** (or a combination).
 - "Which fields are sensitive to the point they should not even leave the server for profiles
-  without authority?" — confirms the redaction (the `desenhador-de-apis` already marks them; here
+  without authority?" — confirms the redaction (the `api-designer` already marks them; here
   they are enforced).
 
 ## Rules
@@ -117,7 +117,7 @@ requirements.
 1. Read the profiles × actions × scopes matrix from the requirements; if missing, block with
    questions.
 2. Design the **access model**: RBAC/ABAC, scoping axis (organizational unit), sensitive
-   fields. Write it in `contrato-backend.md`.
+   fields. Write it in `backend-contract.md`.
 3. Implement the **authority guards** in the orchestration layer of each operation.
 4. Implement the **scoping in the query** of every read, by the server-side identity.
 5. Implement the **redaction of sensitive fields** on output (second layer).
@@ -125,7 +125,7 @@ requirements.
 7. Write the tests: profile sees / does not see; no profile denies; out-of-scope → 404; sensitive
    redacted; and the **guardrail** that sweeps all the endpoints.
 8. Live proof: two different profiles see different subsets; a profile without authority is denied.
-9. Return to the Orchestrator; hand over to the `especialista-de-autorizacao-e-least-privilege` for
+9. Return to the Orchestrator; hand over to the `authorization-specialist-e-least-privilege` for
    the cross-cutting audit.
 
 ## Examples
@@ -179,14 +179,14 @@ never sees anything from org B.
 | --- | --- |
 | `agents/05-backend/authentication-specialist.md` | upstream — provides the trusted identity |
 | `agents/05-backend/api-designer.md` | upstream — marks sensitive fields in the contract |
-| `agents/05-backend/rest-specialist.md` / `especialista-graphql.md` / `especialista-grpc.md` | downstream — consume the guards and the scoping |
+| `agents/05-backend/rest-specialist.md` / `graphql-specialist.md` / `grpc-specialist.md` | downstream — consume the guards and the scoping |
 | `agents/09-security/authorization-and-least-privilege-specialist.md` | verification — audits privilege across all layers |
 | `agents/06-data/data-modeler.md` | upstream — defines the scope's organizational unit |
 | `agents/12-reviewers/backend-reviewer.md` | verification — confirms fail-closed, 404-not-403, scoping in the query |
 
 ## Done criteria
 
-- [ ] Access model written in `contrato-backend.md`: profiles, actions, scopes, sensitive fields.
+- [ ] Access model written in `backend-contract.md`: profiles, actions, scopes, sensitive fields.
 - [ ] Authority **and** scoping checked on the server in every operation/read of the slice.
 - [ ] Scoping enforced in the query; sensitive fields redacted in two layers.
 - [ ] Fail-closed by default; out-of-scope → 404.

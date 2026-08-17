@@ -1,4 +1,4 @@
-# nginx Specialist (nginx Specialist)
+# nginx Specialist
 
 > **Specialist** agent spec for F8 (origin proxy). Follows the
 > `agents/_template/AGENT-TEMPLATE.md`.
@@ -54,9 +54,9 @@ the Orchestrator (`core/question-engine.md`).
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Versioned nginx config | `product/07-operations/proxy/nginx/` (`nginx.conf`, `sites/`, `snippets/`) | `estratega-de-deploy`, reviewers |
+| Versioned nginx config | `product/07-operations/proxy/nginx/` (`nginx.conf`, `sites/`, `snippets/`) | `deployment-strategist`, reviewers |
 | Proxy runbook (reload, rollback, purge, upstream drain) | `product/07-operations/runbooks/proxy-nginx.md` (`templates/technical/runbook.md.template`) | F9 operations, `workflows/W11-incident-response.md` |
-| Rate limits and timeouts register | `product/07-operations/proxy/limites.md` | `guardiao-de-performance`, `especialista-de-waf` |
+| Rate limits and timeouts register | `product/07-operations/proxy/limits.md` | `performance-guardian`, `waf-specialist` |
 
 ## Questions to the user
 
