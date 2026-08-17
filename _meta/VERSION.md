@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.0.0** (2026-08-17)
+**Current version: 1.0.1** (2026-08-17)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -16,6 +16,12 @@ framework evolves in this repository through pull requests and curation
 never automatically.
 
 ## Changelog
+
+### 1.0.1 — 2026-08-17
+
+- Fix: `_meta/verify-project.sh` check 1 still looked for a `produto/` directory at the project
+  root (a leftover from the upstream edition); it now checks `product/`, matching the canonical
+  tree. Without this fix the project gate failed every project of this edition at check 1.
 
 ### 1.0.0 — 2026-08-17
 
