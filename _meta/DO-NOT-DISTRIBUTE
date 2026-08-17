@@ -1,0 +1,6 @@
+# _meta/DO-NOT-DISTRIBUTE — files that stay in this repository only, excluded from
+# the release ZIP that projects copy (.github/workflows/release.yml reads this list).
+# One path per line, relative to the root. This is the confidentiality lever between
+# the framework repository and the copies it distributes.
+_meta/DO-NOT-DISTRIBUTE
+.glossario-pt-en.json

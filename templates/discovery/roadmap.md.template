@@ -1,0 +1,49 @@
+# Roadmap
+
+> **Como usar:** sequência por horizontes (não por datas) de tudo o que o produto quer ser, incluindo
+> explicitamente o que fica para mais tarde. Instanciado pelo
+> `agents/00-discovery/roadmap-planner.md`, depois do MVP fixado. Fica em
+> `product/00-discovery/roadmap.md`.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/roadmap-planner.md`
+> **Fase:** F1 (fim da descoberta); revisitado em F9 · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** utilizador, `agents/02-architecture/*`, `agente-de-evolucao-de-features`
+
+## H1 — Agora (= MVP)
+
+*Idêntico ao que `mvp.md` fixou — este documento sequencia o que vem depois, não reabre o corte.*
+
+- {{item}} — move {{kpi}}
+
+## H2 — A seguir
+
+| Item | Justificação (KPI que serve) | Depende de |
+| --- | --- | --- |
+| {{item}} | {{kpi-associado}} | {{dependencia-ou-travessao}} |
+
+## H3 — Mais tarde
+
+*Precisão aqui é ficção — mantém a descrição vaga de propósito.*
+
+| Item | Justificação | Depende de |
+| --- | --- | --- |
+| {{item}} | {{kpi-associado}} | {{dependencia-ou-travessao}} |
+
+## Não planeado (revisitar)
+
+*O que ninguém quis em nenhum horizonte — não se decide "fora" para sempre, marca-se para revisitar.*
+
+- {{item}} — {{porque-ficou-fora}}
+
+## Funcionalidades futuras que condicionam decisões de hoje
+
+*Distintas de ideias sem compromisso — só estas justificam preparar a arquitetura de hoje para
+extensão (`MANIFESTO.md`), evitando tanto migração destrutiva como sobre-engenharia.*
+
+- {{funcionalidade-futura}} — {{o-que-tem-de-ficar-preparado-agora}}
+
+## Relacionados
+
+- `agents/00-discovery/roadmap-planner.md` · `templates/discovery/mvp.md.template`
+- `agents/13-guardians/feature-evolution-agent.md` — reabre isto quando surge pedido em produção.

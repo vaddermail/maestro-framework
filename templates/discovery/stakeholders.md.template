@@ -1,0 +1,40 @@
+# Stakeholders
+
+> **Como usar:** mapa de todas as partes interessadas — quem usa, decide, é afetado por, ou pode
+> vetar o produto. Instanciado pelo `agents/00-discovery/stakeholder-mapper.md` depois de
+> `problema.md` existir. Fica em `product/00-discovery/stakeholders.md`.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/stakeholder-mapper.md`
+> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** `construtor-de-personas`, `analista-de-objetivos-de-negocio`, `analista-de-riscos`, F2
+
+## Mapa de stakeholders
+
+*Cobre sempre as quatro famílias: utilizador, decisor/patrocinador, afetado (não usa mas sofre o
+impacto) e bloqueador (pode vetar: legal, segurança, financeiro). Classifica por poder × interesse
+real, nunca por simpatia.*
+
+| Stakeholder (papel) | Família | Poder × Interesse | Espera / receia | Canal | Dono de decisão |
+| --- | --- | --- | --- | --- | --- |
+| {{papel}} | utilizador / decisor / afetado / bloqueador | {{alto-medio-baixo}} × {{alto-medio-baixo}} | {{expectativa-ou-receio}} | {{canal-de-contacto}} | {{quem-decide}} |
+
+## Stakeholders sensíveis
+
+*Reguladores, encarregado de proteção de dados, representantes de trabalhadores — mudam requisitos
+legais. Sinaliza-os ao `agents/00-discovery/risk-analyst.md`.*
+
+- {{stakeholder}} — {{porque-e-sensivel}}
+
+## Por identificar
+
+*Decisões-chave (ex.: quem aprova orçamento) sem dono conhecido ainda — não se adivinha a estrutura
+organizacional, regista-se a lacuna.*
+
+- {{lacuna}}
+
+## Relacionados
+
+- `agents/00-discovery/stakeholder-mapper.md` · `templates/discovery/problem.md.template`
+- `templates/discovery/persona.md.template` — aprofunda os stakeholders-utilizadores.
+- `templates/discovery/risks.md.template`

@@ -1,0 +1,103 @@
+# FRAMEWORK-IMPROVEMENTS.md — {{nome-do-produto}}
+
+> **Como usar:** instancia-se em F0, junto com o `STATE.md`
+> (`Maestro/workflows/W00-project-kickoff.md`), e mantém-se **desde o dia 0**: sempre que o
+> trabalho revela uma armadilha nova, um padrão com ganho medido, um atrito da framework ou um bloco
+> reutilizável, o agente que o viveu regista-o aqui **no momento** — nunca "no fim do projeto"
+> (retrospetivas tardias só recuperam o que os commits contam; o resto perde-se). Consolida-se no
+> fecho de F6/F7/F8 e, em F9, na cadência do perfil; envia-se à framework-mãe pelo
+> `Maestro/playbooks/report-framework-improvements.md`. Fica na **raiz do projeto**.
+
+> **Sanitização (obrigatória):** este ficheiro sai do projeto. Nenhuma entrada contém dados
+> pessoais, nomes de clientes, segredos ou detalhe confidencial do domínio — a lição escreve-se na
+> forma geral; a evidência aponta para caminhos/commits, sem colar conteúdo sensível.
+
+---
+
+*Formato de cada entrada (igual nas cinco secções): **o quê → porquê → evidência → destino
+sugerido na framework**. Uma entrada sem porquê e sem evidência não se envia — é opinião, não lição
+(`Maestro/knowledge/README.md` §Regra de ouro). Distinguir sempre **novo** (este projeto
+descobriu) de **cross-validado** (a framework já o dizia; este projeto confirmou noutro domínio —
+a confirmação também se reporta, porque sobe a confiança do padrão).*
+
+## 0. Cabeçalho
+
+| | |
+| --- | --- |
+| **Projeto** | {{nome-do-produto}} |
+| **Domínio (1 linha, sanitizado)** | {{ex.: SaaS B2B de agendamento}} |
+| **Versão da framework copiada** | {{ver `Maestro/_meta/VERSION.md`}} |
+| **Arranque do projeto** | {{aaaa-mm-dd}} |
+| **Último envio à framework-mãe** | {{aaaa-mm-dd / nunca}} — issue {{#nnn / —}} |
+
+## 1. Armadilhas novas
+
+*Defeitos, enganos de ferramenta ou de processo que a framework ainda não previne. O que dispara o
+registo: "isto vai acontecer a outro projeto".*
+
+- **{{A-1. Título curto da armadilha.}}** *Sintoma:* {{o que se observou}}. *Causa:* {{a causa
+  raiz}}. *Correção:* {{o que resolveu}}. *Evidência:* {{caminho/commit no projeto}}. *Destino
+  sugerido:* {{ficheiro da framework onde entraria}}.
+
+## 2. Padrões provados (com ganho medido)
+
+*Técnicas que funcionaram **com números** (tempo, custo, defeitos evitados). Sem medida, vai para
+a secção 4 como sugestão, não aqui.*
+
+- **{{P-1. Título do padrão.}}** *O que é:* {{descrição em 2–3 linhas}}. *Ganho medido:*
+  {{ex.: build 88s → 24s (−73%)}}. *Evidência:* {{caminho/commit}}. *Destino sugerido:* {{ficheiro}}.
+
+## 3. Validação cruzada de padrões existentes
+
+*A framework já ensinava; este projeto confirmou noutro domínio — regista-se para subir a confiança
+(2.º ponto de dados) e apontar uma implementação de referência.*
+
+- **{{V-1. Padrão da framework confirmado.}}** *Onde a framework o diz:* {{ficheiro/secção}}.
+  *Como este projeto o confirmou:* {{1–2 linhas + nuance nova, se houver}}. *Implementação de
+  referência:* {{caminho no projeto}}.
+
+## 4. Atrito e omissões
+
+*Onde a framework estorvou, ficou calada ou obrigou a inventar: instruções ambíguas, passos em
+falta, artefactos sem template, perguntas que deviam existir. Inclui edições locais à cópia da
+framework detetadas em `Maestro/playbooks/sync-framework.md` — cada uma é um atrito
+reportável antes de se reconciliar.*
+
+- **{{O-1. O que faltou ou estorvou.}}** *Contexto:* {{quando aconteceu}}. *O que se fez à mão:*
+  {{a solução improvisada}}. *Proposta:* {{o que a framework devia passar a dizer/ter}}.
+
+## 5. Blocos reutilizáveis
+
+*Código, configuração ou documentos deste projeto que valem como semente de módulo, template ou
+starter para projetos futuros — desacoplados do domínio.*
+
+- **{{B-1. Nome do bloco.}}** *O que faz:* {{1–2 linhas}}. *Onde está:* {{caminho no projeto}}.
+  *Duplicação que evitou:* {{ex.: estava copiado em 3 ecrãs e divergia}}. *Destino sugerido:*
+  {{modules/templates/starter}}.
+
+## 6. Confirmação de candidatas
+
+*No fecho de cada fase, reler `Maestro/knowledge/candidates.md` da cópia (a sala de espera da
+framework-mãe) e registar aqui, por **ID estável (C-nnn)**, cada candidata que este projeto
+**confirmou** (viveu o mesmo problema/padrão — com evidência) ou **infirmou** (tentou e não se
+aplicou/correu mal — igualmente valioso). É este passo que dá às candidatas a 2.ª confirmação de
+que a promoção precisa; sem ele, dependem de coincidências.*
+
+- **{{C-nnn}} — {{confirmada / infirmada}}.** *Evidência:* {{caminho/commit no projeto + 1 linha de
+  contexto}}.
+
+## 7. Registo de envios
+
+*Preenchido pelo `Maestro/playbooks/report-framework-improvements.md` a cada envio. As
+entradas enviadas marcam-se nas secções acima com `(enviado #nnn)` — nunca se apagam daqui.*
+
+| Data | Marco (fase fechada / cadência) | Issue na framework-mãe | Resultado da curadoria |
+| --- | --- | --- | --- |
+| {{aaaa-mm-dd}} | {{ex.: fecho de F7}} | {{#nnn}} | {{pendente / promovida / candidata / rejeitada}} |
+
+## Relacionados
+
+- `Maestro/playbooks/report-framework-improvements.md` — como e quando este ficheiro se envia.
+- `Maestro/knowledge/README.md` — o circuito completo do conhecimento.
+- `Maestro/checklists/definition-of-done.md` — os portões de fase que exigem a consolidação.
+- `STATE.md` — a memória viva do projeto; as lições do produto vivem lá, as da framework aqui.

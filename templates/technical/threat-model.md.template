@@ -1,0 +1,76 @@
+# Modelo de Ameaças — `{{nome-da-funcionalidade}}`
+
+> **Como usar:** copia para `product/05-security/threat-model.md` — uma instância por
+> funcionalidade crítica do plano de cobertura. Preenche todas as secções; toda a ameaça listada
+> tem de terminar com uma decisão (mitigada/transferida/aceite/eliminada) — nada fica "em aberto".
+> Produzido pelo `agents/09-security/threat-modeler.md`.
+
+## Cabeçalho
+
+| Campo | Valor |
+| --- | --- |
+| Funcionalidade | {{nome-da-funcionalidade}} |
+| Âmbito coberto | {{o-que-entra-e-o-que-fica-de-fora}} |
+| Perfil de risco de referência | {{link-para-perfil-de-risco}} |
+| Data | {{aaaa-mm-dd}} |
+| Autor | {{agente-ou-pessoa}} |
+| Revisão prevista | {{aaaa-mm-dd-ou-gatilho}} |
+
+## Ativos
+
+*O que se protege — dados, credenciais, dinheiro, disponibilidade.*
+
+| Ativo | Onde vive | Dano se comprometido |
+| --- | --- | --- |
+| {{ex-dados-pessoais-de-clientes}} | {{servico-ou-tabela}} | {{reputacional-legal-financeiro}} |
+
+## Atores / agentes de ameaça
+
+| Ator | Capacidade | Motivação | Plausível neste sistema? |
+| --- | --- | --- | --- |
+| {{ex-utilizador-autenticado-a-escalar-privilegios}} | {{capacidade-tecnica}} | {{o-que-ganha}} | {{sim-nao-porque}} |
+
+## Fronteiras de confiança (DFD textual)
+
+*Todo o ponto onde os dados atravessam um limite de confiança — cliente→servidor, serviço→serviço,
+produto→integração externa. É aqui que as ameaças se concentram (`modules/rbac-and-scoping.md`).*
+
+1. `{{fronteira-1-ex-cliente-para-api}}` — {{o-que-atravessa}}
+2. `{{fronteira-2-ex-api-para-fila}}` — {{o-que-atravessa}}
+3. `{{fronteira-3-ex-worker-para-bd-ou-integracao-externa}}` — {{o-que-atravessa}}
+
+## Ameaças por categoria (STRIDE)
+
+*Passar cada elemento/fronteira pela taxonomia; registar só as ameaças credíveis dado o perfil de
+risco. Uma categoria descartada regista-se com o porquê — não se omite em silêncio.*
+
+| ID | Categoria | Elemento afetado | Ameaça (o que pode correr mal) | Severidade × probabilidade | Controlo (nomeado, atribuível) | Decisão | Dono |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| T1 | Spoofing | {{fronteira-x}} | {{descricao-concreta}} | {{alta-media-baixa}} | {{controlo-atribuivel-a-um-agente}} | {{mitigada-transferida-aceite-eliminada}} | {{agente-responsavel}} |
+| T2 | Tampering | | | | | | |
+| T3 | Repudiation | | | | | | |
+| T4 | Information disclosure | | | | | | |
+| T5 | Denial of service | | | | | | |
+| T6 | Elevation of privilege | | | | | | |
+
+## Risco residual aceite
+
+*Só o utilizador aceita risco residual (`MANIFESTO.md` §8) — nunca o agente sozinho.*
+
+| Ameaça (ID) | Porque não se mitiga agora | Aceite por | Data | Revisão |
+| --- | --- | --- | --- | --- |
+| {{id-da-ameaca}} | {{custo-do-controlo-vs-exposicao}} | {{utilizador}} | {{aaaa-mm-dd}} | {{quando-reavaliar}} |
+
+## Lacunas / não modelado
+
+*Honestidade: não se inventa a superfície. O que não foi modelado e porquê (fluxo não especificado,
+fora do âmbito desta versão) — registar em `STATE.md` se bloquear o resto da equipa.*
+
+- {{lacuna-1-e-o-que-falta-para-fechar}}
+
+## Relacionados
+
+- `agents/09-security/threat-modeler.md` · `agents/09-security/security-coordinator.md`
+- `agents/09-security/owasp-top10-specialist.md` · `agents/09-security/pentester.md`
+- `modules/rbac-and-scoping.md` · `modules/state-machines.md`
+- `templates/technical/review-report.md.template`

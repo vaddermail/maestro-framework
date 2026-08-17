@@ -1,0 +1,84 @@
+# STATE.md — {{nome-do-produto}}
+
+> **Como usar:** instancia-se uma vez em F0 a partir deste template
+> (`Maestro/workflows/W00-project-kickoff.md`) e depois **atualiza-se sempre**, ao fim de
+> cada bloco de trabalho — nunca só "no fim do dia" (uma sessão que não atualiza isto é trabalho
+> meio-perdido). Fica na **raiz do projeto**. É o primeiro ficheiro a ler depois do `CLAUDE.md`.
+
+---
+
+*Higiene: o topo fica hiper-detalhado sobre o presente; sessões antigas colapsam em §8 por marco (o
+detalhe fica no Git/CHANGELOG). Um STATE.md onde ninguém encontra nada deixou de ser memória
+(`Maestro/core/project-memory.md` §Higiene da memória).*
+
+## 1. Cabeçalho de situação
+
+| | |
+| --- | --- |
+| **Última atualização** | {{aaaa-mm-dd}} por {{quem/sessão}} |
+| **Fase atual** | {{F0–F9, ver `Maestro/core/lifecycle.md`}} |
+| **Workflow ativo** | {{ex.: `Maestro/workflows/W05-specification.md`}} |
+| **Perfil de esforço** | {{protótipo / produto interno / produto comercial / plataforma empresarial}} |
+| **Versão da framework** | {{ver `Maestro/_meta/VERSION.md`}} |
+| **Repositório da framework-mãe** | {{org/repo ou URL — de onde a cópia veio; é para lá que seguem os reportes de melhorias e de lá que se re-sincroniza}} |
+| **Ferramenta de IA em uso** | {{Claude Code / Cowork / outra}} |
+
+## 2. Feito
+
+*Blocos concluídos, mais recente primeiro. Cada um com evidência de verificação — "testado" sem
+prova não conta (`Maestro/knowledge/permanent-rules.md` §2 Honestidade absoluta).*
+
+- **{{aaaa-mm-dd}} — {{o que ficou feito}}.** Evidência: {{testes correram / output real / link}}.
+
+## 3. Em curso
+
+*O que está a meio, com o suficiente para outra sessão retomar sem re-perguntar.*
+
+- **{{item em curso}}** — {{onde ficou, próximo passo concreto, ficheiros tocados}}.
+
+## 4. A seguir
+
+*Próximos passos, por ordem.*
+
+1. {{passo 1}}
+2. {{passo 2}}
+
+## 5. Decisões pendentes
+
+*Perguntas à espera do utilizador, formato `Maestro/core/question-engine.md`. Cada uma
+bloqueia algo concreto — diz o quê.*
+
+- **P-{{nnn}}** — {{pergunta}}. Contexto: {{porquê importa}}. Bloqueia: {{o quê}}. Dono:
+  {{utilizador/papel que decide}}.
+
+## 6. Decisões tomadas em nome do dono ausente
+
+*Quando foi preciso avançar sem esperar resposta — registadas explicitamente como revisitáveis
+(nunca silenciosas).*
+
+- **{{aaaa-mm-dd}} — {{decisão tomada}}.** Porquê: {{urgência/bloqueio}}. Revisitar se:
+  {{condição concreta}}.
+
+## 7. Lições
+
+*O não-óbvio: bugs que se repetiram, armadilhas de ferramenta, correções de rumo. Cada uma com o
+porquê e o como aplicar — senão vira superstição. Antes de acrescentar: procurar duplicados e
+atualizar em vez de duplicar.*
+
+- **{{lição}}.** Porquê: {{a causa raiz}}. Como aplicar: {{a regra concreta daqui em diante}}.
+
+## 8. Registo histórico
+
+*Sessões/marcos anteriores, resumidos. O detalhe fica no Git (`git log`) e no `CHANGELOG.md`.*
+
+### {{marco/versão anterior}} — {{aaaa-mm-dd}}
+
+{{resumo de 2–4 linhas}}
+
+## Relacionados
+
+- `CLAUDE.md` — regras estáveis.
+- `CHANGELOG.md` — histórico por versão.
+- `Maestro/core/project-memory.md` — o porquê desta estrutura.
+- `Maestro/core/question-engine.md` — formato das decisões pendentes (§5).
+- `product/99-records/pending-decisions.md` — espelho das pendências, se o projeto o mantiver.

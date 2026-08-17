@@ -1,0 +1,65 @@
+# Relatório de Guardião — `{{dimensao}}`
+
+> **Como usar:** copia para `product/99-records/guardians/{{dimensao}}-AAAA-MM-DD.md`, um ficheiro
+> por ciclo. Todo o `agents/13-guardians/` usa este molde. Um relatório sem números e sem estados
+> terminais **não fecha o ciclo** — formato definido em `agents/13-guardians/README.md` §Formato de
+> relatório do ciclo.
+
+## Cabeçalho
+
+| Campo | Valor |
+| --- | --- |
+| Guardião (dimensão) | {{ex-guardiao-de-seguranca}} |
+| Janela do ciclo | {{data-inicio}} a {{data-fim}} |
+| Cadência | {{diaria-semanal-mensal-por-evento}} |
+| Ciclo anterior | `{{caminho-para-relatorio-anterior}}` |
+
+## Achados por estado terminal
+
+*Todo o achado do ciclo termina resolvido, mitigado (risco residual aceite pelo utilizador) ou
+não-aplicável (justificado). Nada fica "em análise" sem dono e sem prazo.*
+
+### Resolvido
+
+| Achado | Ação aplicada | Validação |
+| --- | --- | --- |
+| {{ex-cve-2026-x-na-lib-y}} | {{patch-aplicado}} | {{teste-de-regressao-verde}} |
+
+### Mitigado (risco residual aceite)
+
+| Achado | Mitigação | Aceite por | Data | Revisão prevista |
+| --- | --- | --- | --- | --- |
+| {{achado}} | {{mitigacao-aplicada}} | {{utilizador}} | {{aaaa-mm-dd}} | {{quando-reavaliar}} |
+
+### Não-aplicável
+
+| Achado | Porque não se aplica |
+| --- | --- |
+| {{achado}} | {{justificacao}} |
+
+## Ações aplicadas e como foram validadas
+
+*Nunca "aplicado" sem prova — o ciclo é analisa→planeia→aplica→valida→documenta.*
+
+| Ação | Validação real (nunca "parece bem") |
+| --- | --- |
+| {{acao}} | {{evidencia-concreta}} |
+
+## O que subiu ao utilizador
+
+*Só o utilizador aceita risco residual e decide âmbito/dinheiro/dados/produção — o guardião
+recomenda, não decide (`MANIFESTO.md` §8).*
+
+- {{decisao-pendente-1-com-opcoes-e-recomendacao-por-defeito}}
+
+## Tendência face ao ciclo anterior
+
+| Métrica | Ciclo anterior | Este ciclo | Direção |
+| --- | --- | --- | --- |
+| {{ex-numero-de-achados-abertos}} | {{valor}} | {{valor}} | {{melhor-pior-igual}} |
+
+## Relacionados
+
+- `agents/13-guardians/README.md` · `core/lifecycle.md`
+- `workflows/W09-continuous-operation.md` · `loops/README.md`
+- `core/project-memory.md`

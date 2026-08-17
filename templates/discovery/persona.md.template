@@ -1,0 +1,53 @@
+# Persona — {{nome-da-persona}}
+
+> **Como usar:** um ficheiro por persona (arquétipo de utilizador por comportamento, não por cargo).
+> Instanciado pelo `agents/00-discovery/persona-builder.md` a partir de `stakeholders.md`.
+> Fica em `product/00-discovery/personas/{{nome-da-persona-em-kebab}}.md` — um ficheiro por persona.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/persona-builder.md`
+> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** `modelador-de-casos-de-utilizacao`, `investigador-de-ux`, `revisor-de-ux`
+
+## Frase-âncora
+
+*A tensão central da persona numa frase ("quero X, mas tenho de Y") — é o que os revisores de UX vão
+testar contra cada decisão de desenho.*
+
+{{frase-de-tensao}}
+
+## Objetivo principal
+
+{{objetivo}} *(observado / suposto)*
+
+## Dores atuais
+
+*Ligadas a `problema.md` — nunca inventadas. O que for suposição marca-se "a validar".*
+
+- {{dor-1}} *(observado / suposto)*
+
+## Contexto de utilização
+
+*É daqui que sai a exigência de mobile-first ou de acessibilidade, mais tarde — não de preferência
+estética.*
+
+| Dimensão | Descrição |
+| --- | --- |
+| Dispositivo | {{dispositivo}} |
+| Ambiente | {{ambiente-ruido-pressa-luvas-interrupcoes}} |
+| Frequência de uso | {{frequencia}} |
+
+## Literacia digital
+
+{{nivel-de-a-vontade-com-tecnologia}}
+
+## Critério de sucesso pessoal
+
+*O que, para esta pessoa — não para a organização — conta como "correu bem hoje".*
+
+{{sucesso-pessoal}}
+
+## Relacionados
+
+- `agents/00-discovery/persona-builder.md` · `templates/discovery/stakeholders.md.template`
+- `templates/discovery/use-case.md.template` — usa esta persona como ator.

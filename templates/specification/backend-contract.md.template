@@ -1,0 +1,86 @@
+# Contrato de Backend — {{nome-do-modulo-ou-sistema}}
+
+> **Como usar:** instanciado pelo `agents/05-backend/authorization-specialist.md` em F5 (desenho)
+> e F6 (por cada fatia construída), com os campos sensíveis marcados pelo
+> `agents/05-backend/api-designer.md`. Fica em `product/04-specification/backend-contract.md`.
+> Descreve o que o **servidor** garante — nenhum endpoint com dados sai sem passar por este contrato.
+
+> **Estado:** rascunho
+> **Dono:** `agents/05-backend/authorization-specialist.md`
+> **Fase:** F5 (desenho) · F6 (implementação por fatia) · **Atualizado:** {{aaaa-mm-dd}}
+> **Satisfaz:** {{rn-nnn-de-autoridade-e-scoping}}
+> **Consumidores:** todo o backend, `agents/12-reviewers/backend-reviewer.md`, `agents/09-security/authorization-and-least-privilege-specialist.md`
+
+## Princípio
+
+*Não reescrever a doutrina — referenciá-la. O cliente **declara** intenção (perfil ativo); o servidor
+**confirma** contra os papéis realmente concedidos e falha fechado por defeito
+(`modules/rbac-and-scoping.md`, `knowledge/origin-lessons.md`). Nada neste documento depende de uma
+verificação feita só no cliente.*
+
+## Perfis e papéis
+
+| Perfil | Descrição | Âmbito organizacional (eixo de scoping) |
+| --- | --- | --- |
+| {{nome-do-perfil}} | {{quem-é-e-o-que-faz}} | {{ex.-a-sua-equipa-departamento-organizacao-tenant}} |
+
+## Autorização e scoping por recurso
+
+*Duas verificações distintas, sempre as duas: **autoridade** (que ações) e **scoping** (que
+subconjunto de dados). Scoping aplica-se **na query**, nunca em pós-filtro.*
+
+| Recurso / ação | Perfil | Autorizado? | Âmbito (scoping) | Notas |
+| --- | --- | --- | --- | --- |
+| {{recurso-e-verbo-ex.-listar-encomendas}} | {{perfil}} | {{sim/não}} | {{filtro-aplicado-na-query}} | {{gate-de-elegibilidade-ou-escalao-se-aplicavel}} |
+
+*Recurso fora do âmbito do requerente devolve **404, não 403** — não se revela que existe. Pedido sem
+perfil válido é **negado** (fail-closed); nunca se assume perfil por defeito.*
+
+## Campos sensíveis
+
+*Defesa em profundidade: o campo não sai da query **e** é redigido na saída — as duas camadas, não
+uma só.*
+
+| Campo | Entidade | Quem vê | Mecanismo de redação |
+| --- | --- | --- | --- |
+| {{nome-do-campo}} | {{entidade}} | {{perfis-com-autoridade}} | {{omitido-na-query-e-redigido-na-serializacao}} |
+
+## Integridade transacional
+
+*Que operações têm de ser atómicas e que lock evita a leitura-decisão-escrita corrida (TOCTOU) sobre
+o mesmo recurso.*
+
+| Operação | Transação / lock | Invariante protegido |
+| --- | --- | --- |
+| {{nome-da-operacao}} | {{ambito-da-transacao-e-tipo-de-lock}} | {{i-nnn-do-modelo-de-dados-logico}} |
+
+## Erros e códigos
+
+*Consistência é o que permite ao cliente não adivinhar. Situação de fora-de-âmbito é sempre 404.*
+
+| Situação | Código | Corpo / mensagem | Nota |
+| --- | --- | --- | --- |
+| Sem perfil válido | {{401-ou-equivalente}} | {{mensagem-generica-sem-detalhe-interno}} | fail-closed |
+| Sem autoridade para a ação | {{403}} | {{mensagem-generica}} | recurso existe, ação recusada |
+| Recurso fora do âmbito (scoping) | {{404}} | {{mensagem-generica}} | nunca 403 — não revela existência |
+| {{situacao-de-validacao-de-negocio}} | {{422-ou-equivalente}} | {{mensagem-com-o-invariante-violado}} | liga a `RN-nnn` |
+
+## Testes obrigatórios
+
+*Sem estes, o contrato não está imposto — está só descrito.*
+
+- [ ] Cada perfil listado vê exatamente o subconjunto esperado (teste "vê / não vê" por perfil).
+- [ ] Pedido sem perfil é negado (prova o fail-open impossível — nunca `perfil ?? "admin"`).
+- [ ] Recurso fora do âmbito devolve 404 em vez de 403.
+- [ ] Campos sensíveis ausentes da resposta para perfis sem autoridade.
+- [ ] Guardrail: teste que percorre todos os endpoints e falha se algum expõe dados sem passar pela
+      autorização/scoping.
+- [ ] Prova-live: dois perfis diferentes veem subconjuntos diferentes de dados reais.
+
+## Relacionados
+
+- `agents/05-backend/authorization-specialist.md` · `agents/05-backend/authentication-specialist.md`
+- `agents/05-backend/api-designer.md` · `agents/09-security/authorization-and-least-privilege-specialist.md`
+- `modules/rbac-and-scoping.md` · `modules/approval-engine.md`
+- `templates/specification/logical-data-model.md.template` · `templates/specification/business-rules.md.template`
+- `knowledge/proven-patterns.md` · `knowledge/origin-lessons.md`

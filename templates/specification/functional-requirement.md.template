@@ -1,0 +1,75 @@
+# RF-{{nnn}} — {{titulo-do-requisito}}
+
+> **Como usar:** um ficheiro (ou secção) por requisito funcional, instanciado pelo
+> `agents/01-requirements/requirements-engineer.md` em F2 a partir de um caso de utilização do MVP.
+> A secção "Critérios de aceitação" é preenchida a jusante pelo
+> `agents/01-requirements/acceptance-criteria-writer.md` — o Engenheiro deixa-a pronta, vazia.
+> Fica em `product/01-requirements/functional-requirements.md` (um `RF-nnn` por bloco, concatenados no
+> mesmo ficheiro; em projetos grandes pode desdobrar-se em `product/01-requirements/requisitos/RF-nnn.md`).
+
+> **Estado:** rascunho
+> **Dono:** `agents/01-requirements/requirements-engineer.md`
+> **Fase:** F2 · **Atualizado:** {{aaaa-mm-dd}}
+> **Satisfaz:** {{cu-nnn-do-caso-de-utilizacao}}
+> **Consumidores:** `redator-de-criterios-de-aceitacao`, `modelador-de-regras-de-negocio`, arquitetura (F3), especificação (F5), testes (F6/F7)
+
+## Descrição
+
+*Forma obrigatória: "o sistema [faz X] quando [gatilho], para [ator]" — força ator, gatilho e
+resultado observável a aparecerem. Uma só capacidade; se precisa de "e" para duas capacidades
+independentes, são dois `RF`.*
+
+> O sistema {{acao-observavel}} quando {{gatilho}}, para {{ator}}.
+
+## Origem e prioridade
+
+| Campo | Valor |
+| --- | --- |
+| **Caso(s) de utilização** | {{cu-nnn}} |
+| **Prioridade** | {{essencial \| importante \| desejável}} (herdada de `agents/00-discovery/prioritizer.md`) |
+| **Ator(es)** | {{persona-ou-papel}} |
+
+## Regras de negócio associadas
+
+*Um `RF` sem regras associadas é raro — a maioria pressupõe pelo menos uma. Preencher com os `RN-nnn`
+que este requisito respeita (ver `templates/specification/business-rules.md.template`).*
+
+| ID | Enunciado resumido |
+| --- | --- |
+| {{rn-nnn}} | {{resumo-de-uma-linha}} |
+
+## Critérios de aceitação
+
+*Dono: `redator-de-criterios-de-aceitacao`. Formato Dado/Quando/Então; um cenário testa um só
+comportamento. Cobrir caminho feliz + erros + limites — não só o feliz.*
+
+- **Caminho feliz** — Dado {{condicao-inicial}}, Quando {{acao}}, Então {{resultado-observavel}}.
+- **Erro/limite** — Dado {{condicao-de-fronteira}}, Quando {{acao}}, Então {{resultado-de-rejeicao-ou-erro}}.
+- *(repetir uma linha por cenário relevante; um resultado ainda não decidido fica "a confirmar (P-nnn)")*
+
+## Dependências
+
+*Outros `RF` que têm de existir ou estar concluídos antes deste, e o porquê.*
+
+| Depende de | Porquê |
+| --- | --- |
+| {{rf-nnn}} | {{razao-da-dependencia}} |
+
+## Fora de âmbito
+
+*O que este `RF` explicitamente não cobre, para não virar suposição de quem o lê depois — normalmente
+o que o `delimitador-de-mvp` cortou ou outro `RF` trata.*
+
+- {{exclusao-explicita}}
+
+## Notas
+
+*Decisões de fronteira já resolvidas com o utilizador (com data), ou lacunas ainda em aberto
+registadas como pergunta em `product/01-requirements/questions-and-answers.md`.*
+
+## Relacionados
+
+- `agents/01-requirements/requirements-engineer.md` · `agents/01-requirements/acceptance-criteria-writer.md`
+- `agents/01-requirements/business-rules-modeler.md` · `agents/01-requirements/glossary-curator.md`
+- `templates/specification/business-rules.md.template`
+- `core/artifact-protocol.md` · `workflows/W02-requirements.md`

@@ -1,0 +1,67 @@
+# Ideia
+
+> **Como usar:** estrutura a ideia bruta do utilizador numa descrição testável — o ponto de partida
+> que toda a descoberta (F1) consome. Instanciado pelo `agents/00-discovery/idea-analyst.md`,
+> logo a seguir a F0. Fica em `product/00-discovery/idea.md`.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/idea-analyst.md`
+> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** todos os agentes de F1; base de F2
+
+## Conceito (uma frase)
+
+*Força a ideia a caber numa frase — se não couber, há duas ideias por separar.*
+
+{{conceito-numa-frase}}
+
+## Para quem
+
+*Público aparente — quem parece beneficiar, antes de qualquer stakeholder mapeado formalmente.*
+
+{{publico-aparente}}
+
+## Porquê agora
+
+*O que muda para que valha a pena construir isto agora e não noutra altura (janela de mercado,
+obrigação nova, dor recente, restrição a desaparecer).*
+
+{{porque-agora}}
+
+## É / Não é
+
+| É | Não é (ainda) |
+| --- | --- |
+| {{o-que-e}} | {{o-que-nao-e}} |
+
+## Problema aparente
+
+*Esboço apenas — aprofundado a seguir em `problema.md`.*
+
+{{problema-aparente}}
+
+## Valor aparente
+
+{{valor-aparente-para-quem-usa}}
+
+## Pressupostos e hipóteses a testar
+
+*Tudo o que a ideia assume em silêncio (quem paga, escala, plataforma, restrições legais) vira aqui
+um pressuposto explícito, marcado "a confirmar" — nunca assumido como facto.*
+
+| Pressuposto / hipótese | Como se testa | Estado |
+| --- | --- | --- |
+| {{pressuposto-1}} | {{como-testar}} | a confirmar |
+
+## Perguntas-âncora
+
+*O que, por responder, trava toda a descoberta seguinte. Registo completo em
+`product/01-requirements/questions-and-answers.md`.*
+
+- (P-{{nnn}}) {{pergunta}}
+
+## Relacionados
+
+- `agents/00-discovery/idea-analyst.md` · `agents/00-discovery/README.md`
+- `templates/discovery/problem.md.template` — aprofunda o problema aqui esboçado.
+- `core/question-engine.md` · `core/artifact-protocol.md`

@@ -1,0 +1,71 @@
+# Post-Mortem — `{{nome-do-incidente}}`
+
+> **Como usar:** copia para `product/99-records/incidents/{{incidente}}-AAAA-MM-DD.md`. Sem
+> culpados: o foco são sistemas e processos, nunca pessoas. Números reais, não impressões.
+> Produzido a partir de `workflows/W11-incident-response.md`.
+
+## Cabeçalho
+
+| Campo | Valor |
+| --- | --- |
+| Incidente | {{nome}} |
+| Severidade | {{sev1-sev2-sev3}} |
+| Início | {{aaaa-mm-dd-hh-mm}} |
+| Fim | {{aaaa-mm-dd-hh-mm}} |
+| Duração | {{duracao}} |
+| Autor do relatório | {{pessoa-ou-agente}} |
+
+## Resumo
+
+*Um parágrafo: o que aconteceu, para quem só vai ler isto.*
+
+{{resumo}}
+
+## Impacto (números)
+
+| Métrica | Valor |
+| --- | --- |
+| Utilizadores afetados | {{numero-ou-percentagem}} |
+| Downtime / degradação | {{duracao-e-descricao}} |
+| Dados afetados | {{perdidos-corrompidos-expostos-nenhum}} |
+| Custo estimado | {{se-aplicavel}} |
+
+## Cronologia
+
+| Hora | Evento |
+| --- | --- |
+| {{hh-mm}} | {{deteccao-alerta-disparado}} |
+| {{hh-mm}} | {{acao-de-mitigacao}} |
+| {{hh-mm}} | {{resolucao-confirmada}} |
+
+## Causa raiz
+
+*Sistemas e processos, não pessoas — "o deploy não tinha rollback ensaiado", nunca "o Fulano
+esqueceu-se". Porquês sucessivos até à causa sistémica.*
+
+{{causa-raiz-com-a-cadeia-de-porques}}
+
+## O que correu bem
+
+- {{ex-alerta-disparou-a-tempo}}
+
+## O que correu mal
+
+- {{ex-runbook-desatualizado-obrigou-a-improviso}}
+
+## Ações de prevenção
+
+| Ação | Dono | Prazo | Estado |
+| --- | --- | --- | --- |
+| {{acao-concreta}} | {{pessoa-ou-agente}} | {{aaaa-mm-dd}} | {{pendente-em-curso-feito}} |
+
+## Prevenção verificada
+
+*Prova de que a ação realmente impede a repetição — não só "foi implementada".*
+
+- {{evidencia-ex-teste-de-regressao-que-falha-sem-a-correcao}}
+
+## Relacionados
+
+- `workflows/W11-incident-response.md` · `checklists/post-incident.md`
+- `agents/13-guardians/README.md` · `knowledge/proven-patterns.md`

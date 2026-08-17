@@ -1,0 +1,86 @@
+# Máquina de Estados — {{nome-do-fluxo-critico}}
+
+> **Como usar:** um ficheiro (ou secção) por fluxo crítico com ciclo de vida próprio (encomenda,
+> subscrição, ticket, devolução…), instanciado pelo `agents/01-requirements/business-rules-modeler.md`
+> em F5, com `modules/state-machines.md` como método. Fica em
+> `product/04-specification/state-machines.md` (uma secção por fluxo; em projetos grandes, um
+> ficheiro por fluxo em `product/04-specification/maquinas-de-estado/{{nome-do-fluxo}}.md`).
+
+> **Estado:** rascunho
+> **Dono:** `agents/01-requirements/business-rules-modeler.md`
+> **Fase:** F5 · **Atualizado:** {{aaaa-mm-dd}}
+> **Satisfaz:** {{rf-nnn}}, {{rn-nnn}}
+> **Consumidores:** Backend (F6), `agents/05-backend/authorization-specialist.md`, testes (F6/F7)
+
+## Entidade modelada
+
+*Que entidade tem este ciclo de vida e porque precisa de máquina de estado explícita em vez de um
+campo livre — normalmente porque transições erradas corrompem dados ou o negócio.*
+
+{{nome-da-entidade}} — {{razao-para-ser-fluxo-critico}}
+
+## Estados
+
+| Estado | Descrição | Terminal? |
+| --- | --- | --- |
+| {{nome-do-estado}} | {{o-que-significa-estar-neste-estado}} | {{sim/não}} |
+
+*Um estado terminal não tem transições de saída — se parecer precisar de uma, é sinal de que falta um
+estado ou de que não é terminal.*
+
+## Diagrama
+
+*Mermaid (versionável, legível por agentes). Manter sincronizado com a tabela de transições abaixo —
+o diagrama é vista, a tabela é fonte de verdade.*
+
+```mermaid
+stateDiagram-v2
+    [*] --> {{estado-inicial}}
+    {{estado-inicial}} --> {{estado-seguinte}}: {{nome-da-transicao}}
+    {{estado-seguinte}} --> [*]
+```
+
+## Tabela de transições
+
+*Cada transição tem nome próprio (usa-se no código e nos logs, não "mudar estado"). "Quem pode" é
+autoridade (`modules/rbac-and-scoping.md`), não scoping. A guarda é a pré-condição verificada no
+servidor antes de aceitar a transição.*
+
+| Transição | De | Para | Quem pode | Guarda (pré-condição) | Efeitos |
+| --- | --- | --- | --- | --- | --- |
+| {{nome-da-transicao}} | {{estado-de-origem}} | {{estado-de-destino}} | {{papel-ou-ator}} | {{condicao-que-tem-de-ser-verdade}} | {{o-que-mais-muda-no-sistema}} |
+
+## Transições inválidas
+
+*Tão explícitas como as válidas — o servidor tem de as rejeitar (nunca ignorar em silêncio), e são a
+base do critério de rejeição em `templates/specification/functional-requirement.md.template`.*
+
+| De | Para (tentativa) | Porque é inválida | Resposta do servidor |
+| --- | --- | --- | --- |
+| {{estado-de-origem}} | {{estado-de-destino-proibido}} | {{razao}} | {{erro-ou-codigo-devolvido}} |
+
+## Estados terminais
+
+- {{estado-terminal-1}} — {{o-que-impede-daqui-em-diante}}
+
+## Base + overlay (se aplicável)
+
+*Só quando uma ação temporária compete com estado permanente pelo mesmo campo (ex.: um empréstimo não
+pode apagar o responsável de base). Se não se aplica, escrever "Não aplicável — sem estado temporário
+em competição com estado permanente".*
+
+{{descricao-da-camada-temporaria-e-como-reverte-a-base}}
+
+## Notas de concorrência
+
+*Duas transições simultâneas sobre a mesma instância — que lock/transação impede o estado inconsistente
+(TOCTOU). Se não há risco de concorrência relevante, dizê-lo explicitamente.*
+
+{{nota-de-lock-ou-transacao-quando-aplicavel}}
+
+## Relacionados
+
+- `modules/state-machines.md` · `agents/01-requirements/business-rules-modeler.md`
+- `agents/05-backend/authorization-specialist.md` · `agents/06-data/data-modeler.md`
+- `templates/specification/business-rules.md.template` · `templates/specification/backend-contract.md.template`
+- `workflows/W05-specification.md` · `knowledge/origin-lessons.md`

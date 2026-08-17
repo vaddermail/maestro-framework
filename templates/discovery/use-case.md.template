@@ -1,0 +1,52 @@
+# CU-{{nnn}} — {{nome-do-caso}}
+
+> **Como usar:** uma jornada de ponta a ponta por objetivo relevante de uma persona — ao nível de
+> objetivo, nunca de ecrã ou de widget. Instanciado pelo
+> `agents/00-discovery/use-case-modeler.md`. Fica em
+> `product/00-discovery/use-cases/CU-{{nnn}}-{{nome-em-kebab}}.md` — um ficheiro por caso.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/use-case-modeler.md`
+> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** `delimitador-de-mvp`, `priorizador`, `engenheiro-de-requisitos`, `investigador-de-ux`
+
+## Identificação
+
+| Campo | Valor |
+| --- | --- |
+| Ator | {{persona}} |
+| Gatilho | {{o-que-faz-a-persona-comecar}} |
+| Pré-condições | {{o-que-tem-de-ser-verdade-antes}} |
+| Resultado | {{o-que-a-persona-reconhece-como-"consegui"}} |
+
+## Fluxo principal
+
+*5–9 passos ao nível de objetivo de negócio — se um passo nomeia um botão ou um ecrã, desceu demais
+(isso é F4, `agents/03-experience/`).*
+
+1. {{passo-1}}
+2. {{passo-2}}
+
+## Fluxos alternativos
+
+*Outros caminhos válidos até ao mesmo resultado.*
+
+- ({{n}}a) {{variacao}} → {{consequencia}}
+
+## Exceções
+
+*As exceções são onde o valor se esconde — um CU só com caminho feliz está quase sempre incompleto.*
+
+- (E1) {{o-que-corre-mal}} → {{o-que-acontece-a-seguir}}
+
+## Pontos de decisão de negócio
+
+*O que depende de uma regra de negócio ainda por fixar (ex.: um limiar, um prazo) — marca-se aqui,
+não se inventa. Resolvido em F2 pelo `agents/01-requirements/business-rules-modeler.md`.*
+
+- {{ponto-de-decisao}}
+
+## Relacionados
+
+- `agents/00-discovery/use-case-modeler.md` · `templates/discovery/persona.md.template`
+- `agents/01-requirements/requirements-engineer.md` — deriva requisitos rastreáveis deste CU.

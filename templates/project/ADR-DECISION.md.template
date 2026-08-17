@@ -1,0 +1,83 @@
+# ADR-{{numero-adr}} — {{titulo-da-decisao}}
+
+> **Como usar:** uma cópia por decisão **estrutural** (`Maestro/core/decision-engine.md`
+> §Tipos de decisão — estilo arquitetural, stack, cloud, modelo de identidade, estratégia de dados).
+> Nomeia-se `ADR-{{numero-com-3-digitos}}-{{titulo-em-kebab}}.md`, em
+> `product/02-architecture/decisions/`. Nunca se apaga: quando substituída, marca-se
+> `substituída por ADR-{{numero-adr}}` e cria-se um ADR novo.
+
+---
+
+> **Estado:** proposta | aprovada | substituída por ADR-{{numero-adr}}
+> **Data:** {{aaaa-mm-dd}} · **Decidido por:** {{árbitro/agente responsável}} + validado por
+> {{utilizador/papel que aprovou}}
+> **Satisfaz:** {{RF-nnn, RN-nnn, RNF-nnn relevantes — remover a linha se não aplicável}}
+
+## Contexto
+
+*O problema e as forças em jogo — que requisitos/RNF/riscos pressionam esta decisão, e porque se
+decide agora.*
+
+{{descrição do problema a decidir}}
+
+## Critérios (com peso)
+
+*Derivados dos artefactos de requisitos/riscos/custos (`Maestro/core/decision-engine.md`
+§O processo para decisões estruturais). Exemplos típicos: adequação funcional, custo total
+(construção + operação), complexidade operacional, competência da equipa, reversibilidade,
+maturidade/estabilidade, lock-in.*
+
+| Critério | Peso |
+| --- | --- |
+| {{critério 1}} | {{alto / médio / baixo}} |
+| {{critério 2}} | {{alto / médio / baixo}} |
+
+## Opções consideradas
+
+*Todas as propostas do painel — incluindo as rejeitadas, para ninguém as re-propor sem novidade. O
+"não fazer nada"/manter o que existe é sempre uma opção avaliada, mesmo que rejeitada em uma linha.*
+
+### Opção A — {{nome-da-opcao}}
+
+- **Desenho:** {{resumo}}
+- **Prós:** {{lista}}
+- **Contras:** {{lista, honestos — inclui "não serve porque X" se for o caso}}
+- **Custo estimado:** {{construção + operação}}
+- **Reversibilidade:** {{o que custaria voltar atrás}}
+
+### Opção B — {{nome-da-opcao}}
+
+- **Desenho:** {{resumo}}
+- **Prós:** {{lista}}
+- **Contras:** {{lista}}
+- **Custo estimado:** {{construção + operação}}
+- **Reversibilidade:** {{o que custaria voltar atrás}}
+
+### Opção C — manter o que existe / não fazer nada
+
+- **Prós:** {{...}}
+- **Contras:** {{...}}
+
+## Decisão
+
+**Escolhida: {{opção-escolhida}}.**
+
+{{fundamentação — que critérios pesaram mais e porquê; se fundiu ideias de mais de uma opção,
+dizê-lo explicitamente}}
+
+## Consequências
+
+- **Fica mais fácil:** {{...}}
+- **Fica mais difícil / dívida assumida:** {{...}}
+
+## Reversão
+
+- **Custo de mudar mais tarde:** {{...}}
+- **Sinais de alerta que justificariam revisitar:** {{...}}
+
+## Relacionados
+
+- `product/01-requirements/functional-requirements.md` — requisitos satisfeitos.
+- `product/02-architecture/architecture-vision.md` — visão consolidada onde este ADR se insere.
+- `Maestro/core/decision-engine.md` — o processo que gerou esta decisão.
+- `STATE.md` — onde se regista a validação do utilizador.

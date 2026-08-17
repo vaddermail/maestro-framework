@@ -1,0 +1,71 @@
+# Runbook — `{{nome-do-procedimento}}`
+
+> **Como usar:** copia para `product/07-operations/runbooks/{{procedimento}}.md` (ou pasta equivalente do
+> componente afetado). Escreve para quem o vai correr sem contexto extra, a meio da noite — passos
+> exatos, sem improviso. Quem o corre em produção não deve adivinhar.
+
+## Cabeçalho
+
+| Campo | Valor |
+| --- | --- |
+| Procedimento | {{nome}} |
+| Sistema / componente | {{componente}} |
+| Última verificação | {{aaaa-mm-dd}} |
+| Dono | {{agente-ou-equipa}} |
+
+## Quando usar
+
+*O gatilho concreto — alerta, ticket, decisão planeada.*
+
+{{descricao-do-gatilho}}
+
+## Pré-condições
+
+- [ ] {{acesso-necessario-ex-vpn-ligada}}
+- [ ] {{backup-recente-confirmado}}
+- [ ] {{janela-de-manutencao-se-aplicavel}}
+
+## Passos
+
+*Comandos-placeholder entre crases; substituir pelos reais do projeto antes de correr. Cada passo diz
+o que se espera ver, não só o comando.*
+
+1. {{passo-1-descricao}}
+   ```
+   {{comando-placeholder-1}}
+   ```
+2. {{passo-2-descricao}}
+   ```
+   {{comando-placeholder-2}}
+   ```
+3. {{passo-n-descricao}}
+   ```
+   {{comando-placeholder-n}}
+   ```
+
+## Verificação
+
+*Como confirmar que o procedimento funcionou — nunca "parece bem".*
+
+| Verificação | Comando/consulta | Resultado esperado |
+| --- | --- | --- |
+| {{ex-servico-responde}} | `{{comando-placeholder}}` | {{resultado-esperado}} |
+
+## Reversão
+
+*Passos exatos para desfazer, se algo correr mal. Se não há reversão possível a partir de um certo
+ponto, dizê-lo aqui, de forma explícita.*
+
+1. {{passo-de-reversao-1}}
+2. {{passo-de-reversao-2}}
+
+## Escalamento e contactos
+
+| Situação | Contactar | Como |
+| --- | --- | --- |
+| {{procedimento-falha-a-meio}} | {{papel-ou-pessoa}} | {{canal-ex-telefone-slack}} |
+
+## Relacionados
+
+- `agents/07-devops/deployment-strategist.md` · `agents/06-data/backup-specialist.md`
+- `playbooks/release-and-rollback.md` · `checklists/go-live.md`

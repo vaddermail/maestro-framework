@@ -1,0 +1,49 @@
+# Dossier de Génese — {{nome-do-produto}}
+
+> **Como usar:** instancia-se em F0 para `product/99-records/genesis.md`
+> (`workflows/W00-project-kickoff.md`) e ganha **uma linha no fecho de cada fase** — faz parte
+> do portão (`checklists/definition-of-done.md`). É o instrumento que mede a promessa da framework
+> ("cada produto mais barato e melhor que o anterior"): sem estes números, a melhoria é convicção;
+> com eles, é a curva de `knowledge/learning-curve.md`. Números honestos e aproximados
+> valem mais do que campos vazios — estimar é permitido, inventar não
+> (`knowledge/permanent-rules.md`).
+
+## Fases
+
+*Preencher a linha ao fechar o portão da fase. "Custo IA": tokens ou €, o que a ferramenta der —
+consistente dentro do projeto. "Retrabalho": fatias/artefactos refeitos por causa de defeito ou de
+divergência com a spec. "1.ª?": o portão passou à primeira tentativa?*
+
+| Fase | Fechada em | Dias desde F0 | Custo IA | Perguntas ao utilizador | Retrabalho | 1.ª? | Notas |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| F1 | {{aaaa-mm-dd}} | {{n}} | {{…}} | {{n}} | {{…}} | {{sim/não}} | {{…}} |
+
+## Qualidade em F7
+
+| Métrica | Valor |
+| --- | --- |
+| Achados de auditoria/revisão (críticos / altos / médios / baixos) | {{n/n/n/n}} |
+| Achados que eram *retrofit* (faltava desde a fatia 0) | {{n}} |
+| Iterações de loops (L02–L08) até verde | {{n}} |
+
+## Fecho (no aceite de F8)
+
+| Métrica | Este produto | Produto anterior (da curva, na cópia) |
+| --- | --- | --- |
+| Dias F0 → produção | {{n}} | {{n}} |
+| Custo IA total | {{…}} | {{…}} |
+| Achados F7 (críticos+altos) | {{n}} | {{n}} |
+| Retrabalho total | {{…}} | {{…}} |
+
+**Leitura honesta em 3 linhas:** {{onde este produto foi mais barato/melhor que o anterior, onde
+foi pior, e a hipótese do porquê — é isto que a curadoria quer ler}}.
+
+> **Envio:** o bloco de Fecho segue no reporte de melhorias do fecho de F8
+> (`playbooks/report-framework-improvements.md`); a curadoria atualiza a curva da mãe com o código
+> do projeto (P-n) — nunca o nome (`knowledge/candidates.md` §Regras, regra 5).
+
+## Relacionados
+
+- `knowledge/learning-curve.md` — onde estes números se agregam, produto a produto.
+- `checklists/definition-of-done.md` — o fecho de fase que exige a linha.
+- `core/model-routing.md` — a disciplina que os números de custo informam.

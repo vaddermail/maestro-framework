@@ -1,0 +1,54 @@
+# Relatório de Revisão — `{{dimensao-do-revisor}}`
+
+> **Como usar:** copia para `product/99-records/reviews/{{dimensao}}-{{fatia}}-AAAA-MM-DD.md`. Todo
+> o revisor de `agents/12-reviewers/` usa este molde **sem alterações**, para o
+> `agents/12-reviewers/review-consolidator.md` os poder fundir sem tradução. Formato definido em
+> `agents/12-reviewers/README.md` §Formato do relatório.
+
+## 1. Cabeçalho
+
+| Campo | Valor |
+| --- | --- |
+| Revisor (dimensão) | {{ex-revisor-de-backend}} |
+| Âmbito revisto | {{fatia-commits-ou-artefactos-revistos}} |
+| Data | {{aaaa-mm-dd}} |
+| Modelo e esforço usados | {{ex-topo-effort-high}} (`core/model-routing.md`) |
+
+## 2. Veredicto global
+
+*Um único bloqueador basta para bloquear (`core/quality-gates.md`).*
+
+**{{passa | passa-com-ressalvas | bloqueia}}**
+
+{{uma-frase-de-justificacao-do-veredicto}}
+
+## 3. Achados (ordenados por severidade)
+
+*Um achado confirmado vale mais do que dez suspeitas — ordenar por risco real, não por número de
+achados. Achados de correção, autorização, dinheiro, dados pessoais e fluxos irreversíveis recebem o
+máximo escrutínio (`MANIFESTO.md` §9).*
+
+| ID | Severidade | Localização | Defeito (uma frase) | Cenário de falha concreto | Recomendação | Confiança |
+| --- | --- | --- | --- | --- | --- | --- |
+| A1 | {{bloqueador \| maior \| menor \| nit}} | `{{ficheiro:linha-ou-artefacto}}` | {{defeito-em-uma-frase}} | {{inputs-estado-resultado-errado-nunca-parece-fragil}} | {{recomendacao-concreta}} | {{confirmado \| plausivel}} |
+
+## 4. O que foi verificado e passou
+
+*Não só o negativo — dá confiança e diz ao consolidador o que já está coberto.*
+
+- {{item-verificado-1}}
+- {{item-verificado-2}}
+
+## 5. Fora de âmbito / não verificável
+
+*Honestidade absoluta (`knowledge/permanent-rules.md` §2): o que este revisor não olhou e
+porquê — falta de artefacto ou dimensão de outro revisor.*
+
+| O que não foi verificado | Porquê |
+| --- | --- |
+| {{ex-performance-sob-carga}} | {{dimensao-de-outro-revisor-ou-falta-de-artefacto}} |
+
+## Relacionados
+
+- `agents/12-reviewers/README.md` · `agents/12-reviewers/review-consolidator.md`
+- `checklists/pr-review.md` · `checklists/pre-merge.md` · `core/quality-gates.md`

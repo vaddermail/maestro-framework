@@ -1,0 +1,48 @@
+# Objetivos de Negócio e KPIs
+
+> **Como usar:** um ficheiro, duas secções — objetivos mensuráveis (instanciados pelo
+> `agents/00-discovery/business-goals-analyst.md`) e os KPIs que os medem, com baseline e
+> alvo (instanciados a jusante pelo `agents/00-discovery/kpi-definer.md`). Fica em
+> `product/00-discovery/goals-and-kpis.md`.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/business-goals-analyst.md` (Objetivos) · `agents/00-discovery/kpi-definer.md` (KPIs)
+> **Fase:** F1 · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** `priorizador`, `delimitador-de-mvp`, `analista-de-riscos`, `especialista-de-metricas`, F2
+
+## Objetivos de negócio
+
+*Resultado de negócio, não funcionalidade. "Reduzir o tempo de aprovação" é objetivo; "ter um botão
+de aprovação em lote" é solução disfarçada.*
+
+| ID | Objetivo (direção + resultado observável) | Dono | Liga-se a | Prioridade |
+| --- | --- | --- | --- | --- |
+| OB-1 | {{objetivo-mensuravel}} | {{stakeholder-dono}} | `problema.md` | alta / média / baixa |
+
+## Restrições
+
+*Prazo, orçamento, conformidade legal, capacidade da equipa, tecnologia imposta — limites dados,
+não estimados aqui.*
+
+- {{restricao}}
+
+## Conflitos expostos ao utilizador
+
+*Quando dois objetivos ou restrições colidem (qualidade × prazo × custo), o conflito sobe ao
+utilizador com os trade-offs explicados — nunca se escolhe por ele.*
+
+- {{objetivo-a}} vs {{objetivo-b}} — {{trade-off}} — **decisão pendente / resolvida: {{decisao}}**
+
+## KPIs
+
+*1–2 por objetivo. Baseline antes de alvo: sem baseline, o entregável é um plano de medição, nunca um
+número inventado (`knowledge/permanent-rules.md`).*
+
+| KPI | Mede o objetivo | Baseline | Alvo (valor + prazo) | Fonte | Cadência |
+| --- | --- | --- | --- | --- | --- |
+| {{kpi}} | OB-1 | {{valor-atual-ou-"por medir"}} | {{valor-alvo-ate-quando}} | {{de-onde-vem-o-numero}} | {{semanal-mensal}} |
+
+## Relacionados
+
+- `agents/00-discovery/business-goals-analyst.md` · `agents/00-discovery/kpi-definer.md`
+- `templates/discovery/problem.md.template` · `templates/discovery/mvp.md.template`

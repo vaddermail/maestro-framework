@@ -1,0 +1,149 @@
+# CLAUDE.md — {{nome-do-produto}}
+
+> **Como usar:** instancia-se uma vez em F0 (`Maestro/workflows/W00-project-kickoff.md`), a
+> partir deste template. Fica na **raiz do projeto** (fora de `Maestro/`), ao lado de
+> `STATE.md`. É o primeiro ficheiro que qualquer agente de IA lê no arranque de uma sessão —
+> mantém-se enxuto e estável; o que muda todos os dias vai para `STATE.md`, não para aqui.
+
+---
+
+*Ficheiro de instruções para agentes de IA, carregado automaticamente no arranque de cada sessão. Se
+houver conflito entre o que aqui está e o que o utilizador pede na sessão, o utilizador manda — mas
+avisa-o se estiver a contrariar uma decisão fechada (§7).*
+
+## 1. O que é o projeto
+
+*Preencher em F1 a partir de `product/00-discovery/idea.md` e `product/00-discovery/problem.md`.*
+
+**{{nome-do-produto}}** é {{descrição em 2–4 frases: o que é, para quem, que problema resolve}}.
+
+Domínios/módulos: {{lista, ex.: catálogo, encomendas, faturação, apoio ao cliente}}.
+
+{{Se houver mais do que uma app no mesmo repositório — ex. backoffice + portal do cliente, API +
+app mobile — listar cada uma com o seu ponto de entrada.}}
+
+**Estado atual:** {{fase do ciclo de vida e o que já existe, ex.: "F5 concluída — especificação
+aprovada, a iniciar construção"}}.
+
+## 2. Fontes de verdade (ler por esta ordem)
+
+A informação do projeto está estratificada (`Maestro/core/project-memory.md`). Consulta
+**nesta ordem**:
+
+1. **`CLAUDE.md`** (este ficheiro) — como trabalhar, regras e guardrails. Muda raramente, com peso.
+2. **`STATE.md`** — feito / em curso / a seguir / pendências. **A memória partilhada do projeto.**
+   Lê sempre no início e **atualiza no fim** de cada sessão que mude algo relevante.
+3. **`product/`** — artefactos canónicos por fase (descoberta, requisitos, arquitetura, experiência
+   e, sobretudo, **`product/04-specification/`** — a fonte de verdade **funcional**, agnóstica de
+   tecnologia). Árvore completa em `Maestro/core/artifact-protocol.md`.
+4. **Código + testes** — a implementação da especificação.
+5. **`CHANGELOG.md`** — histórico do *o que mudou e porquê*, por marco.
+
+> Quando `product/04-specification/` e o comportamento observado divergem, a especificação **ganha**
+> — e a divergência regista-se em `STATE.md`.
+
+## 3. Como trabalhar (sempre)
+
+1. **Sincroniza antes de começar** (parte sempre do trabalho mais recente da equipa).
+2. **Lê o `STATE.md`** para saberes onde está o projeto.
+3. Segue o workflow da fase atual (`Maestro/workflows/`; fases em
+   `Maestro/core/lifecycle.md`). Não avances de fase sem o portão correspondente
+   (`Maestro/core/quality-gates.md`).
+4. **Verifica** antes de dar uma alteração por concluída (§6).
+5. **Atualiza** `STATE.md` e, se for um marco, `CHANGELOG.md`.
+6. **Commit + push** com mensagem clara, e avisa a equipa.
+
+As regras permanentes de trabalho (postura de dono, honestidade sem invenção, reversibilidade,
+mudanças em massa, segredos, versões estáveis, disciplina de Git) **não se repetem aqui** — vivem em
+`Maestro/knowledge/permanent-rules.md` e aplicam-se sempre, sem exceção.
+
+**Segredos:** nunca no controlo de versões — ver `Maestro/playbooks/secrets-management.md`.
+
+**Modelo de IA por tarefa:** {{mapeamento concreto deste projeto, ex.: "Topo = {{modelo}},
+Padrão = {{modelo}}, Económico = {{modelo}}, Mecânico = {{modelo}}"}} — regras completas em
+`Maestro/core/model-routing.md`.
+
+## 4. Arquitetura do produto (o essencial)
+
+*Preencher em F3 a partir de `product/02-architecture/architecture-vision.md` e
+`product/02-architecture/stack.md`.*
+
+- **Stack:** {{linguagens, frameworks, BD, versões fixadas}}.
+- **Estilo de arquitetura:** {{monólito modular / hexagonal / event-driven / …}} — porquê no ADR
+  correspondente (`product/02-architecture/decisions/`).
+- **Identidade/autenticação:** {{OIDC, Entra ID, Auth0, …}}.
+- **Ambientes:** {{dev / staging / produção e como se distinguem}}.
+
+Detalhe completo em `product/02-architecture/` e `product/04-specification/backend-contract.md`.
+
+## 5. Regras de negócio inegociáveis
+
+*Preencher a partir de `product/01-requirements/business-rules.md` (RN-nnn). Só entram aqui as
+regras cuja violação já causou, ou causaria, defeitos graves — o resto fica só na especificação.
+Cada regra referencia o RN-nnn de origem.*
+
+1. **{{regra 1, ex.: "Um pedido tem sempre um responsável, nunca dois nem zero"}}** (RN-{{nnn}}).
+2. **{{regra 2, ex.: "Scoping por unidade organizacional em X — usar sempre a função de scoping,
+   nunca a tabela diretamente"}}** (RN-{{nnn}}).
+3. **{{regra 3}}** (RN-{{nnn}}).
+
+A íntegra, com máquinas de estado e fluxos críticos, está em `product/04-specification/`.
+
+## 6. Definição de "pronto" (verificação)
+
+Checklist objetiva: `Maestro/checklists/definition-of-done.md` e
+`Maestro/checklists/pre-merge.md`. Resumo mínimo antes de dar uma alteração por concluída:
+
+- [ ] Build/sintaxe válidos, sem partir o que já existe.
+- [ ] Sem erros nos fluxos afetados (todos os perfis/papéis relevantes, se houver RBAC).
+- [ ] Regras de negócio e integridade das relações mantidas (§5).
+- [ ] Scoping/autorização preservados onde aplicável.
+- [ ] Testes verdes — frontend e backend correm **separados**, os dois têm de passar.
+- [ ] `STATE.md` atualizado; `CHANGELOG.md` se for marco.
+
+## 7. Decisões fechadas (não reabrir sem novidade material)
+
+*Uma linha por ADR aprovado em `product/02-architecture/decisions/`, com link. Reabrir exige novidade
+material e avisa-se antes de contrariar (`Maestro/core/decision-engine.md`
+§Decisões fechadas).*
+
+1. {{decisão 1}} — `product/02-architecture/decisions/ADR-{{nnn}}-{{titulo-em-kebab}}.md`.
+2. {{decisão 2}} — `product/02-architecture/decisions/ADR-{{nnn}}-{{titulo-em-kebab}}.md`.
+
+## 8. Memória e estado partilhados
+
+A memória do projeto **vive no repositório**, não na sessão de nenhuma ferramenta
+(`Maestro/core/project-memory.md`):
+
+- **`CLAUDE.md`** (este ficheiro) — regras estáveis.
+- **`STATE.md`** — estado vivo; é aqui que se passa o testemunho entre sessões e entre pessoas.
+- **`product/`** — artefactos canónicos (contexto profundo e duradouro).
+
+Nada de relevante fica só na memória efémera de uma sessão: se interessa à próxima sessão ou à
+equipa, **escreve-se**.
+
+## 9. A framework (Maestro)
+
+Este projeto segue a framework **Maestro**, copiada para `Maestro/` na raiz do repositório
+— referência de processo, **read-only** durante o desenvolvimento do produto (não é código do
+produto). Mapa completo: `Maestro/README.md`. Pontos de entrada frequentes:
+
+- `Maestro/core/orchestrator.md` — como os agentes se coordenam.
+- `Maestro/core/lifecycle.md` — fases F0–F9 e o que cada uma produz.
+- `Maestro/agents/` — especialistas por categoria, um por responsabilidade.
+- `Maestro/workflows/` — processos que ligam agentes fase a fase.
+- `Maestro/adapters/` — mapeamento concreto para a ferramenta de IA em uso (Claude Code,
+  Cowork, outra).
+
+Versão da framework copiada: {{versão — ver `Maestro/_meta/VERSION.md`}}. Se a framework evoluir
+no repositório de origem, atualiza-se aqui deliberadamente (nunca à deriva) e regista-se em
+`STATE.md`.
+
+## Relacionados
+
+- `STATE.md` — memória viva do dia-a-dia.
+- `CHANGELOG.md` — histórico por versão.
+- `Maestro/core/project-memory.md` — o porquê desta estrutura.
+- `Maestro/core/decision-engine.md` — como as decisões fechadas (§7) se tomam e reabrem.
+- `Maestro/knowledge/permanent-rules.md` — as regras de trabalho que não se repetem aqui.
+- `Maestro/checklists/definition-of-done.md` — o detalhe do §6.

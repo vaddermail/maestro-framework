@@ -1,0 +1,54 @@
+# MVP
+
+> **Como usar:** o menor conjunto de funcionalidades que já entrega valor real e é demonstrável, com
+> os cortes registados a preto no branco. Instanciado pelo
+> `agents/00-discovery/mvp-scoper.md`, perto do fim de F1. Fica em
+> `product/00-discovery/mvp.md`.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/mvp-scoper.md`
+> **Fase:** F1 (fim da descoberta) · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** utilizador, `planeador-de-roadmap`, F2 (requisitos), F3 (arquitetura)
+
+## Âmbito do MVP
+
+*Tem de fechar pelo menos um caso de uso central de ponta a ponta e mover pelo menos um KPI — senão
+o corte está errado.*
+
+| Funcionalidade | Caso de uso que fecha | KPI que move |
+| --- | --- | --- |
+| {{funcionalidade}} | `CU-{{nnn}}` | {{kpi}} |
+
+## Critério de "demonstrável"
+
+*O que se mostra numa demo de poucos minutos. Se não se consegue mostrar a funcionar, ainda há um
+buraco no fluxo.*
+
+{{cenario-de-demo}}
+
+## Exclusões explícitas
+
+*Cada corte com motivo e destino — um corte silencioso volta como "pensei que estava incluído"
+(`knowledge/ai-pitfalls.md`).*
+
+| Fora do MVP | Motivo | Destino |
+| --- | --- | --- |
+| {{funcionalidade-excluida}} | {{motivo-do-corte}} | H2 / H3 / nunca |
+
+## Piso legal/ético/segurança verificado
+
+*Consentimento de dados, acessibilidade básica e segurança de autenticação nunca são "features de
+H2" — se um risco de `riscos.md` o exigir, entram no MVP mesmo custando ao prazo.*
+
+- [ ] {{verificacao-1}}
+
+## Aprovação
+
+*O âmbito é decisão humana — o artefacto não passa a `aprovado` sem isto.*
+
+**Aprovado por:** {{utilizador}} · **Em:** {{aaaa-mm-dd}}
+
+## Relacionados
+
+- `agents/00-discovery/mvp-scoper.md` · `templates/discovery/roadmap.md.template`
+- `templates/discovery/use-case.md.template` · `templates/discovery/goals-and-kpis.md.template`

@@ -1,0 +1,41 @@
+# CHANGELOG — {{nome-do-produto}}
+
+> **Como usar:** atualiza-se a cada **marco** (não a cada commit — commits pequenos vivem no
+> histórico Git; aqui só o que interessa a quem lê a história do produto sem ter visto as sessões).
+> Fica na **raiz do projeto**. Mais recente primeiro.
+
+---
+
+Todas as datas em AAAA-MM-DD. Formato de versão deste projeto: {{semver | vNN | data — escolher um
+e manter}}.
+
+## [{{versao}}] — {{aaaa-mm-dd}}
+
+*Preencher com o essencial do quê e do porquê — não é o log do Git.*
+
+### Adicionado
+- {{funcionalidade nova}} — {{porquê; RF-nnn de origem, se aplicável}}.
+
+### Alterado
+- {{mudança de comportamento existente}} — {{porquê}}.
+
+### Corrigido
+- {{defeito resolvido}} — {{causa raiz, não só o sintoma}}.
+
+### Removido
+- {{o que saiu e porquê}}.
+
+### Segurança
+- {{correções/atualizações relevantes de segurança}}.
+
+---
+
+## [{{versao-anterior}}] — {{aaaa-mm-dd}}
+
+{{...}}
+
+## Relacionados
+
+- `STATE.md` — o presente; este ficheiro é o histórico.
+- `product/02-architecture/decisions/` — ADRs por trás das mudanças estruturais.
+- `Maestro/core/project-memory.md` — onde vive cada tipo de conhecimento.

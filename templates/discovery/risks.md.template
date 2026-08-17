@@ -1,0 +1,34 @@
+# Registo de Riscos
+
+> **Como usar:** registo vivo de riscos de negócio, técnicos e legais, com identificador estável —
+> reaberto em cada portão de fase, não só em F1. Instanciado pelo
+> `agents/00-discovery/risk-analyst.md`. Fica em `product/00-discovery/risks.md`.
+
+> **Estado:** rascunho
+> **Dono:** `agents/00-discovery/risk-analyst.md`
+> **Fase:** F1 (registo inicial); revisitado em cada portão e em F9 · **Atualizado:** {{aaaa-mm-dd}}
+> **Consumidores:** `delimitador-de-mvp`, `planeador-de-roadmap`, `estimador-de-custos`, fases seguintes
+
+## Registo
+
+*Cobre sempre as três dimensões: negócio, técnico, legal/conformidade. Todo risco tem dono e
+próximo passo — "risco: pode falhar" sem mitigação nem dono é decoração, não entra.*
+
+| ID | Categoria | Descrição | Probabilidade × Impacto | Mitigação | Dono | Estado | Gatilho de revisão |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| R-001 | negócio / técnico / legal | {{descricao-ancorada-no-produto}} | {{baixa-media-alta}} × {{baixa-media-alta}} | {{acao-com-dono-e-momento}} | {{responsavel}} | aberto | {{portao-de-fase-ou-evento}} |
+
+*Estados possíveis: aberto (com mitigação e dono) · mitigado · aceite pelo utilizador · fechado.*
+
+## Escalados ao utilizador
+
+*Riscos que exigem decisão de negócio/âmbito, ou aceitação de risco residual — nunca aceites sozinhos
+pelo agente; a aprovação fica registada.*
+
+- {{risco-id}} — {{decisao-pedida}} — **aceite por:** {{utilizador}}, em {{data}}
+
+## Relacionados
+
+- `agents/00-discovery/risk-analyst.md`
+- `agents/09-security/threat-modeler.md` — recebe o testemunho dos riscos de segurança.
+- `templates/discovery/mvp.md.template` · `templates/discovery/roadmap.md.template`

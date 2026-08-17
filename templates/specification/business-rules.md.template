@@ -1,0 +1,73 @@
+# Regras de Negócio — {{nome-do-modulo}}
+
+> **Como usar:** um ficheiro por módulo (ou o catálogo completo do projeto, em protótipos pequenos),
+> instanciado pelo `agents/01-requirements/business-rules-modeler.md` em F2, a partir dos `RF`
+> que pressupõem regras. Fica em `product/01-requirements/business-rules.md`. Cada `RN` é numerada e
+> **eterna**: se morrer, marca-se `obsoleta`, nunca se reutiliza o ID.
+
+> **Estado:** rascunho
+> **Dono:** `agents/01-requirements/business-rules-modeler.md`
+> **Fase:** F2 (esboço) · F5 (consolidação) · **Atualizado:** {{aaaa-mm-dd}}
+> **Satisfaz:** {{rf-nnn-que-pressupoem-estas-regras}}
+> **Consumidores:** `redator-de-criterios-de-aceitacao`, `modelador-de-dados`, `especialista-de-autorizacao`, revisores, testes
+
+## Visão geral do módulo
+
+*Duas frases: que parte do domínio este módulo cobre e porque as suas regras vivem juntas (ex.:
+"faturação de subscrições" ou "atribuição de ativos a colaboradores").*
+
+{{descricao-breve-do-modulo}}
+
+## Catálogo de regras
+
+*Uma linha por regra, para visão rápida. O detalhe de cada uma vai na secção seguinte.*
+
+| ID | Tipo | Enunciado (resumo) | Onde se aplica |
+| --- | --- | --- | --- |
+| {{rn-nnn}} | invariante \| regra de decisão \| restrição | {{resumo-de-uma-linha}} | cliente \| servidor \| BD |
+
+## Detalhe por regra
+
+*Repetir este bloco por `RN`. Um enunciado que precisa de "e/ou" para juntar duas ideias independentes
+é candidato a duas regras.*
+
+### {{rn-nnn}} — {{titulo-curto}}
+
+| Campo | Valor |
+| --- | --- |
+| **Tipo** | {{invariante \| regra-de-decisao \| restricao}} |
+| **Enunciado verificável** | {{frase-testavel-sem-ambiguidade}} |
+| **Porquê (proveniência)** | {{decisao-de-negocio-ou-defeito-que-a-originou}} |
+
+**Onde se aplica e impõe** — *uma regra dura vive em mais do que uma camada (defesa em profundidade);
+marcar todas as que se aplicam, nunca confiar só na app.*
+
+| Camada | Aplica-se? | Mecanismo |
+| --- | --- | --- |
+| Cliente | {{sim/não}} | {{guard-amigavel-de-ux}} |
+| Servidor | {{sim/não}} | {{guard-na-orquestracao-ou-authz}} |
+| Base de dados | {{sim/não}} | {{constraint-check-unique-parcial-fk}} |
+
+**Exceções explícitas** — *uma regra sem exceções registadas assume-se sem exceções; uma exceção não
+escrita aqui não existe.*
+
+- {{condicao-da-excecao}} → {{comportamento-diferente}}. *(se não há exceções: "Nenhuma — aplica-se sempre".)*
+
+**Relacionadas** — `RF`: {{rf-nnn}} · `RN`: {{rn-nnn-relacionada}} · Máquina de estado: {{nome-do-fluxo, se aplicável}}
+
+---
+
+## Notas de modelação
+
+*Onde três mecanismos se cruzam (gate de elegibilidade, autorização, escalão proporcional a um valor),
+registar aqui a fronteira entre eles em vez de os colapsar numa só regra — ver
+`modules/approval-engine.md`. Limiares (valores, prazos) nunca ficam fixos no enunciado da regra;
+ficam num catálogo configurável referenciado aqui.*
+
+## Relacionados
+
+- `agents/01-requirements/business-rules-modeler.md` · `agents/01-requirements/requirements-engineer.md`
+- `agents/06-data/data-modeler.md` · `agents/05-backend/authorization-specialist.md`
+- `modules/state-machines.md` · `modules/approval-engine.md` · `modules/rbac-and-scoping.md`
+- `templates/specification/state-machine.md.template` · `templates/specification/functional-requirement.md.template`
+- `knowledge/origin-lessons.md`

@@ -1,0 +1,72 @@
+# Plano de Testes — `{{fatia-ou-funcionalidade}}`
+
+> **Como usar:** copia para `product/06-tests/test-plans/{{fatia}}.md`. O plano é orientado
+> ao **risco**: cobre primeiro regras de negócio, invariantes e fluxos irreversíveis; não persegue
+> percentagem de cobertura cega. Produzido pelo `agents/10-quality/test-strategist.md`.
+
+## Cabeçalho
+
+| Campo | Valor |
+| --- | --- |
+| Fatia / funcionalidade | {{nome}} |
+| Âmbito | {{o-que-cobre-e-o-que-fica-de-fora}} |
+| Data | {{aaaa-mm-dd}} |
+| Autor | {{agente-ou-pessoa}} |
+
+## Lógica de risco a cobrir
+
+*O que tem de estar certo — não "testar tudo", testar o que dói se falhar: correção, autorização,
+dinheiro, dados pessoais, irreversibilidade (`MANIFESTO.md` §9).*
+
+| Regra / invariante | Porque é risco | Nível de teste | Prioridade |
+| --- | --- | --- | --- |
+| {{ex-um-ativo-um-responsavel-de-cada-vez}} | {{consequencia-concreta-se-falhar}} | {{unitario-integracao-e2e}} | {{alta-media-baixa}} |
+
+## Estratégia por nível
+
+| Nível | Cobre | Fica fora |
+| --- | --- | --- |
+| Unitário | {{regras-de-negocio-e-invariantes-isoladas}} | {{io-externo-real}} |
+| Integração | {{bd-real-contratos-transacoes}} | {{interface-visual}} |
+| E2E | {{fluxos-criticos-multi-perfil-x-paginas}} | {{combinatoria-exaustiva-de-casos}} |
+
+## Fakes/mocks para I/O externo
+
+*Nunca bater em serviços externos reais nos testes automáticos — fake com contrato espelhado ao real.*
+
+| Dependência externa | Real ou fake nos testes | Porquê | Onde vive o fake |
+| --- | --- | --- | --- |
+| {{ex-gateway-de-pagamentos}} | fake | {{custo-latencia-flakiness}} | {{caminho-do-fake}} |
+
+## Dados de teste
+
+| Cenário | Estado inicial | Resultado esperado |
+| --- | --- | --- |
+| {{caminho-feliz}} | {{estado-inicial}} | {{resultado}} |
+| {{caso-limite-1}} | {{estado-inicial}} | {{resultado}} |
+| {{caso-de-erro-1}} | {{estado-inicial}} | {{resultado}} |
+
+## Smoke test live
+
+*Depois do deploy — passo humano ou automatizado curto que confirma o sistema real (não o mock) de
+ponta a ponta.*
+
+1. {{passo-1}}
+2. {{passo-2}}
+3. {{verificacao-final}}
+
+## Critérios de saída
+
+- [ ] Toda a lógica de risco de prioridade alta tem teste que falha se a regra for quebrada.
+- [ ] {{criterio-especifico-2}}
+- [ ] Smoke test live corrido e verde, com evidência anexada (não "parece bem").
+
+## Fora de âmbito
+
+- {{o-que-este-plano-nao-cobre-e-quem-cobre}}
+
+## Relacionados
+
+- `agents/10-quality/test-strategist.md` · `agents/10-quality/coverage-auditor.md`
+- `agents/10-quality/unit-test-engineer.md` · `agents/10-quality/integration-test-engineer.md`
+- `agents/10-quality/e2e-test-engineer.md` · `checklists/definition-of-done.md` · `checklists/pre-merge.md`
