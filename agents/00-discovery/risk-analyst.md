@@ -46,7 +46,7 @@ decisions.
 | `product/00-discovery/problem.md` | `problem-definer` (F1) | Yes | Business risk: what if the problem is not real? |
 | `product/00-discovery/casos-de-utilizacao.md` | `use-case-modeler` (F1) | Yes | Flows where the risk materializes |
 | `product/00-discovery/goals-and-kpis.md` | `kpi-definer` (F1) | No | Risk = a KPI that may not be reached |
-| `STATE.md` §Lições | Project memory | No | Risks that have already materialized before |
+| `STATE.md` §Lessons | Project memory | No | Risks that have already materialized before |
 
 If the problem or the use cases are missing, the analyst **does not fabricate generic checklist
 risks**: it records the gap and returns to the Orchestrator for the missing agents.

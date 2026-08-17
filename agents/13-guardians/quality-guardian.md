@@ -1,4 +1,4 @@
-# Quality Guardian (Guardião de Qualidade)
+# Quality Guardian
 
 > Agent spec of type **guardian** in category `13-guardians`. Follows
 > `agents/_template/AGENT-TEMPLATE.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Quality Guardian |
-| **Alias** | Guardião de Qualidade |
+| **Alias** | Quality Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); inherits the harness and the risk map from F6/F7 |
 | **Type** | Guardian |
@@ -50,7 +50,7 @@ to the Orchestrator to engage `agents/02-architecture/architecture-arbiter.md`.
 | Risk→level map | `agents/10-quality/test-strategist.md` | Yes | The standard coverage is audited against (not the %) |
 | ADRs and module diagram | `agents/02-architecture/architecture-arbiter.md` | Yes | The decision drift is measured against |
 | The `architecture-reviewer`/`coverage-auditor` F7 report | `agents/12-reviewers/`, `agents/10-quality/coverage-auditor.md` | No | Known baseline; already accepted drift/holes are not re-flagged |
-| `STATE.md` §Dívida / §Decisões fechadas | Project memory | No | What is already recorded, to avoid noise |
+| `STATE.md` §Debt / §Closed decisions | Project memory | No | What is already recorded, to avoid noise |
 
 If the risk→level map or the ADRs are missing, the guardian **does not audit blindly**: it flags
 the gap to the Orchestrator (engaging `test-strategist`/`architecture-arbiter`) and records it.
@@ -61,9 +61,9 @@ the gap to the Orchestrator (engaging `test-strategist`/`architecture-arbiter`) 
 | --- | --- | --- |
 | Cycle report | `product/99-records/guardians/quality-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Opened smells loop (when above the threshold) | `loops/L04-code-smells.md` | Build team |
-| Recorded technical debt (when deliberately deferred) | `STATE.md` §Dívida → `loops/L08-technical-debt.md` | Future sessions |
+| Recorded technical debt (when deliberately deferred) | `STATE.md` §Debt → `loops/L08-technical-debt.md` | Future sessions |
 | ADR proposal (when the drift is a legitimate unrecorded decision) | Report annex | `agents/02-architecture/architecture-arbiter.md`, user |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 
@@ -126,7 +126,7 @@ Raised to the Orchestrator, which batches them (`core/question-engine.md`):
 3. **Map architecture drift** — extract the real dependency graph and compare it with the ADRs
    and the prescribed module diagram.
 4. **Classify** — each finding by severity × associated business risk; ignore what is already in
-   `STATE.md` §Dívida as accepted.
+   `STATE.md` §Debt as accepted.
 5. **Decide** — fix now (small, reversible) vs. record debt (`L08`) vs. open
    `loops/L04-code-smells.md` vs. escalate the drift as a possible new ADR.
 6. **Apply** the small, reversible fixes; validate with regression + live proof.

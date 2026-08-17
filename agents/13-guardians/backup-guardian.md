@@ -1,4 +1,4 @@
-# Backup Guardian (Guardião de Backups)
+# Backup Guardian
 
 > A backup that has never been restored is not a backup, it is a hope. This guardian exists so
 > that sentence is never discovered during an incident. Spec per
@@ -9,7 +9,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Backup Guardian |
-| **Alias** | Guardião de Backups |
+| **Alias** | Backup Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation) |
 | **Type** | Guardian |
@@ -49,7 +49,7 @@ failure requires an investment decision — it records it in `STATE.md` → pend
 | Infra backup plan + rebuild runbook | `agents/08-infrastructure/infra-backup-specialist.md` | Yes | Covers what the data backups do not |
 | Disaster recovery plan (system RTO/RPO) | `agents/06-data/disaster-recovery-planner.md` | Yes | The targets the drills are compared against |
 | Backup job logs/alerts | Production infra | Yes | Basis of the daily check |
-| `STATE.md` §Lições | Project memory | No | Previous failures and drills |
+| `STATE.md` §Lessons | Project memory | No | Previous failures and drills |
 
 If no backup strategy and no written runbook exist, the guardian **does not invent a drill
 procedure**: it flags the gap to the Orchestrator and records it — verifying something that was
@@ -63,8 +63,8 @@ never designed gives a false sense of coverage.
 | Drilled data-restore log | `product/99-records/data/restore-YYYY-MM-DD.md` | User, `disaster-recovery-planner` |
 | Drilled infra-restore log | `product/99-records/backups/restore-infra-YYYY-MM-DD.md` | User, audit |
 | Failed-restore post-mortem | `templates/technical/post-mortem.md.template` | User, backup specialists, `W11` |
-| Debt record (RPO/RTO gap) | `STATE.md` §Dívida técnica → `loops/L08-technical-debt.md` | Future sessions |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| Debt record (RPO/RTO gap) | `STATE.md` §Debt → `loops/L08-technical-debt.md` | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

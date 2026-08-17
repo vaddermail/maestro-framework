@@ -70,7 +70,7 @@ Via the arbiter (`core/question-engine.md`):
    the arbiter: the hidden cost is the hours and the operational risk.
 2. **Count total cost = (low) bill + (high) operations.** The honest comparison with a
    hyperscaler includes the SRE hours Hetzner demands
-   (`knowledge/permanent-rules.md` §postura de dono).
+   (`knowledge/permanent-rules.md` §Owner's mindset).
 3. **Backups and HA are the team's responsibility**, they do not come out of the box — design the
    backup strategy right away (`agents/08-infrastructure/infra-backup-specialist.md`) and, if
    needed, redundancy (`agents/08-infrastructure/high-availability-architect.md`).

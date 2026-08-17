@@ -50,7 +50,7 @@ records the blocker in `STATE.md` → pending decisions and escalates the decisi
 | Architecture ADRs | F3 | Yes | Every decision changes the attack surface |
 | `product/05-security/threat-model.md` | `agents/09-security/threat-modeler.md` (F5) | Yes | The threat map to consolidate |
 | Specialist reports (OWASP, ASVS, CIS, hardening, headers, pentest…) | F3–F8 | Per phase | The findings to aggregate |
-| `STATE.md` §Lições | Project memory | No | Previous security risks and decisions |
+| `STATE.md` §Lessons | Project memory | No | Previous security risks and decisions |
 
 If the risk profile is not defined, the coordinator **does not assume** a level: it opens the
 batch of questions to the user (`core/question-engine.md`). Silently assuming "low risk" is the
@@ -64,7 +64,7 @@ mistake this agent exists to prevent.
 | Residual risk register | `product/05-security/residual-risk.md` | User (signs), `security-guardian`, Orchestrator |
 | Security coverage plan per phase | `product/05-security/coverage-plan.md` | Orchestrator (schedules the specialists) |
 | Security gate at each phase gate (passed/blocked) | `STATE.md` + `checklists/pre-production-security.md` | Quality gates |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 All output is **written to file** (`core/project-memory.md`) — verbal residual risk does not
 exist.

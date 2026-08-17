@@ -59,7 +59,7 @@ threshold is not agreed — it records it in `STATE.md` → pending decisions, w
 | Single-source-of-content catalog | `modules/single-source-of-content.md` | Yes | The only admitted origin for grounding |
 | Provenance and undo spec | `agents/06-data/data-auditor.md` (F5) | Yes | How generated content is marked and reverted |
 | Credits and observability design | `modules/credit-management.md` · `modules/ai-observability.md` | Yes | Quotas, rates, usage events, kill-switch |
-| `STATE.md` §Lições | Project memory | No | Prompts and evals that have already failed before |
+| `STATE.md` §Lessons | Project memory | No | Prompts and evals that have already failed before |
 
 If a required input is missing, it does not build on assumption: it returns the gaps and the
 questions to the Orchestrator (`core/question-engine.md`).
@@ -209,7 +209,7 @@ product.
   degradation), then the path with it — never the other way around.
 - Reuse the modules as proven design — credits, usage events, kill-switch, provenance
   and undo already have a ready-made pattern; reinventing them is debt.
-- Record in `STATE.md` §Lições the prompts that failed and why — the next session does not repeat
+- Record in `STATE.md` §Lessons the prompts that failed and why — the next session does not repeat
   the same tuning.
 
 ## Anti-patterns

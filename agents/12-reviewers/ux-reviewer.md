@@ -1,4 +1,4 @@
-# UX Reviewer (Revisor de UX)
+# UX Reviewer
 
 > Spec of a **reviewer**-type agent (`agents/_template/AGENT-TEMPLATE.md`). It does not inspect
 > code: it **uses** the product as each persona would and returns a report; it never builds or
@@ -9,7 +9,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | UX Reviewer |
-| **Alias** | Revisor de UX |
+| **Alias** | UX Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -49,7 +49,7 @@ returns to the Orchestrator to trigger `agents/00-discovery/persona-builder.md` 
 | `product/00-discovery/use-cases/UC-nnn-*` | `agents/00-discovery/use-case-modeler.md` (F1) | Yes | The trigger, the steps and the observable outcome to confirm |
 | Navigable build of the slice (staging or equivalent) | F6 | Yes | The object of the review — never code read, always used |
 | `product/03-experience/responsiveness.md` / `.../accessibility.md` | `agents/03-experience/` (F4) | No | Device context/need of each persona |
-| `STATE.md` §Decisões / §Dívida | `core/project-memory.md` | No | Friction already known and accepted (not re-flagged) |
+| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | Friction already known and accepted (not re-flagged) |
 
 Without personas and UCs, the reviewer does not proceed on assumptions — it returns the list of
 gaps (`core/question-engine.md`).
@@ -60,7 +60,7 @@ gaps (`core/question-engine.md`).
 | --- | --- | --- |
 | UX review report | `product/99-records/reviews/ux-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | `agents/12-reviewers/review-consolidator.md` |
 | List of failed UCs with the exact blocking step | Report section | Build team, `agents/03-experience/ux-researcher.md` |
-| Non-obvious friction lessons | `STATE.md` §Lições | Future sessions |
+| Non-obvious friction lessons | `STATE.md` §Lessons | Future sessions |
 
 All output ends up **written to a file** (`core/project-memory.md`); a finding that is not
 written down does not exist.

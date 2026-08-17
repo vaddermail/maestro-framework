@@ -45,7 +45,7 @@ invest in faster recovery or revise the target.
 | High-availability architecture | `agents/08-infrastructure/high-availability-architect.md` | Yes | HA and DR are complementary, not the same |
 | Availability and continuity NFRs | `nfr-specifier` (F2) | Yes | The business's target RTO/RPO |
 | Critical-dependency inventory | `agents/09-security/sbom-manager.md` + infra | Yes | What needs to come back and in which order |
-| `STATE.md` §Lições / post-mortems | Project memory | No | Previous incidents and drills |
+| `STATE.md` §Lessons / post-mortems | Project memory | No | Previous incidents and drills |
 
 If the business's target RTO/RPO is not defined, the planner **does not presume**: it asks,
 because it sizes the entire recovery investment.
@@ -57,7 +57,7 @@ because it sizes the entire recovery investment.
 | DR plan (RTO/RPO, scenarios, recovery order) | `product/07-operations/data/disaster-recovery.md` | User (approves), `deployment-strategist`, guardians |
 | Recovery runbooks per scenario | `product/07-operations/runbooks/dr-*.md` (`templates/technical/runbook.md.template`) | Whoever executes the recovery in an incident |
 | DR drill log (real times) | `product/99-records/data/dr-drill-YYYY-MM-DD.md` | Orchestrator → user |
-| Gaps and improvement plans | `STATE.md` §Dívida / `loops/L08-technical-debt.md` | Future sessions |
+| Gaps and improvement plans | `STATE.md` §Debt / `loops/L08-technical-debt.md` | Future sessions |
 
 ## Questions to the user
 

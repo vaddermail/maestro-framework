@@ -1,210 +1,218 @@
-# Lições de Origem
+# Origin Lessons
 
-Lições **generalizadas** do projeto-mãe — um produto real construído de
-raiz com IA, que passou de protótipo HTML a monorepo TypeScript real através de ~40 fatias verticais,
-duas auditorias adversariais e um processo de equipa maduro. O domínio do projeto-mãe fica de
-fora; o que se generaliza é o **sistema de trabalho** e os padrões de engenharia.
+**Generalized** lessons from the origin project — a real product built from scratch with AI, which
+went from an HTML prototype to a real TypeScript monorepo through ~40 vertical slices, two
+adversarial audits and a mature team process. The origin project's domain stays out; what
+generalizes is the **system of work** and the engineering patterns.
 
-Cada lição traz o *porquê* e o *como aplicar*. São a memória de defeitos que a framework herda para
-não os repetir noutro produto.
-
----
-
-## A. Especificação e memória
-
-**A1. Spec estratificada, numerada, com precedência explícita e agnóstica de tecnologia.**
-As fontes de verdade organizam-se em camadas com ordem de leitura **e** de precedência declaradas,
-mais uma regra de desempate escrita (protótipo diverge da spec → a spec ganha, regista-se a
-divergência). A spec descreve o *quê/porquê* (regras, fluxos, estados) e nunca o *como* (stack, BD) —
-esse vive em ADRs separados.
-- *Porquê:* dá aos agentes um caminho **determinístico** para resolver contradições sem inventar; e
-  permite trocar de stack sem reescrever a intenção do produto.
-- *Aplicar:* `core/artifact-protocol.md` + `core/project-memory.md`; specs em
-  `product/04-specification/`, decisões em ADRs.
-
-**A2. A spec é também memória de defeitos.** Anotar cada regra dura com a sua **proveniência** (o
-defeito/decisão que a originou).
-- *Porquê:* impede que um agente futuro "simplifique" uma salvaguarda por não perceber porque existe.
-- *Aplicar:* proveniência obrigatória (`core/project-memory.md` §Memory hygiene).
-
-**A3. STATE.md passa o testemunho: topo hiper-detalhado, histórico colapsado.**
-- *Porquê:* um estado que cresce sem higiene deixa de ser encontrável — memória que não se lê não é
-  memória.
-- *Aplicar:* `core/project-memory.md`; registar também **decisões tomadas em nome do dono
-  ausente**, como revisitáveis.
-
-**A4. Dar a spec completa à cabeça e planos autocontidos, tarefa a tarefa.**
-- *Porquê:* corta turnos de ida-e-volta e reduz custo de IA; um implementador com contexto completo
-  erra menos.
-- *Aplicar:* `core/model-routing.md` §6; `workflows/W06-build.md`.
+Each lesson carries the *why* and the *how to apply*. They are the defect memory the framework
+inherits so it does not repeat them in another product.
 
 ---
 
-## B. Regras de negócio e integridade
+## A. Specification and memory
 
-**B1. Três mecanismos de controlo ortogonais que não se substituem:** gate de elegibilidade (bloqueia
-o fluxo cedo) ≠ aprovação de autorização (fecha o fluxo) ≠ escalão proporcional a um valor. Limiares
-**configuráveis em dados, nunca fixos por perfil nem em código**; toda a decisão persiste a via usada.
-- *Porquê:* colapsar os mecanismos torna o sistema rígido e a auditoria impossível.
-- *Aplicar:* `modules/approval-engine.md`.
+**A1. Layered, numbered spec with explicit precedence, agnostic of technology.**
+The sources of truth are organized in layers with a declared reading **and** precedence order,
+plus a written tie-break rule (prototype diverges from the spec → the spec wins, the divergence
+gets recorded). The spec describes the *what/why* (rules, flows, states) and never the *how*
+(stack, DB) — that lives in separate ADRs.
+- *Why:* it gives agents a **deterministic** path to resolve contradictions without inventing; and
+  it allows swapping the stack without rewriting the product's intent.
+- *Apply:* `core/artifact-protocol.md` + `core/project-memory.md`; specs in
+  `product/04-specification/`, decisions in ADRs.
 
-**B2. Autoridade ≠ scoping — eixos distintos.** *Autoridade* = que ações posso fazer; *scoping* = que
-subconjunto de dados vejo. Colapsá-los cria bugs nos dois sentidos.
-- *Porquê:* foi fonte real de defeitos; um perfil pode ter autoridade ampla e scoping estreito, ou o
-  inverso.
-- *Aplicar:* `modules/rbac-and-scoping.md`.
+**A2. The spec is also defect memory.** Annotate every hard rule with its **provenance** (the
+defect/decision that originated it).
+- *Why:* it stops a future agent from "simplifying" a safeguard because it does not see why it
+  exists.
+- *Apply:* mandatory provenance (`core/project-memory.md` §Memory hygiene).
 
-**B3. Uma fonte de verdade por facto; o inverso deriva-se.** Relações bidirecionais guardam um lado e
-derivam o outro; estado calculável **nunca** é coluna.
-- *Porquê:* duas cópias editáveis do mesmo facto divergem — a classe de bug mais teimosa.
-- *Aplicar:* `knowledge/proven-patterns.md` §4; `agents/06-data/data-modeler.md`.
+**A3. STATE.md is the handover: hyper-detailed top, collapsed history.**
+- *Why:* a state file that grows without hygiene stops being findable — memory nobody reads is not
+  memory.
+- *Apply:* `core/project-memory.md`; also record **decisions taken on behalf of the absent
+  owner**, as revisitable.
 
-**B4. Invariantes duros na BD + guards na app.** Constraint é a última linha de defesa; a app dá o
-erro amigável. Testar a constraint inserindo a linha ilegal e afirmando a violação pelo nome.
-- *Aplicar:* `knowledge/proven-patterns.md` §5.
-
-**B5. Estado em camadas ortogonais (base + overlay).** Uma ação temporária nunca deve destruir estado
-permanente; decompor e derivar o estado apresentado.
-- *Aplicar:* `modules/state-machines.md`; `knowledge/proven-patterns.md` §9.
-
-**B6. Uma operação com N vias de entrada = um serviço partilhado.** As vias diferem só em apresentação
-e pré-condições; o efeito é o mesmo código.
-- *Aplicar:* `knowledge/proven-patterns.md` §8.
-
-**B7. Semear dados de demo com datas relativas a uma data-âncora, nunca absolutas.**
-- *Porquê:* um demo com datas fixas "envelhece" e passa a mostrar tudo como atrasado/expirado.
-- *Aplicar:* `agents/06-data/data-modeler.md` (seeds).
+**A4. Give the full spec up front and self-contained plans, task by task.**
+- *Why:* it cuts round-trip turns and reduces AI cost; an implementer with full context makes
+  fewer mistakes.
+- *Apply:* `core/model-routing.md` §6; `workflows/W06-build.md`.
 
 ---
 
-## C. Backend e dados (engenharia)
+## B. Business rules and integrity
 
-**C1. Cliente não-fiável: autorização, scoping e ocultação de sensíveis 100% no servidor.** O cliente
-declara intenção (perfil ativo por header); o servidor confirma. Fora-de-scope → 404, não 403.
-Fail-closed (sem perfil → nega, nunca super-utilizador).
-- *Porquê:* um `?? "ADMIN"` fail-open transformou "sem perfil" em "acesso total" — existiu e foi
-  corrigido.
-- *Aplicar:* `modules/rbac-and-scoping.md`; `agents/05-backend/authorization-specialist.md`.
+**B1. Three orthogonal control mechanisms that do not substitute for each other:** eligibility
+gate (blocks the flow early) ≠ authorization approval (closes the flow) ≠ tier proportional to a
+value. Thresholds **configurable in data, never fixed per profile nor in code**; every decision
+persists the path used.
+- *Why:* collapsing the mechanisms makes the system rigid and auditing impossible.
+- *Apply:* `modules/approval-engine.md`.
 
-**C2. Contrato de dados numa só declaração alimenta validação + tipos servidor + tipos cliente + doc
-da API.** Um snapshot intermédio (ex.: OpenAPI) desacopla o ritmo do frontend sem perder tipagem.
-- *Porquê:* elimina a deriva entre "o que se valida", "o que o tipo diz" e "o que a doc promete".
-- *Aplicar:* `modules/single-source-of-content.md` §Como se adota num produto novo, passo 7 (contratos); `agents/05-backend/api-designer.md`.
+**B2. Authority ≠ scoping — distinct axes.** *Authority* = which actions I can take; *scoping* =
+which subset of data I see. Collapsing them creates bugs in both directions.
+- *Why:* it was a real source of defects; a profile can have broad authority and narrow scoping,
+  or the reverse.
+- *Apply:* `modules/rbac-and-scoping.md`.
 
-**C3. Anatomia uniforme de módulo:** bordo fino (protocolo) → orquestração (autorização + composição)
-→ regra de negócio (função pura/transacional que recebe a ligação de BD).
-- *Porquê:* a lógica difícil fica testável sem HTTP e componível dentro de transações maiores.
-- *Aplicar:* `agents/05-backend/README.md`.
+**B3. One source of truth per fact; the inverse is derived.** Bidirectional relationships store
+one side and derive the other; computable state is **never** a column.
+- *Why:* two editable copies of the same fact diverge — the most stubborn class of bug.
+- *Apply:* `knowledge/proven-patterns.md` §4; `agents/06-data/data-modeler.md`.
 
-**C4. Operações críticas numa transação, com locks pessimistas.** `FOR UPDATE` em quem muta o
-agregado central, lock partilhado na operação inversa que só precisa que ele não mude. Fecha janelas
-TOCTOU.
-- *Aplicar:* `knowledge/proven-patterns.md` §1,§5; `modules/entity-lifecycle.md`.
+**B4. Hard invariants in the DB + guards in the app.** The constraint is the last line of
+defense; the app gives the friendly error. Test the constraint by inserting the illegal row and
+asserting the violation by name.
+- *Apply:* `knowledge/proven-patterns.md` §5.
 
-**C5. Transactional outbox para efeitos secundários.** Emitir evento dentro da transação; entrega por
-executor único idempotente por fingerprint; kill-switch por canal; falhas logadas.
-- *Aplicar:* `modules/job-queue.md`.
+**B5. State in orthogonal layers (base + overlay).** A temporary action must never destroy
+permanent state; decompose and derive the presented state.
+- *Apply:* `modules/state-machines.md`; `knowledge/proven-patterns.md` §9.
 
-**C6. Erros que a UI aciona carregam payload estruturado, não só string.** Formato de erro único e
-padrão em toda a API (ex.: problem+json), com membros de extensão para a UI reagir sem parsing frágil.
-- *Aplicar:* `agents/05-backend/api-designer.md`; `agents/04-frontend/api-integrator.md`.
+**B6. One operation with N entry paths = one shared service.** The paths differ only in
+presentation and preconditions; the effect is the same code.
+- *Apply:* `knowledge/proven-patterns.md` §8.
 
-**C7. Migrações expand-contract; validar constraints em duas fases com dados legados.** CHECK novo
-aplicado sem validar o legado, depois backfill + validação. Nunca largar/renomear o que está em uso.
-- *Aplicar:* `playbooks/expand-contract-db-migration.md`.
+**B7. Seed demo data with dates relative to an anchor date, never absolute.**
+- *Why:* a demo with fixed dates "ages" and starts showing everything as late/expired.
+- *Apply:* `agents/06-data/data-modeler.md` (seeds).
 
-**C8. Distinguir NULL de FALSE e fechar TOCTOU são detalhes que mordem.** Um CHECK só rejeita em FALSE
-estrito (NULL passa); ler-decidir-escrever sem lock tem corrida.
-- *Aplicar:* `agents/06-data/data-modeler.md` (armadilhas SQL).
+---
 
-**C9. Integração externa atrás de uma porta, com adapter fake em dev e upsert idempotente por ID
-externo.** Guardar payload bruto como proveniência; escrita-de-volta como porta desde cedo (mesmo
+## C. Backend and data (engineering)
+
+**C1. Untrusted client: authorization, scoping and hiding of sensitive data 100% server-side.**
+The client declares intent (active profile via header); the server confirms. Out of scope → 404,
+not 403. Fail-closed (no profile → deny, never superuser).
+- *Why:* a fail-open `?? "ADMIN"` turned "no profile" into "full access" — it existed and was
+  fixed.
+- *Apply:* `modules/rbac-and-scoping.md`; `agents/05-backend/authorization-specialist.md`.
+
+**C2. A data contract in a single declaration feeds validation + server types + client types +
+API docs.** An intermediate snapshot (e.g. OpenAPI) decouples the frontend's pace without losing
+typing.
+- *Why:* it eliminates drift between "what is validated", "what the type says" and "what the doc
+  promises".
+- *Apply:* `modules/single-source-of-content.md` §How to adopt it in a new product, step 7
+  (contracts); `agents/05-backend/api-designer.md`.
+
+**C3. Uniform module anatomy:** thin edge (protocol) → orchestration (authorization +
+composition) → business rule (pure/transactional function that receives the DB connection).
+- *Why:* the hard logic stays testable without HTTP and composable inside larger transactions.
+- *Apply:* `agents/05-backend/README.md`.
+
+**C4. Critical operations in one transaction, with pessimistic locks.** `FOR UPDATE` on whoever
+mutates the central aggregate, shared lock on the inverse operation that only needs it not to
+change. Closes TOCTOU windows.
+- *Apply:* `knowledge/proven-patterns.md` §1,§5; `modules/entity-lifecycle.md`.
+
+**C5. Transactional outbox for side effects.** Emit the event inside the transaction; delivery by
+a single executor, idempotent by fingerprint; kill-switch per channel; failures logged.
+- *Apply:* `modules/job-queue.md`.
+
+**C6. Errors the UI acts on carry a structured payload, not just a string.** A single, standard
+error format across the whole API (e.g. problem+json), with extension members so the UI reacts
+without fragile parsing.
+- *Apply:* `agents/05-backend/api-designer.md`; `agents/04-frontend/api-integrator.md`.
+
+**C7. Expand-contract migrations; validate constraints in two phases with legacy data.** New
+CHECK applied without validating the legacy rows, then backfill + validation. Never drop/rename
+what is in use.
+- *Apply:* `playbooks/expand-contract-db-migration.md`.
+
+**C8. Distinguishing NULL from FALSE and closing TOCTOU are details that bite.** A CHECK only
+rejects on strict FALSE (NULL passes); read-decide-write without a lock has a race.
+- *Apply:* `agents/06-data/data-modeler.md` (SQL pitfalls).
+
+**C9. External integration behind a port, with a fake adapter in dev and idempotent upsert by
+external ID.** Store the raw payload as provenance; write-back as a port from early on (even
 no-op).
-- *Aplicar:* `modules/readonly-external-integrations.md`.
+- *Apply:* `modules/readonly-external-integrations.md`.
 
 ---
 
-## D. Frontend e conteúdo
+## D. Frontend and content
 
-**D1. Catálogo único de conteúdo de UI (labels + tooltips + ajuda), tipado, com convenção de chaves.**
-Serve o ecrã **e** o grounding de qualquer IA de ajuda — inclusive dos módulos ainda-por-construir,
-marcados "Planeado".
-- *Aplicar:* `modules/single-source-of-content.md`; `agents/11-documentation/user-help-writer.md`.
+**D1. A single catalog of UI content (labels + tooltips + help), typed, with a key convention.**
+It serves the screen **and** the grounding of any help AI — including modules not yet built,
+marked "Planned".
+- *Apply:* `modules/single-source-of-content.md`; `agents/11-documentation/user-help-writer.md`.
 
-**D2. Regras de produto só aderem se forem impostas por testes que varrem tudo por convenção.** Tooltip
-em toda a ação, label sempre do catálogo, sem cores hardcoded → um teste que falha se algo escapa.
-- *Aplicar:* `knowledge/proven-patterns.md` §7; `pipelines/ci-quality.md`.
+**D2. Product rules only stick if enforced by tests that sweep everything by convention.** Tooltip
+on every action, label always from the catalog, no hardcoded colors → a test that fails if
+anything slips through.
+- *Apply:* `knowledge/proven-patterns.md` §7; `pipelines/ci-quality.md`.
 
-**D3. Encapsular workarounds de biblioteca em componentes do design system, com o porquê inline.**
-- *Porquê:* há bugs só-de-browser (ex.: tooltip que não dispara em botão desativado) que ninguém deve
-  reencontrar.
-- *Aplicar:* `agents/03-experience/component-architect.md`.
+**D3. Encapsulate library workarounds in design system components, with the why inline.**
+- *Why:* there are browser-only bugs (e.g. a tooltip that does not fire on a disabled button)
+  nobody should rediscover.
+- *Apply:* `agents/03-experience/component-architect.md`.
 
-**D4. Tokens de design centrais com camada semântica; tema claro por defeito; mobile-first testado no
-viewport real.** Armadilha recorrente: grids que rebentam por falta de `min-width:0` nos filhos.
-- *Aplicar:* `agents/03-experience/design-system-architect.md`,
+**D4. Central design tokens with a semantic layer; light theme by default; mobile-first tested on
+the real viewport.** Recurring pitfall: grids that break for lack of `min-width:0` on children.
+- *Apply:* `agents/03-experience/design-system-architect.md`,
   `agents/03-experience/responsiveness-specialist.md`, `checklists/web-performance.md`.
 
-**D5. Mocks espelham o servidor com a mesma lógica** (upsert por id, dedupe, formato de erro) e mantêm
-paridade; validação de forma em runtime ligada só em dev/test.
-- *Aplicar:* `agents/04-frontend/api-integrator.md`.
+**D5. Mocks mirror the server with the same logic** (upsert by id, dedupe, error format) and keep
+parity; runtime shape validation enabled only in dev/test.
+- *Apply:* `agents/04-frontend/api-integrator.md`.
 
 ---
 
-## E. Processo, verificação e custo
+## E. Process, verification and cost
 
-**E1. A prova-live real apanha defeitos que centenas de testes verdes não veem.** É gate
-insubstituível antes de declarar "funciona".
-- *Aplicar:* `checklists/definition-of-done.md` §Por alteração de código — a prova-live real é o
-  gate; a materialização por ferramenta vive em `adapters/claude-code.md`.
+**E1. The real live proof catches defects that hundreds of green tests never see.** It is an
+irreplaceable gate before declaring "it works".
+- *Apply:* `checklists/definition-of-done.md` §Per code change — the real live proof is the gate;
+  the tool-specific materialization lives in `adapters/claude-code.md`.
 
-**E2. A revisão adversarial final da branch apanha regressões cross-fatia que as reviews por fatia
-não veem.** A convergência de duas auditorias independentes é confiança alta — mas mesmo essa se
-verifica.
-- *Aplicar:* `playbooks/adversarial-audit.md`; `workflows/W12-global-review.md`.
+**E2. The final adversarial review of the branch catches cross-slice regressions that per-slice
+reviews never see.** The convergence of two independent audits is high confidence — but even that
+gets verified.
+- *Apply:* `playbooks/adversarial-audit.md`; `workflows/W12-global-review.md`.
 
-**E3. Guardrails como testes de CI + pipeline de dois níveis** (testes rápidos in-memory + job de
-paridade real). E ter sempre um **gate de merge local** para quando o CI hospedado fica indisponível
-(custo/minutos).
-- *Aplicar:* `pipelines/ci-quality.md`, `pipelines/ci-security.md`.
+**E3. Guardrails as CI tests + a two-level pipeline** (fast in-memory tests + a real parity job).
+And always keep a **local merge gate** for when hosted CI becomes unavailable (cost/minutes).
+- *Apply:* `pipelines/ci-quality.md`, `pipelines/ci-security.md`.
 
-**E4. Snapshots/artefactos gerados (OpenAPI, clientes, schemas) regeneram-se por comando, nunca à
-mão.** E o snapshot de contrato é idêntico entre consumidores.
-- *Aplicar:* `agents/05-backend/api-designer.md`; `pipelines/ci-quality.md`.
+**E4. Generated snapshots/artifacts (OpenAPI, clients, schemas) are regenerated by command, never
+by hand.** And the contract snapshot is identical across consumers.
+- *Apply:* `agents/05-backend/api-designer.md`; `pipelines/ci-quality.md`.
 
-**E5. Toolset do agente versionado no repo, com adoção evolutiva.** A equipa usa as mesmas ferramentas;
-adota-se o que acrescenta valor **agora**, remove-se o que deixa de acrescentar — cada mudança
-registada com o porquê. Experiências falhadas de tooling registam-se para não se repetirem.
-- *Aplicar:* `adapters/claude-code.md`.
+**E5. The agent's toolset is versioned in the repo, with evolutionary adoption.** The team uses
+the same tools; adopt what adds value **now**, remove what stops adding it — every change recorded
+with the why. Failed tooling experiments get recorded so they are not repeated.
+- *Apply:* `adapters/claude-code.md`.
 
-**E6. Routing de modelos por tarefa; o fan-out no tier caro é que esgota o orçamento.** Modelo forte
-com esforço baixo bate modelo fraco com esforço máximo. As regras de custo evoluem com o orçamento e
-versionam-se com o porquê.
-- *Aplicar:* `core/model-routing.md`.
+**E6. Model routing per task; fan-out on the expensive tier is what drains the budget.** A strong
+model at low effort beats a weak model at maximum effort. Cost rules evolve with the budget and
+are versioned with the why.
+- *Apply:* `core/model-routing.md`.
 
-**E7. Subagentes morrem em suites longas ou ao ceder a um monitor; o controlador fecha-os
-explicitamente.** Suites pesadas (WASM/BD-em-memória) em paralelo rebentam a máquina por OOM.
-- *Aplicar:* `agents/10-quality/README.md`; `knowledge/ai-pitfalls.md` §14.
+**E7. Subagents die in long suites or when yielding to a monitor; the controller closes them
+explicitly.** Heavy suites (WASM/in-memory DB) in parallel blow up the machine via OOM.
+- *Apply:* `agents/10-quality/README.md`; `knowledge/ai-pitfalls.md` §14.
 
-**E8. Postura de dono: sinalizar riscos ANTES de implementar; mudanças destrutivas/em massa com plano
-+ lista.**
-- *Aplicar:* `knowledge/permanent-rules.md` §1,§4.
+**E8. Owner's mindset: flag risks BEFORE implementing; destructive/mass changes come with a plan
++ a list.**
+- *Apply:* `knowledge/permanent-rules.md` §1,§4.
 
 ---
 
-## O que **não** generalizar (avisos)
+## What **not** to generalize (warnings)
 
-- Nomes e regras específicas do domínio de origem (offboarding de 3 vias, escalões por valor,
-  pool de SIMs) são **exemplos** da mecânica — generaliza-se o padrão (transação atómica, outbox,
-  invariantes duplos, authority services), não o domínio.
-- Escolhas concretas de stack (motor de BD leve em dev, combinação exata de bibliotecas, "numeric como
-  string" para dinheiro) são trade-offs daquele projeto — o padrão interessa, a escolha decide-se caso
-  a caso (`core/decision-engine.md`).
-- Idiomatismos de framework (guards/decoradores de um framework específico) ilustram a *ideia* (duas
-  camadas de autorização, política em BD), não a implementação a copiar.
+- Names and rules specific to the origin domain (3-path offboarding, value-based tiers, SIM pool)
+  are **examples** of the mechanics — generalize the pattern (atomic transaction, outbox, double
+  invariants, authority services), not the domain.
+- Concrete stack choices (lightweight DB engine in dev, exact library combination, "numeric as
+  string" for money) are that project's trade-offs — the pattern matters, the choice is decided
+  case by case (`core/decision-engine.md`).
+- Framework idioms (guards/decorators of a specific framework) illustrate the *idea* (two
+  authorization layers, policy in the DB), not an implementation to copy.
 
-## Relacionados
+## Related
 
 - `knowledge/permanent-rules.md` · `knowledge/proven-patterns.md` · `knowledge/ai-pitfalls.md`
-- `modules/README.md` — os módulos que encapsulam estas lições.
-- `core/project-memory.md` — como novas lições sobem de um projeto para aqui.
+- `modules/README.md` — the modules that encapsulate these lessons.
+- `core/project-memory.md` — how new lessons rise from a project into here.

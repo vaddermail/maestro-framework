@@ -53,7 +53,7 @@ escalates to the Orchestrator (real parity is a gate when there is a migration).
 | --- | --- | --- |
 | The slice's integration test suite | Next to the code (stack convention) | `regression-test-engineer.md`, `pipelines/ci-quality.md` |
 | Constraint/transaction proofs | Inside the suite | `agents/06-data/migration-engineer.md`, `agents/12-reviewers/backend-reviewer.md` |
-| Parity residual-risk record | `STATE.md` §Decisões pendentes | Orchestrator, user |
+| Parity residual-risk record | `STATE.md` §Pending decisions | Orchestrator, user |
 
 ## Questions to the user
 

@@ -58,7 +58,7 @@ If the stack is not defined, the specialist **does not guess** the rule set: it 
 | Triaged, prioritized findings | `product/05-security/sast-findings.md` | `security-reviewer`, build team, `security-coordinator` |
 | Baseline of justified suppressions | `product/05-security/sast-findings.md` §Suppressions | Future cycles |
 | CI gate result | `pipelines/ci-security.md` (pass/fail) | Pipeline, PR author |
-| Recurring patterns → lesson | `STATE.md` §Lições | Future sessions (class of bug to prevent at the source) |
+| Recurring patterns → lesson | `STATE.md` §Lessons | Future sessions (class of bug to prevent at the source) |
 
 ## Questions to the user
 

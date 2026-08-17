@@ -16,7 +16,7 @@ same bugs don't have to be relearned the hard way in another product.
   DB, framework) is decided with `core/decision-engine.md` at instantiation time.
 - **It assumes no domain.** The examples are multi-domain (e-commerce, SaaS, data platform,
   internal app) — the mechanics generalize, the domain does not (`knowledge/origin-lessons.md`
-  §O que não generalizar).
+  §What not to generalize).
 - **Not mandatory.** Adopt what adds value **at the product's current point**; the rest stays
   available for when it makes sense (`core/extensibility.md`).
 

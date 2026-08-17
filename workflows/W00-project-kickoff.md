@@ -40,7 +40,7 @@ There is no upstream gate (this is the first phase). All that is required:
 
 Nothing here consumes upstream artifacts (there are none); everything is foundation writing. Step 7
 depends on the user's answers — if they do not answer, the following steps stay blocked and the
-pending item goes to `STATE.md` → "Decisões pendentes" (`core/orchestrator.md` §Recovery).
+pending item goes to `STATE.md` → "Pending decisions" (`core/orchestrator.md` §Recovery).
 
 ## Decision points
 

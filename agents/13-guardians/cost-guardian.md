@@ -1,4 +1,4 @@
-# Cost Guardian (Guardião de Custos)
+# Cost Guardian
 
 > Agent spec of type **guardian** in category `13-guardians`. Follows
 > `agents/_template/AGENT-TEMPLATE.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Cost Guardian |
-| **Alias** | Guardião de Custos |
+| **Alias** | Cost Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); inherits the F1 baseline (`agents/00-discovery/cost-estimator.md`) |
 | **Type** | Guardian |
@@ -51,7 +51,7 @@ in `STATE.md` → pending decisions.
 | Product AI consumption (tokens/cost per feature/model) | `modules/ai-observability.md`, via `agents/05-backend/observability-architect.md` | Yes, if the product uses AI | The most volatile driver |
 | Development AI consumption (tokens/cost per block of work) | `core/model-routing.md` §Cost observability | Yes | The cost of **building**, distinct from the product's |
 | Optimization findings with a cost implication | `agents/13-guardians/performance-guardian.md` | No | Right-sizing after resolving a bottleneck |
-| `STATE.md` §Lições / §Decisões pendentes | Project memory | No | Previous anomalies and cost decisions |
+| `STATE.md` §Lessons / §Pending decisions | Project memory | No | Previous anomalies and cost decisions |
 
 If there is no baseline and no measurable real consumption, the guardian **does not estimate**:
 it engages the `cost-estimator` (via the Orchestrator) and records the gap — watching cost
@@ -64,8 +64,8 @@ without a real number is an illusion of control.
 | Cycle report | `product/99-records/guardians/costs-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Optimization recommendations, with evidence | Report annex | User (decides), relevant technical specialist |
 | Flagged anomalies and their attributed cause | Report annex | Orchestrator, agent at the cause's origin |
-| Cost decisions accepted/declined | `STATE.md` §Decisões pendentes / §Registo | Future sessions |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| Cost decisions accepted/declined | `STATE.md` §Pending decisions / §Registo | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

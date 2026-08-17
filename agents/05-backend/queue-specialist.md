@@ -1,4 +1,4 @@
-# Queue Specialist (Queue Specialist)
+# Queue Specialist
 
 > Agent spec of the **specialist** type. Canonical format in `agents/_template/AGENT-TEMPLATE.md`.
 

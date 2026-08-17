@@ -45,7 +45,7 @@ the deviation and escalates to the Orchestrator.
 | Seed specification | `data-modeler` (F5) | Yes | Reference data (catalogs) and demo data |
 | Environments' schema state | Migration tool / environments | Yes | Which version each environment has applied |
 | Planned deploy order | `deployment-strategist` (F8) | No | When the migrations go to production |
-| `STATE.md` §Lições | Project memory | No | Previous divergences and resolutions |
+| `STATE.md` §Lessons | Project memory | No | Previous divergences and resolutions |
 
 If an environment is at an unknown version or was changed outside the sequence, the manager does
 **not force the next migration on top**: it stops, records and clarifies.
@@ -57,7 +57,7 @@ If an environment is at an unknown version or was changed outside the sequence, 
 | Versioned migration sequence | Migrations directory + version registry | `migration-engineer`, `deployment-strategist`, whole team |
 | Seeds per environment (reference + demo) | `product/07-operations/data/seeds/` | Tests, live proof, new environments |
 | Environment convergence state | `product/07-operations/data/environments.md` | Orchestrator, `devops-reviewer` |
-| Divergence log and plans | `STATE.md` §Dívida / §Lições | Future sessions |
+| Divergence log and plans | `STATE.md` §Debt / §Lessons | Future sessions |
 
 ## Questions to the user
 

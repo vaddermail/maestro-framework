@@ -1,4 +1,4 @@
-# Stack Selector (Stack Selector)
+# Stack Selector
 
 > Agent spec of the **specialist** type. Chooses the concrete technologies after the architectural
 > style is decided (`agents/02-architecture/architecture-arbiter.md`).
@@ -46,7 +46,7 @@ services): it records the question in `STATE.md` → pending decisions.
 | `product/01-requirements/` (NFRs) | F2 | Yes | Latency, availability, compliance, data volume |
 | Team profile and skills | `product/00-discovery/` | Yes | The stack the team masters errs less and is maintained better |
 | Hosting constraints (if already known) | `agents/08-infrastructure/hosting-arbiter.md` | No | Cloud/on-prem conditions managed vs self-hosted services |
-| `STATE.md` §Decisões fechadas | Memory | No | E.g. Entra/OIDC identity already closed conditions the auth lib |
+| `STATE.md` §Closed decisions | Memory | No | E.g. Entra/OIDC identity already closed conditions the auth lib |
 
 If the team's skills are not recorded, it **does not presume "everyone knows X"**: it asks
 (`core/question-engine.md`) — the right stack for one team is the wrong one for another.
@@ -57,7 +57,7 @@ If the team's skills are not recorded, it **does not presume "everyone knows X"*
 | --- | --- | --- |
 | Stack document | `product/02-architecture/stack.md` | All F5–F6 agents, `agents/13-guardians/dependency-guardian.md`, `agents/09-security/sbom-manager.md` |
 | Version-pinning files | Project root (`.nvmrc`, `engines`, lockfile, pinned base image) | Build (F6), pipelines (`pipelines/ci-quality.md`) |
-| ADR per expensive-to-reverse choice | `product/02-architecture/decisions/ADR-nnn-<peça>.md` | `architecture-reviewer`, future sessions |
+| ADR per expensive-to-reverse choice | `product/02-architecture/decisions/ADR-nnn-<piece>.md` | `architecture-reviewer`, future sessions |
 
 ## Questions to the user
 
@@ -193,6 +193,6 @@ to the user for decision.
 
 ## Related
 
-- `knowledge/permanent-rules.md` §6 — versões estáveis por defeito, fixadas.
+- `knowledge/permanent-rules.md` §6 — stable versions by default, pinned.
 - `agents/02-architecture/README.md` · `core/decision-engine.md`
 - `playbooks/dependency-updates.md` — how the versions evolve afterwards, deliberately.

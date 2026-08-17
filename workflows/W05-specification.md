@@ -106,7 +106,7 @@ model) → the consolidator does not choose in silence: it exposes the conflict 
 reanalysis, or raises it to the user if it is a product decision. A missing requirement found
 while specifying → return it to F2, record it in `STATE.md`; **no advancing to F6** with an
 incomplete spec. User unavailable to approve → the spec stays `in-review`, the pending item in
-`STATE.md` → "Decisões pendentes"; **not one line of product code** is written before P5.
+`STATE.md` → "Pending decisions"; **not one line of product code** is written before P5.
 
 ## Effort profiles
 

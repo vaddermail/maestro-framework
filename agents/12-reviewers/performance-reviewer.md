@@ -1,4 +1,4 @@
-# Performance Reviewer (Revisor de Performance)
+# Performance Reviewer
 
 Agent spec for the **reviewer** that, at a review milestone (F7 or global review), examines the
 **built** system against the decided performance budgets — without designing them, without
@@ -9,7 +9,7 @@ measuring them under load and without monitoring production.
 | Field | Value |
 | --- | --- |
 | **Name** | Performance Reviewer |
-| **Alias** | Revisor de Performance |
+| **Alias** | Performance Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (review panel before launch); reconvened by `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -50,7 +50,7 @@ returns to the Orchestrator to engage `agents/03-experience/web-performance-spec
 | Code of the scope under review | F6 (build team) | Yes | Queries, cache layers, hot paths |
 | `product/02-architecture/stack.md` | F3 | Yes | DB engine, runtime, known limits |
 | Performance test results | `agents/10-quality/performance-test-engineer.md` | No | If they exist, they are the evidence under load; otherwise review statically and flag the gap |
-| `STATE.md` §Lições | Project memory | No | Previous bottlenecks and optimizations |
+| `STATE.md` §Lessons | Project memory | No | Previous bottlenecks and optimizations |
 
 If a required input is missing, it does not proceed on assumptions: it returns the list of gaps to
 the Orchestrator (`core/question-engine.md`).
@@ -61,7 +61,7 @@ the Orchestrator (`core/question-engine.md`).
 | --- | --- | --- |
 | Performance review report | `product/99-records/reviews/performance-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | `agents/12-reviewers/review-consolidator.md`, Orchestrator |
 | Prioritized findings (severity + evidence + fix) | Report section | Build team, `db-performance-optimizer` |
-| New lessons | `STATE.md` §Lições | Future sessions, `performance-guardian` |
+| New lessons | `STATE.md` §Lessons | Future sessions, `performance-guardian` |
 
 All output is written to a file — never just "said" (`core/project-memory.md`).
 

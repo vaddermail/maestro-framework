@@ -1,59 +1,59 @@
-# Adaptadores
+# Adapters
 
-Onde a framework **agnóstica** encosta a uma **ferramenta concreta**. Todo o resto da framework
-descreve **papéis e processos** — o que um agente faz, que artefactos produz, que portão o guarda —
-sem nunca assumir com que ferramenta esse trabalho é executado. Um adaptador faz a ponte: diz **como
-uma ferramenta específica** (Claude Code, Cursor, Copilot, …) realiza esses papéis e processos.
+Where the **agnostic** framework meets a **concrete tool**. Everything else in the framework
+describes **roles and processes** — what an agent does, which artifacts it produces, which gate
+guards it — without ever assuming which tool executes that work. An adapter bridges the gap: it
+says **how a specific tool** (Claude Code, Cursor, Copilot, …) realizes those roles and processes.
 
-Esta separação é o princípio 18 do `_meta/STYLE-GUIDE.md`: a framework não executa nada sozinha;
-o acoplamento a ferramentas vive **só aqui**.
+This separation is principle 18 of `_meta/STYLE-GUIDE.md`: the framework executes nothing on its
+own; tool coupling lives **only here**.
 
-## A regra do acoplamento
+## The coupling rule
 
-**Nenhum documento fora de `adapters/` pode assumir uma ferramenta.** Concretamente:
+**No document outside `adapters/` may assume a tool.** Concretely:
 
-- Um documento de agente (`agents/…`) descreve um **papel** (inputs, responsabilidade, outputs,
-  interações) — nunca "corre o subagente X" nem "usa o plugin Y". A mecânica de execução é do
-  adaptador.
-- Um workflow (`workflows/…`) descreve uma **sequência de passos e portões** — não "invoca a skill
-  Z". Como cada passo é despoletado é do adaptador.
-- O `core/` descreve **contratos** (memória em ficheiros, camadas de modelo abstratas, portões) —
-  os nomes concretos (`CLAUDE.md`, um modelo específico, um ficheiro de settings) entram no adaptador.
+- An agent document (`agents/…`) describes a **role** (inputs, responsibility, outputs,
+  interactions) — never "run subagent X" or "use plugin Y". Execution mechanics belong to the
+  adapter.
+- A workflow (`workflows/…`) describes a **sequence of steps and gates** — not "invoke skill Z".
+  How each step gets triggered belongs to the adapter.
+- `core/` describes **contracts** (file-based memory, abstract model tiers, gates) — concrete
+  names (`CLAUDE.md`, a specific model, a settings file) enter through the adapter.
 
-Se um documento do núcleo, dos agentes ou dos workflows precisar de mencionar uma ferramenta, o
-lugar certo é remetê-lo para o adaptador respetivo — como fazem o `core/orchestrator.md` e o
-`core/model-routing.md`, que apontam para `adapters/claude-code.md` em vez de embeberem
-mecânica de ferramenta. Assim, trocar de ferramenta muda **um** ficheiro, não a framework toda.
+If a core, agent or workflow document needs to mention a tool, the right move is to defer to the
+respective adapter — as `core/orchestrator.md` and `core/model-routing.md` do, pointing to
+`adapters/claude-code.md` instead of embedding tool mechanics. That way, switching tools changes
+**one** file, not the whole framework.
 
-## O que um adaptador tem de mapear
+## What an adapter must map
 
-Cada adaptador responde às mesmas perguntas, para a sua ferramenta:
+Every adapter answers the same questions, for its tool:
 
-| Papel/processo da framework | O adaptador diz… |
+| Framework role/process | The adapter says… |
 | --- | --- |
-| **Orquestrador** (`core/orchestrator.md`) | quem assume o papel de maestro (a sessão principal? um agente dedicado?) |
-| **Fichas de agente** (`agents/…`) | como um papel vira execução (subagente dedicado, sessão sequencial, skill) |
-| **Workflows/loops** (`workflows/`, `loops/`) | como uma sequência é conduzida e onde fica o registo de progresso |
-| **Memória** (`core/project-memory.md`) | onde vivem as regras estáveis e o estado vivo, e como a ferramenta os carrega |
-| **Roteamento de modelos** (`core/model-routing.md`) | que modelos concretos preenchem as camadas topo/padrão/económico/mecânico |
-| **Portões e aprovação humana** (`core/quality-gates.md`) | como o modo de autonomia da ferramenta respeita os portões que exigem o humano |
-| **Ferramentas de apoio** | que plugins/integrações a ferramenta oferece, versionados para toda a equipa |
+| **Orchestrator** (`core/orchestrator.md`) | who takes on the maestro role (the main session? a dedicated agent?) |
+| **Agent specs** (`agents/…`) | how a role becomes execution (dedicated subagent, sequential session, skill) |
+| **Workflows/loops** (`workflows/`, `loops/`) | how a sequence is driven and where the progress log lives |
+| **Memory** (`core/project-memory.md`) | where the stable rules and live state live, and how the tool loads them |
+| **Model routing** (`core/model-routing.md`) | which concrete models fill the Top/Standard/Economy/Mechanical tiers |
+| **Gates and human approval** (`core/quality-gates.md`) | how the tool's autonomy mode respects the gates that require the human |
+| **Supporting tools** | which plugins/integrations the tool offers, versioned for the whole team |
 
-## Os adaptadores desta framework
+## This framework's adapters
 
-| Adaptador | Ferramenta | Estado |
+| Adapter | Tool | Status |
 | --- | --- | --- |
-| `adapters/claude-code.md` | **Claude Code** — CLI/IDE com subagentes, skills, plugins, MCP e hooks | Mapeamento completo e testado (é a ferramenta do projeto-mãe) |
-| `adapters/other-assistants.md` | **Outros assistentes** — Cursor, Copilot, Codex CLI, aider e afins | Princípios de adaptação e mínimo viável |
+| `adapters/claude-code.md` | **Claude Code** — CLI/IDE with subagents, skills, plugins, MCP and hooks | Complete, tested mapping (it is the origin project's tool) |
+| `adapters/other-assistants.md` | **Other assistants** — Cursor, Copilot, Codex CLI, aider and the like | Adaptation principles and the viable minimum |
 
-Adicionar um adaptador novo segue o `core/extensibility.md`: cria-se o ficheiro aqui, regista-se
-no `_meta/INVENTORY.md` no mesmo passo, e **não se toca** em nenhum documento agnóstico — se o
-mapeamento exigir mexer no núcleo, é sinal de que o acoplamento fugiu do adaptador.
+Adding a new adapter follows `core/extensibility.md`: create the file here, register it in
+`_meta/INVENTORY.md` in the same step, and **touch no** agnostic document — if the mapping seems
+to require changing the core, that is a sign the coupling escaped the adapter.
 
-## Relacionados
+## Related
 
-- `_meta/STYLE-GUIDE.md` — princípio 18 (o acoplamento vive só em adaptadores).
-- `adapters/claude-code.md` — mapeamento concreto para Claude Code.
-- `adapters/other-assistants.md` — adaptação a outros assistentes de código.
-- `core/orchestrator.md` — o papel que cada adaptador materializa numa ferramenta.
-- `core/extensibility.md` — como acrescentar um adaptador sem tocar nos existentes.
+- `_meta/STYLE-GUIDE.md` — principle 18 (coupling lives only in adapters).
+- `adapters/claude-code.md` — the concrete mapping for Claude Code.
+- `adapters/other-assistants.md` — adapting to other code assistants.
+- `core/orchestrator.md` — the role every adapter materializes in a tool.
+- `core/extensibility.md` — how to add an adapter without touching the existing ones.

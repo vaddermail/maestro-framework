@@ -89,7 +89,7 @@ To the Orchestrator (`core/question-engine.md`):
    down a node and watch the service continue) — the promise does not count
    (`knowledge/permanent-rules.md` §7).
 4. **Graceful degradation by default.** Define, per feature, how the system loses capacity in a
-   controlled way (`knowledge/proven-patterns.md` — fallbacks visíveis, nunca silenciosos)
+   controlled way (`knowledge/proven-patterns.md` — Visible fallbacks, never silent)
    instead of going down entirely.
 5. **HA is neither backup nor DR.** Redundancy protects against component failure; it does not
    protect against corruption, deletion or total loss — those belong to backup and DR.

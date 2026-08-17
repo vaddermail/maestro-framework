@@ -1,157 +1,157 @@
 # Starters
 
-Onde a framework **agnóstica** encosta a uma **stack concreta**. Pelo mesmo padrão de
-`adapters/README.md` — que confina o acoplamento a ferramentas — esta pasta confina o
-acoplamento a stacks: o **contrato** do starter define-se aqui, agnóstico; as **implementações**
-vivem em `starters/starter-<stack>/` (nesta pasta ou como repositórios irmãos), são opcionais e
-nascem de projetos reais. O motivo é o maior custo evitável de arranque: a fatia 0
-(`checklists/definition-of-done.md` §F6 — Esqueleto (fatia 0)) exige o **resultado** — runners,
-guardrails e pipeline verdes antes da primeira fatia — mas cada projeto paga a **construção** do
-zero. Um starter pré-paga essa construção sem casar a framework a stack nenhuma.
+Where the **agnostic** framework meets a **concrete stack**. Following the same pattern as
+`adapters/README.md` — which confines tool coupling — this folder confines stack coupling: the
+starter **contract** is defined here, agnostic; the **implementations** live in
+`starters/starter-<stack>/` (in this folder or as sibling repositories), are optional and are
+born from real projects. The motive is the biggest avoidable kickoff cost: slice 0
+(`checklists/definition-of-done.md` §F6 — Skeleton (slice 0)) demands the **outcome** — runners,
+guardrails and pipeline green before the first slice — but each project pays for the **build**
+from scratch. A starter pre-pays that build without marrying the framework to any stack.
 
-## O que um starter é — e o que não é
+## What a starter is — and what it is not
 
-Um starter é um esqueleto de código para uma stack concreta que entrega a fatia 0 **cumprida no
-primeiro commit**: testes a correr em CI, guardas ligadas e pipeline verde antes de existir
-qualquer funcionalidade.
+A starter is a code skeleton for a concrete stack that delivers slice 0 **fulfilled on the first
+commit**: tests running in CI, guards on and pipeline green before any functionality exists.
 
-O que **não** é:
+What it is **not**:
 
-- **Não é a framework.** A Maestro continua a ser documentação executável, agnóstica de stack
-  (`README.md` §Perguntas frequentes). Um starter é código, acoplado por natureza — e por isso
-  vive só aqui, como o acoplamento a ferramentas vive só em `adapters/`.
-- **Não é obrigatório.** Um projeto sem starter para a sua stack constrói a fatia 0 à mão, como
-  sempre — o portão é exatamente o mesmo; o starter só muda quem paga a construção.
-- **Não é um template de produto.** Zero decisões de domínio: o mesmo starter serve uma loja
-  online, um SaaS B2B de faturação ou uma app interna de RH. Traz engenharia de base — nunca
-  ecrãs, regras de negócio ou modelo de dados do produto.
-- **Não dispensa o processo.** A estratégia de testes escreve-se antes da fatia 0
-  (`workflows/W06-build.md` §Pré-condições) e a checklist do esqueleto confirma-se item a
-  item na mesma — usar um starter é verificar mais depressa, não verificar menos.
+- **It is not the framework.** Maestro remains executable, stack-agnostic documentation
+  (`README.md`). A starter is code, coupled by nature — which is why it lives only here, just as
+  tool coupling lives only in `adapters/`.
+- **It is not mandatory.** A project without a starter for its stack builds slice 0 by hand, as
+  always — the gate is exactly the same; the starter only changes who pays for the build.
+- **It is not a product template.** Zero domain decisions: the same starter serves an online
+  store, a B2B invoicing SaaS or an internal HR app. It brings base engineering — never screens,
+  business rules or the product's data model.
+- **It does not waive the process.** The test strategy is written before slice 0
+  (`workflows/W06-build.md` §Preconditions) and the skeleton checklist is still confirmed item
+  by item — using a starter means verifying faster, not verifying less.
 
-## O contrato — o que todo o starter entrega no primeiro commit
+## The contract — what every starter delivers on the first commit
 
-Tudo abaixo é verificável; um starter que falhe um item não entra nesta pasta:
+Everything below is verifiable; a starter that fails one item does not enter this folder:
 
-- [ ] **Runner de testes por superfície** (frontend, backend, …) configurado e **a correr em CI**,
-      com pelo menos um teste real a passar por superfície — typecheck e build a passar não
-      contam como testado (`checklists/pre-merge.md`).
-- [ ] **Guardrails ligados** no CI desde o primeiro commit: lint, análise estática, fronteiras de
-      arquitetura e varrimento de segredos.
-- [ ] **Pipeline verde no dia 0**, com as superfícies a correr separadas — sem passos manuais não
-      documentados entre a cópia limpa e o verde.
-- [ ] **Fatia 0 cumprida**: o bloco "F6 — Esqueleto (fatia 0)" da
-      `checklists/definition-of-done.md` confirmado item a item no README do starter, com a
-      evidência de cada um.
-- [ ] **Estrutura compatível com o protocolo de artefactos**: o starter não cria, não ocupa nem
-      colide com `product/`, `CLAUDE.md`, `STATE.md` ou a pasta da framework — esses caminhos
-      são do projeto (`core/artifact-protocol.md` §The project's `product/` tree). O código segue a forma
-      prevista no fim dessa árvore (apps/, packages/, infra/, … conforme a arquitetura).
-- [ ] **Zero segredos**: nenhum valor real no repositório nem no histórico; configuração sensível
-      por `*.example` documentado e injeção em runtime (`playbooks/secrets-management.md`).
-- [ ] **Versões estáveis fixadas**: runtime LTS, majors GA, lockfile em controlo de versões
-      (`knowledge/permanent-rules.md` §6 — Versões estáveis por defeito).
-- [ ] **Um comando único de arranque** documentado no README do starter: de cópia limpa até
-      pipeline local verde com um comando (ou um script que encadeia os passos).
-- [ ] **Proveniência declarada** no README do starter: versão da framework com que foi validado
-      (`_meta/VERSION.md`), data da validação e código do projeto de origem (P2, P3, … — a mesma
-      regra de anonimato de `knowledge/candidates.md`).
+- [ ] **Test runner per surface** (frontend, backend, …) configured and **running in CI**, with
+      at least one real test passing per surface — typecheck and build passing do not count as
+      tested (`checklists/pre-merge.md`).
+- [ ] **Guardrails on** in CI from the first commit: lint, static analysis, architecture
+      boundaries and secret scanning.
+- [ ] **Pipeline green on day 0**, with the surfaces running separately — no undocumented manual
+      steps between a clean copy and green.
+- [ ] **Slice 0 fulfilled**: the "F6 — Skeleton (slice 0)" block of
+      `checklists/definition-of-done.md` confirmed item by item in the starter's README, with
+      the evidence for each one.
+- [ ] **Structure compatible with the artifact protocol**: the starter does not create, occupy
+      or collide with `product/`, `CLAUDE.md`, `STATE.md` or the framework folder — those paths
+      belong to the project (`core/artifact-protocol.md` §The project's `product/` tree). The
+      code follows the shape foreseen at the end of that tree (apps/, packages/, infra/, … per
+      the architecture).
+- [ ] **Zero secrets**: no real value in the repository or its history; sensitive configuration
+      via documented `*.example` and runtime injection (`playbooks/secrets-management.md`).
+- [ ] **Stable versions pinned**: LTS runtime, GA majors, lockfile under version control
+      (`knowledge/permanent-rules.md` §6 — Stable versions by default).
+- [ ] **A single kickoff command** documented in the starter's README: from clean copy to local
+      pipeline green with one command (or a script that chains the steps).
+- [ ] **Provenance declared** in the starter's README: the framework version it was validated
+      with (`_meta/VERSION.md`), the validation date and the origin project code (P2, P3, … —
+      the same anonymity rule as `knowledge/candidates.md`).
 
-## A regra-espelho do isolamento
+## The mirror rule of isolation
 
-O princípio 19 do `_meta/STYLE-GUIDE.md` diz que nenhum documento assume stack. Os starters são
-a exceção confinada — e o isolamento corta nos dois sentidos:
+Principle 19 of `_meta/STYLE-GUIDE.md` says no document assumes a stack. Starters are the
+confined exception — and the isolation cuts both ways:
 
-- **Nada fora de `starters/` pode assumir stack.** Nenhum documento do núcleo, agente, workflow,
-  checklist ou template pode depender de existir um starter, referir um starter concreto ou
-  tratar uma tecnologia como dada. Um documento agnóstico que precise de falar de arranque
-  acelerado remete para esta pasta — como remete para `adapters/` quando o assunto é
-  ferramenta.
-- **Nada num starter pode alterar contratos da framework.** Um starter cumpre o contrato acima;
-  não redefine portões, checklists, protocolo de artefactos nem workflows. Se cumprir o contrato
-  parecer exigir mexer num documento agnóstico, o acoplamento fugiu do sítio — é o starter que
-  está errado (o espelho exato da regra de `adapters/README.md`).
+- **Nothing outside `starters/` may assume a stack.** No core document, agent, workflow,
+  checklist or template may depend on a starter existing, reference a concrete starter or treat
+  a technology as given. An agnostic document that needs to speak of an accelerated kickoff
+  defers to this folder — just as it defers to `adapters/` when the subject is a tool.
+- **Nothing in a starter may alter framework contracts.** A starter fulfills the contract above;
+  it does not networkfine gates, checklists, the artifact protocol or workflows. If fulfilling the
+  contract seems to require changing an agnostic document, the coupling escaped its place — the
+  starter is what is wrong (the exact mirror of the rule in `adapters/README.md`).
 
-Consequência prática, e critério de auditoria: apagar `starters/` inteiro não muda uma vírgula no
-resto da framework.
+Practical consequence, and audit criterion: deleting all of `starters/` changes not a comma in
+the rest of the framework.
 
-## Como nasce um starter
+## How a starter is born
 
-Nunca de imaginação. Um starter **destila-se de um projeto real** que provou o esqueleto — CI
-verde ao longo da construção, guardas a apanhar problemas a sério — e entra pelo mesmo circuito
-que todo o conhecimento da framework:
+Never from imagination. A starter **is distilled from a real project** that proved the skeleton —
+CI green throughout the build, guards catching real problems — and enters through the same
+circuit as all the framework's knowledge:
 
-1. O projeto regista, durante a construção, o que o seu esqueleto ensinou — categoria `bloco` do
+1. During the build, the project records what its skeleton taught — category `block` of
    `templates/project/FRAMEWORK-IMPROVEMENTS.md.template`.
-2. No fecho de um marco, reporta à framework-mãe (`playbooks/report-framework-improvements.md`),
-   incluindo a destilação: o esqueleto extraído do produto, sem código de domínio, sem dados e
-   sem segredos.
-3. O `agents/14-meta/framework-curator.md` trata a proposta como candidata, com as regras de
-   promoção de `knowledge/candidates.md` §Regras de entrada e saída. A promoção entra por PR
-   de curadoria (`playbooks/framework-curation.md` §Passos) como **MINOR** em
-   `_meta/VERSION.md` — criando `starters/starter-<stack>/` (ou o apontador para o repositório
-   irmão), a linha na tabela desta pasta e o registo em `_meta/INVENTORY.md`, tudo no mesmo
-   passo (`core/extensibility.md`).
+2. At the close of a milestone, it reports to the upstream framework
+   (`playbooks/report-framework-improvements.md`), including the distillation: the skeleton
+   extracted from the product, with no domain code, no data and no secrets.
+3. `agents/14-meta/framework-curator.md` treats the proposal as a candidate, under the promotion
+   rules of `knowledge/candidates.md` §Entry and exit rules. Promotion enters via curation PR
+   (`playbooks/framework-curation.md` §Steps) as a **MINOR** in `_meta/VERSION.md` — creating
+   `starters/starter-<stack>/` (or the pointer to the sibling repository), the row in this
+   folder's table and the entry in `_meta/INVENTORY.md`, all in the same step
+   (`core/extensibility.md`).
 
-## Como se mantém — e como apodrece à vista
+## How it is maintained — and how it rots in plain sight
 
-Stacks movem-se mais depressa do que processos; um starter parado mente por omissão. A mesma
-lógica de expiração de `knowledge/candidates.md` aplica-se aqui:
+Stacks move faster than processes; a stalled starter lies by omission. The same expiry logic as
+`knowledge/candidates.md` applies here:
 
-- Cada starter **declara a versão da framework com que foi validado** e a data — no seu README e
-  na tabela desta pasta.
-- **Confirmação:** cada projeto novo que use o starter e feche a fatia 0 verde com ele reporta-o
-  como issue `melhorias` — a confirmação é contável e rastreável, nunca subjetiva.
-- **Expiração:** 12 meses (ou 3 rondas de curadoria) sem confirmação nova, ou um MAJOR da
-  framework publicado depois da validação, e o curador marca o starter como `por-revalidar` na
-  tabela desta pasta, na ronda seguinte. Continua utilizável — mas quem o copiar fica avisado de
-  que o dia 0 verde já não está garantido e de que a fatia 0 tem de se verificar por inteiro.
-- **Revalidar** = correr o comando de arranque contra a versão atual da framework e confirmar o
-  contrato item a item; regista-se a nova data e versão.
+- Each starter **declares the framework version it was validated with** and the date — in its
+  README and in this folder's table.
+- **Confirmation:** every new project that uses the starter and closes slice 0 green with it
+  reports that as an `improvements` issue — confirmation is countable and traceable, never
+  subjective.
+- **Expiry:** 12 months (or 3 curation rounds) without a new confirmation, or a framework MAJOR
+  published after the validation, and the curator marks the starter `needs-revalidation` in this
+  folder's table, in the following round. It remains usable — but whoever copies it is warned
+  that green day 0 is no longer guaranteed and that slice 0 must be verified in full.
+- **Revalidating** = running the kickoff command against the current framework version and
+  confirming the contract item by item; the new date and version get recorded.
 
-## Como um projeto usa um starter
+## How a project uses a starter
 
-A opção entra no arranque (`workflows/W00-project-kickoff.md`) quando a stack já é uma
-restrição dura declarada pelo utilizador — muitos projetos chegam assim
-(`workflows/W00-project-kickoff.md` §Pontos de decisão). Quando a stack ainda está em aberto,
-a decisão pertence a F3 e o momento natural do starter passa a ser a entrada de F6, imediatamente
-antes da fatia 0. Em qualquer dos casos, a sequência é a mesma:
+The option enters at kickoff (`workflows/W00-project-kickoff.md`) when the stack is already a
+hard constraint declared by the user — many projects arrive that way
+(`workflows/W00-project-kickoff.md` §Decision points). When the stack is still open, the
+decision belongs to F3 and the starter's natural moment becomes the entry to F6, immediately
+before slice 0. In either case, the sequence is the same:
 
-1. Copiar o starter para a raiz do projeto **depois** de copiar a framework (`START-HERE.md`
-   §Parte 1) — e confirmar que não tocou na pasta da framework, em `CLAUDE.md`, `STATE.md` nem
-   em `product/`.
-2. Correr o comando único de arranque documentado no README do starter.
-3. Verificar a fatia 0 **verde**: pipeline a correr nas superfícies, guardrails ativos — item a
-   item pela `checklists/definition-of-done.md` §F6 — Esqueleto (fatia 0), nunca por confiança.
-4. Registar em `STATE.md`: starter usado, versão do starter e da framework validada, e a escolha
-   de stack como decisão a formalizar em ADR (`product/02-architecture/decisions/`).
+1. Copy the starter to the project root **after** copying the framework (`START-HERE.md`
+   §Part 1) — and confirm it touched neither the framework folder, `CLAUDE.md`, `STATE.md` nor
+   `product/`.
+2. Run the single kickoff command documented in the starter's README.
+3. Verify slice 0 **green**: pipeline running on the surfaces, guardrails active — item by item
+   against `checklists/definition-of-done.md` §F6 — Skeleton (slice 0), never on trust.
+4. Record in `STATE.md`: starter used, starter version and validated framework version, and the
+   stack choice as a decision to formalize in an ADR (`product/02-architecture/decisions/`).
 
-Um projeto **sem** starter para a sua stack não perde nada de contratual: constrói a fatia 0 à
-mão, como sempre — e, fechado o MVP, é o candidato natural a destilar o próximo starter.
+A project **without** a starter for its stack loses nothing contractual: it builds slice 0 by
+hand, as always — and, once the MVP closes, it is the natural candidate to distill the next
+starter.
 
-## Os starters desta pasta
+## The starters in this folder
 
-| Starter | Stack | Validado com | Estado |
+| Starter | Stack | Validated with | Status |
 | --- | --- | --- | --- |
-| *(nenhum ainda)* | — | — | — |
+| *(none yet)* | — | — | — |
 
-Estado honesto: **ainda não existe nenhum `starter-<stack>`**. O primeiro candidato natural é a
-destilação de um produto real do ecossistema — a candidata "starter corrível" registada em
-`knowledge/candidates.md` (tipo `bloco`, P2, promovida em parte: este contrato; a parte
-"guardas à entrada" já subiu como fatia 0). Este contrato existe primeiro de propósito: quando
-essa destilação chegar, entra por medida — em vez de inventar a forma ao mesmo tempo que o
-conteúdo.
+Honest status: **no `starter-<stack>` exists yet**. The first natural candidate is the
+distillation of a real product from the ecosystem — the "runnable starter" candidate recorded in
+`knowledge/candidates.md` (type `block`, P2, partially promoted: this contract; the "guards at
+the door" part already went up as slice 0). This contract exists first on purpose: when that
+distillation arrives, it enters made to measure — instead of inventing the form at the same time
+as the content.
 
-## Relacionados
+## Related
 
-- `adapters/README.md` — o padrão de isolamento que esta pasta replica, de ferramentas para
-  stacks.
-- `checklists/definition-of-done.md` — o bloco F6 — Esqueleto (fatia 0), o resultado que o
-  contrato garante.
-- `workflows/W00-project-kickoff.md` — o arranque onde a opção de usar um starter entra.
-- `workflows/W06-build.md` — a fase cuja fatia 0 o starter pré-paga.
-- `playbooks/framework-curation.md` — a porta única de entrada e manutenção de starters.
-- `knowledge/candidates.md` — a sala de espera onde a implementação do primeiro starter
-  aguarda destilação.
-- `knowledge/permanent-rules.md` — segredos fora do controlo de versões e versões estáveis.
-- `core/artifact-protocol.md` — a árvore do projeto com que todo o starter é compatível.
+- `adapters/README.md` — the isolation pattern this folder replicates, from tools to stacks.
+- `checklists/definition-of-done.md` — the F6 — Skeleton (slice 0) block, the outcome the
+  contract guarantees.
+- `workflows/W00-project-kickoff.md` — the kickoff where the option to use a starter enters.
+- `workflows/W06-build.md` — the phase whose slice 0 the starter pre-pays.
+- `playbooks/framework-curation.md` — the single door for starter entry and maintenance.
+- `knowledge/candidates.md` — the waiting room where the first starter's implementation awaits
+  distillation.
+- `knowledge/permanent-rules.md` — secrets out of version control and stable versions.
+- `core/artifact-protocol.md` — the project tree every starter is compatible with.

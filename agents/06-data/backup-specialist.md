@@ -45,7 +45,7 @@ restore **fails** — in that case it is an incident: escalate immediately
 | Availability and acceptable-loss NFRs | `nfr-specifier` (F2) | Yes | The business's target RPO/RTO |
 | DB engine and infra | `stack-selector` + `08-infrastructure` | Yes | Which backup mechanisms exist |
 | Retention policy | `data-auditor` (F5) | Yes | Backups cannot retain what the law says to delete |
-| `STATE.md` §Lições | Project memory | No | Previous restores and failures |
+| `STATE.md` §Lessons | Project memory | No | Previous restores and failures |
 
 If the acceptable RPO is not defined (how much data can the business tolerate losing?), the
 specialist **does not default to a risky value**: it asks, with the cost of each level.
@@ -57,7 +57,7 @@ specialist **does not default to a risky value**: it asks, with the cost of each
 | Backup strategy per data class | `product/07-operations/data/backups.md` | `disaster-recovery-planner`, `backup-guardian`, user |
 | Restore runbook | `product/07-operations/runbooks/restore.md` (`templates/technical/runbook.md.template`) | `backup-guardian`, incident response |
 | Test-restore log (measured RTO) | `product/99-records/data/restore-YYYY-MM-DD.md` | Orchestrator → user |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

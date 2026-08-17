@@ -61,7 +61,7 @@ the Orchestrator (`core/question-engine.md`).
 | Documentation map (documents × source × owner × precedence) | `product/08-documentation/documentation-map.md` | All the category's writers; Orchestrator; documentation reviewer and guardian |
 | Docs folder structure installed | Repository `docs/` + `product/` subfolders | `technical-writer`, `user-help-writer`, `api-documenter` |
 | Precedence rule between sources | Section of the map | Whoever resolves contradictions without inventing |
-| Non-obvious structural decisions | `STATE.md` §Lições | Future sessions |
+| Non-obvious structural decisions | `STATE.md` §Lessons | Future sessions |
 
 All output is **written to file** (`core/project-memory.md`).
 

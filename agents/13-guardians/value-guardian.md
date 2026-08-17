@@ -1,4 +1,4 @@
-# Value Guardian (Guardião de Valor)
+# Value Guardian
 
 > Agent spec of type **guardian** in category `13-guardians`. It closes in production the cycle
 > that `agents/00-discovery/kpi-definer.md` opens in F1: someone has to prove, with numbers, that
@@ -9,7 +9,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Value Guardian |
-| **Alias** | Guardião de Valor |
+| **Alias** | Value Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); inherits the F1 yardstick (`agents/00-discovery/kpi-definer.md`) |
 | **Type** | Guardian |
@@ -62,7 +62,7 @@ decisions.
 | `product/07-operations/observability.md` | `agents/05-backend/observability-architect.md` (F8) | Yes | Where each number is seen (dashboards and sources) |
 | The cost cycle's report | `agents/13-guardians/cost-guardian.md` (F9) | No | Cost per unit of value — the other half of "is it worth what it costs?" |
 | `product/00-discovery/prioritization.md` | `agents/00-discovery/prioritizer.md` (F1) | No | The expected value that justified building — context for the escalation |
-| `STATE.md` §Lições / §Decisões pendentes | Project memory | No | Targets already revised, series breaks, previous decisions |
+| `STATE.md` §Lessons / §Pending decisions | Project memory | No | Targets already revised, series breaks, previous decisions |
 
 If the yardstick does not exist or lacks baselines and deadline-bound targets, the guardian
 **does not watch impressions**: it engages the `kpi-definer` (via the Orchestrator) and records
@@ -75,10 +75,10 @@ answer from the user).
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Cycle report, KPI by KPI (actual vs target vs baseline, trend) | `product/99-records/guardians/value-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
-| Escalation per missed target (quantified options + recommendation) | Report annex; `STATE.md` §Decisões pendentes | User (decides) |
+| Escalation per missed target (quantified options + recommendation) | Report annex; `STATE.md` §Pending decisions | User (decides) |
 | Evolution request (when the decision is to invest) | `agents/13-guardians/feature-evolution-agent.md`, via the Orchestrator | `workflows/W10-feature-evolution.md` |
 | Flagged measurement gaps | Orchestrator → `agents/05-backend/metrics-specialist.md` | Instrumentation in F9 |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

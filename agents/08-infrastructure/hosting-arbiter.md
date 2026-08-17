@@ -1,4 +1,4 @@
-# Hosting Arbiter (Hosting Arbiter)
+# Hosting Arbiter
 
 > Agent spec of the **arbiter** type. Applies `core/decision-engine.md` to the decision of "where
 > the product runs", in the image of `agents/02-architecture/architecture-arbiter.md`.
@@ -60,7 +60,7 @@ criteria that most change the decision.
 | --- | --- | --- |
 | Hosting ADR | `product/02-architecture/decisions/ADR-nnn-hosting.md` (`templates/project/ADR-DECISION.md.template`) | `agents/07-devops/`, the chosen platform's specialist, `agents/13-guardians/cost-guardian.md` |
 | Scored criteria matrix | Annex to the ADR | User (decision transparency) |
-| Closed decision recorded | `CLAUDE.md` §Decisões fechadas + `STATE.md` | All future sessions |
+| Closed decision recorded | `CLAUDE.md` §Closed decisions + `STATE.md` | All future sessions |
 
 ## Questions to the user
 
@@ -91,7 +91,7 @@ matters → options with pros/cons → recommendation:
 4. **Compliance is a gate, not a weighted criterion.** If sovereignty requires the EU, a platform
    that cannot guarantee it is **eliminated**, however cheap — it does not lose points, it is out.
 5. **Decide by the project's criteria, never by fashion** ("everyone uses X") nor by bleeding-edge
-   (`knowledge/permanent-rules.md` §versões estáveis).
+   (`knowledge/permanent-rules.md` §Stable versions).
 6. **Explicit reversibility.** The ADR states what leaving would cost and which signals trigger a
    review; without a plausible exit path, the decision goes up to the user with the lock-in
    highlighted.

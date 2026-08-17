@@ -12,7 +12,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Name** | Agent name in PT-PT (e.g. Guardião de Segurança) |
+| **Name** | Agent name (e.g. Security Guardian) |
 | **Alias** | International name, if any (e.g. Security Guardian) |
 | **Category** | `NN-category` (the folder it lives in) |
 | **Phases** | Lifecycle phases where it acts (see `core/lifecycle.md`) — e.g. F1, F9 |

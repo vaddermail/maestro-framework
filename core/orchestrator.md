@@ -40,7 +40,7 @@ agent that talks to everyone; specialists talk through artifacts.
 | **Who calls?** | The Orchestrator calls specialists; specialists never call each other — they ask the Orchestrator (via an "I need X" output). Guardians (F9) have their own cadence but report to the Orchestrator. |
 | **When does it call?** | When the active workflow dictates it **and** the agent's mandatory inputs exist and are `approved` (see artifact states). |
 | **Who waits?** | Downstream agents wait for upstream artifacts. The user never waits in the dark: blockers stay visible in `STATE.md` → "Pending decisions". |
-| **Who depends?** | Declared in each agent's spec (§Inputs/§Interações). The Orchestrator builds the dependency graph from the specs — there is no hidden graph. |
+| **Who depends?** | Declared in each agent's spec (§Inputs/§Interactions). The Orchestrator builds the dependency graph from the specs — there is no hidden graph. |
 | **Who validates?** | Reviewers (`agents/12-reviewers/`) validate substance; checklists validate form; the phase gate combines both. Whoever produces never validates. |
 | **Who approves?** | The user — whenever the decision concerns scope, money, personal data, residual risk, destructive action or production (§Human approval). |
 | **Who executes?** | The specialist that owns the artifact. An artifact has **one** owner at a time. |

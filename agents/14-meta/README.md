@@ -3,7 +3,7 @@
 Category outside the project lifecycle: the agents here do not build product — they keep
 **Maestro itself** learning from those who use it. They act on the framework's **upstream
 repository** (never on a project's copy), close the circuit described in `knowledge/README.md`
-§Como o conhecimento circula, and answer the test that validates the framework: *did product
+§How knowledge circulates, and answer the test that validates the framework: *did product
 no. N come out cheaper and better than no. N−1?*
 
 ## Agents
@@ -18,7 +18,7 @@ no. N come out cheaper and better than no. N−1?*
   repository. A project's Orchestrator **never** summons these agents — the project's side of the
   circuit is only `playbooks/report-framework-improvements.md`.
 - **Its own cadence.** No phase triggers it: it fires on accumulated reports, on a phase close in
-  a project, or on elapsed time — see `playbooks/framework-curation.md` §Pré-condições.
+  a project, or on elapsed time — see `playbooks/framework-curation.md` §Preconditions.
 - **A human at the gate.** The output is always a proposal (PR with evidence); the merge belongs
   to the framework owner (`MANIFESTO.md` — the human decides). A framework error multiplies
   across every project that copies it; that is why this gate is the most conservative of all.

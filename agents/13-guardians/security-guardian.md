@@ -1,4 +1,4 @@
-# Security Guardian (Guardião de Segurança)
+# Security Guardian
 
 > Exemplar spec of a **guardian**-type agent. Serves as the depth and format reference for the
 > remaining specs (`agents/_template/AGENT-TEMPLATE.md`).
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Security Guardian |
-| **Alias** | Guardião de Segurança |
+| **Alias** | Security Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); consulted in F7 |
 | **Type** | Guardian |
@@ -43,7 +43,7 @@ never "finishes" — it comes back on the next cadence.
 | `product/02-architecture/stack.md` | F3 | Yes | Pinned component versions |
 | `product/05-security/threat-model.md` | F5/F7 | Yes | Contextualizes real exploitability in the system |
 | CVE feeds / dependency advisories | External | Yes | The vulnerability sources |
-| `STATE.md` §Lições | Project memory | No | Previous vulnerabilities and mitigations |
+| `STATE.md` §Lessons | Project memory | No | Previous vulnerabilities and mitigations |
 
 If the SBOM does not exist or is outdated, the guardian **does not guess the inventory**: it
 engages the `sbom-manager` (via the Orchestrator) and records the gap.
@@ -55,7 +55,7 @@ engages the `sbom-manager` (via the Orchestrator) and records the gap.
 | The cycle's vulnerability report | `product/99-records/guardians/security-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Patch plan per relevant CVE | Report annex | `agents/13-guardians/dependency-guardian.md`, build team |
 | Residual risk record | `product/05-security/residual-risk.md` | `security-coordinator`, user (signs off) |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

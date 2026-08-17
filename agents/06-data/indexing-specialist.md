@@ -43,7 +43,7 @@ feature not yet designed), it records the index as "to revisit when the query ex
 | Expected access patterns | `api-designer` / use cases (F1/F5) | Yes | Which queries filter/sort/join on what |
 | Performance NFRs | `nfr-specifier` (F2) | No | Target latencies per operation |
 | Real query statistics | `performance-guardian` (F9) | F9 only | Observed patterns, not just expected |
-| `STATE.md` §Lições | Project memory | No | Previous indexing decisions |
+| `STATE.md` §Lessons | Project memory | No | Previous indexing decisions |
 
 If the access patterns are not described, the specialist does **not index blindly** (indexing
 everything is an anti-pattern): it asks the Orchestrator for the table's use cases.
@@ -54,7 +54,7 @@ everything is an anti-pattern): it asks the Orchestrator for the table's use cas
 | --- | --- | --- |
 | Index strategy per table | `product/07-operations/data/indexes/<slice>.md` | `migration-engineer`, `db-performance-optimizer`, reviewers |
 | Specification of each index (definition + justification) | Same file | `migration-engineer` (creates the migration) |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

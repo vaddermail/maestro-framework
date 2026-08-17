@@ -1,169 +1,174 @@
-# Adaptador: Claude Code
+# Adapter: Claude Code
 
-Como a framework `Maestro` se executa **em Claude Code** — o CLI/IDE de agentes que serve de
-ferramenta de referência do projeto-mãe. Este é o único ficheiro onde os papéis e processos
-agnósticos ganham nomes concretos: subagentes, skills, `CLAUDE.md`, modelos, plugins, MCP, hooks.
-Tudo o que aqui está é **acoplamento a esta ferramenta** — muda-se aqui sem tocar no resto (princípio
-18 do `_meta/STYLE-GUIDE.md`).
+How the `Maestro` framework runs **on Claude Code** — the agent CLI/IDE that serves as the origin
+project's reference tool. This is the only file where the agnostic roles and processes get
+concrete names: subagents, skills, `CLAUDE.md`, models, plugins, MCP, hooks. Everything here is
+**coupling to this tool** — change it here without touching the rest (principle 18 of
+`_meta/STYLE-GUIDE.md`).
 
-## Mapa rápido
+## Quick map
 
-| Framework (agnóstica) | Claude Code (concreto) |
+| Framework (agnostic) | Claude Code (concrete) |
 | --- | --- |
-| Orquestrador (`core/orchestrator.md`) | A **sessão principal** — o loop de conversação que delega, decide e faz cumprir portões |
-| Ficha de agente (`agents/…`) | **Subagente** (Task/Agent tool) e/ou **skill**, conforme a natureza do papel |
-| Workflow (`workflows/…`) | **Skill** de orquestração ou condução direta pela sessão principal |
-| Loop (`loops/…`) | **Ciclos da própria sessão** com condição de saída e registo em `STATE.md` |
-| Memória (`core/project-memory.md`) | `CLAUDE.md` + `STATE.md` + memória automática do Claude |
-| Camadas de modelo (`core/model-routing.md`) | Modelos Claude concretos (ver §Roteamento) |
-| Ferramentas de apoio | **Plugins** + servidores **MCP**, versionados no repo |
-| Portões com humano (`core/quality-gates.md`) | Modo autónomo com **guardrails de aprovação** nos portões |
-| Protocolo de arranque (`workflows/W00-project-kickoff.md`) | **Hook `SessionStart`** versionado |
+| Orchestrator (`core/orchestrator.md`) | The **main session** — the conversation loop that delegates, decides and enforces gates |
+| Agent spec (`agents/…`) | **Subagent** (Task/Agent tool) and/or **skill**, depending on the nature of the role |
+| Workflow (`workflows/…`) | Orchestration **skill** or direct driving by the main session |
+| Loop (`loops/…`) | **Cycles of the session itself** with an exit condition and a log in `STATE.md` |
+| Memory (`core/project-memory.md`) | `CLAUDE.md` + `STATE.md` + Claude's automatic memory |
+| Model tiers (`core/model-routing.md`) | Concrete Claude models (see §Model routing) |
+| Supporting tools | **Plugins** + **MCP** servers, versioned in the repo |
+| Gates with a human (`core/quality-gates.md`) | Autonomous mode with **approval guardrails** at the gates |
+| Kickoff protocol (`workflows/W00-project-kickoff.md`) | Versioned **`SessionStart` hook** |
 
-## Agentes → subagentes e/ou skills
+## Agents → subagents and/or skills
 
-Uma ficha de agente descreve um papel (`agents/_template/AGENT-TEMPLATE.md`). Em Claude Code
-materializa-se de duas formas, escolhidas pela natureza do trabalho:
+An agent spec describes a role (`agents/_template/AGENT-TEMPLATE.md`). In Claude Code it
+materializes in two forms, chosen by the nature of the work:
 
-- **Subagente (Task/Agent tool)** — para trabalho com **contexto próprio e fan-out**: um especialista
-  que recebe a spec completa à cabeça, produz um artefacto e devolve só a conclusão à sessão
-  principal. É o modo dos painéis (arquitetura em F3, revisores em F7): N subagentes **às cegas** em
-  paralelo + um consolidador, exatamente como o `core/orchestrator.md` §Parallelism descreve.
-  Regra de custo crítica: cada subagente é roteado **pela tarefa que faz** (§Roteamento), nunca todos
-  no modelo de topo — é aí que o orçamento morre (`core/model-routing.md`).
-- **Skill** — para papéis que são um **procedimento repetível** que a sessão principal executa sem
-  precisar de contexto isolado (ex.: uma checklist de portão, um playbook de release). A skill
-  encapsula o "como" e mantém-se fonte única.
+- **Subagent (Task/Agent tool)** — for work with **its own context and fan-out**: a specialist
+  that receives the full spec up front, produces an artifact and returns only the conclusion to
+  the main session. This is the panel mode (architecture in F3, reviewers in F7): N **blind**
+  subagents in parallel + one consolidator, exactly as `core/orchestrator.md` §Parallelism
+  describes. Critical cost rule: each subagent is routed **by the task it performs** (§Model
+  routing), never all on the top-tier model — that is where the budget dies
+  (`core/model-routing.md`).
+- **Skill** — for roles that are a **repeatable procedure** the main session executes without
+  needing isolated context (e.g. a gate checklist, a release playbook). The skill encapsulates
+  the "how" and stays the single source.
 
-Muitos agentes usam os dois: uma skill que orquestra e, lá dentro, subagentes para o fan-out. O
-contrato mantém-se o da framework — os artefactos em `product/` (`core/artifact-protocol.md`),
-não a mecânica.
+Many agents use both: a skill that orchestrates and, inside it, subagents for the fan-out. The
+contract remains the framework's — the artifacts in `product/` (`core/artifact-protocol.md`),
+not the mechanics.
 
-## Workflows → skills ou orquestração da sessão
+## Workflows → skills or session orchestration
 
-Um workflow (`workflows/README.md`) é uma sequência de passos com portões. Em Claude Code conduz-se:
+A workflow (`workflows/README.md`) is a sequence of steps with gates. In Claude Code it is driven:
 
-- **Pela sessão principal** a assumir o papel de Orquestrador — lê o `STATE.md`, sabe a fase, invoca
-  o subagente certo em cada passo, agrupa perguntas em lotes (`core/question-engine.md`) e
-  segura os portões.
-- **Por uma skill de workflow** quando o processo é suficientemente estável para ser encapsulado
-  (ex.: uma skill "arranque de projeto" que executa o `W00`). A skill não substitui o julgamento do
-  Orquestrador — dá-lhe um guião.
+- **By the main session** taking on the Orchestrator role — it reads `STATE.md`, knows the phase,
+  invokes the right subagent at each step, groups questions into batches
+  (`core/question-engine.md`) and holds the gates.
+- **By a workflow skill** when the process is stable enough to be encapsulated (e.g. a "project
+  kickoff" skill that executes `W00`). The skill does not replace the Orchestrator's judgment —
+  it gives it a script.
 
-## Loops → ciclos da sessão com registo em STATE.md
+## Loops → session cycles logged in STATE.md
 
-Um loop (`loops/README.md`) é "enquanto existir condição X, agir". Em Claude Code é a **própria
-sessão a iterar**: avalia a condição de entrada, age, reavalia a condição de saída. As salvaguardas
-anti-loop-infinito da framework aplicam-se tal e qual — **3 iterações sem progresso pára e sobe ao
-utilizador** (`core/orchestrator.md` §Recovery). Cada iteração deixa rasto em `STATE.md`
-(o que se tentou, o resultado, o que falta), para a sessão seguinte retomar sem re-perguntar.
+A loop (`loops/README.md`) is "while condition X holds, act". In Claude Code it is the **session
+itself iterating**: evaluate the entry condition, act, re-evaluate the exit condition. The
+framework's anti-infinite-loop safeguards apply exactly as written — **3 iterations without
+progress stops and escalates to the user** (`core/orchestrator.md` §Recovery). Each iteration
+leaves a trail in `STATE.md` (what was tried, the result, what remains), so the next session
+resumes without re-asking.
 
-## Memória do projeto → CLAUDE.md + STATE.md + memória automática
+## Project memory → CLAUDE.md + STATE.md + automatic memory
 
-A framework manda a memória viver em ficheiros versionados (`core/project-memory.md`). O
-mapeamento em Claude Code:
+The framework mandates that memory live in versioned files (`core/project-memory.md`). The
+Claude Code mapping:
 
-| Camada da framework | Ficheiro concreto | Papel |
+| Framework layer | Concrete file | Role |
 | --- | --- | --- |
-| Regras estáveis (1) | `CLAUDE.md` | Carregado **automaticamente** no arranque de cada sessão. Guardrails, decisões fechadas, mapeamento camadas→modelos. Instanciado de `templates/project/CLAUDE.md.template`. |
-| Memória viva (2) | `STATE.md` | Testemunho entre sessões; lido no início, atualizado no fim. Instanciado de `templates/project/STATE.md.template`. |
-| Artefactos canónicos (3) | `product/` | A spec e os ADRs (`core/artifact-protocol.md`). |
+| Stable rules (1) | `CLAUDE.md` | Loaded **automatically** at the start of every session. Guardrails, closed decisions, tier→model mapping. Instantiated from `templates/project/CLAUDE.md.template`. |
+| Live memory (2) | `STATE.md` | Handover between sessions; read at the start, updated at the end. Instantiated from `templates/project/STATE.md.template`. |
+| Canonical artifacts (3) | `product/` | The spec and the ADRs (`core/artifact-protocol.md`). |
 
-Além destes, o Claude Code tem uma **memória automática própria** (índice de memória por projeto,
-fora do repo). É um **acelerador de sessão, não fonte de verdade**: o que interessa à próxima sessão
-ou ao colega **passa sempre para `STATE.md`** — memória de ferramenta não é memória do projeto
-(`core/project-memory.md` §Memory hygiene). Nunca escrever segredos em nenhuma destas camadas
+Beyond these, Claude Code has its **own automatic memory** (a per-project memory index, outside
+the repo). It is a **session accelerator, not a source of truth**: whatever matters to the next
+session or to a colleague **always goes into `STATE.md`** — tool memory is not project memory
+(`core/project-memory.md` §Memory hygiene). Never write secrets into any of these layers
 (`playbooks/secrets-management.md`).
 
-## Roteamento de modelos → modelos Claude atuais
+## Model routing → current Claude models
 
-As quatro camadas abstratas de `core/model-routing.md` mapeiam-se assim (**válido a:
-2026-08** — atualiza-se em PATCH quando nomes/preços mudarem; a curadoria verifica a validade a
-cada ronda):
+The four abstract tiers of `core/model-routing.md` map as follows (**valid as of: 2026-08** —
+updated in a PATCH when names/prices change; curation checks validity every round):
 
-| Camada abstrata | Para quê | Modelo Claude (atual) |
+| Abstract tier | For what | Claude model (current) |
 | --- | --- | --- |
-| **Topo** | Raciocínio difícil e distintivo, verificação adversarial | **Fable** (raciocínio máximo) ou **Opus** no topo do effort |
-| **Padrão** | Default do dia-a-dia: implementação e revisão | **Opus** (default) ou **Sonnet** |
-| **Económico** | Trabalho padronizado com spec clara | **Sonnet** |
-| **Mecânico** | Trivial e repetitivo | **Haiku** |
+| **Top** | Hard, distinctive reasoning, adversarial verification | **Fable** (maximum reasoning) or **Opus** at top effort |
+| **Standard** | Day-to-day default: implementation and review | **Opus** (default) or **Sonnet** |
+| **Economy** | Standardized work with a clear spec | **Sonnet** |
+| **Mechanical** | Trivial and repetitive | **Haiku** |
 
-O segundo eixo — **esforço/thinking** — aplica-se por cima: começar em médio/alto e subir só se
-preciso, **nunca no máximo por reflexo** (um modelo forte em esforço baixo bate um fraco em esforço
-máximo). A sessão orquestradora mantém-se numa camada forte; o fan-out de subagentes é classificado
-tarefa a tarefa antes de lançar.
+The second axis — **effort/thinking** — applies on top: start at medium/high and raise only if
+needed, **never at maximum by reflex** (a strong model at low effort beats a weak one at maximum
+effort). The orchestrating session stays on a strong tier; the subagent fan-out is classified
+task by task before launching.
 
-> **Os nomes de modelo evoluem; as camadas não.** Esta tabela é a única coisa a rever quando a
-> Anthropic lança/renomeia modelos ou muda preços — atualiza-se aqui e no `CLAUDE.md` do projeto,
-> **deliberadamente e com o porquê versionado**, como qualquer decisão de custo. O resto da framework
-> nunca menciona um nome de modelo.
+> **Model names evolve; the tiers do not.** This table is the only thing to revisit when
+> Anthropic releases/renames models or changes prices — update it here and in the project's
+> `CLAUDE.md`, **deliberately and with the why versioned**, like any cost decision. The rest of
+> the framework never mentions a model name.
 
-## Toolset padrão da equipa (versionado no repo)
+## The team's standard toolset (versioned in the repo)
 
-Princípio: **toda a gente usa as mesmas ferramentas** porque a configuração está no Git, não na
-máquina de cada um. Dois ficheiros:
+Principle: **everyone uses the same tools** because the configuration lives in Git, not on each
+person's machine. Two files:
 
-- **`.claude/settings.json`** → `enabledPlugins` (o toolset padrão) + `permissions` (config segura de
-  autonomia) + `enabledMcpjsonServers` (aprovar servidores partilhados) + `hooks`.
-- **`.mcp.json`** (raiz, versionado) → servidores **MCP** partilhados que não vêm de plugins (ex.: um
-  MCP de base de dados **read-only** para inspecionar schema/dados em prova-live).
+- **`.claude/settings.json`** → `enabledPlugins` (the standard toolset) + `permissions` (safe
+  autonomy config) + `enabledMcpjsonServers` (approve shared servers) + `hooks`.
+- **`.mcp.json`** (root, versioned) → shared **MCP** servers that do not come from plugins (e.g.
+  a **read-only** database MCP to inspect schema/data during live proof).
 
-Onboarding numa máquina nova: clonar, abrir, **confiar no workspace** (sem isto os MCP ficam
-"pending" e os plugins não instalam), aceitar os plugins propostos. Nenhum segredo passa por aqui —
-DSNs e afins entram por variável de ambiente, nunca no repo (`playbooks/secrets-management.md`).
+Onboarding on a new machine: clone, open, **trust the workspace** (without this the MCPs stay
+"pending" and the plugins do not install), accept the proposed plugins. No secret passes through
+here — DSNs and the like enter via environment variable, never the repo
+(`playbooks/secrets-management.md`).
 
-**Plugins úteis por categoria de agente** (exemplos genéricos — o conjunto concreto adota-se por
-necessidade, ver §Adoção evolutiva):
+**Useful plugins by agent category** (generic examples — the concrete set is adopted by need,
+see §Evolutionary adoption):
 
-| Categoria de trabalho | Tipo de plugin/MCP | Quando |
+| Work category | Plugin/MCP type | When |
 | --- | --- | --- |
-| **Navegação semântica de código** | LSP de símbolos/referências/edição-por-símbolo | Explorar e refatorar (RBAC, máquinas de estado, contrato backend↔frontend) — preferir a `grep`/ler ficheiros inteiros |
-| **Documentação de libs** | MCP de docs atualizadas | Antes de assumir a API de uma biblioteca de memória |
-| **Browser / prova live** | Automação de browser e DevTools | E2E do frontend, LCP/CWV, screenshots, prova real no fim (`core/quality-gates.md`) |
-| **Revisão de PR** | Toolkit de revisão (caça a falhas silenciosas, análise de tipos, cobertura de testes) | Antes de merge, alinhado às regras de negócio e à checklist de PR |
-| **Processo** | Skills de brainstorming/plano/TDD/debugging | Estruturar features e depuração sistemática |
-| **Segurança** | Guia de revisão de segurança / SAST | Design e revisão de authz e fronteira do backend |
-| **Observabilidade de custo** | Relatório de uso de sessão | Ligar consumo de IA a valor (`agents/13-guardians/cost-guardian.md`) |
+| **Semantic code navigation** | LSP for symbols/references/edit-by-symbol | Exploring and refactoring (RBAC, state machines, backend↔frontend contract) — prefer over `grep`/reading whole files |
+| **Library documentation** | Up-to-date docs MCP | Before assuming a library's API from memory |
+| **Browser / live proof** | Browser and DevTools automation | Frontend E2E, LCP/CWV, screenshots, real proof at the end (`core/quality-gates.md`) |
+| **PR review** | Review toolkit (silent-failure hunting, type analysis, test coverage) | Before merge, aligned with the business rules and the PR checklist |
+| **Process** | Brainstorming/plan/TDD/debugging skills | Structuring features and systematic debugging |
+| **Security** | Security review guide / SAST | Design and review of authz and the backend boundary |
+| **Cost observability** | Session usage report | Tying AI spend to value (`agents/13-guardians/cost-guardian.md`) |
 
-### Adoção evolutiva (postura obrigatória)
+### Evolutionary adoption (mandatory posture)
 
-O toolset **não é estático** e cada plugin tem custo always-on de contexto/tokens. Duas metades:
+The toolset is **not static** and every plugin carries an always-on context/token cost. Two
+halves:
 
-1. **Não carregar o que não acrescenta valor ao ponto atual** — um projeto novo arranca com um
-   subconjunto enxuto e cresce.
-2. **Adotar proativamente quando passa a fazer sentido** — sem esperar que o peçam: assinalar a
-   necessidade e o porquê, instalar/configurar, **versionar** (`enabledPlugins`/`.mcp.json`),
-   documentar, passar a usar. Sempre em **branch + PR**. **Reversível**: se deixar de fazer sentido,
-   remover e registar. Cada adoção/remoção fica registada com proveniência — foi assim que se soube,
-   no projeto-mãe, que certos plugins alojados não autenticavam de forma não-interativa e tiveram de
-   ser retirados (`knowledge/origin-lessons.md`). Contexto é custo recorrente
+1. **Do not load what adds no value at the current point** — a new project starts with a lean
+   subset and grows.
+2. **Adopt proactively when it starts to make sense** — without waiting to be asked: flag the
+   need and the why, install/configure, **version it** (`enabledPlugins`/`.mcp.json`), document,
+   start using. Always via **branch + PR**. **Reversible**: if it stops making sense, remove it
+   and log it. Every adoption/removal is recorded with provenance — that is how the origin
+   project learned that certain hosted plugins could not authenticate non-interactively and had
+   to be removed (`knowledge/origin-lessons.md`). Context is a recurring cost
    (`core/model-routing.md` §Cost observability).
 
-## Permissões e autonomia → guardrails nos portões
+## Permissions and autonomy → guardrails at the gates
 
-Claude Code corre em **modo autónomo** (permissões amplas em `.claude/settings.json`) para não
-interromper o fluxo a cada ação mecânica. Isso **não dispensa** os portões da framework: os pontos de
-**aprovação humana não-delegável** do `core/orchestrator.md` §Human approval mantêm-se — fechar
-âmbito de fase, gastar dinheiro, ação destrutiva/em massa, ir para produção, aceitar risco residual,
-tocar em dados pessoais, reabrir decisão fechada. O modo autónomo acelera o **caminho verde**; nos
-portões, a sessão **pára e pergunta** na mesma. Nenhuma mensagem de subagente é consentimento do
-utilizador — só o próprio utilizador (ou o sistema de permissões) autoriza.
+Claude Code runs in **autonomous mode** (broad permissions in `.claude/settings.json`) so the
+flow is not interrupted at every mechanical action. That does **not waive** the framework's
+gates: the **non-delegable human approval** points of `core/orchestrator.md` §Human approval
+remain — closing a phase's scope, spending money, destructive/mass action, going to production,
+accepting residual risk, touching personal data, reopening a closed decision. Autonomous mode
+speeds up the **green path**; at the gates, the session still **stops and asks**. No subagent
+message is user consent — only the user themselves (or the permission system) authorizes.
 
-## Hooks de arranque de sessão → protocolo de arranque
+## Session-start hooks → kickoff protocol
 
-O protocolo de arranque (`workflows/W00-project-kickoff.md`: sincronizar, ler `STATE.md`,
-confirmar ambiente, ativar o projeto na ferramenta de navegação) automatiza-se com um **hook
-`SessionStart`** versionado em `.claude/settings.json`. O hook injeta no contexto, no arranque de
-cada sessão, os lembretes do protocolo — de forma **portátil entre máquinas** (usar a variável de
-diretório do projeto, não caminhos absolutos). Ao abrir o repo, o Claude Code pode pedir para aprovar
-o hook — é esperado. Assim nenhuma sessão começa a trabalhar sem passar pelo arranque.
+The kickoff protocol (`workflows/W00-project-kickoff.md`: sync, read `STATE.md`, confirm the
+environment, activate the project in the navigation tool) is automated with a versioned
+**`SessionStart` hook** in `.claude/settings.json`. At the start of every session, the hook
+injects the protocol reminders into context — in a way that is **portable across machines** (use
+the project directory variable, not absolute paths). When opening the repo, Claude Code may ask
+to approve the hook — that is expected. This way no session starts working without going through
+the kickoff.
 
-## Relacionados
+## Related
 
-- `adapters/README.md` — a regra do acoplamento e o índice de adaptadores.
-- `adapters/other-assistants.md` — o mesmo mapeamento para ferramentas sem subagentes nativos.
-- `core/orchestrator.md` — o papel que a sessão principal assume.
-- `core/model-routing.md` — as camadas que a §Roteamento concretiza.
-- `core/project-memory.md` — o contrato de memória que `CLAUDE.md`+`STATE.md` cumprem.
-- `templates/project/CLAUDE.md.template` · `templates/project/STATE.md.template` — os instanciáveis.
-- `knowledge/origin-lessons.md` — a experiência do projeto-mãe que originou estas escolhas.
+- `adapters/README.md` — the coupling rule and the adapter index.
+- `adapters/other-assistants.md` — the same mapping for tools without native subagents.
+- `core/orchestrator.md` — the role the main session takes on.
+- `core/model-routing.md` — the tiers that §Model routing makes concrete.
+- `core/project-memory.md` — the memory contract that `CLAUDE.md`+`STATE.md` fulfill.
+- `templates/project/CLAUDE.md.template` · `templates/project/STATE.md.template` — the
+  instantiables.
+- `knowledge/origin-lessons.md` — the origin project's experience behind these choices.

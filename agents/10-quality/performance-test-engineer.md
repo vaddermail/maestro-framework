@@ -54,7 +54,7 @@ the NFRs are not quantified (no target, no verdict): it returns to the Orchestra
 | Performance report | `product/99-records/quality/performance-YYYY-MM-DD.md` (`templates/technical/test-plan.md.template`) | Orchestrator, user, `agents/12-reviewers/performance-reviewer.md` |
 | Load/stress scripts | Next to the code (test repository) | `regression-test-engineer.md`, `agents/13-guardians/performance-guardian.md` |
 | Located bottlenecks | Report annex | `agents/06-data/db-performance-optimizer.md`, `agents/05-backend/` |
-| Known breaking limit | `STATE.md` §Lições + SLOs | Performance guardian, capacity planning |
+| Known breaking limit | `STATE.md` §Lessons + SLOs | Performance guardian, capacity planning |
 
 ## Questions to the user
 

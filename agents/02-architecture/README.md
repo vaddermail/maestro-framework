@@ -34,7 +34,7 @@ choice costs months; that is why it is among the most formal decisions in the fr
 
 ## How the arbiter uses the specialists (panel + ADR)
 
-The process is the one in `core/decision-engine.md`, section "decisões estruturais", applied to
+The process is the one in `core/decision-engine.md`, section "The process for structural decisions", applied to
 this category:
 
 1. **Frame.** The Orchestrator formulates the decision question ("which architectural style for

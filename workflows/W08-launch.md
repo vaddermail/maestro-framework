@@ -3,7 +3,7 @@
 Put the product in production **with a net**: infra provisioned as code, pipelines running
 green, backups verified, rollback rehearsed and monitoring on — so that go-live is a
 **reversible, observable event**, not a leap of faith. It is the phase where
-`knowledge/permanent-rules.md` §reversibilidade weighs the most: nothing goes to production
+`knowledge/permanent-rules.md` §Reversible by default weighs the most — nothing goes to production
 without a way back and a prior backup.
 
 > **Phase:** F8 · **Entry gate:** P7 (quality & security clean; residual risk signed)

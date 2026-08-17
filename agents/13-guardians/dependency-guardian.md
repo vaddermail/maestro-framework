@@ -1,4 +1,4 @@
-# Dependency Guardian (Guardião de Dependências)
+# Dependency Guardian
 
 > Keeps the product's dependencies updated **deliberately** — never adrift, never by reflex.
 > Spec per `agents/_template/AGENT-TEMPLATE.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Dependency Guardian |
-| **Alias** | Guardião de Dependências |
+| **Alias** | Dependency Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation) |
 | **Type** | Guardian |
@@ -48,7 +48,7 @@ records the block in `STATE.md` → pending decisions.
 | Dependency changelogs | External (upstream) | Yes | Without a changelog there is no deliberate update |
 | Regression harness | `agents/10-quality/regression-test-engineer.md` | Yes | How it is proven the update broke nothing |
 | Pending security requests | `security-guardian.md` | No | Majors deferred for security, now resolved here |
-| `STATE.md` §Lições | Project memory | No | Bumps that have broken something before |
+| `STATE.md` §Lessons | Project memory | No | Bumps that have broken something before |
 
 If there is no regression harness or lockfile, the guardian **does not update blindly**: it flags
 the gap to the Orchestrator (engaging `test-strategist`/`stack-selector`) and records it.
@@ -60,8 +60,8 @@ the gap to the Orchestrator (engaging `test-strategist`/`stack-selector`) and re
 | Cycle report | `product/99-records/guardians/dependencies-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Updated lockfiles/manifests | Repository (via PR) | Whole team; CI |
 | Major plan with breaking changes | Report annex | User (decides the window); build team |
-| Debt record (deferred/pinned versions) | `STATE.md` §Dívida técnica → `loops/L08-technical-debt.md` | Future sessions |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| Debt record (deferred/pinned versions) | `STATE.md` §Debt → `loops/L08-technical-debt.md` | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

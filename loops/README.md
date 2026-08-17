@@ -47,7 +47,7 @@ not converge → stop"). Each loop specializes the rule with three complementary
    regardless of whether there is progress, for the pathological case of infinitesimal "progress".
 
 When a safeguard fires, the Orchestrator **neither insists nor invents** (`knowledge/ai-pitfalls.md`
-#3, #20): it writes in `STATE.md` → "Decisões pendentes" what it tried, why it did not converge and
+#3, #20): it writes in `STATE.md` → "Pending decisions" what it tried, why it did not converge and
 what options exist (change approach, accept residual risk, cut scope), and returns the decision to
 whoever can make it. A run aborted by a safeguard **is not a loop failure** — it is the loop doing
 its job.
@@ -65,7 +65,7 @@ its job.
 
   It records: the metric across iterations (so the trend is visible), the current iteration and the
   cap, when progress last happened, and the status (`in progress` / `at risk` / `stopped —
-  escalated to the user` / `closed`). On closing, it collapses into one line in "Registo histórico"
+  escalated to the user` / `closed`). On closing, it collapses into one line in "Historical log"
   (`core/project-memory.md` §Memory hygiene). This guarantees the next session resumes a loop
   midway **without re-asking**.
 

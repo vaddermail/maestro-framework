@@ -45,7 +45,7 @@ is ambiguous — it escalates to the user, who decides.
 | Compliance NFRs | `nfr-specifier` (F2) | Yes | Retention obligations, personal data, regulation |
 | Points where AI/integrations write data | `agents/05-backend/events-specialist.md`, `modules/readonly-external-integrations.md` | Yes | Where provenance is mandatory |
 | `modules/audit-and-provenance.md` | Framework | Yes | The module that implements the pattern |
-| `STATE.md` §Lições | Project memory | No | Previous audit/retention decisions |
+| `STATE.md` §Lessons | Project memory | No | Previous audit/retention decisions |
 
 If the retention policy is not defined (how long is personal data kept?), the auditor **does not
 invent a deadline**: it asks, because choosing wrong has legal consequences.

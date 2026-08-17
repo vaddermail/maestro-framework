@@ -1,4 +1,4 @@
-# Observability Architect (Observability Architect)
+# Observability Architect
 
 > Agent spec of the **coordinator** type. Canonical format in `agents/_template/AGENT-TEMPLATE.md`.
 

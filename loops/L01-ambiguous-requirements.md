@@ -54,7 +54,7 @@ enough, because contradiction lives **between** documents.
   the same term/rule → treat as a cycle immediately, do not wait for the 3rd iteration; a sign that
   the original question was badly designed (revise it, do not repeat it as-is).
 - **Hard cap:** 8 batches per phase. Once exceeded, the loop stops: it records in `STATE.md` →
-  "Decisões pendentes" the findings that remain, with why they did not converge (user unavailable,
+  "Pending decisions" the findings that remain, with why they did not converge (user unavailable,
   contradictory answers, scope still to be decided), and escalates to the user with options (cut
   the requirement from the MVP, accept a non-critical ambiguity with the risk recorded, or change
   who decides).
@@ -68,7 +68,7 @@ enough, because contradiction lives **between** documents.
 L01 · ambiguous requirements · metric 9→5→2 · iter 3 (cap 8) · last progress: iter 3 · status: in progress
 ```
 
-On closing (metric at zero, verified), it collapses into one line in "Registo histórico"
+On closing (metric at zero, verified), it collapses into one line in "Historical log"
 (`core/project-memory.md` §Memory hygiene) with the date and the total of findings resolved.
 
 ## Example (B2B SaaS — subscription billing)

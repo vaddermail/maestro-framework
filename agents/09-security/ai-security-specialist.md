@@ -63,7 +63,7 @@ decisions) instead of assuming.
 | AI observability design (events, alerts, kill-switch) | `modules/ai-observability.md` (F5/F6) | Yes | Capability the cost and detection controls demand |
 | Credit/quota ledger | `modules/credit-management.md` | Per profile | Basis for the denial-of-wallet control when consumption is billed or limited |
 | Secrets policy (includes BYOK keys) | `agents/09-security/secrets-and-rotation-manager.md` | Yes, if there is BYOK | Where the keys live, who accesses them, how they rotate |
-| `STATE.md` §Lições | Project memory | No | Attacks and mitigations from previous cycles |
+| `STATE.md` §Lessons | Project memory | No | Attacks and mitigations from previous cycles |
 
 ## Outputs
 
@@ -73,7 +73,7 @@ decisions) instead of assuming.
 | AI adversarial test plan | `product/06-tests/test-plans/` | Itself (F7), `agents/09-security/pentester.md` |
 | Adversarial test report (F7) | `product/99-records/audits/` | `agents/09-security/security-coordinator.md`, Orchestrator, build team |
 | AI threats without viable mitigation (for decision) | Escalated to `agents/09-security/security-coordinator.md` | User (signs in `product/05-security/residual-risk.md`) |
-| New lessons | `STATE.md` §Lições | Future sessions, `agents/13-guardians/security-guardian.md` |
+| New lessons | `STATE.md` §Lessons | Future sessions, `agents/13-guardians/security-guardian.md` |
 
 ## Questions to the user
 

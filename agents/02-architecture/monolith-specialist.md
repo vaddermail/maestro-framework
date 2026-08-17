@@ -1,4 +1,4 @@
-# Monolith Specialist (Monolith Specialist)
+# Monolith Specialist
 
 > Agent spec of the **style specialist** type. Produces a blind proposal for the architecture panel,
 > arbitrated by `agents/02-architecture/architecture-arbiter.md`.
@@ -128,8 +128,8 @@ honest verdict is as useful to the arbiter as an enthusiastic defense would be m
 - Say early and loudly when the monolith does **not** fit; the specialist's credibility lies in the
   honesty of its "no"s.
 - Remember that most products **start** here for good reason — distributed complexity is a debt to
-  take on only when there is a real signal (`knowledge/permanent-rules.md` §6, estável e
-  aborrecido por defeito).
+  take on only when there is a real signal (`knowledge/permanent-rules.md` §6, stable and
+  boring by default).
 - Leave the exit path drawn: a monolith with clean logical boundaries is not a trap, it is a
   starting point with doors.
 

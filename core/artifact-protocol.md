@@ -100,7 +100,7 @@ Created in F0 (`workflows/W00-project-kickoff.md`) at the root of the new projec
 │   │   ├── (policies and states)   ← tls-policy.md · waf-policy.md · least-privilege.md · supply-chain.md · dependencies.md · secrets-inventory.md · exposed-secrets.md · sast-findings.md · infrastructure.md (← 09-security specialists)
 │   │   └── residual-risk.md        ← security-coordinator (accepted by the user)
 │   ├── 06-tests/
-│   │   ├── test-strategy.md        ← test-strategist (written before slice 0 — W06 §Pré-condições)
+│   │   ├── test-strategy.md        ← test-strategist (written before slice 0 — W06 §Preconditions)
 │   │   ├── test-plan.md            ← risk-driven plan (links FR/BR → tests)
 │   │   └── test-plans/             ← plans per slice/module, when a single file is not enough
 │   ├── 07-operations/

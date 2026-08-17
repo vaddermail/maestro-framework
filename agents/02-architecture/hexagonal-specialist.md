@@ -172,4 +172,4 @@ the case to the arbiter. It records the negative recommendation.
 
 - `agents/02-architecture/README.md` · `workflows/W03-architecture.md` · `core/decision-engine.md`
 - `agents/02-architecture/clean-architecture-specialist.md` · `agents/02-architecture/ddd-specialist.md`
-- `knowledge/proven-patterns.md` (§8 serviço partilhado) · `knowledge/origin-lessons.md` (C9)
+- `knowledge/proven-patterns.md` (§8 shared service) · `knowledge/origin-lessons.md` (C9)

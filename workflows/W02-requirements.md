@@ -97,7 +97,7 @@ traceability). **Who approves:** the user (requirements, rules, NFRs). With P2 c
 
 `core/orchestrator.md` §Recovery. Agent without input (e.g. NFRs without F1 risks) → schedule the
 upstream agent or add it to the next question batch. Ambiguity the user does not resolve →
-it stays in `STATE.md` → "Decisões pendentes"; it is only assumed by default when the **single
+it stays in `STATE.md` → "Pending decisions"; it is only assumed by default when the **single
 rule** allows it (`core/question-engine.md` §When to assume by default) — **critical** ambiguities
 are never assumed.
 A divergence discovered later (in F5) sends work back to this phase — the reason is recorded in

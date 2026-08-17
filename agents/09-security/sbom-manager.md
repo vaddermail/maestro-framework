@@ -60,7 +60,7 @@ explicitly marks that the runtime/OS inventory stays unfilled until there is an 
 | Machine-readable SBOM | `product/05-security/sbom/` (CycloneDX/SPDX, one per artifact) | `dependency-analyst`, `security-guardian`, scanning tools |
 | Readable SBOM index | `product/05-security/sbom.md` (summary: component count, licenses, the cycle's deltas) | Orchestrator → user |
 | Inventory diff | Appendix to the index | `security-guardian` (what changed since the last analysis) |
-| Identification gaps | `STATE.md` §Decisões pendentes | User (components left to identify) |
+| Identification gaps | `STATE.md` §Pending decisions | User (components left to identify) |
 
 Every SBOM is **written to a versioned file** — it is what allows answering, months later, "was this
 vulnerable version ever in production?" (`core/project-memory.md`).

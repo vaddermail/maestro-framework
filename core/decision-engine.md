@@ -21,7 +21,7 @@ does not deserve an ADR; a three-month one cannot live in a code comment.
 1. **Frame** — the Orchestrator defines the decision question and the **weighted criteria**,
    derived from the artifacts (requirements, NFRs, risks, costs, team). Typical criteria:
    functional fit, total cost (build + operation), operational complexity, team competence,
-   reversibility, maturity/stability (`knowledge/permanent-rules.md` §versões estáveis), lock-in.
+   reversibility, maturity/stability (`knowledge/permanent-rules.md` §Stable versions), lock-in.
 2. **Propose as a panel** — 2–4 relevant specialists (e.g. `agents/02-architecture/`) produce
    **independent, blind** proposals, each with: a design, honest pros/cons against the criteria,
    costs, risks and a reversal path. A specialist who concludes "my approach does not fit here"
@@ -48,7 +48,7 @@ does not deserve an ADR; a three-month one cannot live in a code comment.
 
 A decision validated by the user becomes **closed**: agents do not reopen it on their own
 initiative. The list of closed decisions lives in the project's `CLAUDE.md` (section
-"Decisões fechadas") — it is among the first things any session reads.
+"Closed decisions") — it is among the first things any session reads.
 
 Reopening requires **material novelty** (a new requirement, a proven failure, an external change)
 and happens in the open: "this contradicts closed decision X, made because Y — do you really want

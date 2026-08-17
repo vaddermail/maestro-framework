@@ -131,7 +131,7 @@ proposal.
 - Quantify the **egress** savings with the real volume — it is OVH's most concrete cost advantage
   over the hyperscalers.
 - Confirm the SLA and features of OVH's managed services against the NFR **before** promising
-  them — honesty about maturity (`knowledge/permanent-rules.md` §honestidade).
+  them — honesty about maturity (`knowledge/permanent-rules.md` §Absolute honesty).
 - Distinguish the **network anti-DDoS** (out of the box) from the **application WAF** (to be
   designed) — do not conflate the two protections in front of the user.
 

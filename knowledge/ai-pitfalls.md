@@ -1,105 +1,108 @@
-# Armadilhas do Desenvolvimento Assistido por IA
+# Pitfalls of AI-Assisted Development
 
-Falhas típicas de quem constrói software com agentes de IA — e como a Maestro as **bloqueia por
-construção**, não por lembrete. Cada armadilha traz o mecanismo da framework que a neutraliza. Para o
-Orquestrador e para os revisores, é uma lista de *smells* a caçar.
+Typical failures of people building software with AI agents — and how Maestro **blocks them by
+construction**, not by reminder. Each pitfall names the framework mechanism that neutralizes it. For
+the Orchestrator and the reviewers, this is a list of *smells* to hunt.
 
-## Raciocínio e verdade
+## Reasoning and truth
 
-**1. Alucinação confiante.** A IA inventa uma API, um facto, um número — com toda a segurança.
-→ Bloqueio: honestidade absoluta (`knowledge/permanent-rules.md` §2); grounding obrigatório na
-fonte de verdade (`modules/single-source-of-content.md`); em dúvida, não escrever. Revisores
-verificam factos contra artefactos, não contra a fluência do texto.
+**1. Confident hallucination.** The AI invents an API, a fact, a number — with full confidence.
+→ Block: absolute honesty (`knowledge/permanent-rules.md` §2); mandatory grounding in the
+source of truth (`modules/single-source-of-content.md`); when in doubt, do not write. Reviewers
+check facts against artifacts, not against the fluency of the text.
 
-**2. "Funciona" sem prova.** Typecheck e testes verdes tomados como prova de que o sistema faz o que
-devia. → Bloqueio: **prova-live real** é gate insubstituível (`checklists/definition-of-done.md`
-§Por alteração de código; `core/quality-gates.md`).
-Testes verdes provam que o código não parte; não provam que resolve o problema.
+**2. "It works" without proof.** Green typecheck and tests taken as proof that the system does what
+it should. → Block: **real live proof** is an irreplaceable gate (`checklists/definition-of-done.md`
+§Per code change; `core/quality-gates.md`).
+Green tests prove the code does not break; they do not prove it solves the problem.
 
-**3. Assumir em vez de perguntar.** Preencher lacunas com pressupostos plausíveis. → Bloqueio: o
-motor de perguntas (`core/question-engine.md`) e o loop L01; um input em falta **para** o agente,
-não o convida a adivinhar.
+**3. Assuming instead of asking.** Filling gaps with plausible assumptions. → Block: the
+question engine (`core/question-engine.md`) and loop L01; a missing input **stops** the agent,
+it does not invite it to guess.
 
-**4. Aceitar o brief como infalível.** Implementar fielmente uma spec que contém um bug. → Bloqueio:
-postura de dono (`knowledge/permanent-rules.md` §1) — o implementador **questiona** a spec; um
-especialista pode concluir "o que me pedem está errado" e isso é output válido.
+**4. Accepting the brief as infallible.** Faithfully implementing a spec that contains a bug. →
+Block: owner's mindset (`knowledge/permanent-rules.md` §1) — the implementer **questions** the
+spec; a specialist may conclude "what I am being asked to do is wrong", and that is valid output.
 
-## Escopo e deriva
+## Scope and drift
 
-**5. Fazer mais do que o pedido (scope creep silencioso).** "Aproveitei e refiz também…" →
-Bloqueio: fatias verticais delimitadas (`workflows/W06-build.md`); mudanças fora do âmbito são
-decisão do utilizador (portões). Aditivo avança; destrutivo/lateral pergunta.
+**5. Doing more than what was asked (silent scope creep).** "While I was at it, I also redid…" →
+Block: bounded vertical slices (`workflows/W06-build.md`); out-of-scope changes are the user's
+decision (gates). Additive proceeds; destructive/lateral asks.
 
-**6. Reabrir decisões fechadas.** Re-litigar a cada sessão o que já foi decidido. → Bloqueio:
-decisões fechadas (`core/decision-engine.md`); reabrir exige novidade material e faz-se às claras.
+**6. Reopening closed decisions.** Re-litigating in every session what was already decided. →
+Block: closed decisions (`core/decision-engine.md`); reopening requires material novelty and is
+done in the open.
 
-**7. Duas fontes de verdade que divergem.** A IA duplica um facto/label/regra "para ser rápido". →
-Bloqueio: SSOT com guardrails automáticos (`knowledge/proven-patterns.md` §4, §7).
+**7. Two sources of truth that diverge.** The AI duplicates a fact/label/rule "to be quick". →
+Block: SSOT with automatic guardrails (`knowledge/proven-patterns.md` §4, §7).
 
-## Memória e continuidade
+## Memory and continuity
 
-**8. Estado na cabeça da sessão.** Confiar que "me lembro do que decidimos". → Bloqueio: memória em
-ficheiros (`core/project-memory.md`); está escrito ou não existe. Cada sessão começa por ler
-`STATE.md`.
+**8. State kept in the session's head.** Trusting that "I remember what we decided". → Block: memory
+in files (`core/project-memory.md`); it is written down or it does not exist. Every session starts
+by reading `STATE.md`.
 
-**9. Perder o testemunho entre sessões/ferramentas.** Trabalho meio-feito sem rasto para retomar. →
-Bloqueio: protocolo de fim de sessão (`START-HERE.md` §2.5); pendências e decisões-em-nome-do-dono
-registadas.
+**9. Losing the handover between sessions/tools.** Half-done work with no trail to resume from. →
+Block: session-end protocol (`START-HERE.md` §2.5); pending items and decisions made on the owner's
+behalf get recorded.
 
-**10. Lição reaprendida à conta de repetir o bug.** → Bloqueio: `STATE.md` §Lições com *porquê* +
-*como aplicar*; promoção a `knowledge/` quando se prova geral. Regra: anotar a **proveniência** das
-regras duras para ninguém as "simplificar" sem perceber porque existem.
+**10. A lesson relearned by repeating the bug.** → Block: `STATE.md` §Lessons with the *why* +
+*how to apply*; promotion to `knowledge/` once it proves general. Rule: record the **provenance** of
+hard rules so nobody "simplifies" them without understanding why they exist.
 
-## Custo e escala do próprio processo de IA
+## Cost and scale of the AI process itself
 
-**11. Modelo de topo para tudo.** Correr trabalho mecânico e todos os subagentes no modelo mais caro.
-→ Bloqueio: routing por tarefa (`core/model-routing.md`); o que esgota o orçamento é o
-**fan-out no tier caro**, não o modelo forte no problema difícil.
+**11. Top-tier model for everything.** Running mechanical work and every subagent on the most
+expensive model. → Block: per-task routing (`core/model-routing.md`); what drains the budget is
+**fan-out on the expensive tier**, not the strong model on the hard problem.
 
-**12. Confiar em otimizações de custo não verificadas.** Assumir que o caching/batch está a poupar.
-→ Bloqueio: ceticismo obrigatório — verificar pré-requisitos reais antes de contar com a poupança.
+**12. Trusting unverified cost optimizations.** Assuming the caching/batching is saving money.
+→ Block: mandatory skepticism — verify the real prerequisites before counting on the savings.
 
-**13. Ferramentas/contexto a mais.** Carregar plugins/documentos que não acrescentam valor **agora**
-e pagam custo em todas as sessões. → Bloqueio: adoção evolutiva (`adapters/claude-code.md`):
-adotar quando faz sentido, remover quando deixa de fazer.
+**13. Too many tools, too much context.** Loading plugins/documents that add no value **now** and
+cost something in every session. → Block: evolutionary adoption (`adapters/claude-code.md`):
+adopt when it makes sense, remove when it stops making sense.
 
-## Concorrência, ambiente e ferramentas (armadilhas de execução)
+## Concurrency, environment and tooling (execution pitfalls)
 
-**14. Suites/tarefas pesadas em paralelo rebentam a máquina.** Testes WASM/BD-em-memória em paralelo
-→ OOM no ambiente de dev. → Bloqueio: correr suites pesadas em série; o controlador de subagentes
-fecha-os explicitamente em vez de os deixar pendurados num monitor (`agents/10-quality/README.md`).
+**14. Heavy suites/tasks in parallel blow up the machine.** WASM/in-memory-DB tests in parallel
+→ OOM in the dev environment. → Block: run heavy suites serially; the subagent controller
+closes them explicitly instead of leaving them hanging on a monitor (`agents/10-quality/README.md`).
 
-**15. O motor de dev esconde bugs de concorrência.** Um motor de BD leve que serializa corridas que a
-produção não serializa. → Bloqueio: testar locks/transações também contra o motor real; paridade real
-é gate quando a fatia mexe em dados (`agents/06-data/migration-engineer.md`).
+**15. The dev engine hides concurrency bugs.** A lightweight DB engine that serializes races
+production does not serialize. → Block: test locks/transactions against the real engine too; real
+parity is a gate whenever the slice touches data (`agents/06-data/migration-engineer.md`).
 
-**16. Upgrade de dependência que parte algo em silêncio.** Ex.: mapeamento de erros muda sem aviso. →
-Bloqueio: atualização deliberada com changelog + testes (`playbooks/dependency-updates.md`);
-o Guardião de Dependências (`agents/13-guardians/dependency-guardian.md`) valida antes de
-adotar.
+**16. A dependency upgrade that silently breaks something.** E.g. error mapping changes without
+warning. → Block: deliberate updates with changelog + tests (`playbooks/dependency-updates.md`);
+the Dependency Guardian (`agents/13-guardians/dependency-guardian.md`) validates before
+adopting.
 
-**17. Mudar um componente/label partilhado e partir testes distantes.** → Bloqueio: verificação de
-**máxima abrangência** que varre também o que está a um passo (`knowledge/permanent-rules.md` §7).
+**17. Changing a shared component/label and breaking distant tests.** → Block: **maximum-coverage**
+verification that also sweeps whatever is one step away (`knowledge/permanent-rules.md` §7).
 
-**18. Bugs que só existem no browser/runtime real.** Componentes que se comportam diferente do que o
-teste unitário sugere. → Bloqueio: prova-live real (§2) e smoke E2E no ambiente-alvo.
+**18. Bugs that only exist in the real browser/runtime.** Components that behave differently from
+what the unit test suggests. → Block: real live proof (§2) and an E2E smoke in the target
+environment.
 
-**19. Matar processos pelo nome, não pela porta.** Um "kill pelo nome" mata o processo errado ou
-falha o certo. → Bloqueio: operar por identificador exato (eco de `knowledge/permanent-rules.md`
-§4 — por ID, nunca por substring), incluindo ao gerir processos.
+**19. Killing processes by name, not by port.** A "kill by name" kills the wrong process or misses
+the right one. → Block: operate by exact identifier (echoing `knowledge/permanent-rules.md`
+§4 — by ID, never by substring), including when managing processes.
 
-## Verificação
+## Verification
 
-**20. Auto-validação.** A IA que produziu declara o próprio trabalho pronto. → Bloqueio: verificação
-independente sempre (`core/quality-gates.md`); quem produz nunca é quem valida.
+**20. Self-validation.** The AI that produced the work declares it done. → Block: independent
+verification, always (`core/quality-gates.md`); whoever produces never validates.
 
-**21. Confiar numa única perspetiva.** Um só revisor/verificador dá luz verde. → Bloqueio: painéis e
-**auditoria adversarial** (`playbooks/adversarial-audit.md`) — a convergência de duas auditorias
-independentes é confiança alta, mas mesmo essa se verifica.
+**21. Trusting a single perspective.** A single reviewer/verifier gives the green light. → Block:
+panels and **adversarial audit** (`playbooks/adversarial-audit.md`) — convergence of two
+independent audits is high confidence, but even that gets verified.
 
-## Relacionados
+## Related
 
-- `knowledge/permanent-rules.md` — as regras que estas armadilhas justificam.
-- `knowledge/origin-lessons.md` — os casos reais de onde vieram.
-- `core/orchestrator.md` §Orchestrator anti-patterns — as armadilhas específicas do papel coordenador.
-- `playbooks/adversarial-audit.md` — o método que as caça em lote.
+- `knowledge/permanent-rules.md` — the rules these pitfalls justify.
+- `knowledge/origin-lessons.md` — the real cases they came from.
+- `core/orchestrator.md` §Orchestrator anti-patterns — the pitfalls specific to the coordinator
+  role.
+- `playbooks/adversarial-audit.md` — the method that hunts them in batch.

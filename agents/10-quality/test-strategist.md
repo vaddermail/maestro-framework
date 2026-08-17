@@ -47,7 +47,7 @@ is possible): in that case it returns the gap to the Orchestrator for
 | Backend contract (authz/scoping) | `agents/05-backend/authorization-specialist.md` | Yes | Defines the profiles × scopes to exercise |
 | Quantified NFRs | `agents/01-requirements/nfr-specifier.md` | Yes | Without numbers there is no performance target |
 | Fixed stack | `product/02-architecture/stack.md` (F3) | Yes | Determines runners, test DB engine, tooling |
-| `STATE.md` §Lições | Project memory | No | Past bugs that deserve a dedicated test |
+| `STATE.md` §Lessons | Project memory | No | Past bugs that deserve a dedicated test |
 
 ## Outputs
 
@@ -130,7 +130,7 @@ map of who tests what came out sharp.
 ## Best practices
 
 - Start with what **corrupts data or money** if it fails; the rest fits into the time left over.
-- A bug that already happened (`STATE.md` §Lições) always deserves a dedicated test — it is a
+- A bug that already happened (`STATE.md` §Lessons) always deserves a dedicated test — it is a
   regression waiting to happen again.
 - Prefer many small, deterministic integration tests to a few fragile E2E: E2E is reserved for
   what can only be proven end to end.

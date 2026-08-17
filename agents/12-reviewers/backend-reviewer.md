@@ -1,4 +1,4 @@
-# Backend Reviewer (Revisor de Backend)
+# Backend Reviewer
 
 > Spec of a **reviewer**-type agent (`agents/_template/AGENT-TEMPLATE.md`). It examines the server
 > already built and returns a correctness report; it never builds or decides.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Backend Reviewer |
-| **Alias** | Revisor de Backend |
+| **Alias** | Backend Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -51,7 +51,7 @@ returns to the Orchestrator to trigger `agents/05-backend/authorization-speciali
 | `product/04-specification/logical-data-model.md` (invariant catalog) | `agents/06-data/data-modeler.md` (F5) | Yes | What the DB must enforce, not just the app |
 | Server code of the slice under review | F6 | Yes | What is being reviewed |
 | `product/04-specification/backend/logging.md` | `agents/05-backend/logging-specialist.md` (F5) | Yes | Forbidden fields and the criterion for "silent failure" |
-| `STATE.md` §Decisões / §Dívida | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
+| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
 
 Without the access contract and the invariant catalog, the reviewer does not proceed on
 assumptions — it returns the list of gaps (`core/question-engine.md`).
@@ -63,7 +63,7 @@ assumptions — it returns the list of gaps (`core/question-engine.md`).
 | Backend review report | `product/99-records/reviews/backend-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | `agents/12-reviewers/review-consolidator.md` |
 | Authorization/scoping findings | Appendix to the report | `agents/05-backend/authorization-specialist.md` |
 | Findings of invariants not enforced in the DB | Appendix to the report | `agents/06-data/data-modeler.md`, `agents/06-data/migration-engineer.md` |
-| Structural debt detected | `STATE.md` §Dívida (via consolidator) | `loops/L08-technical-debt.md` |
+| Structural debt detected | `STATE.md` §Debt (via consolidator) | `loops/L08-technical-debt.md` |
 
 All output ends up **written to a file** (`core/project-memory.md`); a finding that is not written
 down does not exist.

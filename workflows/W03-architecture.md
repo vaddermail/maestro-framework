@@ -59,7 +59,7 @@ This is the **decision engine's** workflow — almost everything here is a recor
 - **Architectural style (mandatory ADR):** arbiter's proposal → **user validation** in plain
   language (what was chosen, what was rejected and why, what it costs, how to revert it).
 - **Stack (stable versions):** LTS / GA majors by default; `alpha`/`beta`/`RC` only with a
-  recorded reason (`knowledge/permanent-rules.md` §Versões estáveis). Lockfiles pinned.
+  recorded reason (`knowledge/permanent-rules.md` §Stable versions). Lockfiles pinned.
 - **Hosting:** cost, data residency, team competence and compliance — if it involves
   **money/commitment** (paid infra), human approval is mandatory.
 
@@ -95,7 +95,7 @@ the user (ADRs + costs). With P3 closed, `workflows/W04-experience.md` starts.
 `core/orchestrator.md` §Recovery. Contradictory proposals between specialists → **no picking in
 silence**: confront them against the weighted criteria, or go up to the user if it is a product
 decision. User unavailable to validate costs → the ADR stays in `draft`, the pending item in
-`STATE.md` → "Decisões pendentes", and **no stack is pinned and no infra is contracted** by
+`STATE.md` → "Pending decisions", and **no stack is pinned and no infra is contracted** by
 assumption. A closed decision the user wants to reopen → remind them of the original why before
 executing; if it is reopened, the old ADR is marked `superseded by ADR-nnn` (never deleted).
 

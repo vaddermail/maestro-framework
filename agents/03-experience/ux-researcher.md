@@ -33,7 +33,7 @@ When `product/03-experience/flows-and-journeys.md` and the `screen-map.md` skele
 `approved` state: every MVP use case has a designed flow, every screen on the map is linked to at
 least one flow, and the user has confirmed that "this is how it is used". It may end **blocked**
 if a critical use case is ambiguous — it then opens `loops/L01-ambiguous-requirements.md` and
-records the block in `STATE.md` §decisões pendentes.
+records the block in `STATE.md` §Pending decisions.
 
 ## Inputs
 

@@ -1,4 +1,4 @@
-# Documentation Reviewer (Revisor de Documentação)
+# Documentation Reviewer
 
 > Spec of a **reviewer**-type agent in the `12-reviewers` category. It follows the
 > `agents/_template/AGENT-TEMPLATE.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Documentation Reviewer |
-| **Alias** | Revisor de Documentação |
+| **Alias** | Documentation Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch panel); reconvened per milestone and in `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -47,7 +47,7 @@ the Orchestrator to trigger the `agents/11-documentation/documentation-architect
 | User help content layer | `agents/11-documentation/user-help-writer.md` | Yes | Labels, tooltips, `help{summary, example}` per action |
 | Specification and per-profile business rules | F5 (`product/04-specification/`) | Yes | The real behavior the grounding is checked against |
 | Generated API reference | `agents/11-documentation/api-documenter.md` | No | If it exists, verify it derives from the contract and does not diverge |
-| `STATE.md` §Dívida | Project memory | No | Already-accepted drift is not re-flagged |
+| `STATE.md` §Debt | Project memory | No | Already-accepted drift is not re-flagged |
 
 Without the documentation map and the reference spec, the reviewer does not proceed on
 assumptions — it returns the gaps (`core/question-engine.md`).
@@ -90,7 +90,7 @@ The reviewer measures against artifacts; it asks little, and only via the Orches
 4. **Every finding carries a concrete failure scenario:** *"the README says `pnpm seed`; the
    command failed with `command not found` because it was renamed to `pnpm db:seed` two slices
    ago → a newcomer is blocked at the first step."*
-5. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Dívida with an owner
+5. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
    and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §10).
 6. **It does not fix, it recommends.** Writing belongs to the writers
    (`agents/11-documentation/`); the reviewer points and classifies.

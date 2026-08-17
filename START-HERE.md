@@ -73,7 +73,7 @@ Following `workflows/W00-project-kickoff.md`:
      from `templates/project/CLAUDE.md.template`.
    - `FRAMEWORK-IMPROVEMENTS.md` from
      `templates/project/FRAMEWORK-IMPROVEMENTS.md.template` — the record, from day 0, of what
-     this project teaches the framework (`knowledge/README.md` §Como o conhecimento circula).
+     this project teaches the framework (`knowledge/README.md` §How knowledge circulates).
    - The `product/` tree as per `core/artifact-protocol.md`.
 2. Record in `STATE.md`: date, framework version copied (`_meta/VERSION.md`), AI tool in use,
    and the raw idea exactly as the user gave it (unedited).

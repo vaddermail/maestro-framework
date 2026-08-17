@@ -1,4 +1,4 @@
-# Architecture Reviewer (Revisor de Arquitetura)
+# Architecture Reviewer
 
 > Spec of a **reviewer**-type agent (`agents/_template/AGENT-TEMPLATE.md`). It examines someone
 > else's work along a single dimension and returns a report; it never builds or decides.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Architecture Reviewer |
-| **Alias** | Revisor de Arquitetura |
+| **Alias** | Architecture Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -44,7 +44,7 @@ trigger `agents/02-architecture/architecture-arbiter.md`.
 | `product/02-architecture/stack.md` and module diagram | `agents/02-architecture/architecture-arbiter.md` (F3) | Yes | Prescribed boundaries and dependencies |
 | Code/spec of the slice under review | F5–F6 | Yes | What is being reviewed |
 | `product/04-specification/backend-contract.md` | F5 | No | Where the app↔server boundary is defined |
-| `STATE.md` §Decisões / §Dívida | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
+| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
 
 Without ADRs and a module diagram, the reviewer does not proceed on assumptions — it returns the
 list of gaps (`core/question-engine.md`).
@@ -55,7 +55,7 @@ list of gaps (`core/question-engine.md`).
 | --- | --- | --- |
 | Architecture review report | `product/99-records/reviews/architecture-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | `agents/12-reviewers/review-consolidator.md` |
 | Proposals for a new ADR (when the drift turns out to be a legitimate unrecorded decision) | Appendix to the report | `architecture-arbiter`, user |
-| Structural debt detected | `STATE.md` §Dívida (via consolidator) | `loops/L08-technical-debt.md` |
+| Structural debt detected | `STATE.md` §Debt (via consolidator) | `loops/L08-technical-debt.md` |
 
 All output ends up **written to a file** (`core/project-memory.md`); a finding that is not written
 down does not exist.
@@ -81,7 +81,7 @@ batches (`core/question-engine.md`):
    infrastructure — every violation is a finding with an exact location.
 3. **Every finding carries a concrete failure scenario**, not "smells bad": *"module A imports
    B's repository → a test of A needs B's database → the boundary is fictitious"*.
-4. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Dívida with an owner
+4. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
    and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §10).
 5. **It does not validate its own work** nor read the other reviewers' reports while working.
 6. **Honesty:** what it could not verify (e.g. boundaries only visible at runtime) goes to

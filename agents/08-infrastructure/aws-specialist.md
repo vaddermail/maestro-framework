@@ -69,7 +69,7 @@ Via `hosting-arbiter.md`, which batches them (`core/question-engine.md`):
    say so in the proposal — it is valuable information for the arbiter (`core/decision-engine.md`).
 2. **Map to the most boring service that does the job** — RDS before Aurora, ECS Fargate before
    EKS, unless an NFR demands the more sophisticated one
-   (`knowledge/permanent-rules.md` §versões estáveis).
+   (`knowledge/permanent-rules.md` §Stable versions).
 3. **Cost with egress and per-request charges included**, not just compute and storage; state the
    volume assumptions behind the number.
 4. **Explicit lock-in:** for each proprietary service proposed, state the portable equivalent and
@@ -131,7 +131,7 @@ If there is a corporate AWS mandate, the minimal option is App Runner + RDS sing
 - Model the **peak**, not the average: AWS's value is elasticity; if there is no peak, the
   argument falls.
 - Make egress and per-request costs (NAT, API Gateway, S3 requests) visible up front — it is where
-  AWS bills "explode" (`knowledge/origin-lessons.md` §Processo, verificação e custo).
+  AWS bills "explode" (`knowledge/origin-lessons.md` §Process, verification and cost).
 - Prefer Fargate/managed services to EKS for teams without a dedicated SRE — Kubernetes is
   operational cost that needs justification (`agents/07-devops/kubernetes-specialist.md`).
 - Reserved/Savings Plans only for the proven stable base, never for load yet to be measured.

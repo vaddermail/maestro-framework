@@ -1,4 +1,4 @@
-# Modular Monolith Specialist (Modular Monolith Specialist)
+# Modular Monolith Specialist
 
 > Agent spec of the **style specialist** type. Produces a blind proposal for the architecture panel,
 > arbitrated by `agents/02-architecture/architecture-arbiter.md`.
@@ -63,7 +63,7 @@ It typically raises: which parts of the product does the roadmap expect to grow 
 
 1. **Boundaries derive from the domain, not from the technology.** A module corresponds to a
    cohesive business context (from the glossary and the business rules), not to a technical layer
-   (`knowledge/origin-lessons.md` A1 — a spec dá as costuras naturais).
+   (`knowledge/origin-lessons.md` A1 — the spec provides the natural seams).
 2. **A boundary that is not enforced does not exist.** The proposal specifies **how** the boundary
    is enforced (modules as packages with verified dependencies, each module owning its schema,
    prohibition of cross-module JOINs, a guardrail test that fails if a module imports another's
@@ -168,5 +168,5 @@ useless complexity.
 ## Related
 
 - `agents/02-architecture/README.md` · `core/decision-engine.md`
-- `knowledge/proven-patterns.md` §7 — guardrails que impõem regras por construção.
+- `knowledge/proven-patterns.md` §7 — guardrails that enforce rules by construction.
 - `agents/02-architecture/ddd-specialist.md` — where the boundaries come from.

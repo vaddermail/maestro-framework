@@ -1,4 +1,4 @@
-# Documentation Guardian (Guardião da Documentação)
+# Documentation Guardian
 
 > Watches the sync between documentation, code and the product in production — **continuously**,
 > not only at milestones. Spec per `agents/_template/AGENT-TEMPLATE.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Documentation Guardian |
-| **Alias** | Guardião da Documentação |
+| **Alias** | Documentation Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); consulted in F7 |
 | **Type** | Guardian |
@@ -50,7 +50,7 @@ and escalates to the user.
 | The product's current code and behavior | Repository | Yes | The reality the documentation is verified against |
 | Technical docs, help, API reference, runbooks, ADRs | `agents/11-documentation/` | Yes | What is being watched |
 | The `documentation-reviewer`'s last cycle report | F7 | No | Inherited findings, still open |
-| `STATE.md` §Decisões/§Lições | Project memory | No | Approved decisions not yet propagated to the docs |
+| `STATE.md` §Decisions/§Lessons | Project memory | No | Approved decisions not yet propagated to the docs |
 
 If no documentation map (`agents/11-documentation/documentation-architect.md`) declares where
 each document lives and what its source is, the guardian **does not guess the precedence**: it
@@ -62,8 +62,8 @@ engages the documentation architect and records the gap.
 | --- | --- | --- |
 | Cycle sync report | `product/99-records/guardians/documentation-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Reconciled documentation (specs, docs, help, runbooks, ADRs marked obsolete) | Repository (via PR) | Whole team; help-AI grounding; future sessions |
-| Documentation debt record | `STATE.md` §Dívida técnica → `loops/L08-technical-debt.md` | Future sessions |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| Documentation debt record | `STATE.md` §Debt → `loops/L08-technical-debt.md` | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 
@@ -126,7 +126,7 @@ Via the Orchestrator, batched (`core/question-engine.md`):
 
 ## Examples
 
-**Example (B2B project-management SaaS):** The weekly sweep crosses `STATE.md` §Decisões with
+**Example (B2B project-management SaaS):** The weekly sweep crosses `STATE.md` §Decisions with
 `product/04-specification/modules/approvals.md`: a decision approved three weeks ago changed
 expense approval from "fixed role" to "value-configurable tier" and the code already implements
 it — but the spec still describes the old one, and the user help instructs contacting "the

@@ -1,4 +1,4 @@
-# Event-Driven Specialist (Especialista de Arquitetura Orientada a Eventos)
+# Event-Driven Specialist
 
 > Spec of a **style specialist** agent. It produces a blind proposal for the architecture panel,
 > arbitrated by `agents/02-architecture/architecture-arbiter.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Event-Driven Specialist |
-| **Alias** | Especialista de Arquitetura Orientada a Eventos |
+| **Alias** | Event-Driven Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture panel) |
 | **Type** | Specialist |

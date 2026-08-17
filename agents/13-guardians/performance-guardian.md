@@ -1,4 +1,4 @@
-# Performance Guardian (Guardião de Performance)
+# Performance Guardian
 
 > Agent spec of type **guardian** in category `13-guardians`. Follows
 > `agents/_template/AGENT-TEMPLATE.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Performance Guardian |
-| **Alias** | Guardião de Performance |
+| **Alias** | Performance Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); consulted in F7 by `agents/12-reviewers/performance-reviewer.md` |
 | **Type** | Guardian |
@@ -52,7 +52,7 @@ Orchestrator to engage `agents/03-experience/web-performance-specialist.md` or
 | Correlated dashboards and alerts | `agents/05-backend/observability-architect.md` | Yes | Without correlation (`traceId`), an alert leads nowhere |
 | RED/USE metrics catalog | `agents/05-backend/metrics-specialist.md` | Yes | The numeric basis of everything else |
 | The `performance-reviewer.md`'s F7 verdict | `agents/12-reviewers/performance-reviewer.md` | No | The approved baseline this guardian keeps watching |
-| `STATE.md` §Lições / §Dívida | Project memory | No | Previous bottlenecks and optimizations |
+| `STATE.md` §Lessons / §Debt | Project memory | No | Previous bottlenecks and optimizations |
 
 If there is no budget and no correlated dashboards, the guardian **does not estimate the
 yardstick**: it flags the gap to the Orchestrator and records it — watching without a target is
@@ -66,8 +66,8 @@ monitoring theater.
 | Flagged queries/bottlenecks | Report annex | `agents/06-data/db-performance-optimizer.md`, `agents/05-backend/caching-specialist.md` |
 | Resource saturation signals | Report annex | `agents/05-backend/scalability-architect.md` |
 | Findings with a cost implication | Report annex | `agents/13-guardians/cost-guardian.md` |
-| Deferred performance debt record | `STATE.md` §Dívida → `loops/L08-technical-debt.md` | Future sessions |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| Deferred performance debt record | `STATE.md` §Debt → `loops/L08-technical-debt.md` | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

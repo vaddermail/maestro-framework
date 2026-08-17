@@ -34,11 +34,11 @@ documentation, launch and evolution — **assuming nothing**: whatever is missin
 | `adapters/` | Bindings to concrete tools |
 | `_meta/` | Inventory, style guide, versioning, and the self-verification gates (`verify.sh`, `verify-project.sh`) |
 
-## Status: translation in progress
+## How this mirror works
 
 Maestro is developed against real products in its original (Portuguese) upstream and mirrored here
-in English. The structure, paths and tooling are already English; prose is being translated in
-waves (core first, then agent categories). Issues and PRs are welcome from day one — see
+fully in English — structure, paths, tooling and prose. Each upstream release is translated and
+synced as a release of this edition. Issues and PRs are welcome — see
 [CONTRIBUTING.md](CONTRIBUTING.md), which explains the framework's own contribution circuit:
 **field reports go up, curated releases come down.**
 

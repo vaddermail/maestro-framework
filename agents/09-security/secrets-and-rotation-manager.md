@@ -62,7 +62,7 @@ owner does not rotate.
 | Secrets inventory (class, owner, cadence, location — **never the value**) | `product/05-security/secrets-inventory.md` | `agents/07-devops/secrets-manager.md`, reviewers |
 | Rotation policy per class | `product/05-security/secrets-inventory.md` §rotation | Devops, guardians |
 | Break-glass runbook | `product/05-security/runbooks/break-glass.md` (`templates/technical/runbook.md.template`) | Incident response, on-call |
-| Leak/rotation lessons | `STATE.md` §Lições | Future sessions |
+| Leak/rotation lessons | `STATE.md` §Lessons | Future sessions |
 
 Every artifact refers to secrets **by path/identifier**, never by value
 (`knowledge/permanent-rules.md` §5) — pasting a value into the artifact compromises it.

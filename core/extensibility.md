@@ -70,4 +70,4 @@ always — `MANIFESTO.md` §5.)
 - `_meta/INVENTORY.md` — the register that makes a file "exist".
 - `_meta/VERSION.md` — versioning of the framework itself.
 - `playbooks/framework-curation.md` — where many of the additions come from: the circuit of
-  improvements reported by projects (`knowledge/README.md` §Como o conhecimento circula).
+  improvements reported by projects (`knowledge/README.md` §How knowledge circulates).

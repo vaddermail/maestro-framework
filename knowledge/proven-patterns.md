@@ -1,134 +1,139 @@
-# Padrões que se Provaram
+# Proven Patterns
 
-Padrões de arquitetura e operação validados em produção real. Não são teoria de livro: cada um
-resolveu uma classe concreta de defeitos no projeto-mãe. Os agentes de engenharia e os módulos
-(`modules/`) implementam-nos; este ficheiro é o *porquê* por trás deles.
+Architecture and operations patterns validated in real production. Not textbook theory: each one
+solved a concrete class of defects in the origin project. The engineering agents and the modules
+(`modules/`) implement them; this file is the *why* behind them.
 
-## 1. Fila de trabalho com executor único
+## 1. Work queue with a single executor
 
-Vários pontos podem **submeter** trabalho; **um** worker executa; deduplicação por *fingerprint*
-estável.
+Several points may **submit** work; **one** worker executes; deduplication by stable *fingerprint*.
 
-- **Problema que resolve:** efeitos duplicados (dois emails, dois jobs), corridas entre produtores,
-  reprocessamento após falha.
-- **Como:** materializar o efeito como registo numa fila **dentro da transação** do facto que o
-  origina (transactional outbox — ver §3), com dedupe por chave estável
-  (`evento:origem:destinatário:contexto`) e `inserir-se-não-existe`. Um executor drena o backlog,
-  desacoplado, com kill-switch por canal. Falhas **logadas**, nunca silenciosas; uma falha num item
-  nunca aborta o lote.
-- **Detalhe:** `modules/job-queue.md`, `modules/ai-observability.md`.
+- **Problem it solves:** duplicated effects (two emails, two jobs), races between producers,
+  reprocessing after a failure.
+- **How:** materialize the effect as a queue record **inside the transaction** of the fact that
+  originates it (transactional outbox — see §3), with dedupe by stable key
+  (`event:origin:recipient:context`) and `insert-if-absent`. A single executor drains the backlog,
+  decoupled, with a per-channel kill switch. Failures are **logged**, never silent; one failing
+  item never aborts the batch.
+- **Detail:** `modules/job-queue.md`, `modules/ai-observability.md`.
 
-## 2. Upsert por ID estável, nunca insert cego
+## 2. Upsert by stable ID, never a blind insert
 
-Sincronizações e importações fazem **upsert por identificador externo estável**, não inserts.
+Syncs and imports do an **upsert keyed on a stable external identifier**, not inserts.
 
-- **Problema que resolve:** duplicados a cada re-sincronização; perda de proveniência.
-- **Como:** `inserir-ou-atualizar` com alvo no ID externo; guardar o payload bruto de origem como
-  proveniência; carimbar origem + momento (`sincronizadoEm`). A verdade do sistema-mestre prevalece
-  nos campos que ele gere.
-- **Detalhe:** `modules/readonly-external-integrations.md`.
+- **Problem it solves:** duplicates on every re-sync; loss of provenance.
+- **How:** `insert-or-update` targeting the external ID; store the raw source payload as
+  provenance; stamp origin + moment (`syncedAt`). The master system's truth prevails in the
+  fields it manages.
+- **Detail:** `modules/readonly-external-integrations.md`.
 
-## 3. Transactional outbox — efeitos secundários dentro da transação
+## 3. Transactional outbox — side effects inside the transaction
 
-Emails, eventos e integrações materializam-se na mesma transação do facto que os causa.
+Emails, events and integrations are materialized in the same transaction as the fact that causes
+them.
 
-- **Problema que resolve:** notificar algo que depois fez rollback; ou perder a notificação de algo
-  que foi confirmado.
-- **Como:** `emitirEvento(tx, …)` dentro da transação; a entrega é assíncrona por executor único
-  (§1). Rollback ⇒ zero efeitos, sem código extra.
+- **Problem it solves:** notifying about something that later rolled back; or losing the
+  notification for something that was committed.
+- **How:** `emitEvent(tx, …)` inside the transaction; delivery is asynchronous via the single
+  executor (§1). Rollback ⇒ zero effects, with no extra code.
 
-## 4. Single-source-of-truth para tudo o que se repete
+## 4. Single source of truth for everything that repeats
 
-Qualquer facto que apareça em mais de um lugar tem **uma** fonte editável; o resto **deriva**.
+Any fact that appears in more than one place has **one** editable source; the rest **derives**.
 
-- **Problema que resolve:** as duas cópias divergem — a classe de bug mais teimosa que existe.
-- **Aplica-se a:**
-  - **Dados/relações:** guardar um lado da relação, derivar o inverso por consulta; estado calculável
-    **nunca** é coluna (deriva-se). Ex.: o consumo de licença é o registo de *seat*; a lista de
-    software por equipamento é informativa.
-  - **Contratos front-back:** uma declaração de schema alimenta validação, tipos do servidor, tipos
-    do cliente e documentação da API (`modules/single-source-of-content.md` §Como se adota num produto novo, passo 7 (contratos)).
-  - **Conteúdo de UI:** labels, tooltips e ajuda num catálogo único que serve o ecrã **e** o
-    grounding de qualquer IA de ajuda (`modules/single-source-of-content.md`).
-- **Como garantir:** guardrails automáticos (um teste que varre tudo e falha se houver duplicação
-  fora da fonte) — ver §7.
+- **Problem it solves:** the two copies diverge — the most stubborn bug class there is.
+- **Applies to:**
+  - **Data/relations:** store one side of the relation, derive the inverse by query; computable
+    state is **never** a column (it is derived). E.g. license consumption is the *seat* record; the
+    per-device software list is informational.
+  - **Front-back contracts:** one schema declaration feeds validation, server types, client types
+    and the API docs (`modules/single-source-of-content.md` §How to adopt it in a new product,
+    step 7 (contracts)).
+  - **UI content:** labels, tooltips and help in a single catalog that serves the screen **and**
+    the grounding of any help AI (`modules/single-source-of-content.md`).
+- **How to enforce it:** automatic guardrails (one test that sweeps everything and fails on any
+  duplication outside the source) — see §7.
 
-## 5. Invariantes impostos na camada mais baixa possível — E replicados acima
+## 5. Invariants enforced at the lowest possible layer — AND replicated above
 
-As regras que **nunca** podem ser violadas vivem como constraints da BD, **e** como guards de
-aplicação por cima.
+The rules that can **never** be violated live as DB constraints, **and** as application guards on
+top.
 
-- **Problema que resolve:** um bug de código ou um caminho não previsto viola a regra; a app sozinha
-  não chega.
-- **Como:** exclusividade → `CHECK`; "≤1 relação aberta por entidade" → índice único **parcial**
-  (`WHERE fim IS NULL`); a app dá o erro amigável e cedo; um teste insere a linha ilegal e **afirma
-  a violação da constraint pelo nome**. Relações "estado atual" modelam-se como histórico com
-  `inicio/fim`.
-- **Detalhe:** `modules/state-machines.md`, `agents/06-data/data-modeler.md`.
+- **Problem it solves:** a code bug or an unforeseen path violates the rule; the app alone is not
+  enough.
+- **How:** exclusivity → `CHECK`; "≤1 open relation per entity" → **partial** unique index
+  (`WHERE ended_at IS NULL`); the app raises the friendly error, early; a test inserts the illegal
+  row and **asserts the constraint violation by name**. "Current state" relations are modeled as
+  history with `started_at/ended_at`.
+- **Detail:** `modules/state-machines.md`, `agents/06-data/data-modeler.md`.
 
-## 6. Autorização e ocultação de dados exclusivas do servidor (cliente não-fiável)
+## 6. Authorization and data hiding are server-only (untrusted client)
 
-Toda a decisão de autoridade, scoping e ocultação de campos sensíveis vive no servidor.
+Every decision about authority, scoping and hiding of sensitive fields lives on the server.
 
-- **Problema que resolve:** qualquer verificação no cliente é contornável; qualquer campo enviado
-  "só para não mostrar" é lido.
-- **Como:** o cliente **declara** intenção (ex.: perfil ativo); o servidor **confirma** contra os
-  papéis realmente concedidos. Filtrar na *query* pela identidade do servidor; "fora do meu scope"
-  devolve **404, não 403** (não vaza existência). **Fail-closed:** sem perfil → nega, nunca assume
-  super-utilizador. Dados sensíveis com **defesa em profundidade**: não emitir na query **e** redigir
-  na saída por autorização.
-- **Distinção crítica:** *autorização* (que ações) e *scoping* (que subconjunto de dados) são eixos
-  **distintos** — colapsá-los cria bugs nos dois sentidos.
-- **Detalhe:** `modules/rbac-and-scoping.md`, `agents/05-backend/authorization-specialist.md`.
+- **Problem it solves:** any client-side check can be bypassed; any field sent "just not shown" is
+  read.
+- **How:** the client **declares** intent (e.g. active profile); the server **confirms** against
+  the roles actually granted. Filter in the *query* by the server-side identity; "outside my scope"
+  returns **404, not 403** (it does not leak existence). **Fail-closed:** no profile → deny, never
+  assume superuser. Sensitive data gets **defense in depth**: not emitted in the query **and**
+  redacted on output per authorization.
+- **Critical distinction:** *authorization* (which actions) and *scoping* (which data subset) are
+  **distinct** axes — collapsing them creates bugs in both directions.
+- **Detail:** `modules/rbac-and-scoping.md`, `agents/05-backend/authorization-specialist.md`.
 
-## 7. Guardrails de qualidade como testes que varrem tudo
+## 7. Quality guardrails as tests that sweep everything
 
-Regras de produto (SSOT de conteúdo, conformidade de UI, invariantes) só aderem se forem **impostas
-por testes** que varrem tudo por convenção — não por boa vontade.
+Product rules (content SSOT, UI conformance, invariants) only stick when they are **enforced by
+tests** that sweep everything by convention — not by good will.
 
-- **Problema que resolve:** boas intenções erodem; a regra que não é verificada deixa de ser cumprida
-  ao terceiro sprint.
-- **Como:** um teste que percorre todos os módulos/chaves e falha se algo escapa à convenção (toda a
-  ação tem tooltip; todo o label vem do catálogo; todo o segredo está redigido). Componentes do
-  design system que **forçam a regra por construção** (não dá para criar um botão sem tooltip).
-- **Detalhe:** `modules/single-source-of-content.md`, `pipelines/ci-quality.md`.
+- **Problem it solves:** good intentions erode; a rule that is not checked stops being followed by
+  the third sprint.
+- **How:** one test that walks every module/key and fails if anything escapes the convention (every
+  action has a tooltip; every label comes from the catalog; every secret is redacted). Design
+  system components that **enforce the rule by construction** (you cannot create a button without a
+  tooltip).
+- **Detail:** `modules/single-source-of-content.md`, `pipelines/ci-quality.md`.
 
-## 8. Um serviço partilhado para operações com múltiplas vias de entrada
+## 8. One shared service for operations with multiple entry paths
 
-Uma operação acessível por várias interfaces (portal, backoffice, API, CLI) tem a **lógica de efeito
-num único caso-de-uso partilhado**; as vias diferem só em apresentação e pré-condições.
+An operation reachable through several interfaces (portal, back office, API, CLI) keeps its
+**effect logic in a single shared use case**; the paths differ only in presentation and
+preconditions.
 
-- **Problema que resolve:** o *drift* onde uma via ganha um efeito que a outra esquece (uma
-  devolução que atualiza os quilómetros num sítio e não no outro).
-- **Como:** núcleo transacional único, reutilizado; cada via só trata da sua UX e das suas
-  pré-condições (ex.: a via self-service fica "por validar"; a via do gestor valida num passo).
+- **Problem it solves:** the *drift* where one path gains an effect the other forgets (a return
+  that updates the mileage in one place and not the other).
+- **How:** a single transactional core, reused; each path handles only its own UX and its own
+  preconditions (e.g. the self-service path lands as "pending validation"; the manager path
+  validates in one step).
 
-## 9. Estado em camadas ortogonais (base + overlay)
+## 9. State in orthogonal layers (base + overlay)
 
-Quando duas preocupações competem pelo mesmo campo (permanente vs temporário, publicado vs
-rascunho-de-edição, atribuição vs reserva), separá-las em **camadas independentes** e **derivar** o
-estado apresentado — em vez de sobrescrever destrutivamente.
+When two concerns compete for the same field (permanent vs temporary, published vs edit draft,
+assignment vs reservation), separate them into **independent layers** and **derive** the presented
+state — instead of overwriting destructively.
 
-- **Problema que resolve:** a classe de bug em que uma ação temporária destrói estado permanente
-  (uma reserva de curto prazo que apaga a afetação de base).
-- **Como:** a entidade tem uma camada base e uma camada overlay que se aplica por cima sem a alterar;
-  o estado exibido é derivado das duas; terminar o overlay reverte à base, não a um default global.
-- **Smell a reconhecer:** "esta ação temporária escreve por cima de um campo que também guarda estado
-  de longo prazo" → decompor em camadas.
-- **Detalhe:** `modules/state-machines.md`.
+- **Problem it solves:** the bug class where a temporary action destroys permanent state (a
+  short-term reservation that erases the base assignment).
+- **How:** the entity has a base layer and an overlay layer applied on top without altering it; the
+  displayed state is derived from both; ending the overlay reverts to the base, not to a global
+  default.
+- **Smell to recognize:** "this temporary action writes over a field that also holds long-term
+  state" → decompose into layers.
+- **Detail:** `modules/state-machines.md`.
 
-## 10. Fallbacks visíveis, nunca silenciosos
+## 10. Visible fallbacks, never silent
 
-Todo o caminho de erro/degradação é **logado**; nenhum é engolido em silêncio.
+Every error/degradation path is **logged**; none is silently swallowed.
 
-- **Problema que resolve:** o sistema "funciona" enquanto esconde falhas que só aparecem quando já
-  são um incidente.
-- **Como:** config ausente → no-op **logado**; falha de canal → marcada e visível; exceção 5xx →
-  registada com correlação. Se um limite é atingido (truncar, saltar, amostrar), **diz-se** — silêncio
-  lê-se como "cobriu tudo" quando não cobriu.
+- **Problem it solves:** the system "works" while hiding failures that only surface once they are
+  already an incident.
+- **How:** missing config → **logged** no-op; channel failure → flagged and visible; 5xx exception
+  → recorded with correlation. If a limit is hit (truncate, skip, sample), **say so** — silence
+  reads as "covered everything" when it did not.
 
-## Relacionados
+## Related
 
-- `modules/README.md` — a implementação reutilizável destes padrões.
-- `knowledge/origin-lessons.md` — os defeitos concretos que os provaram.
-- `agents/05-backend/README.md` · `agents/06-data/README.md` — quem os aplica.
+- `modules/README.md` — the reusable implementation of these patterns.
+- `knowledge/origin-lessons.md` — the concrete defects that proved them.
+- `agents/05-backend/README.md` · `agents/06-data/README.md` — who applies them.

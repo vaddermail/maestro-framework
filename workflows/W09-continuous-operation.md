@@ -64,7 +64,7 @@ the user into batches (never one by one — `core/question-engine.md`).
   **personal data**. The guardian recommends with evidence; **it does not decide**.
 - **Batch the questions.** Pending items from several guardians are grouped into one coherent
   batch per cycle, not one interruption per finding (`core/question-engine.md`); they stay visible
-  in `STATE.md` → "Decisões pendentes" until the user answers.
+  in `STATE.md` → "Pending decisions" until the user answers.
 - **Terminal states are mandatory.** No finding stays "under analysis" without an owner and a
   deadline: it ends **resolved** (with proof), **mitigated** (risk accepted by the user) or
   **not-applicable** (justified).

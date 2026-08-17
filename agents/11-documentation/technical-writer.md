@@ -63,7 +63,7 @@ Orchestrator before writing to arbitrary places.
 | Architecture guide | `docs/architecture.md` | Developers, reviewers |
 | Project onboarding guide | `docs/onboarding.md` (derives from `playbooks/developer-onboarding.md`) | New joiner |
 | Runbook prose (from `templates/technical/runbook.md.template`) | `product/07-operations/runbooks/` | Operators |
-| Non-obvious update notes | `STATE.md` §Lições | Future sessions |
+| Non-obvious update notes | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

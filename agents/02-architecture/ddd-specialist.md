@@ -1,4 +1,4 @@
-# Domain-Driven Design Specialist (Especialista de DDD)
+# Domain-Driven Design Specialist
 
 > F3 specialist who applies **strategic DDD** (bounded contexts, context map, ubiquitous language)
 > and **tactical DDD** (aggregates, entities, value objects) to design the domain's boundaries —
@@ -9,7 +9,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Domain-Driven Design Specialist |
-| **Alias** | Especialista de DDD |
+| **Alias** | Domain-Driven Design Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); feeds F5 (specification) |
 | **Type** | Specialist |
@@ -150,7 +150,7 @@ only create ceremony.
   aggregate boundaries — it is the most reliable criterion.
 - Invest deeply in the **core domain** and be deliberately frugal in the supporting subdomains —
   spending the same effort on everything is waste (`MANIFESTO.md` §9).
-- Align each aggregate with the `máquina de estados` of its lifecycle
+- Align each aggregate with the `state machine` of its lifecycle
   (`modules/state-machines.md`) and with the `entity-lifecycle` when there is
   creation/termination with resource release.
 

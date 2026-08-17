@@ -47,7 +47,7 @@ and records the gap in `STATE.md`.
 | `product/04-specification/state-machines.md` | `business-rules-modeler` (F2) | Yes | Lifecycles to represent as history with start/end |
 | `product/01-requirements/glossary.md` | `glossary-curator` (F2) | Yes | Canonical names for entities and attributes |
 | `product/02-architecture/stack.md` | `stack-selector` (F3) | F6 only | Concrete DB engine for the physical model |
-| `STATE.md` §Lições | Project memory | No | Previous modeling decisions and their provenance |
+| `STATE.md` §Lessons | Project memory | No | Previous modeling decisions and their provenance |
 
 If an invariant is undecided (e.g. "can an item have two assignees?"), the modeler **does not
 guess**: it returns the question to the Orchestrator with the consequences of each option.

@@ -62,8 +62,8 @@ four conditions hold**:
    stay pending, always.
 
 What gets assumed is recorded as `assumed-by-default (provisional)` in `questions-and-answers.md`
-and in `STATE.md` §Decisões tomadas em nome do dono ausente, and is **confirmed at the next
-gate**. Anything that fails one of the conditions goes to `STATE.md` §Decisões pendentes — an
+and in `STATE.md` §Decisions made on behalf of the absent owner, and is **confirmed at the next
+gate**. Anything that fails one of the conditions goes to `STATE.md` §Pending decisions — an
 honest block is worth more than a silent assumption. This is the only rule about assuming by
 default: `core/orchestrator.md` §Recovery and the workflows point here; they do not redefine it.
 
@@ -92,7 +92,7 @@ All questions and answers live in `product/01-requirements/questions-and-answers
 - **Unblocked:** ADR-004, FR-031
 ```
 
-- **Pending** questions are mirrored in `STATE.md` → "Decisões pendentes" (that is where the next
+- **Pending** questions are mirrored in `STATE.md` → "Pending decisions" (that is where the next
   session finds them).
 - Answers **assumed by default** must be confirmed by the phase gate — the gate does not pass with
   critical provisionals.

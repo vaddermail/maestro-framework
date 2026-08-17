@@ -1,4 +1,4 @@
-# Edge Computing Specialist (Especialista de Edge Computing)
+# Edge Computing Specialist
 
 > F3 specialist who proposes running compute and/or data **at the network edge, close to the
 > user** — weighing the gain in latency and proximity against the **severe runtime constraints**
@@ -9,7 +9,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Edge Computing Specialist |
-| **Alias** | Especialista de Edge Computing |
+| **Alias** | Edge Computing Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); informs F8 (infrastructure/CDN) |
 | **Type** | Specialist |

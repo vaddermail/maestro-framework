@@ -1,4 +1,4 @@
-# Clean Architecture Specialist (Especialista de Clean Architecture)
+# Clean Architecture Specialist
 
 > F3 specialist who proposes organizing the code into concentric layers with the **dependency
 > rule** pointing inward — and says honestly when that discipline pays off and when it turns into
@@ -9,7 +9,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Clean Architecture Specialist |
-| **Alias** | Especialista de Clean Architecture |
+| **Alias** | Clean Architecture Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture) |
 | **Type** | Specialist |
@@ -143,7 +143,7 @@ arbiter. It records that total indirection here would only add layers with no re
 - Measure the proposal by the direction of the dependencies, not by the folder count.
 - Prefer starting light and **tightening the boundary when the second implementation appears** —
   the interface is earned when there are two things to abstract, not before.
-- Tie each use-case layer to the backend's `anatomia uniforme de módulo`
+- Tie each use-case layer to the backend's `uniform module anatomy`
   (`knowledge/origin-lessons.md` C3) so there are not two vocabularies.
 
 ## Anti-patterns
@@ -182,4 +182,4 @@ arbiter. It records that total indirection here would only add layers with no re
 
 - `agents/02-architecture/README.md` · `workflows/W03-architecture.md` · `core/decision-engine.md`
 - `agents/02-architecture/hexagonal-specialist.md` · `agents/02-architecture/vertical-slice-specialist.md`
-- `knowledge/origin-lessons.md` (C3 anatomia de módulo) · `agents/10-quality/test-strategist.md`
+- `knowledge/origin-lessons.md` (C3 module anatomy) · `agents/10-quality/test-strategist.md`

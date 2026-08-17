@@ -1,4 +1,4 @@
-# DevOps Reviewer (Revisor de DevOps)
+# DevOps Reviewer
 
 > Spec of a **reviewer**-type agent (`agents/_template/AGENT-TEMPLATE.md`). It gives a
 > **point-in-time opinion** before launch on what the `07-devops/` agents assembled; it never
@@ -10,7 +10,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | DevOps Reviewer |
-| **Alias** | Revisor de DevOps |
+| **Alias** | DevOps Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch panel, P7→P8 gate); reconvened for every high-risk release and in `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -64,7 +64,7 @@ assumptions — it returns the list of gaps (`core/question-engine.md`).
 | --- | --- | --- |
 | DevOps review report | `product/99-records/reviews/devops-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | `agents/12-reviewers/review-consolidator.md` |
 | Deploy/rollback/secrets findings | Appendix to the report | `agents/07-devops/deployment-strategist.md`, `agents/07-devops/secrets-manager.md` |
-| Operational debt detected | `STATE.md` §Dívida (via consolidator) | `loops/L08-technical-debt.md` |
+| Operational debt detected | `STATE.md` §Debt (via consolidator) | `loops/L08-technical-debt.md` |
 
 All output ends up **written to a file** (`core/project-memory.md`); a finding that is not written
 down does not exist. No output of this reviewer contains secret values — only confirmation (or

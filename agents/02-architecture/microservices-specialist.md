@@ -1,4 +1,4 @@
-# Microservices Specialist (Microservices Specialist)
+# Microservices Specialist
 
 > Agent spec of the **style specialist** type. Produces a blind proposal for the architecture panel,
 > arbitrated by `agents/02-architecture/architecture-arbiter.md`.
@@ -69,7 +69,7 @@ isolation requirement (compliance, blast radius) that forces physical boundaries
    becomes mandatory: container orchestration, service discovery, distributed tracing,
    network-failure handling, cross-service consistency via sagas/events, per-service pipelines,
    on-call for a fleet. Hiding this cost is the worst possible anti-pattern here
-   (`knowledge/permanent-rules.md` §1 — risks antes de avançar).
+   (`knowledge/permanent-rules.md` §1 — risks before moving forward).
 2. **Microservices solve an organizational problem, not a technical one.** The main benefit is
    letting **autonomous teams** deliver without blocking each other (Conway). A small team does not
    reap that benefit and pays only the cost — the proposal says so.
@@ -182,4 +182,4 @@ make to the panel.
 - `agents/02-architecture/README.md` · `core/decision-engine.md`
 - `agents/02-architecture/event-driven-specialist.md` — how the services communicate without
   coupling.
-- `knowledge/proven-patterns.md` §3 — outbox e consistência distribuída.
+- `knowledge/proven-patterns.md` §3 — outbox and distributed consistency.

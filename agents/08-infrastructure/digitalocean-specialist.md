@@ -126,7 +126,7 @@ route." — a valid proposal that points to another specialist.
 
 - Sell the **cost predictability**, not just the price: for a small team, a stable bill is worth
   more than saving a few euros with surprise risk
-  (`knowledge/origin-lessons.md` §Processo, verificação e custo).
+  (`knowledge/origin-lessons.md` §Process, verification and cost).
 - Choose the App Platform when nobody is there to operate servers — the simplicity is the product,
   not an extra.
 - **Always record the scale limit** where DO stops being the obvious choice — it gives the ADR

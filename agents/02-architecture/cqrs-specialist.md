@@ -1,4 +1,4 @@
-# CQRS Specialist (Especialista de CQRS)
+# CQRS Specialist
 
 > F3 specialist who proposes (or advises against) separating the write model from the read model —
 > with or without event sourcing — weighing the gain against the complexity it introduces.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | CQRS Specialist |
-| **Alias** | Especialista de CQRS |
+| **Alias** | CQRS Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture) |
 | **Type** | Specialist |

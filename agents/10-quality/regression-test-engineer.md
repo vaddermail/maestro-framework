@@ -42,7 +42,7 @@ rots the entire harness (it is recorded and prioritized).
 | --- | --- | --- | --- |
 | Unit/integration/E2E suites | The category's `*-test-engineer` agents | Yes | The material the harness consolidates |
 | Harness definition | `agents/10-quality/test-strategist.md` | Yes | What goes in, how it runs, what is a gate |
-| Fixed bugs | `STATE.md` §Lições, `loops/L02-failing-tests.md` | Yes | Each one becomes a dedicated regression test |
+| Fixed bugs | `STATE.md` §Lessons, `loops/L02-failing-tests.md` | Yes | Each one becomes a dedicated regression test |
 | New flows delivered | `workflows/W06-build.md`, `workflows/W10-feature-evolution.md` | Yes | Each new flow enters the harness before closing |
 | CI configuration | `pipelines/ci-quality.md` | Yes | Where the harness runs as a gate |
 
@@ -53,7 +53,7 @@ rots the entire harness (it is recorded and prioritized).
 | Regression harness | Test repository + CI config | `pipelines/ci-quality.md`, `agents/13-guardians/quality-guardian.md` |
 | Regression test per fixed bug | Inside the harness | All future sessions |
 | Green merge gate | `checklists/pre-merge.md` | Orchestrator, whoever integrates |
-| Flakiness/execution-time record | `STATE.md` §Dívida | Quality guardian |
+| Flakiness/execution-time record | `STATE.md` §Debt | Quality guardian |
 
 ## Questions to the user
 

@@ -1,4 +1,4 @@
-# Frontend Reviewer (Revisor de Frontend)
+# Frontend Reviewer
 
 > Spec of a **reviewer**-type agent (`agents/_template/AGENT-TEMPLATE.md`). It examines the
 > client code and artifacts already built and returns a report; it never builds or decides.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Frontend Reviewer |
-| **Alias** | Revisor de Frontend |
+| **Alias** | Frontend Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -49,7 +49,7 @@ returns to the Orchestrator to trigger `agents/04-frontend/frontend-architect.md
 | `product/03-experience/accessibility.md` and `.../responsiveness.md` | `agents/03-experience/` (F4) | Yes | The contract adherence is measured against |
 | Code of the client slice under review | F6 | Yes | What is being reviewed |
 | `product/04-specification/api-contract.md` and mock handlers | `agents/05-backend/api-designer.md`, `agents/04-frontend/api-integrator.md` | Yes | To verify error fidelity and shape |
-| `STATE.md` §Decisões / §Dívida | `core/project-memory.md` | No | UI debt already known and accepted (not re-flagged) |
+| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | UI debt already known and accepted (not re-flagged) |
 
 Without the conventions and the content layer, the reviewer does not proceed on assumptions — it
 returns the list of gaps (`core/question-engine.md`).
@@ -60,7 +60,7 @@ returns the list of gaps (`core/question-engine.md`).
 | --- | --- | --- |
 | Frontend review report | `product/99-records/reviews/frontend-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | `agents/12-reviewers/review-consolidator.md` |
 | SSOT/token violations forwarded | Appendix to the report | `agents/04-frontend/frontend-architect.md`, `agents/03-experience/design-system-architect.md` |
-| UI debt detected | `STATE.md` §Dívida (via consolidator) | `loops/L08-technical-debt.md` |
+| UI debt detected | `STATE.md` §Debt (via consolidator) | `loops/L08-technical-debt.md` |
 
 All output ends up **written to a file** (`core/project-memory.md`); a finding that is not written
 down does not exist.
@@ -96,7 +96,7 @@ batches (`core/question-engine.md`):
    (`knowledge/proven-patterns.md` §6).
 6. **Filter/sort in explicit state.** Rebuilding filters from the DOM is a finding
    (`knowledge/ai-pitfalls.md`); state lives in an application variable or the URL.
-7. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Dívida with an owner
+7. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
    and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §10).
 8. **It does not validate its own work** nor read the other reviewers' reports while working.
 9. **Honesty:** what it could not verify (e.g. a real physical device, a screen reader) goes to

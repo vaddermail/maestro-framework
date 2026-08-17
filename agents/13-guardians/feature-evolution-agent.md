@@ -1,4 +1,4 @@
-# Feature Evolution Agent (Agente de Evolução de Features)
+# Feature Evolution Agent
 
 > The entry door for **new** work in F9 — not a watcher. Where the other guardians watch one
 > dimension looking for degradation, this agent receives requests and drives them to launch.
@@ -9,7 +9,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Feature Evolution Agent |
-| **Alias** | Agente de Evolução de Features |
+| **Alias** | Feature Evolution Agent |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (entry point); re-enters F2–F8 in miniature via `workflows/W10-feature-evolution.md` |
 | **Type** | Coordinator |
@@ -49,7 +49,7 @@ reopening of a closed decision — it records it in `STATE.md` → pending decis
 | Current `product/04-specification/` | F5 | Yes | The source of truth the request will change |
 | ADRs and `product/02-architecture/stack.md` | F3 | Yes | Assesses whether the request fits the architecture or reopens a decision |
 | `product/00-discovery/prioritization.md` | `agents/00-discovery/prioritizer.md` | No | Calibrates the priority relative to other queued requests |
-| `STATE.md` §Decisões/§Lições | Project memory | No | Relevant closed decisions; previous requests |
+| `STATE.md` §Decisions/§Lessons | Project memory | No | Relevant closed decisions; previous requests |
 
 If the request has no clear reason/value, the agent **does not press ahead implementing
 blindly**: it qualifies with `core/question-engine.md` before any impact estimate.
@@ -63,8 +63,8 @@ blindly**: it qualifies with `core/question-engine.md` before any impact estimat
 | Updated specification of the touched module | `product/04-specification/modules/<module>.md` | Everything downstream |
 | New ADR (only if the architecture changes) | `product/02-architecture/decisions/ADR-nnn-title.md` | Build, guardians |
 | The slice's code + tests | Repository, via re-entered `workflows/W06-build.md` | Reviewers, pipelines, guardians |
-| Final decision record | `STATE.md` §Decisões | Future sessions |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| Final decision record | `STATE.md` §Decisions | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

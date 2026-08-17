@@ -1,4 +1,4 @@
-# Scalability Architect (Scalability Architect)
+# Scalability Architect
 
 > Agent spec of the **specialist** type (architect of one dimension). Canonical format in
 > `agents/_template/AGENT-TEMPLATE.md`.

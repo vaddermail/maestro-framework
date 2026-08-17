@@ -47,7 +47,7 @@ user (`core/quality-gates.md`).
 | Current migration sequence | `schema-versioning-manager` | Yes | Where the new migration fits and what state it assumes |
 | `playbooks/expand-contract-db-migration.md` | Framework | Yes | The canonical procedure to follow |
 | Sample of legacy data | Staging environment | If there is data | To validate constraints in two phases |
-| `STATE.md` §Lições | Project memory | No | Previous migrations and their pitfalls |
+| `STATE.md` §Lessons | Project memory | No | Previous migrations and their pitfalls |
 
 If the physical model does not distinguish an additive change from a destructive one, the
 engineer does **not assume**: it returns the question to the `data-modeler` via the Orchestrator.
@@ -59,7 +59,7 @@ engineer does **not assume**: it returns the question to the `data-modeler` via 
 | Up + down migration (or reversal plan) | Project migrations directory | `schema-versioning-manager`, `deployment-strategist` |
 | Migration plan for the slice | `product/07-operations/data/migrations/<slice>.md` (`templates/technical/migration-plan.md.template`) | Reviewers, Orchestrator |
 | Backfill/validation runbook (when there is data) | `product/07-operations/runbooks/` (`templates/technical/runbook.md.template`) | `deployment-strategist`, guardians |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

@@ -176,4 +176,4 @@ recommendation with the why.
 
 - `agents/02-architecture/README.md` · `workflows/W03-architecture.md` · `workflows/W06-build.md`
 - `agents/02-architecture/clean-architecture-specialist.md` · `agents/02-architecture/ddd-specialist.md`
-- `knowledge/proven-patterns.md` (§4 SSOT, §7 guardrails, §8 serviço partilhado)
+- `knowledge/proven-patterns.md` (§4 SSOT, §7 guardrails, §8 shared service)

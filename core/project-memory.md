@@ -52,7 +52,7 @@ Associated discipline:
 | State and pending items | `STATE.md` | In the last session's head |
 | Structural decision + why | ADR in `product/02-architecture/decisions/` | In a commit comment |
 | Business rule | `product/04-specification/` | Only in the code |
-| Non-obvious lesson | `STATE.md` §Lições | Relearned by repeating the bug |
+| Non-obvious lesson | `STATE.md` §Lessons | Relearned by repeating the bug |
 | Improvement that belongs to the framework (not the product) | `FRAMEWORK-IMPROVEMENTS.md` at the root | Dies in commits and in heads; the framework does not learn (`playbooks/report-framework-improvements.md`) |
 | User question/answer | `product/01-requirements/questions-and-answers.md` | Re-asked every 3 sessions |
 | Rule provenance | Annotation in the spec itself ("origin: defect X") | Lost — the spec becomes dogma without context |

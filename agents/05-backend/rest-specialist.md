@@ -1,4 +1,4 @@
-# REST Specialist (REST Specialist)
+# REST Specialist
 
 > **Specialist** agent spec: implements the contract in a REST style over HTTP.
 

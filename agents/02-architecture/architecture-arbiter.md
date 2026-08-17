@@ -1,4 +1,4 @@
-# Architecture Arbiter (Árbitro de Arquitetura)
+# Architecture Arbiter
 
 > Spec of an **arbiter**-type agent. It does not propose solutions — it decides between the
 > proposals of others and justifies the decision in an ADR (`core/decision-engine.md`).
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Architecture Arbiter |
-| **Alias** | Árbitro de Arquitetura |
+| **Alias** | Architecture Arbiter |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); reconvened by `workflows/W10-feature-evolution.md` when a new feature challenges the decided style |
 | **Type** | Arbiter |
@@ -47,7 +47,7 @@ data (e.g. real expected scale, number of teams): in that case it writes the dec
 | Weighted criteria matrix | Orchestrator, derived from F2 | Yes | Functional fit, total cost, operational complexity, team competence, reversibility, maturity, lock-in |
 | `product/01-requirements/` (NFR) | F2 | Yes | Scale, availability, latency, compliance — what pressures the decision |
 | `product/00-discovery/` (team, budget, roadmap) | F1 | Yes | Number of teams, operational maturity, horizon |
-| `STATE.md` §Decisões fechadas | Memory | No | Already-closed constraints the decision cannot contradict |
+| `STATE.md` §Closed decisions | Memory | No | Already-closed constraints the decision cannot contradict |
 
 If a proposal arrives without an operating cost or without a reversal path, the arbiter **does not
 complete it by deduction of its own**: it returns it to the specialist (via the Orchestrator) — an
@@ -59,7 +59,7 @@ incomplete proposal is not arbitrable.
 | --- | --- | --- |
 | Architectural style ADR | `product/02-architecture/decisions/ADR-nnn-estilo.md` (`templates/project/ADR-DECISION.md.template`) | `stack-selector`, all F5–F6 agents, `agents/12-reviewers/architecture-reviewer.md` |
 | Architecture vision (block diagram + boundaries) | `product/02-architecture/visao-de-arquitetura.md` | Specification (F5), build (F6) |
-| Closed decision recorded | project `CLAUDE.md` §Decisões fechadas | All future sessions |
+| Closed decision recorded | project `CLAUDE.md` §Closed decisions | All future sessions |
 
 All output is written to file — a decision that only exists in the conversation does not survive
 the session (`core/project-memory.md`).
@@ -132,7 +132,7 @@ It puts them to the Orchestrator, which groups them (`core/question-engine.md`).
 6. **Write the ADR** — context, options, decision, consequences, reversal, state `proposed`.
 7. **Validate with the user** — in plain language: what was chosen, what was rejected and why,
    what it costs, how it reverses. Move the ADR to `approved`.
-8. **Record as closed** — write the decision into the `CLAUDE.md` §Decisões fechadas and hand
+8. **Record as closed** — write the decision into the `CLAUDE.md` §Closed decisions and hand
    control back to the Orchestrator, which starts the `stack-selector`.
 
 ## Examples
@@ -207,7 +207,7 @@ It does not hide the bill — it exposes it for the user to sign.
 - [ ] Rejected options recorded with the reason; "do nothing" among them.
 - [ ] Reversal path and reopening warning signs written.
 - [ ] User validated in plain language; ADR in the `approved` state.
-- [ ] Decision recorded in the `CLAUDE.md` §Decisões fechadas.
+- [ ] Decision recorded in the `CLAUDE.md` §Closed decisions.
 
 ## Related
 

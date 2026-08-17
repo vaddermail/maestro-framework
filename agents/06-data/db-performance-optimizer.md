@@ -43,7 +43,7 @@ to the `data-modeler` or the `architecture-arbiter` via the Orchestrator.
 | Query execution plan | Environment with representative data | Yes | The base evidence for the diagnosis |
 | Latency budget | `nfr-specifier` (F2) | Yes | The target it is measured against |
 | Current index strategy | `indexing-specialist` | Yes | What already exists before proposing more |
-| `STATE.md` §Lições / Dívida | Project memory | No | Previous optimizations and regressions |
+| `STATE.md` §Lessons / §Debt | Project memory | No | Previous optimizations and regressions |
 
 If there is no representative data (only the tiny dev dataset), the optimizer **does not
 conclude**: optimizing against 100 rows deceives (the planner picks different plans with volume).
@@ -55,8 +55,8 @@ It asks the Orchestrator for an environment with volume.
 | --- | --- | --- |
 | Diagnosis + before/after plan | `product/07-operations/data/performance/<query>.md` | `performance-guardian`, reviewers |
 | Proposed change (rewrite/index/partition/config) | Same file + migration if applicable | `migration-engineer`, `indexing-specialist` |
-| Technical-debt item (if deferred) | `STATE.md` §Dívida / `loops/L08-technical-debt.md` | Future sessions |
-| New lessons | `STATE.md` §Lições | Future sessions |
+| Technical-debt item (if deferred) | `STATE.md` §Debt / `loops/L08-technical-debt.md` | Future sessions |
+| New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
 

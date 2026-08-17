@@ -46,7 +46,7 @@ engineers (`core/quality-gates.md`).
 | Regression harness | `agents/10-quality/regression-test-engineer.md` | Yes | The tests that actually exist |
 | Business rules and invariants | `agents/01-requirements/business-rules-modeler.md` | Yes | What **must** be covered |
 | Line-coverage report (if any) | Coverage tool | No | Weak signal: used as a clue, never as a verdict |
-| `STATE.md` §Lições | Project memory | No | Past bugs that reveal risk classes to check |
+| `STATE.md` §Lessons | Project memory | No | Past bugs that reveal risk classes to check |
 
 ## Outputs
 

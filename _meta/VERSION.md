@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.0.0** (2026-08-14)
+**Current version: 1.0.0** (2026-08-17)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -17,12 +17,12 @@ never automatically.
 
 ## Changelog
 
-### 1.0.0 — 2026-08-14
+### 1.0.0 — 2026-08-17
 
 - First public English edition, derived from the private upstream framework (Maestro 2.6.0, PT),
-  where it was distilled from three real products and hardened by a 14-agent adversarial audit
-  (43 recommendations implemented). Structure, paths and tooling are English; prose is being
-  translated in waves — see the repository issues for progress.
+  where it was distilled from real products built from scratch and hardened by a 14-agent
+  adversarial audit (43 recommendations implemented). Fully English: structure, paths, tooling
+  and prose — verified by `_meta/verify.sh` and a repository-wide residue sweep.
 - The ecosystem state starts fresh in this edition: the candidates ledger
   (`knowledge/candidates.md`) and the learning curve (`knowledge/learning-curve.md`) are empty —
   they will be filled by the first products built with this edition and by community field

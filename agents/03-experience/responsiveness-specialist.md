@@ -55,7 +55,7 @@ assume** "360px is enough": it asks (see below) and records the gap.
 | --- | --- | --- |
 | Responsive strategy | `product/03-experience/responsiveness.md` | `agents/04-frontend/screen-implementer.md`, `agents/12-reviewers/ux-reviewer.md` |
 | Responsive annotations per screen | Attached to the screen map | `agents/04-frontend/frontend-architect.md` |
-| Layout-pitfall lessons | `STATE.md` §Lições | Future sessions |
+| Layout-pitfall lessons | `STATE.md` §Lessons | Future sessions |
 
 Everything is written to file (`core/project-memory.md`) — a breakpoint decision only spoken in
 the conversation is lost by the next session.

@@ -1,4 +1,4 @@
-# Network Architect (Network Architect)
+# Network Architect
 
 > Agent spec of the **specialist** type in the `08-infrastructure` category. Follows the
 > `agents/_template/AGENT-TEMPLATE.md`.

@@ -94,7 +94,7 @@ flows** are validated by the user — UX decisions can be revisited, but **never
 `core/orchestrator.md` §Recovery. `wireframer` without an approved `flows-and-journeys.md`, or
 `component-architect` without tokens → return the gap as a question batch, **never assume**.
 User unavailable to validate the screen map → the map stays `in-review`, the pending item in
-`STATE.md` → "Decisões pendentes"; F5 **does not start** without P4 closed. A divergence found in
+`STATE.md` → "Pending decisions"; F5 **does not start** without P4 closed. A divergence found in
 F6 (a screen impossible to implement as designed) sends work back to F4 — record the reason in
 `STATE.md`.
 

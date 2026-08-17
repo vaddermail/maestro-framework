@@ -26,7 +26,7 @@ framework owner to approve.
 ## When it starts
 
 On a cadence trigger, on the upstream repository (never inside a project), when **any** of these
-holds — whichever comes first (`playbooks/framework-curation.md` §Pré-condições):
+holds — whichever comes first (`playbooks/framework-curation.md` §Preconditions):
 
 - ≥3 open issues labeled `improvements`;
 - a project closed F6 (P6b), F7 or F8 and sent its report;

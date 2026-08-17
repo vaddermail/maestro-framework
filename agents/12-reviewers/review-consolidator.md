@@ -1,4 +1,4 @@
-# Review Consolidator (Consolidador de Revisões)
+# Review Consolidator
 
 > Agent spec of type **coordinator** in category `12-reviewers`. Follows the
 > `agents/_template/AGENT-TEMPLATE.md`.
@@ -8,7 +8,7 @@
 | Field | Value |
 | --- | --- |
 | **Name** | Review Consolidator |
-| **Alias** | Consolidador de Revisões |
+| **Alias** | Review Consolidator |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (closes the pre-launch panel); reconvened in `workflows/W12-global-review.md` |
 | **Type** | Coordinator |
@@ -46,7 +46,7 @@ and escalates to the user (`core/question-engine.md`).
 | --- | --- | --- | --- |
 | All panel reports (`product/99-records/reviews/*-YYYY-MM-DD.md`) | Each convened `agents/12-reviewers/*-reviewer.md` | Yes | The raw material to merge; it must be **complete** |
 | ADRs and specification (F3/F5) | Framework/product | Yes | Factual base to resolve contradictions by evidence, not by authority |
-| `STATE.md` §Dívida | Project memory | No | Findings already accepted as residual risk do not re-enter the plan as new |
+| `STATE.md` §Debt | Project memory | No | Findings already accepted as residual risk do not re-enter the plan as new |
 | Product risk profile | `agents/09-security/security-coordinator.md` | No | Helps calibrate the final severity of findings on the boundary between security and another dimension |
 
 If the panel is not complete, the consolidator does **not** start with what exists — it returns
@@ -60,7 +60,7 @@ the list of missing reviewers to the Orchestrator.
 | Global gate P7 verdict | `STATE.md` + `core/quality-gates.md` | Orchestrator |
 | Findings addressed to the loops | `loops/L02-failing-tests.md` · `loops/L03-security-issues.md` · `loops/L04-code-smells.md` · `loops/L05-inconsistencies.md` | The respective loops |
 | Escalated contradictions (no resolution by evidence) | `STATE.md` → pending decisions | User |
-| New accepted debt | `STATE.md` §Dívida | Future sessions, F9 guardians |
+| New accepted debt | `STATE.md` §Debt | Future sessions, F9 guardians |
 
 All output is **written to a file** (`core/project-memory.md`); a plan spoken in a conversation
 does not exist.
@@ -132,7 +132,7 @@ Asked through the Orchestrator, always batched (`core/question-engine.md`):
    the artifact, decide with evidence and document the why, or escalate if it is a genuine
    trade-off.
 6. **Classify and order** the final plan by real risk (severity × exposure × cost of the fix),
-   crossing with `STATE.md` §Dívida so as not to re-introduce what is already accepted.
+   crossing with `STATE.md` §Debt so as not to re-introduce what is already accepted.
 7. **Assign an owner** to each finding (loop L02–L05, build agent, or residual risk to sign off).
 8. **Issue the global gate P7 verdict** — it blocks with a single blocker; passes-with-caveats
    with signed residual risk; passes with no open findings.

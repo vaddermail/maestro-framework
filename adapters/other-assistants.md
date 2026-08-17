@@ -1,92 +1,92 @@
-# Adaptador: outros assistentes de código
+# Adapter: other code assistants
 
-Como executar a framework `Maestro` em assistentes **sem** subagentes nativos ou com orquestração
-mais pobre que o Claude Code — **Cursor**, **GitHub Copilot**, **Codex CLI**, **aider** e afins. Não é
-um mapeamento fechado por ferramenta (mudam depressa demais); são os **princípios de adaptação** e o
-**mínimo viável** que fazem a framework funcionar em qualquer uma. O contrato da framework são os
-**artefactos e os portões**, não a mecânica — por isso o essencial transporta-se; o que muda é o
-conforto.
+How to run the `Maestro` framework on assistants **without** native subagents or with poorer
+orchestration than Claude Code — **Cursor**, **GitHub Copilot**, **Codex CLI**, **aider** and the
+like. This is not a closed per-tool mapping (they change too fast); it is the **adaptation
+principles** and the **viable minimum** that make the framework work on any of them. The
+framework's contract is the **artifacts and the gates**, not the mechanics — so the essentials
+carry over; what changes is the comfort.
 
-## O que a framework exige de qualquer ferramenta
+## What the framework requires of any tool
 
-Independentemente da ferramenta, três coisas têm de existir. Sem elas, não é a framework que corre —
-é improviso:
+Whatever the tool, three things must exist. Without them, it is not the framework running — it is
+improvisation:
 
-1. **Memória em ficheiros versionados.** `CLAUDE.md` (ou o equivalente da ferramenta) para as regras
-   estáveis + `STATE.md` para o estado vivo + `product/` para os artefactos canónicos. É isto que
-   permite passar o testemunho entre sessões, pessoas e ferramentas (`core/project-memory.md`).
-2. **Disciplina de portões manual.** Onde o Claude Code segura os portões pela sessão orquestradora,
-   noutra ferramenta o humano (ou a sessão) segura-os **conscientemente**: os pontos de aprovação
-   não-delegável do `core/orchestrator.md` §Human approval não desaparecem por a ferramenta não
-   os impor.
-3. **Roteamento de modelos, mesmo que grosseiro.** As camadas de `core/model-routing.md`
-   aplicam-se mesmo quando a escolha é só "modelo forte" vs "modelo rápido": usar o forte no
-   raciocínio distintivo, o rápido no mecânico.
+1. **Memory in versioned files.** `CLAUDE.md` (or the tool's equivalent) for the stable rules +
+   `STATE.md` for the live state + `product/` for the canonical artifacts. This is what enables
+   the handover across sessions, people and tools (`core/project-memory.md`).
+2. **Manual gate discipline.** Where Claude Code holds the gates through the orchestrating
+   session, on another tool the human (or the session) holds them **consciously**: the
+   non-delegable approval points of `core/orchestrator.md` §Human approval do not disappear
+   just because the tool does not enforce them.
+3. **Model routing, even if coarse.** The tiers of `core/model-routing.md` apply even when the
+   choice is just "strong model" vs "fast model": use the strong one for distinctive reasoning,
+   the fast one for the mechanical.
 
-Se a ferramenta oferecer isto, tem-se o **mínimo viável**. Tudo o resto é ganho de ergonomia.
+If the tool offers this, you have the **viable minimum**. Everything else is an ergonomics gain.
 
-## Onde cada ferramenta guarda as regras estáveis
+## Where each tool keeps the stable rules
 
-O equivalente do `CLAUDE.md` — o ficheiro de instruções de projeto carregado automaticamente — existe
-na maioria das ferramentas, com nome diferente. Instanciar sempre a partir de
-`templates/project/CLAUDE.md.template` e ajustar o nome do ficheiro à ferramenta:
+The `CLAUDE.md` equivalent — the automatically loaded project instructions file — exists in most
+tools under a different name. Always instantiate from `templates/project/CLAUDE.md.template` and
+adjust the file name to the tool:
 
-| Ferramenta | Onde vivem as regras estáveis de projeto |
+| Tool | Where the project's stable rules live |
 | --- | --- |
-| **Cowork** | Ficheiro de instruções de projeto (o equivalente do `CLAUDE.md`) na pasta partilhada do projeto; portões e lotes de perguntas correm na conversa — sem fan-out de subagentes, o painel de revisores corre sequencialmente |
-| **Cursor** | Regras de projeto (`.cursor/rules/…`, ou o ficheiro de regras único do workspace) |
-| **GitHub Copilot** | Ficheiro de instruções do repositório para o Copilot |
-| **Codex CLI** | Ficheiro de instruções do agente na raiz do repo |
-| **aider** | Ficheiro de convenções apontado à sessão + o `read`/contexto inicial |
+| **Cowork** | Project instructions file (the `CLAUDE.md` equivalent) in the project's shared folder; gates and question batches run in the conversation — with no subagent fan-out, the reviewer panel runs sequentially |
+| **Cursor** | Project rules (`.cursor/rules/…`, or the workspace's single rules file) |
+| **GitHub Copilot** | The repository's instructions file for Copilot |
+| **Codex CLI** | Agent instructions file at the repo root |
+| **aider** | Conventions file pointed at the session + the initial `read`/context |
 
-Qualquer que seja o nome, a **fonte de verdade é o repositório** — o `STATE.md` e o `product/` são
-partilhados e agnósticos de ferramenta; só o ficheiro de regras muda de rótulo. Duas pessoas em
-ferramentas diferentes partilham contexto com um `git pull`.
+Whatever the name, the **source of truth is the repository** — `STATE.md` and `product/` are
+shared and tool-agnostic; only the rules file changes label. Two people on different tools share
+context with a `git pull`.
 
-## Simular subagentes quando não existem
+## Simulating subagents when there are none
 
-O maior défice destas ferramentas é a **ausência de subagentes reais** — não há fan-out de N
-especialistas às cegas + consolidador (`core/orchestrator.md` §Parallelism). Compensa-se com
-**sessões sequenciais que comunicam por artefactos em ficheiro**:
+The biggest deficit of these tools is the **absence of real subagents** — no fan-out of N blind
+specialists + consolidator (`core/orchestrator.md` §Parallelism). Compensate with **sequential
+sessions that communicate through file artifacts**:
 
-- **Painel de arquitetura (F3) / revisores (F7):** em vez de N subagentes em paralelo, correr N
-  **sessões/passagens sequenciais**, cada uma com o papel de um especialista, **escrevendo o seu
-  relatório num ficheiro próprio** em `product/…` (formato de `templates/technical/review-report.md.template`).
-  Só depois uma passagem de **consolidação** lê todos os ficheiros e produz o plano único. O
-  isolamento "às cegas" consegue-se **não dando** a uma passagem os relatórios das outras até à
-  consolidação.
-- **Fatias verticais (F6):** correm uma de cada vez; a coordenação vive no `STATE.md` (o que está
-  feito, o que está em curso), não na memória da sessão.
-- **Loops (`loops/…`):** a mesma sessão itera, com a **condição de saída explícita** e a salvaguarda
-  de parar às 3 iterações sem progresso — o registo de cada volta vai para `STATE.md`.
+- **Architecture panel (F3) / reviewers (F7):** instead of N parallel subagents, run N
+  **sequential sessions/passes**, each playing one specialist's role, **writing its report to
+  its own file** in `product/…` (format of `templates/technical/review-report.md.template`).
+  Only afterwards does a **consolidation** pass read all the files and produce the single plan.
+  The "blind" isolation is achieved by **not giving** a pass the other passes' reports until
+  consolidation.
+- **Vertical slices (F6):** run one at a time; coordination lives in `STATE.md` (what is done,
+  what is in progress), not in session memory.
+- **Loops (`loops/…`):** the same session iterates, with the **explicit exit condition** and the
+  safeguard of stopping at 3 iterations without progress — each lap's log goes to `STATE.md`.
 
-O artefacto em ficheiro **é** o mecanismo de passagem de contexto que os subagentes fariam em memória.
-Mais lento, igualmente correto.
+The file artifact **is** the context-passing mechanism the subagents would provide in memory.
+Slower, equally correct.
 
-## O que se perde sem orquestração nativa — e como compensar
+## What is lost without native orchestration — and how to compensate
 
-| Perda | Compensação |
+| Loss | Compensation |
 | --- | --- |
-| **Fan-out paralelo real** | Sequencial + artefactos em ficheiro (acima). Mais lento; o resultado tem de ser o mesmo. |
-| **Portões impostos pela ferramenta** | Checklists explícitas em cada portão (`checklists/`), validadas à mão; o humano confirma antes de avançar. |
-| **Roteamento automático de modelos** | Escolha manual consciente por tarefa; registar desvios em `STATE.md`. |
-| **Toolset versionado para a equipa** | Documentar no `STATE.md`/README as extensões/MCP que a ferramenta usa, para paridade entre pessoas — mesmo que a ferramenta não as versione sozinha. |
-| **Hook de arranque de sessão** | Protocolo de arranque **manual** e disciplinado (`workflows/W00-project-kickoff.md`): sincronizar, ler `STATE.md`, confirmar ambiente — todas as sessões, sem exceção. |
-| **Memória automática da ferramenta** | Nenhuma perda real: a framework nunca dependeu dela — a memória canónica são os ficheiros versionados (`core/project-memory.md`). |
+| **Real parallel fan-out** | Sequential + file artifacts (above). Slower; the result must be the same. |
+| **Tool-enforced gates** | Explicit checklists at each gate (`checklists/`), validated by hand; the human confirms before moving on. |
+| **Automatic model routing** | Conscious manual choice per task; log deviations in `STATE.md`. |
+| **Team-versioned toolset** | Document in `STATE.md`/README the extensions/MCP the tool uses, for parity across people — even if the tool does not version them itself. |
+| **Session-start hook** | **Manual**, disciplined kickoff protocol (`workflows/W00-project-kickoff.md`): sync, read `STATE.md`, confirm the environment — every session, no exception. |
+| **The tool's automatic memory** | No real loss: the framework never depended on it — the canonical memory is the versioned files (`core/project-memory.md`). |
 
-## Princípio de fundo
+## Underlying principle
 
-Uma ferramenta mais pobre **não baixa a fasquia** — só transfere para o humano e para a disciplina de
-ficheiros o que o Claude Code automatiza. A framework foi desenhada agnóstica precisamente para isto:
-os documentos de papéis e processos leem-se igual em qualquer assistente; muda só este adaptador. Se
-uma ferramenta nova ganhar subagentes ou hooks, promove-se o seu mapeamento a um adaptador dedicado
-(`core/extensibility.md`), sem tocar no resto.
+A poorer tool **does not lower the bar** — it only transfers to the human and to file discipline
+what Claude Code automates. The framework was designed agnostic precisely for this: the role and
+process documents read the same on any assistant; only this adapter changes. If a new tool gains
+subagents or hooks, promote its mapping to a dedicated adapter (`core/extensibility.md`),
+without touching the rest.
 
-## Relacionados
+## Related
 
-- `adapters/README.md` — a regra do acoplamento e o índice de adaptadores.
-- `adapters/claude-code.md` — o mapeamento completo na ferramenta de referência (o alvo a imitar).
-- `core/project-memory.md` — o mínimo viável: memória em ficheiros versionados.
-- `core/orchestrator.md` — os portões e o paralelismo que se simulam à mão.
-- `workflows/W00-project-kickoff.md` — o protocolo de arranque a executar manualmente.
-- `core/extensibility.md` — como promover uma ferramenta nova a adaptador dedicado.
+- `adapters/README.md` — the coupling rule and the adapter index.
+- `adapters/claude-code.md` — the full mapping on the reference tool (the target to imitate).
+- `core/project-memory.md` — the viable minimum: memory in versioned files.
+- `core/orchestrator.md` — the gates and the parallelism simulated by hand.
+- `workflows/W00-project-kickoff.md` — the kickoff protocol to execute manually.
+- `core/extensibility.md` — how to promote a new tool to a dedicated adapter.

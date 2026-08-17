@@ -1,4 +1,4 @@
-# Security Reviewer (Revisor de Segurança)
+# Security Reviewer
 
 Agent spec for the **reviewer** that, before launch, confronts the built system with the threat
 model, the OWASP Top 10 and the least-privilege principle — an independent opinion, distinct from
@@ -9,7 +9,7 @@ whoever designed the security and from whoever watches it in production.
 | Field | Value |
 | --- | --- |
 | **Name** | Security Reviewer |
-| **Alias** | Revisor de Segurança |
+| **Alias** | Security Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (review panel / security gate before production); reconvened by `workflows/W12-global-review.md` |
 | **Type** | Reviewer |
@@ -51,7 +51,7 @@ exists to confront — it does not invent one; it records the gap and engages
 | `modules/rbac-and-scoping.md` + the product's authorization policy | F5/F6 | Yes | The least-privilege contract to verify |
 | SAST/DAST/dependency findings | `agents/09-security/sast-specialist.md`, `-dast`, `dependency-analyst` | No | It consumes them; it does not replace the tools |
 | Compliance / personal data requirements | F2 (NFR) | No | GDPR, retention, minimization |
-| `STATE.md` §Lições | Project memory | No | Previous vulnerabilities in the product |
+| `STATE.md` §Lessons | Project memory | No | Previous vulnerabilities in the product |
 
 If a required input is missing, it returns the gaps to the Orchestrator — it never assumes "it
 should be safe".
@@ -63,7 +63,7 @@ should be safe".
 | Security review report | `product/99-records/reviews/security-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | `review-consolidator`, `security-coordinator`, Orchestrator |
 | Findings prioritized by exploitable risk + mitigation | Report section | Build team, F9 specialists |
 | Residual-risk recommendation (for the user to sign off) | Annex | `security-coordinator`, user |
-| New lessons | `STATE.md` §Lições | Future sessions, `security-guardian` |
+| New lessons | `STATE.md` §Lessons | Future sessions, `security-guardian` |
 
 ## Questions to the user
 
