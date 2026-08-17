@@ -161,7 +161,7 @@ provisioning. The `security-guardian` reassesses the drift in F9.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/09-security/hardening-specialist.md` | parallel — designs the minimal posture CIS confirms against the standard |
 | `agents/09-security/infrastructure-analyst.md` · `container-analyst.md` | upstream — provide the scan CIS interprets |

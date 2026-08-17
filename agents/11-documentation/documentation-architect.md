@@ -167,7 +167,7 @@ code within weeks.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/11-documentation/technical-writer.md` | downstream — writes in the technical folders this one defines |
 | `agents/11-documentation/user-help-writer.md` | downstream — uses the content-layer this one hosts in the map |

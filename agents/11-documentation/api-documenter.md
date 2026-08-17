@@ -166,7 +166,7 @@ cycle, not months.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/05-backend/api-designer.md` | upstream — closes the contract this one documents |
 | `agents/05-backend/rest-specialist.md` | upstream — produces the REST API's OpenAPI |

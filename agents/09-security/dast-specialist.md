@@ -144,7 +144,7 @@ design. The F7 gate is conditioned on closing the high XSS.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/09-security/sast-specialist.md` | parallel — dynamic + static cover distinct angles |
 | `agents/09-security/pentester.md` | downstream — takes over what the automated does not reach (logic, chaining) |

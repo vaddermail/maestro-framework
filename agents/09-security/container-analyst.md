@@ -146,7 +146,7 @@ Result: surface cut at the origin, not 63 CVEs triaged one by one every week.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/07-devops/docker-specialist.md` | upstream/downstream — produces the images; receives the build misconfig |
 | `agents/07-devops/kubernetes-specialist.md` | downstream — receives the insecure runtime posture |

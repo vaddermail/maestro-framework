@@ -27,7 +27,7 @@ distance between what is written and what is true, and returns findings with exa
 
 Invoked by the Orchestrator (`core/orchestrator.md`) when a slice/release in F7 has documentation
 and a help content layer ready for review — **provided it is not the author of either**
-(`knowledge/ai-pitfalls.md` #20). It runs in parallel with the other reviewers on the panel,
+(`knowledge/ai-pitfalls.md` §20). It runs in parallel with the other reviewers on the panel,
 blind (`agents/12-reviewers/README.md`).
 
 ## When it ends
@@ -91,7 +91,7 @@ The reviewer measures against artifacts; it asks little, and only via the Orches
    command failed with `command not found` because it was renamed to `pnpm db:seed` two slices
    ago → a newcomer is blocked at the first step."*
 5. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Dívida with an owner
-   and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` #10).
+   and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §10).
 6. **It does not fix, it recommends.** Writing belongs to the writers
    (`agents/11-documentation/`); the reviewer points and classifies.
 7. **Scope honesty:** documentation it could not execute/test (e.g. a disaster recovery runbook

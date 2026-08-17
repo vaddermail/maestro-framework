@@ -194,7 +194,7 @@ F7 close), issue #14 (B2B SaaS, F8 close), issue #15 (internal app, F9 cadence).
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | Each project's Orchestrator (`core/orchestrator.md`) | upstream — consolidates and sends the reports (`playbooks/report-framework-improvements.md`); receives the verdict on the issues |
 | Framework owner (human) | downstream — reviews the PRs, decides contradictions/MAJOR, merges; is the gate |

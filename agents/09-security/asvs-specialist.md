@@ -158,7 +158,7 @@ security gate.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/09-security/security-coordinator.md` | upstream and downstream — receives the risk profile, returns the verification |
 | `agents/01-requirements/nfr-specifier.md` | upstream — NFRs that force the level |

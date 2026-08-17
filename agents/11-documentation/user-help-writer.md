@@ -169,7 +169,7 @@ user (and the AI) a rule the product does not honor.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/11-documentation/documentation-architect.md` | upstream — hosts the content-layer in the map |
 | `agents/01-requirements/glossary-curator.md` | provides the terms the help uses |

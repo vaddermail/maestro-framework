@@ -160,7 +160,7 @@ made a possible bug official; documenting the spec would have lied about the rea
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/11-documentation/documentation-architect.md` | upstream — defines where and from which source this one writes |
 | `agents/11-documentation/api-documenter.md` | parallel — this one does narrative guides, the other the reference |

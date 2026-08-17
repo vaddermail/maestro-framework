@@ -155,7 +155,7 @@ compromise: one bucket prefix and one table, instead of the whole system.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/05-backend/authorization-specialist.md` | upstream — app authz model this one extends |
 | `agents/06-data/data-modeler.md` | upstream — which tables each service touches; downstream — grants |

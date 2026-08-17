@@ -232,7 +232,7 @@ before publishing, with provenance and undo per generated field.
 
 ## Interactions
 
-| Agent | Relation |
+| Agent | Relationship |
 | --- | --- |
 | `agents/09-security/threat-modeler.md` | upstream — the threat model marks the AI features to deepen |
 | `agents/09-security/security-coordinator.md` | supervision — consolidates the findings; owner of the residual risk |
