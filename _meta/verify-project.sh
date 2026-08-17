@@ -28,7 +28,7 @@ fi
 # 1. F0 foundation: the files W00 creates exist
 # ---------------------------------------------------------------------------
 fund_ko=0
-for f in STATE.md FRAMEWORK-IMPROVEMENTS.md produto; do
+for f in STATE.md FRAMEWORK-IMPROVEMENTS.md product; do
   [ -e "$f" ] || { falha "MISSING FOUNDATION: $f (workflows/W00-project-kickoff.md)"; fund_ko=1; }
 done
 [ -f CLAUDE.md ] || aviso "no CLAUDE.md at the root (or the tool's equivalent — adapters/)"
