@@ -1,0 +1,44 @@
+name: release
+on:
+  push:
+    tags: ['v*']
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Framework gate
+        run: bash _meta/verify.sh
+      - name: Build the integrity manifest (_meta/SHA256SUMS)
+        run: |
+          : > _meta/SHA256SUMS
+          while IFS= read -r f; do
+            f=${f#./}
+            case "$f" in .git/*|.github/*|_meta/SHA256SUMS) continue ;; esac
+            excl=0
+            while IFS= read -r l; do
+              case "$l" in ''|'#'*) continue ;; esac
+              [ "$f" = "$l" ] && excl=1
+            done < _meta/DO-NOT-DISTRIBUTE
+            [ "$excl" = 1 ] && continue
+            sha256sum "$f" >> _meta/SHA256SUMS
+          done < <(find . -type f | sort)
+          wc -l _meta/SHA256SUMS
+      - name: Build the sanitized ZIP
+        run: |
+          EX=(-x '.git/*' -x '.github/*')
+          while IFS= read -r l; do
+            case "$l" in ''|'#'*) continue ;; esac
+            EX+=(-x "$l")
+          done < _meta/DO-NOT-DISTRIBUTE
+          zip -qr "Maestro-${GITHUB_REF_NAME}.zip" . "${EX[@]}"
+          unzip -l "Maestro-${GITHUB_REF_NAME}.zip" | tail -3
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" "Maestro-${GITHUB_REF_NAME}.zip" \
+            --title "Maestro ${GITHUB_REF_NAME}" \
+            --notes "Framework distribution ZIP — see _meta/VERSION.md for the changelog and START-HERE.md to bootstrap a project."
