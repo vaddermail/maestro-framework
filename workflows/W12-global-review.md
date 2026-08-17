@@ -1,111 +1,112 @@
-# W12 — Revisão Global (sob pedido)
+# W12 — Global Review (on demand)
 
-> **Disparo:** o utilizador pede uma revisão multidisciplinar completa · **Coordena:** o Orquestrador
-> monta o painel de `agents/12-reviewers/` · **Condição de fecho:** plano consolidado entregue e o
-> utilizador decidiu o que se corrige já vs backlog.
+> **Trigger:** the user requests a full multidisciplinary review · **Coordinates:** the
+> Orchestrator assembles the panel from `agents/12-reviewers/` · **Closing condition:** the
+> consolidated plan delivered and the user has decided what gets fixed now vs backlog.
 
-## Objetivo
+## Objective
 
-Dar ao utilizador uma **fotografia independente e multidisciplinar** do estado de um âmbito à sua
-escolha — o produto todo, um módulo, uma release, um repositório herdado — e um **plano priorizado**
-de correções para ele decidir. Ao contrário de todas as fases, W12 **não é um portão** e **não
-bloqueia** nada por si: é diagnóstico a pedido. Quem decide o que fazer com os achados é o utilizador.
+Give the user an **independent, multidisciplinary snapshot** of the state of a scope of their
+choosing — the whole product, a module, a release, an inherited repository — and a **prioritized
+plan** of fixes for them to decide on. Unlike every phase, W12 **is not a gate** and **blocks**
+nothing by itself: it is diagnosis on demand. What to do with the findings is the user's call.
 
-### W12 vs W07 — a diferença que importa
+### W12 vs W07 — the difference that matters
 
-| | `workflows/W07-quality-and-security.md` | `workflows/W12-global-review.md` (este) |
+| | `workflows/W07-quality-and-security.md` | `workflows/W12-global-review.md` (this one) |
 | --- | --- | --- |
-| **Natureza** | Portão **obrigatório** de pré-lançamento (P7) | Revisão **convocável** a qualquer momento |
-| **Quando** | Sempre, antes de F8 | Sob pedido do utilizador |
-| **Âmbito** | O MVP / a release a lançar | Qualquer âmbito que o utilizador defina |
-| **Efeito de um bloqueador** | Impede o lançamento | Vira item priorizado; o utilizador decide |
+| **Nature** | **Mandatory** pre-launch gate (P7) | Review **summonable** at any time |
+| **When** | Always, before F8 | At the user's request |
+| **Scope** | The MVP / the release to launch | Any scope the user defines |
+| **Effect of a blocker** | Prevents the launch | Becomes a prioritized item; the user decides |
 
-W07 **usa** este workflow como mecânica de painel; W12 pode correr sem que haja lançamento nenhum
-(ex.: revisão trimestral de um SaaS, due diligence antes de uma aquisição, auditoria de um módulo
-legado antes de lhe mexer).
+W07 **uses** this workflow as its panel mechanics; W12 can run with no launch in sight at all
+(e.g. a quarterly review of a SaaS, due diligence before an acquisition, an audit of a legacy
+module before touching it).
 
-## Gatilho e pré-condições
+## Trigger and preconditions
 
-- [ ] Pedido explícito do utilizador com um **âmbito definido**. Se vier vago ("revê o projeto"), o
-      Orquestrador delimita-o em lote (`core/question-engine.md`): que módulos, que profundidade,
-      com ou sem auditoria adversarial.
-- [ ] Os artefactos do âmbito existem e estão acessíveis (código, specs de `product/04-specification/`,
-      ADRs de `product/02-architecture/`). Um revisor sem artefacto **declara-o** em "fora de âmbito",
-      não inventa (`agents/12-reviewers/README.md` §Report format).
+- [ ] Explicit request from the user with a **defined scope**. If it arrives vague ("review the
+      project"), the Orchestrator delimits it in a batch (`core/question-engine.md`): which
+      modules, what depth, with or without an adversarial audit.
+- [ ] The scope's artifacts exist and are accessible (code, specs in `product/04-specification/`,
+      ADRs in `product/02-architecture/`). A reviewer without an artifact **declares it** as
+      "out of scope", never invents (`agents/12-reviewers/README.md` §Report format).
 
-## Passos (agente → artefacto)
+## Steps (agent → artifact)
 
-Os relatórios de todos os revisores vivem em `product/99-records/reviews/RG-nnn/`; o plano
-consolidado em `product/99-records/reviews/RG-nnn/plano-consolidado.md`.
+All reviewers' reports live in `product/99-records/reviews/RG-nnn/`; the consolidated plan in
+`product/99-records/reviews/RG-nnn/consolidated-plan.md`.
 
-| # | Passo | Agente | Artefacto | Depende de |
+| # | Step | Agent | Artifact | Depends on |
 | --- | --- | --- | --- | --- |
-| 1 | **Delimitar o âmbito** | Orquestrador + utilizador | `RG-nnn/ambito.md`: o que se revê, profundidade, se inclui auditoria adversarial | pedido |
-| 2 | **Lançar o painel completo, em paralelo e às cegas** | os 9 revisores de `agents/12-reviewers/` (arquitetura, frontend, backend, ux, devops, performance, segurança, documentação, testes) | um relatório por revisor (`templates/technical/review-report.md.template`) | 1 |
-| 3 | **Auditoria adversarial** (se pedida no passo 1) | `playbooks/adversarial-audit.md` | relatório adversarial anexo | 1 |
-| 4 | **Consolidar** | `agents/12-reviewers/review-consolidator.md` | `plano-consolidado.md`: achados fundidos, sem duplicados nem contradições, ordenados por risco real | 2, 3 |
-| 5 | **Apresentar e decidir** | Orquestrador → utilizador | decisão registada em `STATE.md`: **corrige-já** vs **backlog** por item | 4 |
+| 1 | **Delimit the scope** | Orchestrator + user | `RG-nnn/scope.md`: what is reviewed, depth, whether it includes an adversarial audit | request |
+| 2 | **Launch the full panel, in parallel and blind** | the 9 reviewers in `agents/12-reviewers/` (architecture, frontend, backend, ux, devops, performance, security, documentation, tests) | one report per reviewer (`templates/technical/review-report.md.template`) | 1 |
+| 3 | **Adversarial audit** (if requested in step 1) | `playbooks/adversarial-audit.md` | adversarial report attached | 1 |
+| 4 | **Consolidate** | `agents/12-reviewers/review-consolidator.md` | `consolidated-plan.md`: findings merged, no duplicates or contradictions, ordered by real risk | 2, 3 |
+| 5 | **Present and decide** | Orchestrator → user | decision recorded in `STATE.md`: **fix-now** vs **backlog**, per item | 4 |
 
-**Painel = independência + cegueira** (`agents/12-reviewers/README.md`): cada revisor recebe os
-mesmos artefactos e o mesmo âmbito mas **não lê os relatórios dos outros** enquanto trabalha — a
-convergência de dois pareceres separados é sinal forte; a contaminação destrói esse sinal. Uma
-dimensão por revisor; o consolidador é o **único** que lê tudo, e só no passo 4. O Orquestrador
-roteia o modelo de cada revisor por tarefa (`core/model-routing.md`), não o de topo em toda
-a fila.
+**Panel = independence + blindness** (`agents/12-reviewers/README.md`): every reviewer receives
+the same artifacts and the same scope but **does not read the others' reports** while working —
+two separate opinions converging is a strong signal; contamination destroys that signal. One
+dimension per reviewer; the consolidator is the **only one** who reads everything, and only in
+step 4. The Orchestrator routes each reviewer's model per task (`core/model-routing.md`), not the
+top model across the whole queue.
 
-## Pontos de decisão (aprovação humana)
+## Decision points (human approval)
 
-- **Passo 1 — o âmbito e a profundidade** são do utilizador (define o custo da revisão).
-- **Passo 5 — o núcleo de W12:** para **cada** achado, o utilizador decide **corrigir já** ou **mandar
-  para o backlog**. O agente não decide isso sozinho — a priorização técnica (`consolidador`) informa;
-  a decisão de negócio é do dono (`core/orchestrator.md` §Human approval). Achados que envolvam
-  dados pessoais, dinheiro ou fluxos irreversíveis recebem recomendação explícita de "corrigir já"
-  (`MANIFESTO.md` §9), mas a palavra final é do utilizador.
+- **Step 1 — the scope and the depth** belong to the user (they set the cost of the review).
+- **Step 5 — the core of W12:** for **each** finding, the user decides **fix now** or **send to
+  the backlog**. The agent does not decide that alone — the technical prioritization
+  (`consolidator`) informs; the business decision belongs to the owner (`core/orchestrator.md`
+  §Human approval). Findings involving personal data, money or irreversible flows get an explicit
+  "fix now" recommendation (`MANIFESTO.md` §9), but the final word is the user's.
 
-## Loops que abre
+## Loops it opens
 
-Os achados que o utilizador manda **corrigir já** alimentam os loops normais, por dimensão:
+The findings the user sends to **fix now** feed the normal loops, per dimension:
 
-- `loops/L02-failing-tests.md` (achados de testes), `loops/L03-security-issues.md`
-  (segurança, por severidade), `loops/L04-code-smells.md` (qualidade), `loops/L05-inconsistencies.md`
-  (docs↔código↔dados).
-- O que vai para **backlog** entra em `loops/L08-technical-debt.md` — rastreável, com dono e prazo,
-  nunca esquecido num relatório que ninguém reabre.
+- `loops/L02-failing-tests.md` (test findings), `loops/L03-security-issues.md` (security, by
+  severity), `loops/L04-code-smells.md` (quality), `loops/L05-inconsistencies.md`
+  (docs↔code↔data).
+- What goes to the **backlog** enters `loops/L08-technical-debt.md` — traceable, with an owner and
+  a deadline, never forgotten in a report nobody reopens.
 
-## Condição de fecho (não é um portão)
+## Closing condition (not a gate)
 
-W12 **termina** — não "aprova" — quando:
+W12 **finishes** — it does not "approve" — when:
 
-- [ ] Todos os revisores do âmbito entregaram relatório no molde comum (ou declararam explicitamente o
-      que não puderam rever e porquê — honestidade absoluta, `knowledge/permanent-rules.md` §2).
-- [ ] O `consolidador-de-revisoes` produziu **um** plano priorizado, sem duplicados nem contradições.
-- [ ] O utilizador triou cada item (corrige-já / backlog) e a decisão ficou em `STATE.md`.
+- [ ] Every reviewer in scope delivered a report in the common template (or explicitly declared
+      what they could not review and why — absolute honesty, `knowledge/permanent-rules.md` §2).
+- [ ] The `review-consolidator` produced **one** prioritized plan, with no duplicates or
+      contradictions.
+- [ ] The user triaged every item (fix-now / backlog) and the decision landed in `STATE.md`.
 
-Se W12 foi convocado **como parte de um lançamento** (a partir de W07), então sim, o seu resultado
-alimenta o portão P7 — mas essa vinculação é de W07, não deste workflow.
+If W12 was summoned **as part of a launch** (from W07), then yes, its outcome feeds gate P7 — but
+that binding belongs to W07, not to this workflow.
 
-## Recuperação de falhas
+## Failure recovery
 
-| Situação | Resposta |
+| Situation | Response |
 | --- | --- |
-| Dois revisores contradizem-se | O `consolidador` não escolhe em silêncio: expõe a contradição no plano e sobe-a ao utilizador ou pede reanálise com o conflito explícito (`core/orchestrator.md` §Recovery). |
-| Um revisor não tem o artefacto de que precisa | Declara-o em "fora de âmbito"; o Orquestrador agenda o artefacto em falta ou nota a lacuna no plano. Não se inventa um veredicto sobre o que não se viu. |
-| Achados demais para triar de uma vez | O consolidador agrupa por severidade e por módulo; o utilizador tria por lotes (bloqueadores primeiro). |
-| Âmbito revelou-se maior do que o pedido | Renegociar o âmbito com o utilizador (passo 1) antes de gastar o painel todo — a profundidade é uma decisão de custo dele. |
+| Two reviewers contradict each other | The `consolidator` does not pick a side in silence: it exposes the contradiction in the plan and raises it to the user, or requests re-analysis with the conflict made explicit (`core/orchestrator.md` §Recovery and exceptions). |
+| A reviewer lacks the artifact they need | They declare it "out of scope"; the Orchestrator schedules the missing artifact or notes the gap in the plan. No verdict is invented about what was not seen. |
+| Too many findings to triage at once | The consolidator groups by severity and by module; the user triages in batches (blockers first). |
+| The scope turned out larger than requested | Renegotiate the scope with the user (step 1) before spending the whole panel — the depth is their cost decision. |
 
-## Perfis de esforço
+## Effort profiles
 
-| Perfil | Como muda |
+| Profile | How it changes |
 | --- | --- |
-| **Protótipo** | Painel mínimo (arquitetura + segurança + o revisor da dimensão em causa); sem auditoria adversarial. |
-| **Produto interno** | Painel completo nos módulos de risco; adversarial opcional. |
-| **Produto comercial / Plataforma** | Painel completo + `playbooks/adversarial-audit.md` de série; W12 como **revisão periódica** agendada, não só a pedido pontual. |
+| **Prototype** | Minimal panel (architecture + security + the reviewer of the dimension at hand); no adversarial audit. |
+| **Internal product** | Full panel on the risky modules; adversarial optional. |
+| **Commercial product / Platform** | Full panel + `playbooks/adversarial-audit.md` as standard; W12 as a scheduled **periodic review**, not only on ad-hoc request. |
 
-## Relacionados
+## Related
 
-- `agents/12-reviewers/README.md` — o painel, a regra da cegueira, o formato do relatório.
-- `agents/12-reviewers/review-consolidator.md` — quem funde os relatórios num plano único.
-- `workflows/W07-quality-and-security.md` — o portão obrigatório que usa esta mecânica.
-- `playbooks/adversarial-audit.md` — o escrutínio máximo, opcional aqui.
-- `templates/technical/review-report.md.template` — o molde comum dos revisores.
-- `loops/L08-technical-debt.md` — para onde vai o que fica em backlog.
+- `agents/12-reviewers/README.md` — the panel, the blindness rule, the report format.
+- `agents/12-reviewers/review-consolidator.md` — who merges the reports into a single plan.
+- `workflows/W07-quality-and-security.md` — the mandatory gate that uses this mechanics.
+- `playbooks/adversarial-audit.md` — maximum scrutiny, optional here.
+- `templates/technical/review-report.md.template` — the reviewers' common template.
+- `loops/L08-technical-debt.md` — where whatever stays in the backlog goes.

@@ -1,139 +1,146 @@
-# RBAC e Scoping · autoridade e âmbito, sempre no servidor
+# RBAC and Scoping · authority and scope, always on the server
 
-> **Validação em produção:** 2.ª confirmação em domínio distinto do projeto-mãe (P2 — curadoria de 2026-08; nuance confirmada: scoping como **predicado SQL composável** nos
-> caminhos quentes, não um conjunto em memória). O desenho mantém-se; a confiança sobe.
+> **Production validation:** 2nd confirmation in a domain distinct from the origin project (P2 —
+> 2026-08 curation round; nuance confirmed: scoping as a **composable SQL predicate** on hot
+> paths, not an in-memory set). The design stands; confidence rises.
 
-Um módulo para responder, em qualquer produto multi-utilizador, a duas perguntas **distintas**: *que
-ações é que este ator pode fazer?* (autorização/RBAC) e *sobre que subconjunto de dados?* (scoping por
-unidade organizacional). São **eixos ortogonais** — um gestor de uma filial tem autoridade ampla mas
-âmbito estreito; um auditor tem âmbito total mas autoridade só de leitura. A regra que atravessa tudo:
-a decisão vive **100% no servidor**, porque o cliente é não-fiável; falha em **fail-closed**; e os
-campos sensíveis são redigidos **por categoria de campo**, não por um único portão de tudo-ou-nada.
+A module to answer, in any multi-user product, two **distinct** questions: *which actions can this
+actor perform?* (authorization/RBAC) and *over which subset of data?* (scoping by organizational
+unit). They are **orthogonal axes** — a branch manager has broad authority but a narrow scope; an
+auditor has full scope but read-only authority. The rule cutting across everything: the decision
+lives **100% on the server**, because the client is untrusted; it fails **closed**; and sensitive
+fields are redacted **per field category**, not through a single all-or-nothing gate.
 
-## O problema que resolve
+## The problem it solves
 
-- **Colapsar autoridade e âmbito.** Tratá-los como uma coisa só gera bugs nos dois sentidos: dá a alguém
-  acesso a dados de outra unidade porque tinha a "ação", ou nega uma ação legítima porque o âmbito não
-  batia certo (`knowledge/origin-lessons.md` B2).
-- **Confiar no cliente.** Qualquer verificação feita no browser é contornável; qualquer campo enviado
-  "só para não mostrar" é lido no payload. Esconder no frontend não é segurança.
-- **Fail-open.** Um `perfil ?? "ADMIN"` que transforma "sem perfil" em "acesso total" é um defeito real e
-  catastrófico (`knowledge/origin-lessons.md` C1). A ausência de permissão tem de **negar**.
-- **Redação tudo-ou-nada.** Um único gate "vê tudo / não vê nada" não modela a realidade: o mesmo
-  utilizador pode ver o email de um cliente mas não o seu número de cartão. A ocultação é **por categoria
-  de campo**.
+- **Collapsing authority and scope.** Treating them as one thing breeds bugs in both directions:
+  giving someone access to another unit's data because they had the "action", or denying a
+  legitimate action because the scope did not line up (`knowledge/origin-lessons.md` B2).
+- **Trusting the client.** Any check done in the browser can be bypassed; any field sent "just not
+  shown" gets read in the payload. Hiding in the frontend is not security.
+- **Fail-open.** A `role ?? "ADMIN"` that turns "no role" into "full access" is a real, catastrophic
+  defect (`knowledge/origin-lessons.md` C1). Absence of permission must **deny**.
+- **All-or-nothing redaction.** A single "sees everything / sees nothing" gate does not model
+  reality: the same user may see a customer's email but not their card number. Hiding is **per
+  field category**.
 
-## O modelo (conceitos e entidades, agnóstico de stack)
+## The model (concepts and entities, stack-agnostic)
 
-- **Ator (`ator`)** — quem faz o pedido: um utilizador, uma conta de serviço, um sistema integrado.
-- **Perfil/Papel (`papel`)** — um conjunto nomeado de **permissões** (ações). Um ator tem um ou mais
-  papéis; o cliente pode **declarar** qual está ativo, mas o servidor **confirma** contra os papéis
-  realmente concedidos.
-- **Permissão (`permissao`)** — a autoridade para uma ação sobre um tipo de recurso (`ler-fatura`,
-  `aprovar-despesa`, `eliminar-utilizador`). É o eixo **autoridade**.
-- **Âmbito/Scope (`ambito`)** — o subconjunto de dados que o ator alcança, tipicamente por unidade
-  organizacional (departamento, região, cliente, projeto, tenant). É o eixo **scoping**, independente da
-  autoridade.
-- **Política (`politica`)** — a regra que combina papel + âmbito + recurso para produzir *permitir/negar*.
-  Vive perto dos dados (idealmente também na BD, não só na app).
-- **Categoria de campo sensível (`categoriaCampo`)** — uma classificação dos campos por sensibilidade
-  (`identificador-pessoal`, `segredo`, `financeiro`, `saúde`). A redação decide-se **por categoria**, com
-  a permissão de ver aquela categoria — não por um flag global.
+- **Actor (`actor`)** — whoever makes the request: a user, a service account, an integrated system.
+- **Role (`role`)** — a named set of **permissions** (actions). An actor holds one or more roles;
+  the client may **declare** which one is active, but the server **confirms** it against the roles
+  actually granted.
+- **Permission (`permission`)** — the authority for an action on a resource type (`read-invoice`,
+  `approve-expense`, `delete-user`). It is the **authority** axis.
+- **Scope (`scope`)** — the subset of data the actor reaches, typically by organizational unit
+  (department, region, customer, project, tenant). It is the **scoping** axis, independent of
+  authority.
+- **Policy (`policy`)** — the rule combining role + scope + resource to produce *allow/deny*. It
+  lives close to the data (ideally in the DB too, not only in the app).
+- **Sensitive field category (`fieldCategory`)** — a classification of fields by sensitivity
+  (`personal-identifier`, `secret`, `financial`, `health`). Redaction is decided **per category**,
+  with the permission to see that category — not via a global flag.
 
-O padrão de fundo é o do `knowledge/proven-patterns.md` §6: o cliente declara intenção, o
-servidor decide; a *query* filtra pela identidade do servidor; a saída redige por autorização.
+The underlying pattern is `knowledge/proven-patterns.md` §6: the client declares intent, the server
+decides; the *query* filters by the server's identity; the output redacts by authorization.
 
-## Regras inegociáveis (numeradas, verificáveis)
+## Non-negotiable rules (numbered, verifiable)
 
-1. **Autorização e scoping são eixos separados.** A decisão avalia os dois independentemente; nunca um
-   serve de proxy do outro. Teste: um papel com autoridade ampla e âmbito estreito vê **menos** dados, e
-   um âmbito amplo com autoridade de leitura **não** consegue escrever.
-2. **A decisão vive no servidor; o cliente só declara intenção.** Nenhuma autoridade se decide no cliente.
-   Teste: um pedido forjado (perfil/âmbito adulterado no payload) é recusado pelo servidor.
-3. **Fail-closed por defeito.** Sem papel resolúvel, sem política aplicável ou em dúvida → **negar**;
-   nunca assumir super-utilizador. Teste: um ator sem perfil recebe negação, não acesso total
+1. **Authorization and scoping are separate axes.** The decision evaluates both independently;
+   neither ever proxies for the other. Test: a role with broad authority and narrow scope sees
+   **less** data, and a broad scope with read-only authority can**not** write.
+2. **The decision lives on the server; the client only declares intent.** No authority is decided on
+   the client. Test: a forged request (role/scope tampered in the payload) is refused by the server.
+3. **Fail-closed by default.** No resolvable role, no applicable policy, or in doubt → **deny**;
+   never assume superuser. Test: an actor with no role gets a denial, not full access
    (`knowledge/origin-lessons.md` C1).
-4. **O scoping filtra na origem da query, não na apresentação.** Os dados fora do âmbito **não saem** da
-   base; não se buscam-todos-e-filtram-no-fim. Teste: a query devolve só o subconjunto do âmbito, mesmo
-   que a UI peça mais.
-5. **Fora-do-âmbito devolve "não existe", não "não autorizado".** Um recurso fora do scope responde como
-   inexistente (404), não como proibido (403), para não vazar a sua existência. Teste: pedir um recurso de
-   outra unidade é indistinguível de pedir um recurso que não existe.
-6. **Campos sensíveis redigem-se por categoria, com defesa em profundidade.** Não emitir na query **e**
-   redigir na saída, por categoria de campo (`knowledge/proven-patterns.md` §6). Teste: sem
-   permissão para a categoria `segredo`, o campo não aparece no payload — não basta estar oculto no ecrã.
-7. **A autoridade confirma-se por operação, não uma vez à entrada.** Cada ação sensível revalida; não se
-   confia numa verificação feita no login. Teste: mudar o papel a meio da sessão altera o que a próxima
-   ação permite.
-8. **As políticas são auditáveis e versionáveis.** Quem tem que papel e que âmbito é rastreável e o
-   histórico de concessões/revogações fica registado (`modules/audit-and-provenance.md`). Teste: uma
-   concessão de acesso reconduz a quem a deu e quando.
+4. **Scoping filters at the query's source, not at presentation.** Data outside the scope **never
+   leaves** the database; no fetch-everything-and-filter-at-the-end. Test: the query returns only
+   the scoped subset, even if the UI asks for more.
+5. **Out-of-scope returns "not found", not "not authorized".** A resource outside the scope responds
+   as nonexistent (404), not as forbidden (403), to avoid leaking its existence. Test: requesting a
+   resource of another unit is indistinguishable from requesting one that does not exist.
+6. **Sensitive fields are redacted per category, with defense in depth.** Not emitted in the query
+   **and** redacted on output, per field category (`knowledge/proven-patterns.md` §6). Test:
+   without permission for the `secret` category, the field does not appear in the payload — being
+   hidden on the screen is not enough.
+7. **Authority is confirmed per operation, not once at the entrance.** Every sensitive action
+   revalidates; no trusting a check done at login. Test: changing the role mid-session changes what
+   the next action allows.
+8. **Policies are auditable and versionable.** Who holds which role and which scope is traceable,
+   and the history of grants/revocations is recorded (`modules/audit-and-provenance.md`). Test: an
+   access grant traces back to who gave it and when.
 
-## Como se adota num produto novo (passos)
+## How to adopt it in a new product (steps)
 
-1. **Enumerar os papéis e as ações** do produto (a matriz autoridade) e, **separadamente**, as **unidades
-   de âmbito** (por que dimensão se particionam os dados: tenant, região, departamento, projeto).
-2. **Classificar os campos sensíveis por categoria** e mapear que papel vê que categoria
+1. **Enumerate the product's roles and actions** (the authority matrix) and, **separately**, the
+   **scope units** (along which dimension the data partitions: tenant, region, department, project).
+2. **Classify sensitive fields by category** and map which role sees which category
    (`agents/06-data/data-modeler.md`, `agents/09-security/README.md`).
-3. **Escrever o contrato de backend** que declara: authz no servidor, filtragem na query, 404-fora-de-âmbito,
-   redação por categoria (`templates/specification/backend-contract.md.template`).
-4. **Impor a política perto dos dados** — políticas na BD além dos guards de app
-   (`knowledge/proven-patterns.md` §5,§6) — e escolher o modelo (RBAC puro vs ABAC — ver
-   Variações), registando em ADR (`templates/project/ADR-DECISION.md.template`).
-5. **Ligar à autenticação** (`agents/05-backend/authentication-specialist.md`): a identidade vem do
-   authn, a autoridade e o âmbito deste módulo.
-6. **Testar adversarialmente**: forjar perfil/âmbito, pedir recursos de outra unidade, ler payloads à
-   procura de campos que deviam estar redigidos (`playbooks/adversarial-audit.md`).
+3. **Write the backend contract** declaring: authz on the server, filtering in the query,
+   404-out-of-scope, redaction per category
+   (`templates/specification/backend-contract.md.template`).
+4. **Enforce the policy close to the data** — DB policies beyond the app guards
+   (`knowledge/proven-patterns.md` §5,§6) — and choose the model (pure RBAC vs ABAC — see
+   Variations), recording it in an ADR (`templates/project/ADR-DECISION.md.template`).
+5. **Connect to authentication** (`agents/05-backend/authentication-specialist.md`): identity comes
+   from authn, authority and scope from this module.
+6. **Test adversarially**: forge role/scope, request another unit's resources, read payloads looking
+   for fields that should be redacted (`playbooks/adversarial-audit.md`).
 
-## Variações e trade-offs
+## Variations and trade-offs
 
-- **RBAC puro vs ABAC (atributos).** RBAC (papel → permissões) é simples, legível e chega à maioria dos
-  produtos; ABAC (decisão por atributos do ator/recurso/contexto) é mais expressivo — necessário quando a
-  regra depende de dados dinâmicos ("o dono do registo", "durante o horário laboral") — mas mais difícil
-  de auditar. Muitos produtos são RBAC com um punhado de regras ABAC (ownership).
-- **Âmbito hierárquico vs plano.** Unidades em árvore (região → filial → equipa) permitem herança de
-  âmbito (quem alcança a região alcança as filiais), ao custo de complexidade na avaliação; âmbitos
-  planos são triviais mas não modelam a herança.
-- **Multi-tenant: isolamento por linha vs por schema/BD.** Filtrar por `tenant_id` em cada query é simples
-  e barato mas depende de nunca esquecer o filtro (impor na camada baixa); isolar por schema/BD é mais
-  forte mas mais pesado de operar.
-- **Redação no servidor vs projeções por papel.** Redigir campos na saída é flexível; ter *views*/projeções
-  distintas por papel é mais seguro (o campo nem existe na projeção) mas multiplica os contratos.
+- **Pure RBAC vs ABAC (attributes).** RBAC (role → permissions) is simple, readable and enough for
+  most products; ABAC (decision by actor/resource/context attributes) is more expressive — needed
+  when the rule depends on dynamic data ("the record's owner", "during working hours") — but harder
+  to audit. Many products are RBAC with a handful of ABAC rules (ownership).
+- **Hierarchical vs flat scope.** Units in a tree (region → branch → team) allow scope inheritance
+  (whoever reaches the region reaches the branches), at the cost of evaluation complexity; flat
+  scopes are trivial but do not model inheritance.
+- **Multi-tenant: row-level vs schema/DB isolation.** Filtering by `tenant_id` in every query is
+  simple and cheap but depends on never forgetting the filter (enforce at the low layer); isolating
+  by schema/DB is stronger but heavier to operate.
+- **Server-side redaction vs per-role projections.** Redacting fields on output is flexible; having
+  distinct *views*/projections per role is safer (the field does not even exist in the projection)
+  but multiplies the contracts.
 
-## Exemplo (1–2, multi-domínio)
+## Example (1–2, multi-domain)
 
-**Plataforma de gestão de clínicas (multi-tenant).** Cada clínica é um tenant (âmbito). Um rececionista
-tem autoridade de agendar mas **não** de ver o histórico clínico; um médico vê o histórico dos **seus**
-pacientes (âmbito por médico dentro do tenant). Os campos de saúde são categoria sensível: o rececionista
-recebe o payload **sem** esses campos (Regra 6). Pedir um paciente de outra clínica responde "não existe"
-(Regra 5). Sem perfil resolvido, nega (Regra 3).
+**Clinic-management platform (multi-tenant).** Each clinic is a tenant (scope). A receptionist has
+authority to schedule but **not** to see clinical history; a doctor sees the history of **their**
+patients (per-doctor scope within the tenant). Health fields are a sensitive category: the
+receptionist receives the payload **without** those fields (Rule 6). Requesting a patient from
+another clinic answers "not found" (Rule 5). With no resolved role, deny (Rule 3).
 
-**Ferramenta interna de faturação (empresa com filiais).** O eixo de âmbito é a filial. Um contabilista
-de filial tem autoridade ampla (criar, editar, fechar faturas) mas só da **sua** filial; o controller do
-grupo tem âmbito total mas autoridade só de leitura e exportação — os dois eixos cruzam-se de forma
-oposta (Regra 1). Os IBAN e dados fiscais são categoria `financeiro`, redigidos para quem não os precisa.
+**Internal invoicing tool (company with branches).** The scope axis is the branch. A branch
+accountant has broad authority (create, edit, close invoices) but only over **their** branch; the
+group controller has full scope but authority only to read and export — the two axes cross in
+opposite ways (Rule 1). IBANs and tax data are the `financial` category, redacted for whoever does
+not need them.
 
-## Armadilhas conhecidas
+## Known pitfalls
 
-- **Fail-open (`?? "ADMIN"`).** O default que transforma ausência de perfil em acesso total — o defeito
-  mais perigoso deste módulo (Regra 3, `knowledge/origin-lessons.md` C1).
-- **Filtrar no cliente/na apresentação.** Buscar tudo e esconder no ecrã envia os dados no payload;
-  filtra-se **na query** (Regra 4).
-- **403 em vez de 404 fora de âmbito.** Responder "não autorizado" confirma que o recurso existe — vaza
-  informação. Fora de âmbito é "não existe" (Regra 5).
-- **Redação tudo-ou-nada.** Um gate único não modela "vê o email mas não o cartão"; redige-se por
-  categoria de campo (Regra 6).
-- **Confiar numa verificação de entrada.** Autorizar só no login e não revalidar por operação deixa a
-  sessão com poderes que já foram revogados (Regra 7).
-- **Confundir autenticação com autorização.** Saber *quem é* (authn) não diz *o que pode* nem *sobre que
-  dados*; são camadas distintas (`agents/05-backend/authentication-specialist.md`).
+- **Fail-open (`?? "ADMIN"`).** The default that turns a missing role into full access — this
+  module's most dangerous defect (Rule 3, `knowledge/origin-lessons.md` C1).
+- **Filtering on the client/at presentation.** Fetching everything and hiding it on screen sends the
+  data in the payload; filter **in the query** (Rule 4).
+- **403 instead of 404 out of scope.** Answering "not authorized" confirms the resource exists — it
+  leaks information. Out of scope is "not found" (Rule 5).
+- **All-or-nothing redaction.** A single gate does not model "sees the email but not the card";
+  redact per field category (Rule 6).
+- **Trusting an entrance check.** Authorizing only at login and not revalidating per operation
+  leaves the session with powers already revoked (Rule 7).
+- **Confusing authentication with authorization.** Knowing *who it is* (authn) says neither *what
+  they can do* nor *over which data*; they are distinct layers
+  (`agents/05-backend/authentication-specialist.md`).
 
-## Relacionados
+## Related
 
-- `modules/audit-and-provenance.md` — concessões, revogações e acessos deixam rasto imutável.
-- `modules/state-machines.md` — a autoridade de cada transição confirma-se com este módulo.
-- `modules/approval-engine.md` — a autoridade do aprovador vem daqui.
-- `knowledge/proven-patterns.md` — §6: autorização e ocultação exclusivas do servidor.
-- `knowledge/origin-lessons.md` — B2 (autoridade ≠ scoping) e C1 (fail-closed).
-- `agents/05-backend/authorization-specialist.md` — quem implementa a política no servidor.
-- `templates/specification/backend-contract.md.template` — onde se declara authz, scoping e redação.
+- `modules/audit-and-provenance.md` — grants, revocations and accesses leave an immutable trail.
+- `modules/state-machines.md` — each transition's authority is confirmed with this module.
+- `modules/approval-engine.md` — the approver's authority comes from here.
+- `knowledge/proven-patterns.md` — §6: authorization and hiding exclusive to the server.
+- `knowledge/origin-lessons.md` — B2 (authority ≠ scoping) and C1 (fail-closed).
+- `agents/05-backend/authorization-specialist.md` — who implements the policy on the server.
+- `templates/specification/backend-contract.md.template` — where authz, scoping and redaction are
+  declared.

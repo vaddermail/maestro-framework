@@ -1,93 +1,94 @@
-# L01 — Requisitos Ambíguos
+# L01 — Ambiguous Requirements
 
-> Loop `L01` da framework Maestro — persiste enquanto existirem requisitos ambíguos,
-> contraditórios ou em falta, até desambiguar tudo o que é crítico ou provar que a decisão está fora
-> do alcance da sessão. Segue a anatomia de `loops/README.md`.
+> Loop `L01` of the Maestro framework — persists while ambiguous, contradictory or missing
+> requirements exist, until everything critical is disambiguated or proven to be beyond the
+> session's reach. Follows the anatomy in `loops/README.md`.
 
-Um requisito ambíguo aceite em silêncio é o defeito mais barato de evitar e o mais caro de descobrir
-tarde — reaparece em cada fase seguinte, cada vez mais caro de corrigir (arquitetura já escolhida, UI
-já desenhada, código já escrito). Este loop existe para que nenhuma ambiguidade sobreviva a F2 sem
-virar uma pergunta explícita ao utilizador.
+An ambiguous requirement accepted in silence is the cheapest defect to avoid and the most expensive
+to discover late — it resurfaces in every following phase, more expensive to fix each time
+(architecture already chosen, UI already designed, code already written). This loop exists so that
+no ambiguity survives F2 without becoming an explicit question to the user.
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Quando corre** | F2 (principal); reaberto em F5 quando a especificação expõe lacunas novas |
-| **Agente que executa a ação** | `agents/01-requirements/ambiguity-hunter.md` deteta e formula a pergunta; o agente-dono do artefacto (`engenheiro-de-requisitos`, `modelador-de-regras-de-negocio`, `especificador-de-requisitos-nao-funcionais`, `redator-de-criterios-de-aceitacao`, `curador-do-glossario`) aplica a resposta |
-| **Modelo sugerido** | Topo, esforço médio, para a deteção adversarial (`core/model-routing.md`); Padrão para aplicar a resposta ao artefacto |
+| **When it runs** | F2 (main); reopened in F5 when the specification exposes new gaps |
+| **Agent that executes the action** | `agents/01-requirements/ambiguity-hunter.md` detects and phrases the question; the artifact's owner agent (`requirements-engineer`, `business-rules-modeler`, `nfr-specifier`, `acceptance-criteria-writer`, `glossary-curator`) applies the answer |
+| **Suggested model** | Top, medium effort, for the adversarial detection (`core/model-routing.md`); Standard to apply the answer to the artifact |
 
-## Métrica de progresso
+## Progress metric
 
-Número de achados `A-nnn` com severidade **crítica** em estado `aberto` nos artefactos de F2/F5
-(ambiguidade + contradição + lacuna, somados). Contável por artefacto e no total, comparável lote a
-lote porque cada achado tem ID estável.
+Number of `A-nnn` findings with **critical** severity in `open` state in the F2/F5 artifacts
+(ambiguity + contradiction + gap, summed). Countable per artifact and in total, comparable batch to
+batch because each finding has a stable ID.
 
-## Condição de entrada
+## Entry condition
 
-Existe pelo menos um achado `A-nnn` crítico em estado `aberto` — detetado pelo Caçador de
-Ambiguidades numa leitura por artefacto ou cruzada (`agents/01-requirements/ambiguity-hunter.md`
-§Workflow).
+At least one critical `A-nnn` finding exists in `open` state — detected by the Ambiguity Hunter in
+a per-artifact or cross-artifact pass (`agents/01-requirements/ambiguity-hunter.md` §Workflow).
 
-## Ação (o corpo da iteração)
+## Action (the body of the iteration)
 
-1. O Caçador lê o(s) artefacto(s) que mudou(aram) desde a última passagem e atualiza a lista de
-   achados `A-nnn` (novos, reabertos, fechados).
-2. O Orquestrador agrupa os achados que exigem decisão do utilizador num **lote coerente** (3–8
-   perguntas, nunca mais de 12) via `core/question-engine.md`, indicando o que cada resposta
-   desbloqueia.
-3. O lote é colocado ao utilizador; entretanto, o trabalho que não depende das respostas continua — o
-   loop não espera às escuras.
-4. Cada resposta que chega é aplicada pelo agente-dono do artefacto correspondente (nunca pelo
-   Caçador, que só deteta).
-5. O Caçador reverifica os achados tocados pela resposta e fecha os que ficaram resolvidos.
+1. The Hunter reads the artifact(s) changed since the last pass and updates the list of `A-nnn`
+   findings (new, reopened, closed).
+2. The Orchestrator groups the findings that require a user decision into a **coherent batch** (3–8
+   questions, never more than 12) via `core/question-engine.md`, stating what each answer unblocks.
+3. The batch is put to the user; meanwhile, work that does not depend on the answers continues —
+   the loop does not wait in the dark.
+4. Each answer that arrives is applied by the owner agent of the corresponding artifact (never by
+   the Hunter, which only detects).
+5. The Hunter re-verifies the findings touched by the answer and closes those that were resolved.
 
-## Condição de saída (sucesso)
+## Exit condition (success)
 
-Zero achados críticos em estado `aberto`, confirmado pelo Caçador de Ambiguidades numa passagem final
-cruzada sobre todos os artefactos de F2 — não basta cada agente-dono declarar o seu artefacto
-corrigido isoladamente, porque a contradição vive **entre** documentos.
+Zero critical findings in `open` state, confirmed by the Ambiguity Hunter in a final cross-artifact
+pass over all F2 artifacts — each owner agent declaring its own artifact fixed in isolation is not
+enough, because contradiction lives **between** documents.
 
-## Salvaguarda anti-loop-infinito
+## Anti-infinite-loop safeguard
 
-- **Estagnação:** 3 lotes de perguntas consecutivos sem reduzir a contagem de achados críticos → parar.
-- **Oscilação:** um achado fechado por uma resposta é reaberto por uma resposta posterior contraditória
-  sobre o mesmo termo/regra → tratar como ciclo de imediato, não esperar pela 3.ª iteração; sinal de
-  que a pergunta original estava mal desenhada (revê-la, não repeti-la igual).
-- **Teto duro:** 8 lotes por fase. Ultrapassado, o loop para: regista em `STATE.md` → "Decisões
-  pendentes" os achados que restam, com o porquê de não convergirem (utilizador indisponível,
-  respostas contraditórias, âmbito a decidir), e sobe ao utilizador com opções (cortar o requisito do
-  MVP, aceitar uma ambiguidade não-crítica com risco registado, ou mudar quem decide).
-- Um utilizador que não responde **não conta como iteração sem progresso** — o motor de perguntas já
-  prevê que o loop não gira em vazio (`core/question-engine.md` §Associated loop); a salvaguarda
-  dispara sobre lotes efetivamente respondidos que não resolveram nada.
+- **Stagnation:** 3 consecutive question batches without reducing the critical findings count →
+  stop.
+- **Oscillation:** a finding closed by one answer is reopened by a later contradictory answer about
+  the same term/rule → treat as a cycle immediately, do not wait for the 3rd iteration; a sign that
+  the original question was badly designed (revise it, do not repeat it as-is).
+- **Hard cap:** 8 batches per phase. Once exceeded, the loop stops: it records in `STATE.md` →
+  "Decisões pendentes" the findings that remain, with why they did not converge (user unavailable,
+  contradictory answers, scope still to be decided), and escalates to the user with options (cut
+  the requirement from the MVP, accept a non-critical ambiguity with the risk recorded, or change
+  who decides).
+- A user who does not answer **does not count as an iteration without progress** — the question
+  engine already ensures the loop does not spin on empty (`core/question-engine.md` §Associated
+  loop); the safeguard fires on batches actually answered that resolved nothing.
 
-## Registo em STATE.md
+## STATE.md record
 
 ```
-L01 · requisitos ambíguos · métrica 9→5→2 · iter 3 (teto 8) · último progresso: iter 3 · estado: em curso
+L01 · ambiguous requirements · metric 9→5→2 · iter 3 (cap 8) · last progress: iter 3 · status: in progress
 ```
 
-Ao fechar (métrica a zero, verificado), colapsa para uma linha no "Registo histórico"
-(`core/project-memory.md` §Memory hygiene) com a data e o total de achados resolvidos.
+On closing (metric at zero, verified), it collapses into one line in "Registo histórico"
+(`core/project-memory.md` §Memory hygiene) with the date and the total of findings resolved.
 
-## Exemplo (SaaS B2B — faturação por assinatura)
+## Example (B2B SaaS — subscription billing)
 
-O `engenheiro-de-requisitos` escreve **RF-018**: *"O sistema cobra automaticamente no início de cada
-ciclo."* O Caçador levanta três achados no mesmo enunciado: **A-031** (ambiguidade) — "início do
-ciclo" é a data de subscrição de cada cliente ou o dia 1 do mês civil para todos?; **A-032** (lacuna)
-— o que acontece se o cartão for recusado: retenta, suspende o acesso, ou notifica só o financeiro?;
-**A-033** (contradição) — RF-018 implica cobrança automática, mas **RN-009** diz "toda a cobrança
-acima de 500€ exige aprovação manual do financeiro". Os três viram o lote P-041/042/043. O utilizador
-responde: ciclo por data de subscrição; retenta 3× em 48h e depois suspende; RN-009 só se aplica a
-faturas avulsas de upsell, não à mensalidade recorrente. O `engenheiro-de-requisitos` e o
-`modelador-de-regras-de-negocio` corrigem os artefactos, o Caçador reverifica e fecha os três achados.
+The `requirements-engineer` writes **FR-018**: *"The system charges automatically at the start of
+each cycle."* The Hunter raises three findings on the same statement: **A-031** (ambiguity) — is
+"start of the cycle" each customer's subscription date, or the 1st of the calendar month for
+everyone?; **A-032** (gap) — what happens if the card is declined: retry, suspend access, or only
+notify finance?; **A-033** (contradiction) — FR-018 implies automatic charging, but **BR-009** says
+"any charge above €500 requires manual approval from finance". The three become batch
+P-041/042/043. The user answers: cycle by subscription date; retry 3× within 48h and then suspend;
+BR-009 only applies to one-off upsell invoices, not the recurring monthly fee. The
+`requirements-engineer` and the `business-rules-modeler` fix the artifacts, the Hunter re-verifies
+and closes the three findings.
 
-## Relacionados
+## Related
 
-- `core/question-engine.md` — o mecanismo de pergunta em lote que este loop aciona.
-- `agents/01-requirements/ambiguity-hunter.md` — o agente dono da deteção.
-- `agents/01-requirements/README.md` — os agentes-donos que aplicam as respostas.
-- `core/quality-gates.md` — P2 não passa com achados críticos abertos.
-- `core/orchestrator.md` — §Recovery, a origem da regra dos 3.
-- `knowledge/ai-pitfalls.md` — §3, assumir em vez de perguntar, a armadilha que este loop bloqueia.
+- `core/question-engine.md` — the batched questioning mechanism this loop triggers.
+- `agents/01-requirements/ambiguity-hunter.md` — the agent that owns detection.
+- `agents/01-requirements/README.md` — the owner agents that apply the answers.
+- `core/quality-gates.md` — P2 does not pass with critical findings open.
+- `core/orchestrator.md` — §Recovery and exceptions, the origin of the rule of 3.
+- `knowledge/ai-pitfalls.md` — §3, assuming instead of asking, the pitfall this loop blocks.

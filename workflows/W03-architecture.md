@@ -1,113 +1,118 @@
-# W03 — Arquitetura (F3)
+# W03 — Architecture (F3)
 
-> **Fase:** F3 · **Portão de saída:** P3 · **Agentes-núcleo:** `agents/02-architecture/` (árbitro +
-> especialistas de estilo convocados conforme o contexto + selecionador de stack), com o
-> `agents/08-infrastructure/hosting-arbiter.md` quando aplicável, conduzidos pelo
+> **Phase:** F3 · **Exit gate:** P3 · **Core agents:** `agents/02-architecture/` (arbiter +
+> style specialists convened per context + stack selector), with
+> `agents/08-infrastructure/hosting-arbiter.md` when applicable, conducted by
 > `core/orchestrator.md`.
 
-## Objetivo
+## Objective
 
-Decidir **como se constrói** — estilo arquitetural, stack concreta em versões estáveis, fronteiras e
-integrações — antes de escrever uma linha de código de produto. As decisões estruturais **não se
-tomam por moda nem pela opinião do agente mais falador**: geram-se em painel às cegas, decidem-se por
-árbitro, registam-se em **ADR** e fecham-se (`core/decision-engine.md`). Reverter uma escolha de
-estilo custa meses — por isso é das decisões mais formais da framework.
+Decide **how it gets built** — architectural style, concrete stack at stable versions, boundaries
+and integrations — before writing a single line of product code. Structural decisions are **not
+made by fashion or by the opinion of the most talkative agent**: they are generated in a blind
+panel, decided by an arbiter, recorded in an **ADR** and closed (`core/decision-engine.md`).
+Reverting a style choice costs months — which is why this is among the framework's most formal
+decisions.
 
-## Pré-condições (portão de entrada)
+## Preconditions (entry gate)
 
-- [ ] P2 fechado: `product/01-requirements/` `aprovado` — requisitos, `RN-nnn` e **RNF quantificados**
-      existem (são os critérios pesados que decidem a arquitetura).
-- [ ] Riscos e custos de F1 disponíveis (`product/00-discovery/risks.md`, `custos.md`) — alimentam
-      os pesos dos critérios e a validação de custo do utilizador.
+- [ ] P2 closed: `product/01-requirements/` `approved` — requirements, `BR-nnn` and **quantified
+      NFRs** exist (they are the weighted criteria that decide the architecture).
+- [ ] F1 risks and costs available (`product/00-discovery/risks.md`, `costs.md`) — they feed the
+      criteria weights and the user's cost validation.
 
-Sem RNF quantificados **não se decide arquitetura**: escala esperada, disponibilidade e volumes são o
-que separa um monólito de microserviços. Faltando, devolve-se a F2 (`core/lifecycle.md` §2).
+Without quantified NFRs **no architecture is decided**: expected scale, availability and volumes
+are what separates a monolith from microservices. If they are missing, go back to F2
+(`core/lifecycle.md` §2).
 
-## Passos (agente → artefacto)
+## Steps (agent → artifact)
 
-O processo é o do `core/decision-engine.md` §The process for structural decisions. Artefactos em
-`product/02-architecture/`.
+The process is that of `core/decision-engine.md` §The process for structural decisions. Artifacts
+in `product/02-architecture/`.
 
-| # | Passo | Quem | Artefacto |
+| # | Step | Who | Artifact |
 | --- | --- | --- | --- |
-| 1 | **Enquadrar** a decisão e os critérios com pesos (escala, nº de equipas, operação, reversibilidade, custo, prazo, lock-in) | Orquestrador | pergunta de decisão + critérios (rascunho da `visao-arquitetural.md`) |
-| 2 | **Propor em painel, às cegas** — 2–4 especialistas de estilo *relevantes* | `agents/02-architecture/` (estilo) | uma proposta independente por especialista |
-| 3 | **Arbitrar** — comparar contra os critérios, fundir ideias, escrever a decisão | `agents/02-architecture/architecture-arbiter.md` | `decisoes/ADR-nnn-titulo.md` + `visao-arquitetural.md` |
-| 4 | **Validar** em linguagem simples e **fixar a stack** (só depois do estilo) | utilizador → `agents/02-architecture/stack-selector.md` | ADR `aprovado` + `stack.md` (versões fixadas) |
-| 5 | **Decidir alojamento** (cloud/on-prem/híbrido), quando aplicável | `agents/08-infrastructure/hosting-arbiter.md` | `ADR-nnn` de alojamento |
-| 6 | **Fixar contratos externos** (sistemas read-only, identidade) | Orquestrador + especialistas | `integracoes.md` (`modules/readonly-external-integrations.md`) |
+| 1 | **Frame** the decision and the weighted criteria (scale, number of teams, operation, reversibility, cost, deadline, lock-in) | Orchestrator | decision question + criteria (draft of `architecture-vision.md`) |
+| 2 | **Propose in a panel, blind** — 2–4 *relevant* style specialists | `agents/02-architecture/` (style) | one independent proposal per specialist |
+| 3 | **Arbitrate** — compare against the criteria, merge ideas, write the decision | `agents/02-architecture/architecture-arbiter.md` | `decisions/ADR-nnn-title.md` + `architecture-vision.md` |
+| 4 | **Validate** in plain language and **pin the stack** (only after the style) | user → `agents/02-architecture/stack-selector.md` | ADR `approved` + `stack.md` (pinned versions) |
+| 5 | **Decide hosting** (cloud/on-prem/hybrid), when applicable | `agents/08-infrastructure/hosting-arbiter.md` | hosting `ADR-nnn` |
+| 6 | **Pin external contracts** (read-only systems, identity) | Orchestrator + specialists | `integrations.md` (`modules/readonly-external-integrations.md`) |
 
-**Convocação seletiva (`agents/02-architecture/README.md`):** o Orquestrador convoca **só os
-especialistas de estilo relevantes** ao problema (`especialista-monolito`, `-monolito-modular`,
-`-microservicos`, `-event-driven`, `-cqrs`, `-clean-architecture`, `-hexagonal`, `-ddd`,
-`-vertical-slice`, `-serverless`, `-edge-computing`) — **nunca todos por reflexo**. Uma proposta "o
-meu estilo não serve aqui" é válida e poupa ao árbitro descartar uma opção má. O árbitro **nunca é um
-dos proponentes** (separar quem propõe de quem decide).
+**Selective convening (`agents/02-architecture/README.md`):** the Orchestrator convenes **only the
+style specialists relevant** to the problem (`monolith-specialist`,
+`modular-monolith-specialist`, `microservices-specialist`, `event-driven-specialist`,
+`cqrs-specialist`, `clean-architecture-specialist`, `hexagonal-specialist`, `ddd-specialist`,
+`vertical-slice-specialist`, `serverless-specialist`, `edge-computing-specialist`) — **never all
+of them by reflex**. A proposal saying "my style does not fit here" is valid and saves the arbiter
+from discarding a bad option. The arbiter is **never one of the proposers** (separate who proposes
+from who decides).
 
-**Paralelismo:** as propostas do painel (passo 2) correm em paralelo e **às cegas** — sem se verem
-umas às outras (`core/orchestrator.md` §Parallelism). A stack (4) **nunca** se escolhe antes do
-estilo: a tecnologia serve a arquitetura, não o contrário.
+**Parallelism:** the panel's proposals (step 2) run in parallel and **blind** — without seeing one
+another (`core/orchestrator.md` §Parallelism). The stack (4) is **never** chosen before the style:
+technology serves the architecture, not the other way around.
 
-## Pontos de decisão
+## Decision points
 
-Este é o workflow do **motor de decisão** — quase tudo aqui é decisão registada:
+This is the **decision engine's** workflow — almost everything here is a recorded decision:
 
-- **Estilo arquitetural (ADR obrigatório):** proposta do árbitro → **validação do utilizador** em
-  linguagem simples (o que se escolheu, o que se rejeitou e porquê, o que custa, como se reverte).
-- **Stack (versões estáveis):** LTS / majors GA por defeito; `alpha`/`beta`/`RC` só com razão
-  registada (`knowledge/permanent-rules.md` §versões estáveis). Lockfiles fixados.
-- **Alojamento:** custo, residência de dados, competência da equipa e conformidade — se envolve
-  **dinheiro/compromisso** (infra paga), é aprovação humana obrigatória.
+- **Architectural style (mandatory ADR):** arbiter's proposal → **user validation** in plain
+  language (what was chosen, what was rejected and why, what it costs, how to revert it).
+- **Stack (stable versions):** LTS / GA majors by default; `alpha`/`beta`/`RC` only with a
+  recorded reason (`knowledge/permanent-rules.md` §Versões estáveis). Lockfiles pinned.
+- **Hosting:** cost, data residency, team competence and compliance — if it involves
+  **money/commitment** (paid infra), human approval is mandatory.
 
-**Aprovação humana obrigatória (P3):** os **ADRs e os custos**. O Orquestrador para e pergunta antes
-de assumir qualquer compromisso pago (`core/orchestrator.md` §Human approval). Cada ADR aprovado
-fica **fechado** — não se reabre sem novidade material (`core/decision-engine.md` §Closed decisions);
-a lista de decisões fechadas vai para o `CLAUDE.md` do projeto.
+**Mandatory human approval (P3):** the **ADRs and the costs**. The Orchestrator stops and asks
+before assuming any paid commitment (`core/orchestrator.md` §Human approval). Each approved ADR
+becomes **closed** — it is not reopened without material news (`core/decision-engine.md` §Closed
+decisions); the list of closed decisions goes into the project's `CLAUDE.md`.
 
-## Loops que abre
+## Loops it opens
 
-- F3 não corre um loop dos `loops/` numerados; a sua iteração é o **ciclo de arbitragem**: se
-  nenhuma proposta satisfaz os critérios, o Orquestrador reformula os pesos (ou pede uma proposta
-  extra) e volta ao passo 2. **Salvaguarda:** 3 rondas sem convergência → subir ao utilizador com o
-  trade-off por decidir, em vez de arbitrar no vazio (`core/orchestrator.md` §Recovery).
+- F3 does not run one of the numbered `loops/`; its iteration is the **arbitration cycle**: if no
+  proposal satisfies the criteria, the Orchestrator reworks the weights (or requests an extra
+  proposal) and returns to step 2. **Safeguard:** 3 rounds without convergence → go up to the user
+  with the trade-off to be decided, instead of arbitrating in a vacuum
+  (`core/orchestrator.md` §Recovery).
 
-## Portão de saída (P3)
+## Exit gate (P3)
 
 `core/quality-gates.md` + `checklists/definition-of-done.md`:
 
-- [ ] ADRs escritos com **opções consideradas** (incl. o status quo), decisão, consequências e
-      **caminho de reversão** (`core/decision-engine.md` §ADR — what it must contain).
-- [ ] Stack **fixada** em versões estáveis, com lockfiles (`stack.md`).
-- [ ] Integrações externas com contrato assumido (read-only, sincronização, campos geridos fora).
-- [ ] Utilizador **validou custos e trade-offs** em linguagem simples.
+- [ ] ADRs written with the **options considered** (incl. the status quo), decision, consequences
+      and **reversal path** (`core/decision-engine.md` §ADR — what it must contain).
+- [ ] Stack **pinned** at stable versions, with lockfiles (`stack.md`).
+- [ ] External integrations with an assumed contract (read-only, sync, fields managed elsewhere).
+- [ ] User **validated costs and trade-offs** in plain language.
 
-**Quem verifica:** o Orquestrador (completude do ADR) — o `agents/12-reviewers/architecture-reviewer.md`
-só audita a *aderência* em F7. **Quem aprova:** o utilizador (ADRs + custos). Com P3 fechado, arranca
-`workflows/W04-experience.md`.
+**Who verifies:** the Orchestrator (ADR completeness) —
+`agents/12-reviewers/architecture-reviewer.md` only audits *adherence* in F7. **Who approves:**
+the user (ADRs + costs). With P3 closed, `workflows/W04-experience.md` starts.
 
-## Recuperação de falhas e bloqueios
+## Recovery from failures and blockages
 
-`core/orchestrator.md` §Recovery. Propostas contraditórias entre especialistas → **não se
-escolhe em silêncio**: confronta-se contra os critérios pesados ou sobe-se ao utilizador se for
-decisão de produto. Utilizador indisponível para validar custos → o ADR fica em `rascunho`, a
-pendência em `STATE.md` → "Decisões pendentes", e **não se fixa stack nem se contrata infra** por
-assunção. Decisão fechada que o utilizador queira reabrir → avisa-se do porquê original antes de
-executar; se reabrir, o ADR antigo marca-se `substituída por ADR-nnn` (nunca se apaga).
+`core/orchestrator.md` §Recovery. Contradictory proposals between specialists → **no picking in
+silence**: confront them against the weighted criteria, or go up to the user if it is a product
+decision. User unavailable to validate costs → the ADR stays in `draft`, the pending item in
+`STATE.md` → "Decisões pendentes", and **no stack is pinned and no infra is contracted** by
+assumption. A closed decision the user wants to reopen → remind them of the original why before
+executing; if it is reopened, the old ADR is marked `superseded by ADR-nnn` (never deleted).
 
-## Perfis de esforço
+## Effort profiles
 
-| Perfil | Profundidade de F3 |
+| Profile | F3 depth |
 | --- | --- |
-| **Protótipo** | ADR curto (1 página) do estilo óbvio; stack mínima estável; alojamento adiado; painel de 2 pode ser o próprio Orquestrador a esboçar as opções. |
-| **Produto interno** | Painel real de 2–3 estilos; ADRs para as decisões estruturais; alojamento decidido. |
-| **Produto comercial** | + ADR de alojamento com custos validados; stack com política de atualização. |
-| **Plataforma empresarial** | **ADR para toda a decisão estrutural**; painel completo; conformidade e residência de dados explícitas no alojamento. |
+| **Prototype** | Short ADR (1 page) for the obvious style; minimal stable stack; hosting deferred; the panel of 2 may be the Orchestrator itself sketching the options. |
+| **Internal product** | Real panel of 2–3 styles; ADRs for the structural decisions; hosting decided. |
+| **Commercial product** | + hosting ADR with validated costs; stack with an update policy. |
+| **Enterprise platform** | **ADR for every structural decision**; full panel; compliance and data residency explicit in the hosting. |
 
-## Relacionados
+## Related
 
-- `core/decision-engine.md` — o processo painel→árbitro→ADR que esta fase encarna.
-- `agents/02-architecture/README.md` — a categoria e a convocação seletiva de especialistas.
-- `agents/08-infrastructure/hosting-arbiter.md` — a arbitragem de alojamento.
-- `templates/project/ADR-DECISION.md.template` — o formato do registo de decisão.
-- `workflows/W02-requirements.md` — a fase anterior (fornece requisitos e RNF).
-- `workflows/W05-specification.md` — consome os ADRs e a stack para a especificação.
+- `core/decision-engine.md` — the panel→arbiter→ADR process this phase embodies.
+- `agents/02-architecture/README.md` — the category and the selective convening of specialists.
+- `agents/08-infrastructure/hosting-arbiter.md` — the hosting arbitration.
+- `templates/project/ADR-DECISION.md.template` — the format of the decision record.
+- `workflows/W02-requirements.md` — the previous phase (supplies requirements and NFRs).
+- `workflows/W05-specification.md` — consumes the ADRs and the stack for the specification.

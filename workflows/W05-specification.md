@@ -1,123 +1,128 @@
-# W05 — Especificação (F5)
+# W05 — Specification (F5)
 
-> **Fase:** F5 · **Portão de saída:** P5 (**desbloqueia código**) · **Agentes-núcleo:**
+> **Phase:** F5 · **Exit gate:** P5 (**unlocks code**) · **Core agents:**
 > `agents/01-requirements/business-rules-modeler.md`, `agents/06-data/data-modeler.md`,
-> `agents/05-backend/api-designer.md` e `agents/09-security/threat-modeler.md`,
-> coordenados pelo `core/orchestrator.md`.
+> `agents/05-backend/api-designer.md` and `agents/09-security/threat-modeler.md`,
+> coordinated by `core/orchestrator.md`.
 
-## Objetivo
+## Objective
 
-Produzir a **fonte de verdade funcional canónica, agnóstica de tecnologia**: as regras de negócio
-consolidadas por módulo, os fluxos críticos como máquinas de estado, o modelo de dados lógico e o
-contrato do backend (autorização, scoping, integridade, campos sensíveis). É o documento que
-**sobrevive a reescritas do código** — quando o código e a spec divergirem, a spec ganha
-(`core/artifact-protocol.md` §4). **Só depois de P5 se escreve código de produto** (F6).
+Produce the **canonical, technology-agnostic functional source of truth**: the business rules
+consolidated per module, the critical flows as state machines, the logical data model and the
+backend contract (authorization, scoping, integrity, sensitive fields). It is the document that
+**survives code rewrites** — when code and spec diverge, the spec wins
+(`core/artifact-protocol.md` §4). **Only after P5 is product code written** (F6).
 
-## Pré-condições (portão de entrada)
+## Preconditions (entry gate)
 
-- [ ] P2 fechado: requisitos, `RN-nnn`, RNF e critérios de aceitação `aprovado` (`product/01-requirements/`).
-- [ ] P3 fechado: ADRs e stack `aprovado` (`product/02-architecture/`) — o contrato de backend
-      assume o estilo e as fronteiras já decididos.
-- [ ] P4 fechado: mapa de ecrãs e fluxos `aprovado` (`product/03-experience/`) — as máquinas de
-      estado dos fluxos críticos refletem o que a UX desenhou.
+- [ ] P2 closed: requirements, `BR-nnn`, NFRs and acceptance criteria `approved`
+      (`product/01-requirements/`).
+- [ ] P3 closed: ADRs and stack `approved` (`product/02-architecture/`) — the backend contract
+      assumes the style and boundaries already decided.
+- [ ] P4 closed: screen map and flows `approved` (`product/03-experience/`) — the state machines
+      of the critical flows reflect what UX designed.
 
-Faltando qualquer um, **não se especifica**: a spec seria construída sobre âmbito, arquitetura ou UX
-por fechar (`core/lifecycle.md` §2).
+If any is missing, **there is no specifying**: the spec would be built on scope, architecture or
+UX left open (`core/lifecycle.md` §2).
 
-## Passos (agente → artefacto)
+## Steps (agent → artifact)
 
-A especificação **consolida** o que F2–F4 produziram — não reinventa. Artefactos em
-`product/04-specification/` (e o threat model em `product/05-security/`).
+The specification **consolidates** what F2–F4 produced — it does not reinvent. Artifacts in
+`product/04-specification/` (and the threat model in `product/05-security/`).
 
-| # | Agente | Artefacto | Depende de |
+| # | Agent | Artifact | Depends on |
 | --- | --- | --- | --- |
-| 1 | Orquestrador | `README.md` (índice dos módulos a especificar, derivado do MVP) | prioridades (F1), `RF` (F2) |
-| 2 | `agents/01-requirements/business-rules-modeler.md` | `modules/<modulo>.md` (regras `RN-nnn` consolidadas, permissões, fluxos por módulo) | `RN-nnn` (F2), fluxos (F4) |
-| 3 | `agents/01-requirements/business-rules-modeler.md` | `maquinas-de-estado.md` (estados, transições, efeitos, quem pode — `modules/state-machines.md`) | 2 |
-| 4 | `agents/06-data/data-modeler.md` | `modelo-de-dados-logico.md` (entidades, relações **bidirecionais coerentes**, invariantes — agnóstico de BD) | 2 |
-| 5 | `agents/05-backend/api-designer.md` | `contrato-backend.md` (authz/scoping/integridade/campos sensíveis **100% no servidor**) | 2, 4, ADRs (F3) |
-| 6 | `agents/09-security/threat-modeler.md` | `product/05-security/threat-model.md` (STRIDE por funcionalidade crítica) | 2–5 |
+| 1 | Orchestrator | `README.md` (index of the modules to specify, derived from the MVP) | priorities (F1), `FR` (F2) |
+| 2 | `agents/01-requirements/business-rules-modeler.md` | `modules/<module>.md` (consolidated `BR-nnn` rules, permissions, flows per module) | `BR-nnn` (F2), flows (F4) |
+| 3 | `agents/01-requirements/business-rules-modeler.md` | `state-machines.md` (states, transitions, effects, who may — `modules/state-machines.md`) | 2 |
+| 4 | `agents/06-data/data-modeler.md` | `logical-data-model.md` (entities, **coherent bidirectional** relations, invariants — database-agnostic) | 2 |
+| 5 | `agents/05-backend/api-designer.md` | `backend-contract.md` (authz/scoping/integrity/sensitive fields **100% on the server**) | 2, 4, ADRs (F3) |
+| 6 | `agents/09-security/threat-modeler.md` | `product/05-security/threat-model.md` (STRIDE per critical feature) | 2–5 |
 
 **Templates:** `templates/specification/business-rules.md.template`,
-`maquina-de-estados.md.template`, `modelo-de-dados-logico.md.template`,
-`contrato-backend.md.template` (e `requisito-funcional.md.template` para o rasto `RF`→spec).
+`state-machine.md.template`, `logical-data-model.md.template`,
+`backend-contract.md.template` (and `functional-requirement.md.template` for the `FR`→spec trail).
 
-**Paralelismo (`core/orchestrator.md` §Parallelism):** os módulos independentes (passo 2)
-especificam-se em paralelo; máquinas de estado (3), modelo de dados (4) e contrato de backend (5)
-partilham as regras do passo 2 e encadeiam-se por dependência. O `modelador-de-ameacas` (6) corre
-sobre o conjunto já esboçado. O `agents/09-security/security-coordinator.md` tem assento
-transversal — segurança não é uma fase, é uma dimensão (`core/lifecycle.md` §5).
+**Parallelism (`core/orchestrator.md` §Parallelism):** independent modules (step 2) are specified
+in parallel; state machines (3), data model (4) and backend contract (5) share the rules from
+step 2 and chain by dependency. The `threat-modeler` (6) runs over the already-drafted whole.
+The `agents/09-security/security-coordinator.md` holds a cross-cutting seat — security is not a
+phase, it is a dimension (`core/lifecycle.md` §5).
 
-> **Regra de ouro do contrato de backend (`modules/rbac-and-scoping.md`):** o cliente **declara**, o
-> servidor **confirma**; fail-closed; fora-de-scope responde **404** (nunca 403 que confirme a
-> existência). Campos sensíveis nunca saem do servidor a quem não os pode ver. Isto especifica-se
-> aqui, não se "lembra" em F6.
+> **Golden rule of the backend contract (`modules/rbac-and-scoping.md`):** the client
+> **declares**, the server **confirms**; fail-closed; out-of-scope answers **404** (never a 403
+> that confirms existence). Sensitive fields never leave the server to whoever may not see them.
+> This is specified here, not "remembered" in F6.
 
-> **Escala ao perfil:** num protótipo, os quatro documentos colapsam numa `product/04-specification/spec.md`
-> de poucas páginas — mas as **máquinas de estado dos fluxos críticos e as invariantes de dados**
-> escrevem-se sempre (são a origem histórica da maioria dos defeitos, `knowledge/origin-lessons.md`).
+> **Scale to the profile:** in a prototype, the four documents collapse into a
+> `product/04-specification/spec.md` of a few pages — but the **state machines of the critical
+> flows and the data invariants** are always written (they are the historical origin of most
+> defects, `knowledge/origin-lessons.md`).
 
-## Pontos de decisão
+## Decision points
 
-Lacunas sobem em **lotes** ao Orquestrador (`core/question-engine.md`). Lotes típicos de F5:
+Gaps go up to the Orchestrator in **batches** (`core/question-engine.md`). Typical F5 batches:
 
-- **Estados e transições** — que transições são legais, que efeitos disparam, quem as pode fazer.
-- **Invariantes de dados** — o que nunca pode ficar incoerente (relações bidirecionais, unicidade).
-- **Autorização fina** — que perfil vê/faz o quê, e o que o scoping por unidade organizacional corta.
-- **Campos sensíveis** — o que é confidencial e a quem se oculta.
+- **States and transitions** — which transitions are legal, which effects fire, who may run them.
+- **Data invariants** — what may never become incoherent (bidirectional relations, uniqueness).
+- **Fine-grained authorization** — which profile sees/does what, and what org-unit scoping cuts.
+- **Sensitive fields** — what is confidential and from whom it is hidden.
 
-**Aprovação humana obrigatória (P5):** a **especificação completa** é aprovada pelo utilizador — é o
-contrato que desbloqueia a construção. Qualquer tratamento **novo de dados pessoais/sensíveis**
-sinalizado em F2 confirma-se aqui no threat model.
+**Mandatory human approval (P5):** the **complete specification** is approved by the user — it is
+the contract that unlocks the build. Any **new processing of personal/sensitive data** flagged in
+F2 is confirmed here in the threat model.
 
-## Loops que abre
+## Loops it opens
 
-- **`loops/L05-inconsistencies.md`** — enquanto houver divergência entre spec ↔ requisitos ↔ modelo
-  de dados (ex.: uma regra sem entidade, um estado sem transição de saída), reconcilia-se com a fonte
-  de verdade a montante. **Condição de saída:** zero inconsistências abertas.
-- Uma lacuna que revele **requisito em falta** reabre F2 via `loops/L01-ambiguous-requirements.md` — a
-  spec **não inventa** o requisito, devolve-o (`core/lifecycle.md` §2). **Salvaguarda**
-  anti-loop de 3 iterações em ambos (`loops/README.md`).
+- **`loops/L05-inconsistencies.md`** — while there is divergence between spec ↔ requirements ↔
+  data model (e.g. a rule without an entity, a state without an outgoing transition), reconcile
+  with the upstream source of truth. **Exit condition:** zero open inconsistencies.
+- A gap that reveals a **missing requirement** reopens F2 via
+  `loops/L01-ambiguous-requirements.md` — the spec **does not invent** the requirement, it
+  returns it (`core/lifecycle.md` §2). Anti-loop **safeguard** of 3 iterations on both
+  (`loops/README.md`).
 
-## Portão de saída (P5)
+## Exit gate (P5)
 
 `core/quality-gates.md` + `checklists/definition-of-done.md`:
 
-- [ ] Especificação **revista em painel mínimo** — arquitetura + segurança + UX — e consolidada pelo
-      `agents/12-reviewers/review-consolidator.md` num plano único sem contradições.
-- [ ] **Máquinas de estado** dos fluxos críticos completas (estados, transições, efeitos, quem pode).
-- [ ] **Modelo de dados lógico** com invariantes e relações bidirecionais coerentes.
-- [ ] **Contrato de backend** define authz, scoping e ocultação de sensíveis **no servidor**.
-- [ ] Cada `RF` do MVP tem spec rastreável; threat model cobre as funcionalidades críticas.
-- [ ] Utilizador **aprovou** a especificação.
+- [ ] Specification **reviewed by a minimal panel** — architecture + security + UX — and
+      consolidated by `agents/12-reviewers/review-consolidator.md` into a single plan without
+      contradictions.
+- [ ] **State machines** of the critical flows complete (states, transitions, effects, who may).
+- [ ] **Logical data model** with invariants and coherent bidirectional relations.
+- [ ] **Backend contract** defines authz, scoping and sensitive-field hiding **on the server**.
+- [ ] Every MVP `FR` has a traceable spec; the threat model covers the critical features.
+- [ ] The user **approved** the specification.
 
-**Quem verifica:** o painel de revisores (substância) + consolidador (coerência) — nunca quem
-escreveu. **Quem aprova:** o utilizador. **Com P5 fechado, desbloqueia-se o código:** arranca
-`workflows/W06-build.md`.
+**Who verifies:** the reviewer panel (substance) + the consolidator (coherence) — never the
+author. **Who approves:** the user. **With P5 closed, code is unlocked:**
+`workflows/W06-build.md` starts.
 
-## Recuperação de falhas e bloqueios
+## Failure and blocker recovery
 
-`core/orchestrator.md` §Recovery. Revisões contraditórias (ex.: contrato de backend vs threat
-model) → o consolidador não escolhe em silêncio: expõe o conflito e pede reanálise, ou sobe ao
-utilizador se for decisão de produto. Requisito em falta descoberto ao especificar → devolve-se a F2,
-regista-se em `STATE.md`; **não se avança para F6** com a spec incompleta. Utilizador indisponível
-para aprovar → a spec fica `em-revisao`, a pendência em `STATE.md` → "Decisões pendentes"; **nenhuma
-linha de código de produto** se escreve antes de P5.
+`core/orchestrator.md` §Recovery. Contradictory reviews (e.g. backend contract vs threat
+model) → the consolidator does not choose in silence: it exposes the conflict and asks for
+reanalysis, or raises it to the user if it is a product decision. A missing requirement found
+while specifying → return it to F2, record it in `STATE.md`; **no advancing to F6** with an
+incomplete spec. User unavailable to approve → the spec stays `in-review`, the pending item in
+`STATE.md` → "Decisões pendentes"; **not one line of product code** is written before P5.
 
-## Perfis de esforço
+## Effort profiles
 
-| Perfil | Profundidade de F5 |
+| Profile | F5 depth |
 | --- | --- |
-| **Protótipo** | Spec de poucas páginas revista pelo próprio Orquestrador + OK do utilizador; máquinas de estado só dos fluxos críticos. |
-| **Produto interno** | Spec por módulo; painel mínimo (arquitetura + segurança + UX); modelo de dados e contrato completos. |
-| **Produto comercial** | + threat model formal (STRIDE); revisão em painel alargado; contrato de backend detalhado por endpoint. |
-| **Plataforma empresarial** | + modelo de dados com auditoria/retenção; contrato com ASVS-alvo; revisão global (`workflows/W12-global-review.md`) antes de P5. |
+| **Prototype** | Spec of a few pages reviewed by the Orchestrator itself + user OK; state machines only for the critical flows. |
+| **Internal product** | Spec per module; minimal panel (architecture + security + UX); full data model and contract. |
+| **Commercial product** | + formal threat model (STRIDE); extended panel review; backend contract detailed per endpoint. |
+| **Enterprise platform** | + data model with audit/retention; contract with a target ASVS; global review (`workflows/W12-global-review.md`) before P5. |
 
-## Relacionados
+## Related
 
-- `core/artifact-protocol.md` — `product/04-specification/` é a fonte de verdade a jusante.
-- `workflows/W02-requirements.md` · `workflows/W03-architecture.md` · `workflows/W04-experience.md` — as fases que esta consolida.
-- `workflows/W06-build.md` — a fase que P5 desbloqueia.
-- `modules/state-machines.md` · `modules/rbac-and-scoping.md` — os padrões que a spec aplica.
-- `agents/12-reviewers/review-consolidator.md` — quem funde o painel de revisão de P5.
-- `templates/specification/backend-contract.md.template` — o molde do contrato do servidor.
+- `core/artifact-protocol.md` — `product/04-specification/` is the source of truth downstream.
+- `workflows/W02-requirements.md` · `workflows/W03-architecture.md` ·
+  `workflows/W04-experience.md` — the phases this one consolidates.
+- `workflows/W06-build.md` — the phase P5 unlocks.
+- `modules/state-machines.md` · `modules/rbac-and-scoping.md` — the patterns the spec applies.
+- `agents/12-reviewers/review-consolidator.md` — who merges the P5 review panel.
+- `templates/specification/backend-contract.md.template` — the mold of the server contract.

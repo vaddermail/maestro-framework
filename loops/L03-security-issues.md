@@ -1,77 +1,80 @@
-# L03 — Problemas de Segurança
+# L03 — Security Issues
 
-> Loop `L03` da framework Maestro — persiste enquanto existirem achados de segurança abertos,
-> resolvendo pela severidade real (não pela ordem de deteção). Segue a anatomia de `loops/README.md`.
+> Loop `L03` of the Maestro framework — persists while open security findings exist, resolving
+> by real severity (not by detection order). Follows the anatomy in `loops/README.md`.
 
-Um achado de segurança não resolvido não desaparece por se ignorar — fica à espera de ser explorado.
-Este loop existe para que nenhum achado fique "para depois" sem que essa decisão seja explícita,
-assinada pelo utilizador, e nunca do agente.
+An unresolved security finding does not disappear by being ignored — it sits waiting to be
+exploited. This loop exists so that no finding is left "for later" without that decision being
+explicit, signed off by the user, and never the agent's.
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Quando corre** | F7 (painel de revisão + pentest, antes do lançamento); F9 (contínuo, cadência do guardião) |
-| **Agente que executa a ação** | `agents/09-security/security-coordinator.md` tria e prioriza; o especialista dono da área do achado (`especialista-owasp-top10`, `especialista-de-autenticacao-segura`, `especialista-de-autorizacao-e-least-privilege`, …) corrige; `agents/09-security/pentester.md` e os scanners de `pipelines/ci-security.md` alimentam achados novos |
-| **Modelo sugerido** | Topo para triagem de severidade crítica/alta e desenho da correção; Padrão para aplicar uma mitigação já conhecida (`core/model-routing.md`) |
+| **When it runs** | F7 (review panel + pentest, before launch); F9 (continuous, guardian's cadence) |
+| **Agent that executes the action** | `agents/09-security/security-coordinator.md` triages and prioritizes; the specialist that owns the finding's area (`owasp-top10-specialist`, `secure-authentication-specialist`, `authorization-and-least-privilege-specialist`, …) fixes it; `agents/09-security/pentester.md` and the scanners in `pipelines/ci-security.md` feed new findings |
+| **Suggested model** | Top for triage of critical/high severity and for designing the fix; Standard to apply an already-known mitigation (`core/model-routing.md`) |
 
-## Métrica de progresso
+## Progress metric
 
-Número de achados de segurança em estado `aberto`, com contagem separada por severidade
-(crítico/alto/médio/baixo) — a métrica que decide a saída é **crítico + alto**, não o total bruto.
+Number of security findings in `open` state, counted separately by severity
+(critical/high/medium/low) — the metric that decides the exit is **critical + high**, not the raw
+total.
 
-## Condição de entrada
+## Entry condition
 
-Existe ≥1 achado de segurança em estado `aberto` — de pentest, SAST/DAST, revisão de segurança
-(`agents/12-reviewers/security-reviewer.md`) ou threat model.
+There is ≥1 security finding in `open` state — from pentest, SAST/DAST, security review
+(`agents/12-reviewers/security-reviewer.md`) or the threat model.
 
-## Ação (o corpo da iteração)
+## Action (the body of the iteration)
 
-1. Triar por **severidade real**: score bruto (CVSS ou equivalente) cruzado com explorabilidade no
-   sistema concreto (threat model) — um "crítico" num componente não exposto pode valer menos do que
-   um "médio" no caminho de autenticação.
-2. Resolver primeiro o de maior severidade real, nunca o mais fácil de corrigir.
-3. Aplicar a correção com caminho de reversão (flag se o risco de regressão for alto —
+1. Triage by **real severity**: raw score (CVSS or equivalent) crossed with exploitability in the
+   concrete system (threat model) — a "critical" in an unexposed component can be worth less than
+   a "medium" on the authentication path.
+2. Resolve the highest real severity first, never the easiest to fix.
+3. Apply the fix with a reversal path (a flag if the regression risk is high —
    `modules/feature-flags.md`).
-4. Validar: regressão verde + prova-live que confirma que a exploração deixou de funcionar.
+4. Validate: regression green + live proof confirming the exploit no longer works.
 
-## Condição de saída (sucesso)
+## Exit condition (success)
 
-Zero achados críticos/altos em estado `aberto`. Achados médios/baixos podem transitar para **risco
-residual aceite** — mas só por decisão explícita do utilizador, registada em
-`product/05-security/residual-risk.md`, nunca fechados por decreto do agente.
+Zero critical/high findings in `open` state. Medium/low findings may transition to **accepted
+residual risk** — but only by an explicit user decision, recorded in
+`product/05-security/residual-risk.md`, never closed by agent decree.
 
-## Salvaguarda anti-loop-infinito
+## Anti-infinite-loop safeguard
 
-- **Estagnação:** 3 iterações sobre o mesmo achado sem o mover de estado → parar esse achado
-  especificamente (os outros continuam).
-- **Oscilação:** corrigir um achado reintroduz outro (ex.: apertar CSP quebra um fluxo que reabre um
-  achado de autorização) → parar de imediato, é sinal de correção pontual em vez de estrutural.
-- **Teto duro:** 4 tentativas por achado individual. Ultrapassado, o achado sobe a candidato a **risco
-  residual** — nunca fica silenciado; o utilizador decide aceitar o risco, cortar a funcionalidade, ou
-  redesenhar (subir a `agents/09-security/threat-modeler.md` se for estrutural).
+- **Stagnation:** 3 iterations on the same finding without moving its state → stop that specific
+  finding (the others continue).
+- **Oscillation:** fixing one finding reintroduces another (e.g. tightening CSP breaks a flow that
+  reopens an authorization finding) → stop immediately; it is a sign of a point fix instead of a
+  structural one.
+- **Hard cap:** 4 attempts per individual finding. Once exceeded, the finding escalates as a
+  candidate for **residual risk** — it is never silenced; the user decides to accept the risk, cut
+  the feature, or networksign (escalate to `agents/09-security/threat-modeler.md` if structural).
 
-## Registo em STATE.md
+## STATE.md record
 
 ```
-L03 · segurança · métrica 5→3→3 · iter 3 (teto 4) · último progresso: iter 2 · estado: EM RISCO
+L03 · security · metric 5→3→3 · iter 3 (cap 4) · last progress: iter 2 · status: AT RISK
 ```
 
-## Exemplo (app interna — portal de RH)
+## Example (internal app — HR portal)
 
-O `pentester` reporta um achado crítico: um colaborador consegue ver a ficha salarial de outro
-alterando o `id` na URL (IDOR). O `coordenador-de-seguranca` classifica-o crítico e explorável (não
-exige credenciais especiais). O `especialista-de-autorizacao-e-least-privilege` corrige: a rota passa
-a filtrar sempre pela identidade do servidor, nunca pelo `id` do pedido, e devolve 404 (não 403) fora
-do scope. Regressão verde; prova-live confirma que o `id` de outro colaborador já devolve 404. O
-achado fecha como corrigido-e-validado, documentado com a causa (falta de scoping no servidor,
+The `pentester` reports a critical finding: an employee can see another employee's salary record by
+changing the `id` in the URL (IDOR). The `security-coordinator` classifies it as critical and
+exploitable (it requires no special cnetworkntials). The
+`authorization-and-least-privilege-specialist` fixes it: the route now always filters by the
+server-side identity, never by the request's `id`, and returns 404 (not 403) outside the scope.
+Regression green; live proof confirms that another employee's `id` now returns 404. The finding
+closes as fixed-and-validated, documented with the cause (missing server-side scoping,
 `knowledge/proven-patterns.md` §6).
 
-## Relacionados
+## Related
 
-- `agents/09-security/security-coordinator.md` — dono da triagem e do risco residual.
-- `agents/09-security/README.md` — o mapa de especialistas que corrigem cada tipo de achado.
-- `agents/09-security/pentester.md` — principal produtor de achados em F7.
-- `checklists/pre-production-security.md` — o portão que este loop tem de satisfazer.
-- `core/quality-gates.md` — P7 não passa com crítico/alto aberto.
-- `playbooks/adversarial-audit.md` — o escrutínio que alimenta achados adicionais.
+- `agents/09-security/security-coordinator.md` — owns triage and residual risk.
+- `agents/09-security/README.md` — the map of specialists who fix each type of finding.
+- `agents/09-security/pentester.md` — the main producer of findings in F7.
+- `checklists/pre-production-security.md` — the gate this loop must satisfy.
+- `core/quality-gates.md` — P7 does not pass with critical/high open.
+- `playbooks/adversarial-audit.md` — the scrutiny that feeds additional findings.

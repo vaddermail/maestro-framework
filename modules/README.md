@@ -1,96 +1,99 @@
-# Módulos — capacidades reutilizáveis destiladas do projeto-mãe
+# Modules — reusable capabilities distilled from the origin project
 
-Um **módulo** é uma capacidade de **produto** reutilizável — não uma biblioteca de código. Descreve o
-desenho conceptual, as regras inegociáveis e as armadilhas de algo que **qualquer** produto novo pode
-adotar: um ledger de créditos, um motor de aprovações, um trilho de auditoria. Onde um agente
-(`agents/README.md`) diz *quem faz o trabalho* e um workflow (`workflows/README.md`) diz *em que
-ordem*, um módulo diz *o quê construir e porquê construí-lo assim* — de forma agnóstica de stack,
-cloud e domínio.
+A **module** is a reusable **product** capability — not a code library. It describes the
+conceptual design, the non-negotiable rules and the pitfalls of something **any** new product can
+adopt: a credit ledger, an approval engine, an audit trail. Where an agent (`agents/README.md`)
+says *who does the work* and a workflow (`workflows/README.md`) says *in what order*, a module
+says *what to build and why to build it that way* — agnostic of stack, cloud and domain.
 
-Os módulos são a destilação prática dos padrões em `knowledge/proven-patterns.md` e das
-`knowledge/origin-lessons.md`: cada um encapsula uma classe de defeitos já resolvida, para não se
-reaprender à custa dos mesmos bugs noutro produto.
+Modules are the practical distillation of the patterns in `knowledge/proven-patterns.md` and of
+`knowledge/origin-lessons.md`: each one encapsulates an already-solved class of defects, so the
+same bugs don't have to be relearned the hard way in another product.
 
-## O que um módulo **não** é
+## What a module is **not**
 
-- **Não é código nem uma dependência a instalar.** É o *quê/porquê*; o *como* concreto (linguagem,
-  BD, framework) decide-se com `core/decision-engine.md` quando se instancia.
-- **Não assume domínio.** Os exemplos são multi-domínio (e-commerce, SaaS, plataforma de dados, app
-  interna) — a mecânica generaliza-se, o domínio não (`knowledge/origin-lessons.md` §O que não
-  generalizar).
-- **Não é obrigatório.** Adota-se o que acrescenta valor **ao ponto atual** do produto; o resto fica
-  disponível para quando fizer sentido (`core/extensibility.md`).
+- **Not code, nor a dependency to install.** It is the *what/why*; the concrete *how* (language,
+  DB, framework) is decided with `core/decision-engine.md` at instantiation time.
+- **It assumes no domain.** The examples are multi-domain (e-commerce, SaaS, data platform,
+  internal app) — the mechanics generalize, the domain does not (`knowledge/origin-lessons.md`
+  §O que não generalizar).
+- **Not mandatory.** Adopt what adds value **at the product's current point**; the rest stays
+  available for when it makes sense (`core/extensibility.md`).
 
-## Como se adota um módulo num produto
+## How a module is adopted into a product
 
-Três passos, sempre nesta ordem:
+Three steps, always in this order:
 
-1. **Escolher** — durante a especificação (`workflows/W05-specification.md`) ou uma evolução
-   (`workflows/W10-feature-evolution.md`), identificar que o produto tem a necessidade que o módulo
-   resolve. Na dúvida entre adotar já ou depois, adota-se quando a necessidade é **real e presente**,
-   não especulativa.
-2. **Instanciar no domínio** — traduzir os conceitos genéricos do módulo para a linguagem ubíqua do
-   produto (`agents/01-requirements/glossary-curator.md`) e escrever as regras concretas nas specs
-   (`agents/01-requirements/business-rules-modeler.md`). As "regras inegociáveis" do módulo
-   copiam-se para as regras de negócio do produto **com a sua proveniência** — para nenhum agente
-   futuro as "simplificar" sem perceber porque existem (`knowledge/origin-lessons.md` A2).
-3. **Registar a adoção** — abrir um ADR (`templates/project/ADR-DECISION.md.template`) a dizer que o
-   módulo foi adotado, em que variante e porquê; e deixar rasto em `STATE.md`
-   (`core/project-memory.md`). Adoção não registada é adoção que a próxima sessão desconhece.
+1. **Choose** — during specification (`workflows/W05-specification.md`) or an evolution
+   (`workflows/W10-feature-evolution.md`), identify that the product has the need the module
+   solves. When in doubt between adopting now or later, adopt when the need is **real and
+   present**, not speculative.
+2. **Instantiate in the domain** — translate the module's generic concepts into the product's
+   ubiquitous language (`agents/01-requirements/glossary-curator.md`) and write the concrete
+   rules into the specs (`agents/01-requirements/business-rules-modeler.md`). The module's
+   "non-negotiable rules" are copied into the product's business rules **with their provenance**
+   — so that no future agent "simplifies" them without understanding why they exist
+   (`knowledge/origin-lessons.md` A2).
+3. **Record the adoption** — open an ADR (`templates/project/ADR-DECISION.md.template`) stating
+   that the module was adopted, in which variant and why; and leave a trace in `STATE.md`
+   (`core/project-memory.md`). An unrecorded adoption is one the next session knows nothing
+   about.
 
-## Princípio do desacoplamento
+## Decoupling principle
 
-**Os módulos não dependem uns dos outros.** Cada um adota-se isoladamente e faz sentido sozinho — é a
-mesma propriedade open-closed dos agentes (`core/extensibility.md`): registar = existir, sem
-cirurgia nos existentes. Podem, no entanto, **compor-se** quando o produto os adota em conjunto, e a
-composição faz-se por **artefactos partilhados**, nunca por acoplamento direto:
+**Modules do not depend on each other.** Each one is adopted in isolation and makes sense on its
+own — the same open-closed property as the agents (`core/extensibility.md`): registering =
+existing, with no surgery on the existing ones. They can, however, **compose** when the product
+adopts them together, and composition happens through **shared artifacts**, never through direct
+coupling:
 
-- o `modules/approval-engine.md` **emite** transições que o `modules/state-machines.md`
-  executa, e **ambos** escrevem no `modules/audit-and-provenance.md`;
-- o `modules/rbac-and-scoping.md` decide *quem pode* transitar; a máquina de estados decide *se a
-  transição é legal*.
+- `modules/approval-engine.md` **emits** transitions that `modules/state-machines.md` executes,
+  and **both** write to `modules/audit-and-provenance.md`;
+- `modules/rbac-and-scoping.md` decides *who may* transition; the state machine decides *whether
+  the transition is legal*.
 
-Nenhum módulo importa outro para funcionar: um produto pode adotar só a auditoria, ou só os créditos.
-Onde um módulo **assume** o resultado de outro, di-lo na secção "Relacionados" — não o embute.
+No module imports another to work: a product can adopt only the audit trail, or only the credits.
+Where a module **assumes** another's output, it says so in the "Related" section — it does not
+embed it.
 
-## Esqueleto comum de um ficheiro de módulo
+## Common skeleton of a module file
 
-Todos os módulos (exceto este README) seguem **exatamente** esta estrutura, por esta ordem — para que
-o leitor salte de um módulo para outro sem reaprender o formato:
+All modules (except this README) follow **exactly** this structure, in this order — so the reader
+can jump from one module to another without relearning the format:
 
-| Secção | O que responde |
+| Section | What it answers |
 | --- | --- |
-| `# Título · linha de contexto` | O que é o módulo, para quem, numa frase |
-| `## O problema que resolve` | A classe de defeitos/necessidade que justifica o módulo |
-| `## O modelo (conceitos e entidades, agnóstico de stack)` | As entidades e relações, sem escolher tecnologia |
-| `## Regras inegociáveis (numeradas, verificáveis)` | As invariantes que qualquer instância tem de respeitar — cada uma confirmável |
-| `## Como se adota num produto novo (passos)` | O caminho concreto de instanciação |
-| `## Variações e trade-offs` | As decisões abertas e quando escolher cada opção |
-| `## Exemplo (1–2, multi-domínio)` | Instâncias realistas em domínios diferentes |
-| `## Armadilhas conhecidas` | Os erros típicos de quem implementa o módulo |
-| `## Relacionados` | 3–8 caminhos que existam no `_meta/INVENTORY.md` |
+| `# Title · context line` | What the module is, for whom, in one sentence |
+| `## The problem it solves` | The class of defects/need that justifies the module |
+| `## The model (concepts and entities, stack-agnostic)` | The entities and relations, without picking technology |
+| `## Non-negotiable rules (numbered, verifiable)` | The invariants every instance must respect — each one confirmable |
+| `## How to adopt it in a new product (steps)` | The concrete instantiation path |
+| `## Variations and trade-offs` | The open decisions and when to choose each option |
+| `## Example (1–2, multi-domain)` | Realistic instances in different domains |
+| `## Known pitfalls` | The typical mistakes of those implementing the module |
+| `## Related` | 3–8 paths that exist in `_meta/INVENTORY.md` |
 
-## Os módulos da framework
+## The framework's modules
 
-| Módulo | O que oferece |
+| Module | What it offers |
 | --- | --- |
-| `modules/credit-management.md` | Ledger genérico de créditos: contas, movimentos, tarifas, quotas, kill-switch; para IA, APIs, ferramentas, por utilizador/organização. |
-| `modules/approval-engine.md` | Aprovações por escalão configurável (valor/risco), gate de validação de necessidade separado. |
-| `modules/state-machines.md` | Fluxos críticos como máquinas de estado explícitas: estados, transições, efeitos, quem pode. |
-| `modules/rbac-and-scoping.md` | Perfis, âmbitos por unidade organizacional, aplicação no servidor, cliente não-fiável. |
-| `modules/audit-and-provenance.md` | Trilho de auditoria imutável; proveniência de dados tocados por IA com undo. |
-| `modules/job-queue.md` | Fila com executor único: submissão múltipla, dedupe por fingerprint, retries, visibilidade. |
-| `modules/feature-flags.md` | Flags e kill-switches: mudanças de risco desligáveis sem deploy; higiene de flags. |
-| `modules/single-source-of-content.md` | SSOT de labels/descrições/ajuda: um ficheiro fonte serve UI, tooltips e grounding de IA. |
-| `modules/ai-observability.md` | Consumo de IA contabilizado (tokens, custo, por funcionalidade/modelo/utilizador), alertas, kill-switch por modelo. |
-| `modules/readonly-external-integrations.md` | Sistemas externos como contrato assumido: read-only, sincronização, campos geridos fora. |
-| `modules/entity-lifecycle.md` | Onboarding/offboarding de entidades com libertação transacional de todos os recursos associados. |
+| `modules/credit-management.md` | Generic credit ledger: accounts, movements, tariffs, quotas, kill-switch; for AI, APIs, tools, per user/organization. |
+| `modules/approval-engine.md` | Approvals by configurable tier (value/risk), separate need-validation gate. |
+| `modules/state-machines.md` | Critical flows as explicit state machines: states, transitions, effects, who may. |
+| `modules/rbac-and-scoping.md` | Profiles, scopes per organizational unit, server-side enforcement, untrusted client. |
+| `modules/audit-and-provenance.md` | Immutable audit trail; provenance of AI-touched data, with undo. |
+| `modules/job-queue.md` | Queue with a single executor: multiple submission, dedupe by fingerprint, retries, visibility. |
+| `modules/feature-flags.md` | Flags and kill-switches: risky changes that switch off without a deploy; flag hygiene. |
+| `modules/single-source-of-content.md` | SSOT for labels/descriptions/help: one source file serves UI, tooltips and AI grounding. |
+| `modules/ai-observability.md` | Accounted AI consumption (tokens, cost, per feature/model/user), alerts, per-model kill-switch. |
+| `modules/readonly-external-integrations.md` | External systems as an assumed contract: read-only, synchronization, externally managed fields. |
+| `modules/entity-lifecycle.md` | Onboarding/offboarding of entities with transactional release of all associated resources. |
 
-## Relacionados
+## Related
 
-- `core/extensibility.md` — como se adiciona/adota um módulo sem partir os existentes.
-- `knowledge/proven-patterns.md` — os padrões de produção que os módulos encapsulam.
-- `knowledge/origin-lessons.md` — os defeitos concretos que os provaram.
-- `core/decision-engine.md` — como se decide a variante concreta ao instanciar.
-- `templates/project/ADR-DECISION.md.template` — onde se regista a adoção de um módulo.
-- `agents/01-requirements/business-rules-modeler.md` — quem traduz as regras do módulo para o domínio.
+- `core/extensibility.md` — how a module is added/adopted without breaking the existing ones.
+- `knowledge/proven-patterns.md` — the production patterns the modules encapsulate.
+- `knowledge/origin-lessons.md` — the concrete defects that proved them.
+- `core/decision-engine.md` — how the concrete variant is decided at instantiation.
+- `templates/project/ADR-DECISION.md.template` — where a module's adoption is recorded.
+- `agents/01-requirements/business-rules-modeler.md` — maps the module's rules to the domain.

@@ -1,104 +1,107 @@
-# W00 — Arranque de Projeto (F0)
+# W00 — Project Kickoff (F0)
 
-> **Fase:** F0 · **Portão de saída:** P0 · **Agente-núcleo:** o Orquestrador em pessoa
-> (`core/orchestrator.md`) — nenhum especialista de produto trabalha ainda.
+> **Phase:** F0 · **Exit gate:** P0 · **Core agent:** the Orchestrator in person
+> (`core/orchestrator.md`) — no product specialist works yet.
 
-## Objetivo
+## Objective
 
-Pôr a fundação de pé: a framework instalada no repositório do projeto, a **memória do projeto**
-instanciada (`STATE.md`, `CLAUDE.md`, `FRAMEWORK-IMPROVEMENTS.md`, árvore `product/`), o
-**perfil de esforço** calibrado e a **ideia bruta** registada sem edição. No fim de F0 o projeto tem onde escrever tudo o que se decidir
-a seguir — e não decidiu ainda nada sobre o produto.
+Put the foundation in place: the framework installed in the project repository, the **project
+memory** instantiated (`STATE.md`, `CLAUDE.md`, `FRAMEWORK-IMPROVEMENTS.md`, `product/` tree), the
+**effort profile** calibrated and the **raw idea** recorded without editing. At the end of F0 the
+project has somewhere to write everything decided from here on — and has decided nothing about the
+product yet.
 
-## Pré-condições (portão de entrada)
+## Preconditions (entry gate)
 
-Não há portão a montante (é a primeira fase). Exige-se apenas:
+There is no upstream gate (this is the first phase). All that is required:
 
-- [ ] Uma pasta/repositório do projeto, com `Maestro/` copiada para dentro a partir do ZIP de uma
+- [ ] A project folder/repository, with `Maestro/` copied inside from the ZIP of a
       **release** (`START-HERE.md` §Part 1).
-- [ ] Auto-verificação da cópia instalada **verde**: `bash Maestro/_meta/verify.sh` — uma cópia
-      corrompida ou parcial descobre-se aqui, não a meio de F5.
-- [ ] Uma sessão de IA com acesso a ficheiros, na raiz do projeto.
-- [ ] A ideia do utilizador em 2–10 frases (mesmo vaga — refiná-la é trabalho de F1, não pré-requisito).
-- [ ] Ambiente confirmado (a ferramenta de IA lê/escreve ficheiros; se for Claude Code, ver o
-      protocolo de arranque de `adapters/claude-code.md`).
+- [ ] Self-check of the installed copy **green**: `bash Maestro/_meta/verify.sh` — a corrupted or
+      partial copy is caught here, not halfway through F5.
+- [ ] An AI session with file access, at the project root.
+- [ ] The user's idea in 2–10 sentences (even if vague — refining it is F1 work, not a
+      prerequisite).
+- [ ] Environment confirmed (the AI tool reads/writes files; if it is Claude Code, see the
+      session-start protocol in `adapters/claude-code.md`).
 
-## Passos (agente → artefacto)
+## Steps (agent → artifact)
 
-| # | Quem | Ação | Artefacto |
+| # | Who | Action | Artifact |
 | --- | --- | --- | --- |
-| 1 | Orquestrador | Ler a framework pela ordem de `START-HERE.md` §2.1 (Manifesto → orquestrador → ciclo → protocolo → perguntas → memória → este workflow) | — (só leitura) |
-| 2 | Orquestrador | Criar `STATE.md` na raiz a partir de `templates/project/STATE.md.template` | `STATE.md` |
-| 3 | Orquestrador | Criar `CLAUDE.md` (ou equivalente da ferramenta) a partir de `templates/project/CLAUDE.md.template`, incluindo o mapeamento camadas→modelos (`core/model-routing.md`) | `CLAUDE.md` |
-| 4 | Orquestrador | Criar `FRAMEWORK-IMPROVEMENTS.md` na raiz (de `templates/project/FRAMEWORK-IMPROVEMENTS.md.template`) e o dossier de génese em `product/99-records/genesis.md` (de `templates/project/GENESIS.md.template`) — o que o projeto ensina à framework, e os números que provam a promessa | `FRAMEWORK-IMPROVEMENTS.md`, `product/99-records/genesis.md` |
-| 5 | Orquestrador | Criar a árvore `product/` conforme `core/artifact-protocol.md` (colapsada ao perfil — ver §Perfis) | `product/` |
-| 6 | Orquestrador | Registar em `STATE.md`: data, versão da framework (`_meta/VERSION.md`), **repositório da framework-mãe** (org/repo ou URL de origem da cópia — o destino dos reportes de melhorias e a fonte das sincronizações), ferramenta de IA, e a **ideia bruta tal como o utilizador a deu** (sem editar) | `STATE.md` |
-| 7 | Orquestrador | Colocar o lote único de calibração (§Pontos de decisão) e fixar o **perfil de esforço** | `STATE.md` |
-| 8 | Orquestrador | Propor o primeiro commit ("fundação do projeto") — só executar se o utilizador confirmar (`START-HERE.md` §2.2) | — |
+| 1 | Orchestrator | Read the framework in the order of `START-HERE.md` §2.1 (Manifesto → orchestrator → lifecycle → protocol → questions → memory → this workflow) | — (read-only) |
+| 2 | Orchestrator | Create `STATE.md` at the root from `templates/project/STATE.md.template` | `STATE.md` |
+| 3 | Orchestrator | Create `CLAUDE.md` (or the tool's equivalent) from `templates/project/CLAUDE.md.template`, including the tiers→models mapping (`core/model-routing.md`) | `CLAUDE.md` |
+| 4 | Orchestrator | Create `FRAMEWORK-IMPROVEMENTS.md` at the root (from `templates/project/FRAMEWORK-IMPROVEMENTS.md.template`) and the genesis dossier at `product/99-records/genesis.md` (from `templates/project/GENESIS.md.template`) — what the project teaches the framework, and the numbers that prove the promise | `FRAMEWORK-IMPROVEMENTS.md`, `product/99-records/genesis.md` |
+| 5 | Orchestrator | Create the `product/` tree per `core/artifact-protocol.md` (collapsed to the profile — see §Effort profiles) | `product/` |
+| 6 | Orchestrator | Record in `STATE.md`: date, framework version (`_meta/VERSION.md`), **upstream framework repository** (org/repo or URL the copy came from — the destination of improvement reports and the source of syncs), AI tool, and the **raw idea exactly as the user gave it** (unedited) | `STATE.md` |
+| 7 | Orchestrator | Put the single calibration batch (§Decision points) and pin the **effort profile** | `STATE.md` |
+| 8 | Orchestrator | Propose the first commit ("project foundation") — execute only if the user confirms (`START-HERE.md` §2.2) | — |
 
-Nada aqui consome artefactos a montante (não os há); tudo é escrita de fundação. O passo 7 depende
-das respostas do utilizador — se ele não responder, os passos seguintes ficam bloqueados e a pendência
-fica em `STATE.md` → "Decisões pendentes" (`core/orchestrator.md` §Recovery).
+Nothing here consumes upstream artifacts (there are none); everything is foundation writing. Step 7
+depends on the user's answers — if they do not answer, the following steps stay blocked and the
+pending item goes to `STATE.md` → "Decisões pendentes" (`core/orchestrator.md` §Recovery).
 
-## Pontos de decisão
+## Decision points
 
-Um **único lote** de calibração ao utilizador (formato de `core/question-engine.md`,
+A **single** calibration batch to the user (format of `core/question-engine.md`,
 `START-HERE.md` §2.3):
 
-- **Dimensão da ambição** → escolhe o perfil de esforço: protótipo / produto interno / produto
-  comercial / plataforma empresarial (`core/orchestrator.md` §Effort profiles). **Decisão do utilizador**
-  (dimensiona todos os portões seguintes).
-- **Horizonte** (semanas / meses / anos) e **equipa** (só utilizador+IA / equipa pequena / várias
-  equipas) — afinam a profundidade e a disciplina de Git.
-- **Restrições duras já conhecidas** — orçamento, prazos, conformidade (ex.: RGPD, setor regulado),
-  integrações obrigatórias, preferências tecnológicas fortes. Registam-se como **entrada** para F1/F3,
-  não como decisões fechadas ainda.
-- **Limiares de qualidade** — aceitar os defaults do perfil para code smells e dívida técnica
-  (tabelas em `loops/L04-code-smells.md` e `loops/L08-technical-debt.md`) ou fixar valores próprios;
-  o acordado regista-se no `CLAUDE.md`.
+- **Size of the ambition** → picks the effort profile: prototype / internal product / commercial
+  product / enterprise platform (`core/orchestrator.md` §Effort profiles). **User decision**
+  (it sizes every gate that follows).
+- **Horizon** (weeks / months / years) and **team** (user+AI only / small team / multiple
+  teams) — they tune the depth and the Git discipline.
+- **Hard constraints already known** — budget, deadlines, compliance (e.g. GDPR, regulated
+  sector), mandatory integrations, strong technology preferences. Recorded as **input** for
+  F1/F3, not as closed decisions yet.
+- **Quality thresholds** — accept the profile defaults for code smells and technical debt
+  (tables in `loops/L04-code-smells.md` and `loops/L08-technical-debt.md`) or set custom values;
+  whatever is agreed is recorded in `CLAUDE.md`.
 
-Aprovação humana obrigatória: **o perfil de esforço** (afeta custo e profundidade de tudo o resto).
+Mandatory human approval: **the effort profile** (it affects the cost and depth of everything
+else).
 
-## Loops que abre
+## Loops it opens
 
-Nenhum loop de fase. F0 é uma sequência curta e determinística. O único mecanismo iterativo é o
-motor de perguntas do lote de calibração, que fecha assim que o perfil está fixado.
+No phase loop. F0 is a short, deterministic sequence. The only iterative mechanism is the
+question engine of the calibration batch, which closes as soon as the profile is pinned.
 
-## Portão de saída (P0)
+## Exit gate (P0)
 
 `core/quality-gates.md`:
 
-- [ ] `STATE.md`, `CLAUDE.md`, `FRAMEWORK-IMPROVEMENTS.md` e árvore `product/` criados na raiz
-      (fora de `Maestro/`).
-- [ ] Ideia bruta registada sem edição; versão da framework, **repositório da framework-mãe** e
-      ferramenta de IA anotados.
-- [ ] Perfil de esforço **confirmado pelo utilizador** e registado.
-- [ ] Mapeamento camadas→modelos preenchido no `CLAUDE.md`.
+- [ ] `STATE.md`, `CLAUDE.md`, `FRAMEWORK-IMPROVEMENTS.md` and the `product/` tree created at the
+      root (outside `Maestro/`).
+- [ ] Raw idea recorded without editing; framework version, **upstream framework repository** and
+      AI tool noted.
+- [ ] Effort profile **confirmed by the user** and recorded.
+- [ ] Tiers→models mapping filled in in `CLAUDE.md`.
 
-**Quem aprova:** o utilizador (perfil de esforço). **Quem verifica:** o Orquestrador (existência e
-formato dos ficheiros). Com P0 fechado, arranca `workflows/W01-discovery.md`.
+**Who approves:** the user (effort profile). **Who verifies:** the Orchestrator (existence and
+format of the files). With P0 closed, `workflows/W01-discovery.md` starts.
 
-## Perfis de esforço
+## Effort profiles
 
-O perfil calibrado aqui **dimensiona todas as fases seguintes** — mas F0 em si é praticamente
-constante:
+The profile calibrated here **sizes every following phase** — but F0 itself is practically
+constant:
 
-| Perfil | Efeito em F0 |
+| Profile | Effect on F0 |
 | --- | --- |
-| **Protótipo** | Árvore `product/` colapsada (um ficheiro por fase, ex.: `product/00-discovery/dossier.md`); guardiões marcados como desativados no `CLAUDE.md`. Os **nomes e IDs** mantêm-se para não perder rastreabilidade se crescer (`core/artifact-protocol.md`). |
-| **Produto interno** | Árvore completa; guardiões em cadência mensal anotada no `CLAUDE.md`. |
-| **Produto comercial** | Árvore completa; nota no `CLAUDE.md` de auditoria adversarial antes do go-live e pentest obrigatório. |
-| **Plataforma empresarial** | Como o comercial + registo de que toda a decisão estrutural exige ADR e de que a revisão global (`workflows/W12-global-review.md`) é periódica. |
+| **Prototype** | `product/` tree collapsed (one file per phase, e.g. `product/00-discovery/dossier.md`); guardians marked as disabled in `CLAUDE.md`. **Names and IDs** are kept so traceability is not lost if it grows (`core/artifact-protocol.md`). |
+| **Internal product** | Full tree; guardians on a monthly cadence noted in `CLAUDE.md`. |
+| **Commercial product** | Full tree; note in `CLAUDE.md` of an adversarial audit before go-live and a mandatory pentest. |
+| **Enterprise platform** | As commercial + a record that every structural decision requires an ADR and that the global review (`workflows/W12-global-review.md`) is periodic. |
 
-Mudar de perfil mais tarde é legítimo (regista-se em `STATE.md` e executam-se os portões que o novo
-perfil exige — `core/orchestrator.md` §Effort profiles).
+Changing profile later is legitimate (record it in `STATE.md` and run the gates the new profile
+requires — `core/orchestrator.md` §Effort profiles).
 
-## Relacionados
+## Related
 
-- `START-HERE.md` — o protocolo humano+IA de que este workflow é o detalhe.
-- `core/project-memory.md` — o que `STATE.md` e a memória em ficheiros garantem.
-- `core/artifact-protocol.md` — a árvore `product/` a criar.
+- `START-HERE.md` — the human+AI protocol this workflow is the detail of.
+- `core/project-memory.md` — what `STATE.md` and file-based memory guarantee.
+- `core/artifact-protocol.md` — the `product/` tree to create.
 - `templates/project/STATE.md.template` · `templates/project/CLAUDE.md.template` ·
-  `templates/project/FRAMEWORK-IMPROVEMENTS.md.template` — os instanciáveis.
-- `workflows/W01-discovery.md` — a fase que arranca a seguir.
-- `adapters/claude-code.md` — arranque de sessão e memória na ferramenta concreta.
+  `templates/project/FRAMEWORK-IMPROVEMENTS.md.template` — the instantiables.
+- `workflows/W01-discovery.md` — the phase that starts next.
+- `adapters/claude-code.md` — session start and memory in the concrete tool.

@@ -1,124 +1,128 @@
-# Observabilidade de IA · contabilizar, ver e cortar o consumo
+# AI Observability · account for, see, and cut consumption
 
-Módulo reutilizável para os produtos que **chamam modelos de IA**: cada utilização é contabilizada
-(tokens, custo, latência), atribuída (funcionalidade, modelo, utilizador/organização), visível num
-painel, com alertas de anomalia e **kill-switch por modelo**. Sem isto, o custo de IA é uma caixa
-negra que só se descobre na fatura.
+Reusable module for products that **call AI models**: every use is accounted for (tokens, cost,
+latency), attributed (feature, model, user/organization), visible on a dashboard, with anomaly
+alerts and a **per-model kill-switch**. Without this, AI cost is a black box you only discover on
+the invoice.
 
-## O problema que resolve
+## The problem it solves
 
-Chamadas a modelos de IA têm três propriedades perigosas: **custam por uso** (não são um custo fixo),
-**variam muito** (um prompt mal montado multiplica tokens) e são **fáceis de proliferar** (fan-out de
-subagentes, retries, contextos inchados). Sem observabilidade dedicada:
+Calls to AI models have three dangerous properties: **they cost per use** (not a fixed cost),
+**they vary widely** (a badly assembled prompt multiplies tokens) and **they proliferate easily**
+(subagent fan-out, retries, bloated contexts). Without dedicated observability:
 
-- ninguém sabe **que funcionalidade** consome o quê, logo não há como otimizar;
-- uma anomalia (loop de retries, prompt gigante) só aparece na conta ao fim do mês;
-- não há como **cortar** um modelo específico sem desligar o produto todo.
+- nobody knows **which feature** consumes what, so there is no way to optimize;
+- an anomaly (retry loop, giant prompt) only shows up in the bill at month's end;
+- there is no way to **cut** a specific model without switching off the whole product.
 
-A lição de origem é direta (`knowledge/origin-lessons.md` §E6): o fan-out no tier caro é que
-esgota o orçamento — e o que não se mede não se governa.
+The origin lesson is direct (`knowledge/origin-lessons.md` §E6): fan-out on the expensive tier is
+what drains the budget — and what isn't measured isn't governed.
 
-## O modelo (conceitos e entidades, agnóstico de stack)
+## The model (concepts and entities, stack-agnostic)
 
-- **Evento de uso** — um registo por chamada ao modelo: `modelo`, `funcionalidade`, `utilizador/org`,
-  `tokensEntrada`, `tokensSaída`, `tokensCache`, `custo`, `latência`, `desfecho` (ok|erro|corte),
-  `fingerprint` (para deduplicar retries).
-- **Atribuição** — cada evento carrega as dimensões por que se vai fatiar: **por funcionalidade**
-  (que parte do produto), **por modelo** (qual foi usado), **por utilizador/organização** (quem
-  consumiu). Sem estas dimensões à cabeça, o dashboard não responde às perguntas úteis.
-- **Tarifa** — tabela `modelo → preço por token de entrada/saída/cache`, versionada; o custo calcula-se
-  da tarifa, não se adivinha. Alinha-se com o ledger de `modules/credit-management.md` quando há
-  cobrança ao utilizador.
-- **Painel** — agregações consultáveis: custo por dia × funcionalidade × modelo, top consumidores,
-  tokens de cache vs frescos (para ver se o *caching* está mesmo a poupar).
-- **Alerta de anomalia** — regra sobre a série: gasto/hora acima de baseline, taxa de erro alta, prompt
-  médio a crescer. Aciona notificação, não silêncio.
-- **Kill-switch por modelo** — desligar um modelo específico sem deploy (`modules/feature-flags.md`),
-  com *fallback* declarado (outro modelo, ou degradação honesta).
+- **Usage event** — one record per model call: `model`, `feature`, `user/org`, `inputTokens`,
+  `outputTokens`, `cacheTokens`, `cost`, `latency`, `outcome` (ok|error|cutoff), `fingerprint`
+  (to deduplicate retries).
+- **Attribution** — each event carries the dimensions it will be sliced by: **per feature**
+  (which part of the product), **per model** (which one was used), **per user/organization** (who
+  consumed). Without these dimensions up front, the dashboard can't answer the useful questions.
+- **Tariff** — a `model → price per input/output/cache token` table, versioned; cost is computed
+  from the tariff, not guessed. It aligns with the `modules/credit-management.md` ledger when the
+  user is charged.
+- **Dashboard** — queryable aggregations: cost per day × feature × model, top consumers, cache vs
+  fresh tokens (to see whether *caching* is actually saving).
+- **Anomaly alert** — a rule over the series: spend/hour above baseline, high error rate, average
+  prompt growing. It triggers a notification, not silence.
+- **Per-model kill-switch** — switching off a specific model without a deploy
+  (`modules/feature-flags.md`), with a declared *fallback* (another model, or honest degradation).
 
-## Regras inegociáveis (numeradas, verificáveis)
+## Non-negotiable rules (numbered, verifiable)
 
-1. **Toda a chamada de IA emite um evento de uso.** Verificável: um teste/guardrail que falha se
-   existir um caminho de chamada ao modelo sem instrumentação (varredura como
-   `knowledge/proven-patterns.md` §7).
-2. **Custo calculado da tarifa versionada, nunca hardcoded.** Verificável: mudar a tarifa muda o custo
-   reportado; um preço embutido no código é um bug.
-3. **Cada evento é atribuível às três dimensões** (funcionalidade, modelo, utilizador/org). Verificável:
-   nenhum evento com dimensão em falta chega ao painel.
-4. **Existe kill-switch por modelo com efeito imediato.** Verificável: desligar um modelo redireciona
-   ou degrada no pedido seguinte, sem deploy (`modules/feature-flags.md`).
-5. **Anomalias alertam, não passam em silêncio.** Verificável: injetar um pico simulado dispara o
-   alerta configurado (`knowledge/proven-patterns.md` §10 — fallbacks visíveis).
-6. **Pré-requisitos de otimização verificam-se antes de se confiar neles.** Antes de assumir que o
-   *prompt caching* poupa, medir tokens de cache vs frescos no painel; uma otimização não-confirmada é
-   uma suposição, não uma economia.
-7. **Sem segredos nos eventos.** Prompts/respostas podem conter dados sensíveis; o que se regista para
-   custo não inclui conteúdo por omissão, e nunca chaves (`knowledge/permanent-rules.md` §5).
-8. **Retries não contam a dobrar por engano.** O `fingerprint` distingue uma chamada repetida de duas
-   utilizações reais; o custo reflete o que foi mesmo gasto.
+1. **Every AI call emits a usage event.** Verifiable: a test/guardrail that fails if there is a
+   model-call path without instrumentation (a sweep as in `knowledge/proven-patterns.md` §7).
+2. **Cost computed from the versioned tariff, never hardcoded.** Verifiable: changing the tariff
+   changes the reported cost; a price embedded in the code is a bug.
+3. **Every event is attributable to the three dimensions** (feature, model, user/org).
+   Verifiable: no event with a missing dimension reaches the dashboard.
+4. **A per-model kill-switch exists with immediate effect.** Verifiable: switching off a model
+   redirects or degrades on the next request, without a deploy (`modules/feature-flags.md`).
+5. **Anomalies alert, they don't pass in silence.** Verifiable: injecting a simulated spike fires
+   the configured alert (`knowledge/proven-patterns.md` §10 — visible fallbacks).
+6. **Optimization prerequisites are verified before being trusted.** Before assuming *prompt
+   caching* saves, measure cache vs fresh tokens on the dashboard; an unconfirmed optimization is
+   an assumption, not a saving.
+7. **No secrets in the events.** Prompts/responses may contain sensitive data; what is recorded
+   for cost includes no content by default, and never keys (`knowledge/permanent-rules.md` §5).
+8. **Retries don't count double by mistake.** The `fingerprint` distinguishes a repeated call
+   from two real uses; the cost reflects what was actually spent.
 
-## Como se adota num produto novo (passos)
+## How to adopt it in a new product (steps)
 
-1. **Envolver todas as chamadas de IA numa porta única** — um cliente de modelo por onde tudo passa;
-   é aí que a instrumentação vive (não espalhada por cada call-site).
-2. **Definir o evento de uso e a tarifa versionada**; ligar a tarifa à documentação oficial de preços
-   do fornecedor do modelo (ver o acoplamento a ferramentas em `adapters/claude-code.md`).
-3. **Emitir o evento em todas as chamadas** via a porta, com as três dimensões de atribuição.
-4. **Construir o painel** de custo/tokens/latência por dimensão (`agents/05-backend/observability-architect.md`).
-5. **Configurar alertas** de anomalia com baseline e limiares acordados com o dono do orçamento.
-6. **Ligar o kill-switch por modelo** às flags, com *fallback* declarado por funcionalidade.
-7. **Rever periodicamente** com o `agents/13-guardians/cost-guardian.md`: onde poupar, que
-   otimização confirmar, que modelo trocar por routing (`core/model-routing.md`).
+1. **Wrap all AI calls behind a single gateway** — one model client everything goes through; that
+   is where the instrumentation lives (not scattered across every call-site).
+2. **Define the usage event and the versioned tariff**; tie the tariff to the model provider's
+   official pricing documentation (see the tool coupling in `adapters/claude-code.md`).
+3. **Emit the event on every call** through the gateway, with the three attribution dimensions.
+4. **Build the dashboard** of cost/tokens/latency per dimension
+   (`agents/05-backend/observability-architect.md`).
+5. **Configure anomaly alerts** with a baseline and thresholds agreed with the budget owner.
+6. **Wire the per-model kill-switch** to the flags, with a declared *fallback* per feature.
+7. **Review periodically** with `agents/13-guardians/cost-guardian.md`: where to save, which
+   optimization to confirm, which model to swap via routing (`core/model-routing.md`).
 
-## Variações e trade-offs
+## Variations and trade-offs
 
-- **Instrumentação própria vs plataforma dedicada.** Própria (eventos na BD + painel simples): controlo
-  total, zero dependência, suficiente para começar. Plataforma (Langfuse/Helicone/OpenTelemetry-GenAI/…):
-  traces ricos e dashboards prontos, mais uma dependência e possível envio de conteúdo a terceiros —
-  pesar contra a regra 7.
-- **Medir só custo vs traços completos.** Custo por dimensão é o mínimo acionável; traços de
-  prompt/resposta ajudam a depurar mas levantam privacidade e volume — amostrar em vez de guardar tudo.
-- **Contabilizar vs cobrar.** Observar (este módulo) é ver o custo; **cobrar** ao utilizador é o ledger
-  de `modules/credit-management.md`. Partilham a tarifa e o evento de uso, mas são responsabilidades
-  distintas — nem todo o produto que observa também cobra.
-- **Kill-switch duro vs degradação suave.** Cortar um modelo pode devolver erro honesto ou cair para um
-  modelo mais barato; a escolha é por funcionalidade (uma sugestão opcional degrada; uma extração
-  crítica falha visivelmente).
+- **In-house instrumentation vs dedicated platform.** In-house (events in the DB + a simple
+  dashboard): full control, zero dependencies, enough to start. Platform
+  (Langfuse/Helicone/OpenTelemetry-GenAI/…): rich traces and ready-made dashboards, one more
+  dependency and possibly content sent to third parties — weigh against rule 7.
+- **Measuring only cost vs full traces.** Cost per dimension is the actionable minimum;
+  prompt/response traces help debugging but raise privacy and volume concerns — sample instead of
+  keeping everything.
+- **Accounting vs charging.** Observing (this module) is seeing the cost; **charging** the user
+  is the `modules/credit-management.md` ledger. They share the tariff and the usage event, but
+  they are distinct responsibilities — not every product that observes also charges.
+- **Hard kill-switch vs soft degradation.** Cutting a model can return an honest error or fall
+  back to a cheaper model; the choice is per feature (an optional suggestion degrades; a critical
+  extraction fails visibly).
 
-## Exemplo (multi-domínio)
+## Example (multi-domain)
 
-**SaaS de suporte — resumos gerados por IA.** Cada resumo de ticket emite um evento
-`{funcionalidade: resumo-ticket, modelo: X, org: 88, tokens_in, tokens_out, custo}`. O painel mostra
-que uma organização gera 60% do custo por reprocessar resumos em loop; investiga-se e corta-se o loop.
-Quando o fornecedor do modelo X tem incidente, o kill-switch redireciona `resumo-ticket` para o
-modelo Y (mais barato, resumo mais curto) — degradação honesta, sinalizada na UI.
+**Support SaaS — AI-generated summaries.** Each ticket summary emits an event
+`{feature: ticket-summary, model: X, org: 88, tokens_in, tokens_out, cost}`. The dashboard shows
+one organization generating 60% of the cost by reprocessing summaries in a loop; it gets
+investigated and the loop is cut. When model X's provider has an incident, the kill-switch
+redirects `ticket-summary` to model Y (cheaper, shorter summary) — honest degradation, signaled
+in the UI.
 
-**Plataforma de dados — classificação de registos.** Antes de confiar que o *prompt caching* reduziria
-a fatura, mede-se no painel a razão tokens-cache/tokens-frescos: estava a 5% (o prefixo não era
-estável). Ajusta-se o prompt para maximizar o prefixo partilhado e confirma-se o salto para 70% —
-otimização **verificada**, não assumida (regra 6).
+**Data platform — record classification.** Before trusting that *prompt caching* would reduce the
+bill, the cache-tokens/fresh-tokens ratio is measured on the dashboard: it sat at 5% (the prefix
+wasn't stable). The prompt is adjusted to maximize the shared prefix and the jump to 70% is
+confirmed — a **verified** optimization, not an assumed one (rule 6).
 
-## Armadilhas conhecidas
+## Known pitfalls
 
-- **Instrumentação por call-site:** espalhar a contagem por cada chamada garante que uma escapa; a
-  porta única (passo 1) é o que torna a regra 1 verificável.
-- **Confiar numa otimização não medida:** o *prompt caching* só poupa se o prefixo for estável e
-  suficientemente longo — assumir a poupança sem a ver no painel é auto-engano (regra 6).
-- **Custo hardcoded que envelhece:** o fornecedor muda preços; um número no código diverge da fatura
-  real. A tarifa é dados versionados (regra 2).
-- **Registar prompts com dados pessoais/segredos:** transforma o log de custo num risco de privacidade;
-  guardar métricas, não conteúdo (regra 7).
-- **Retries contados como uso:** um backoff que rechama o modelo inflaciona o custo aparente se não se
-  deduplicar por fingerprint (regra 8).
-- **Dashboard sem atribuição:** um total global de custo não diz **onde** cortar; sem as três dimensões,
-  o painel é bonito e inútil.
+- **Per-call-site instrumentation:** scattering the accounting across every call guarantees one
+  escapes; the single gateway (step 1) is what makes rule 1 verifiable.
+- **Trusting an unmeasured optimization:** *prompt caching* only saves if the prefix is stable
+  and long enough — assuming the saving without seeing it on the dashboard is self-deception
+  (rule 6).
+- **Hardcoded cost that ages:** the provider changes prices; a number in the code drifts from the
+  real invoice. The tariff is versioned data (rule 2).
+- **Logging prompts with personal data/secrets:** it turns the cost log into a privacy risk;
+  store metrics, not content (rule 7).
+- **Retries counted as usage:** a backoff that re-calls the model inflates the apparent cost if
+  not deduplicated by fingerprint (rule 8).
+- **A dashboard without attribution:** a global cost total doesn't say **where** to cut; without
+  the three dimensions, the dashboard is pretty and useless.
 
-## Relacionados
+## Related
 
-- `core/model-routing.md` — escolher o modelo por tarefa é a maior alavanca de custo.
-- `modules/credit-management.md` — o ledger que cobra o consumo observado, quando há faturação.
-- `modules/feature-flags.md` — o kill-switch por modelo.
-- `agents/13-guardians/cost-guardian.md` — quem vigia o custo em cadência e sugere otimizações.
-- `agents/05-backend/observability-architect.md` — traces/logs/métricas onde estes eventos encaixam.
-- `modules/single-source-of-content.md` — o catálogo que serve de grounding ao assistente de IA.
-- `knowledge/origin-lessons.md` — §E6 (routing e fan-out no tier caro).
+- `core/model-routing.md` — choosing the model per task is the biggest cost lever.
+- `modules/credit-management.md` — the ledger that charges the observed consumption, when billing
+  exists.
+- `modules/feature-flags.md` — the per-model kill-switch.
+- `agents/13-guardians/cost-guardian.md` — watches cost on a cadence and suggests optimizations.
+- `agents/05-backend/observability-architect.md` — traces/logs/metrics these events fit into.
+- `modules/single-source-of-content.md` — the catalog that grounds the AI assistant.
+- `knowledge/origin-lessons.md` — §E6 (routing and fan-out on the expensive tier).

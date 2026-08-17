@@ -1,126 +1,135 @@
-# W07 — Qualidade & Segurança (Fase F7)
+# W07 — Quality & Security (Phase F7)
 
-O escrutínio independente entre o "MVP aceite" e o "mundo real": um **painel de revisores** que olha
-o produto por várias dimensões ao mesmo tempo, uma **auditoria adversarial** que tenta parti-lo de
-propósito, e um **gate de segurança pré-produção** com pentest autorizado. Nada aqui constrói — tudo
-aqui **verifica**, e o princípio que justifica a fase é uma armadilha concreta de IA: **quem produz
-nunca valida o próprio trabalho** e **uma só perspetiva não chega** (`knowledge/ai-pitfalls.md`
-§20–21).
+The independent scrutiny between "MVP accepted" and "the real world": a **panel of reviewers**
+that looks at the product across several dimensions at once, an **adversarial audit** that tries
+to break it on purpose, and a **pre-production security gate** with an authorized pentest.
+Nothing here builds — everything here **verifies**, and the principle behind the phase is a
+concrete AI pitfall: **whoever produces never validates their own work** and **a single
+perspective is not enough** (`knowledge/ai-pitfalls.md` §20–21).
 
-> **Fase:** F7 · **Portão de entrada:** P6b (MVP aceite vs spec; harness de regressão verde)
-> · **Portão de saída:** P7 (zero achados críticos/altos abertos; risco residual assinado)
-> · **Workflow anterior:** `workflows/W06-build.md` · **seguinte:** `workflows/W08-launch.md`
-> · **Convocado também por:** `workflows/W12-global-review.md` (mesma mecânica, âmbito global).
+> **Phase:** F7 · **Entry gate:** P6b (MVP accepted vs spec; regression harness green)
+> · **Exit gate:** P7 (zero open critical/high findings; residual risk signed)
+> · **Previous workflow:** `workflows/W06-build.md` · **next:** `workflows/W08-launch.md`
+> · **Also convened by:** `workflows/W12-global-review.md` (same mechanics, global scope).
 
-## Objetivo
+## Objective
 
-Dar ao utilizador uma decisão fundamentada — **lança-se ou não?** — assente em evidência
-independente, não na palavra de quem construiu. F7 produz um **plano consolidado de correções** e um
-**registo de risco residual assinado**; sai limpa ou não sai.
+Give the user a grounded decision — **launch or not?** — resting on independent evidence, not on
+the word of whoever built it. F7 produces a **consolidated fix plan** and a **signed residual
+risk record**; it leaves clean or it does not leave.
 
-## Pré-condições (portão de entrada)
+## Preconditions (entry gate)
 
-- [ ] P6b passou: MVP completo confrontado com `product/04-specification/`, todos os RF do MVP com
-      código e teste rastreável, harness de regressão verde no ambiente-alvo.
-- [ ] `product/05-security/threat-model.md` (de F5) existe e está `aprovado` — dá o mapa de ataque
-      ao painel e ao pentester.
-- [ ] Dívida técnica conhecida **registada** (`loops/L08-technical-debt.md`), não escondida.
-- [ ] Build reprodutível num ambiente equivalente ao de produção (senão o pentest testa o quê?).
+- [ ] P6b passed: complete MVP checked against `product/04-specification/`, every MVP FR with
+      traceable code and tests, regression harness green in the target environment.
+- [ ] `product/05-security/threat-model.md` (from F5) exists and is `approved` — it gives the
+      attack map to the panel and the pentester.
+- [ ] Known technical debt **recorded** (`loops/L08-technical-debt.md`), not hidden.
+- [ ] Reproducible build in an environment equivalent to production (otherwise what does the
+      pentest test?).
 
-Se algo falta, **não se abre F7** — devolve-se à construção (`core/lifecycle.md` regra 2).
+If anything is missing, **F7 does not open** — return it to the build (`core/lifecycle.md`
+rule 2).
 
-## Passos (agente → artefacto)
+## Steps (agent → artifact)
 
-Três blocos: o painel corre **em paralelo e às cegas**; a auditoria e a segurança correm sobre a mesma
-base; a consolidação funde tudo. Todos os relatórios vivem em `product/99-records/`.
+Three blocks: the panel runs **in parallel and blind**; the audit and security run over the same
+base; consolidation merges everything. All reports live in `product/99-records/`.
 
-| # | Agente | Artefacto | Depende de |
+| # | Agent | Artifact | Depends on |
 | --- | --- | --- | --- |
-| 1 | Painel `agents/12-reviewers/` (arquitetura, backend, frontend, ux, devops, performance, segurança, documentação, testes) | um relatório por revisor em `product/99-records/reviews/<dimensao>-AAAA-MM-DD.md` (molde `templates/technical/review-report.md.template`) | MVP + specs |
-| 2 | `agents/09-security/security-coordinator.md` (coordena OWASP, ASVS, least-privilege, headers, TLS, segredos expostos, dependências, containers, infra) | `checklists/pre-production-security.md` preenchida + achados em `product/05-security/` | threat-model |
-| 3 | `agents/09-security/pentester.md` | relatório de intrusão autorizada (âmbito + provas de exploração) em `product/99-records/audits/pentest-AAAA-MM-DD.md` | build tipo-produção |
-| 4 | `playbooks/adversarial-audit.md` (multidisciplinar, verificação independente de cada conclusão) | `product/99-records/audits/adversarial-AAAA-MM-DD.md` | 1–3 |
-| 5 | `agents/12-reviewers/review-consolidator.md` | **plano consolidado** priorizado, sem duplicados nem contradições, em `product/99-records/reviews/plano-consolidado-AAAA-MM-DD.md` | 1–4 |
+| 1 | Panel `agents/12-reviewers/` (architecture, backend, frontend, ux, devops, performance, security, documentation, tests) | one report per reviewer in `product/99-records/reviews/<dimension>-YYYY-MM-DD.md` (mold `templates/technical/review-report.md.template`) | MVP + specs |
+| 2 | `agents/09-security/security-coordinator.md` (coordinates OWASP, ASVS, least-privilege, headers, TLS, exposed secrets, dependencies, containers, infra) | `checklists/pre-production-security.md` filled in + findings in `product/05-security/` | threat-model |
+| 3 | `agents/09-security/pentester.md` | authorized intrusion report (scope + exploitation proofs) in `product/99-records/audits/pentest-YYYY-MM-DD.md` | production-like build |
+| 4 | `playbooks/adversarial-audit.md` (multidisciplinary, independent verification of every conclusion) | `product/99-records/audits/adversarial-YYYY-MM-DD.md` | 1–3 |
+| 5 | `agents/12-reviewers/review-consolidator.md` | prioritized **consolidated plan**, without duplicates or contradictions, in `product/99-records/reviews/consolidated-plan-YYYY-MM-DD.md` | 1–4 |
 
-**Painel às cegas (`agents/12-reviewers/README.md`):** cada revisor recebe os mesmos artefactos e o
-mesmo âmbito mas **não lê os relatórios dos outros** — a convergência de dois pareceres separados é
-sinal forte; a contaminação destrói-o. O `consolidador-de-revisoes` é o **único** que lê tudo, e só
-**depois** de todos terem escrito. O `coordenador-de-seguranca` tem assento transversal
-(`core/lifecycle.md` §5): segurança não é um passo, é uma dimensão presente em todos.
+**Blind panel (`agents/12-reviewers/README.md`):** each reviewer receives the same artifacts and
+the same scope but **does not read the others' reports** — the convergence of two separate
+opinions is a strong signal; contamination destroys it. The `review-consolidator` is the
+**only** one who reads everything, and only **after** everyone has written. The
+`security-coordinator` holds a cross-cutting seat (`core/lifecycle.md` §5): security is not a
+step, it is a dimension present in all of them.
 
-> **Escala ao perfil:** num protótipo, o painel colapsa no mínimo (segurança + arquitetura) e o
-> Orquestrador consolida; numa plataforma empresarial corre o painel completo, ASVS nível 2+ e a
-> auditoria adversarial é obrigatória antes do go-live (`core/orchestrator.md` §Effort profiles).
+> **Scale to the profile:** in a prototype, the panel collapses to the minimum (security +
+> architecture) and the Orchestrator consolidates; on an enterprise platform the full panel
+> runs, ASVS level 2+ and the adversarial audit is mandatory before go-live
+> (`core/orchestrator.md` §Effort profiles).
 
-## Pontos de decisão
+## Decision points
 
-- **Severidade → destino.** Cada achado do plano consolidado tem severidade (**bloqueador · maior ·
-  menor · nit**). **Bloqueadores e maiores voltam à construção** (`workflows/W06-build.md`) pelos
-  loops certos; menores/nits podem ser dívida registada se o utilizador aceitar.
-- **Aprovação humana obrigatória (P7):** o **risco residual** é decisão do utilizador — os achados
-  que se decide **não** corrigir ficam em `product/05-security/residual-risk.md` **assinados** por
-  ele, com o porquê e o risco assumido (`core/orchestrator.md` §Human approval). O agente
-  recomenda; nunca aceita risco em nome do utilizador.
-- **Derrogação de critério** (um item da checklist que não passa mas se decide seguir na mesma) é do
-  utilizador e regista-se (`core/quality-gates.md`) — nunca um atalho do Orquestrador.
+- **Severity → destination.** Each finding in the consolidated plan has a severity (**blocker ·
+  major · minor · nit**). **Blockers and majors go back to the build** (`workflows/W06-build.md`)
+  through the right loops; minors/nits may become recorded debt if the user accepts.
+- **Mandatory human approval (P7):** the **residual risk** is the user's decision — findings one
+  decides **not** to fix go to `product/05-security/residual-risk.md`, **signed** by the user,
+  with the why and the risk taken on (`core/orchestrator.md` §Human approval). The agent
+  recommends; it never accepts risk on the user's behalf.
+- **Criterion waiver** (a checklist item that fails but one decides to proceed anyway) belongs
+  to the user and is recorded (`core/quality-gates.md`) — never an Orchestrator shortcut.
 
-Exemplo multi-domínio: num **SaaS B2B**, o revisor-de-backend confirma que um utilizador do tenant A
-não vê dados do tenant B (fora-de-scope → 404); num **e-commerce**, o pentester tenta forjar o preço
-no carrinho e o coordenador-de-segurança verifica que o total é sempre recalculado no servidor; numa
-**app interna**, o revisor-de-ux percorre o offboarding real e confirma que liberta **todos** os
-recursos da pessoa, não só o primeiro.
+Multi-domain example: in a **B2B SaaS**, the backend-reviewer confirms that a tenant A user
+cannot see tenant B data (out-of-scope → 404); in an **e-commerce**, the pentester tries to
+forge the price in the cart and the security-coordinator verifies that the total is always
+recalculated on the server; in an **internal app**, the ux-reviewer walks the real offboarding
+and confirms it releases **all** of the person's resources, not just the first.
 
-## Loops que abre
+## Loops it opens
 
-- `loops/L03-security-issues.md` — enquanto houver problema de segurança aberto, resolve-se por
-  severidade; alimentado pelo coordenador, pelo pentester e pelo revisor-de-seguranca.
-- `loops/L02-failing-tests.md` — regressões descobertas no escrutínio corrigem-se na causa, nunca no
-  teste. Não se fecha F7 com vermelho.
-- `loops/L04-code-smells.md` — smells acima do limiar apontados pelos revisores melhoram-se sem mudar
-  comportamento.
-- `loops/L05-inconsistencies.md` — divergência docs↔código↔dados detetada pelo painel reconcilia-se
-  com a fonte de verdade (a spec ganha).
-- `loops/L07-cves.md` — CVEs em dependências levantados pela análise de supply-chain entram na triagem.
+- `loops/L03-security-issues.md` — while a security problem is open, it is resolved by severity;
+  fed by the coordinator, the pentester and the security-reviewer.
+- `loops/L02-failing-tests.md` — regressions found in the scrutiny are fixed at the cause, never
+  in the test. F7 does not close red.
+- `loops/L04-code-smells.md` — smells above the threshold flagged by the reviewers are improved
+  without changing behavior.
+- `loops/L05-inconsistencies.md` — docs↔code↔data divergence detected by the panel is reconciled
+  with the source of truth (the spec wins).
+- `loops/L07-cves.md` — CVEs in dependencies raised by the supply-chain analysis enter triage.
 
-Salvaguarda anti-loop (`loops/README.md`): três iterações sem progresso param o loop e sobem ao
-utilizador com diagnóstico — não se insiste às cegas.
+Anti-loop safeguard (`loops/README.md`): three iterations without progress stop the loop and
+raise it to the user with a diagnosis — no insisting blindly.
 
-## Portão de saída (P7)
+## Exit gate (P7)
 
 `core/quality-gates.md`:
 
-- [ ] **Zero achados críticos/altos (bloqueadores/maiores) por resolver** no plano consolidado — os
-      resolvidos com prova de correção, os aceites assinados como risco residual.
-- [ ] `checklists/pre-production-security.md` **completa** (headers, TLS, segredos fora do Git,
+- [ ] **Zero unresolved critical/high findings (blockers/majors)** in the consolidated plan —
+      the resolved ones with proof of fix, the accepted ones signed as residual risk.
+- [ ] `checklists/pre-production-security.md` **complete** (headers, TLS, secrets out of Git,
       SAST/DAST/dependency/container scan, least privilege).
-- [ ] Pentest sem exploração crítica em aberto; achados do pentester tratados ou aceites.
-- [ ] Plano consolidado **limpo** e `product/05-security/residual-risk.md` **assinado pelo utilizador**.
+- [ ] Pentest with no critical exploitation open; the pentester's findings addressed or accepted.
+- [ ] Consolidated plan **clean** and `product/05-security/residual-risk.md` **signed by the
+      user**.
 
-**Quem verifica:** o `consolidador-de-revisoes` (substância) + o Orquestrador (completude da checklist).
-**Quem aprova:** o utilizador (risco residual). Com P7 fechado, arranca `workflows/W08-launch.md`.
-Enquanto houver bloqueador, F7 **não passa** — o produto volta à construção e reentra no painel.
+**Who verifies:** the `review-consolidator` (substance) + the Orchestrator (checklist
+completeness). **Who approves:** the user (residual risk). With P7 closed,
+`workflows/W08-launch.md` starts. While a blocker remains, F7 **does not pass** — the product
+goes back to the build and re-enters the panel.
 
-## Perfis de esforço
+## Effort profiles
 
-| Perfil | Profundidade de F7 |
+| Profile | F7 depth |
 | --- | --- |
-| **Protótipo** | Painel mínimo (segurança + arquitetura), consolidação pelo Orquestrador, sem pentest formal; a checklist de segurança corre na mesma no essencial. |
-| **Produto interno** | Painel nos fluxos críticos; scans automatizados; pentest leve; risco residual assinado. |
-| **Produto comercial** | Painel completo; **auditoria adversarial obrigatória** antes do go-live; pentest completo; guardiões já preparados para F9. |
-| **Plataforma empresarial** | + ASVS nível 2+, verificação independente de cada conclusão, revisão global periódica (`workflows/W12-global-review.md`). |
+| **Prototype** | Minimal panel (security + architecture), consolidation by the Orchestrator, no formal pentest; the security checklist still runs on the essentials. |
+| **Internal product** | Panel on the critical flows; automated scans; light pentest; residual risk signed. |
+| **Commercial product** | Full panel; **mandatory adversarial audit** before go-live; full pentest; guardians already prepared for F9. |
+| **Enterprise platform** | + ASVS level 2+, independent verification of every conclusion, periodic global review (`workflows/W12-global-review.md`). |
 
-## Anti-padrões
+## Anti-patterns
 
-- ❌ Revisor omnisciente que passa por tudo com pouca profundidade → ✅ uma dimensão por revisor.
-- ❌ Painel que lê os pareceres uns dos outros → ✅ revisões às cegas, consolidação depois.
-- ❌ "Sem achados críticos, logo seguro" sem pentest nem auditoria → ✅ tentar parti-lo de propósito.
-- ❌ Agente a "aceitar" risco residual → ✅ só o utilizador assina o que fica por corrigir.
+- ❌ An omniscient reviewer skimming everything with little depth → ✅ one dimension per
+  reviewer.
+- ❌ A panel that reads each other's opinions → ✅ blind reviews, consolidation afterwards.
+- ❌ "No critical findings, therefore secure" without pentest or audit → ✅ try to break it on
+  purpose.
+- ❌ An agent "accepting" residual risk → ✅ only the user signs what stays unfixed.
 
-## Relacionados
+## Related
 
-- `agents/12-reviewers/README.md` — o painel, o formato de relatório e a consolidação.
-- `agents/09-security/README.md` — a cobertura de segurança (design → build → verify → operate).
-- `playbooks/adversarial-audit.md` — o escrutínio máximo desta fase.
+- `agents/12-reviewers/README.md` — the panel, the report format and the consolidation.
+- `agents/09-security/README.md` — the security coverage (design → build → verify → operate).
+- `playbooks/adversarial-audit.md` — this phase's maximum scrutiny.
 - `checklists/pre-production-security.md` · `checklists/pr-review.md` · `checklists/pre-merge.md`
-- `core/quality-gates.md` — P7 em detalhe.
-- `workflows/W06-build.md` (de onde vem) · `workflows/W08-launch.md` (para onde vai) · `workflows/W12-global-review.md`.
+- `core/quality-gates.md` — P7 in detail.
+- `workflows/W06-build.md` (where it comes from) · `workflows/W08-launch.md` (where it goes) ·
+  `workflows/W12-global-review.md`.

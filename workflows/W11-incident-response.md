@@ -1,110 +1,111 @@
-# W11 — Resposta a Incidente (transversal a F9)
+# W11 — Incident Response (cross-cutting to F9)
 
-> **Disparo:** algo em produção está a falhar ou a arriscar dados **agora** · **Coordena:** o
-> Orquestrador (com o `agents/09-security/security-coordinator.md` se for incidente de
-> segurança) · **Condição de fecho:** `checklists/post-incident.md` completa.
+> **Trigger:** something in production is failing or putting data at risk **now** · **Coordinates:**
+> the Orchestrator (with `agents/09-security/security-coordinator.md` if it is a security
+> incident) · **Closing condition:** `checklists/post-incident.md` complete.
 
-## Objetivo
+## Objective
 
-Conter um incidente em produção com o mínimo de dano e sem esconder nada: **mitigar primeiro,
-diagnosticar depois**, comunicar com honestidade e cadência, corrigir a causa e aprender sem procurar
-culpados. Não é um portão de fase — é um procedimento transversal que pode disparar a qualquer momento
-durante a operação (`workflows/W09-continuous-operation.md`). A **reversibilidade é a primeira arma**
-(`knowledge/permanent-rules.md` §reversibilidade): quase todo o incidente se atenua a desligar
-uma mudança recente antes de perceber a causa.
+Contain a production incident with minimal damage and nothing hidden: **mitigate first, diagnose
+later**, communicate with honesty and cadence, fix the cause and learn without hunting for
+culprits. It is not a phase gate — it is a cross-cutting procedure that can fire at any moment
+during operation (`workflows/W09-continuous-operation.md`). **Reversibility is the first weapon**
+(`knowledge/permanent-rules.md` §3): almost every incident is softened by switching
+off a recent change before understanding the cause.
 
-## Gatilho e pré-condições
+## Trigger and preconditions
 
-- [ ] Sinal de incidente: alerta de um guardião (`agents/13-guardians/README.md`), erro reportado por
-      utilizador, degradação observada, ou suspeita de fuga/acesso indevido.
-- [ ] Existe rollback e/ou flags para a mudança suspeita (`playbooks/release-and-rollback.md`,
-      `modules/feature-flags.md`) — se não existirem, é a primeira lição do post-mortem.
-- [ ] Abre-se `product/99-records/incidents/INC-nnn.md` **imediatamente** e regista-se em tempo real:
-      o log do incidente é a fonte de verdade, não a memória.
+- [ ] Incident signal: an alert from a guardian (`agents/13-guardians/README.md`), an error
+      reported by a user, observed degradation, or suspicion of a leak/unauthorized access.
+- [ ] A rollback and/or flags exist for the suspect change (`playbooks/release-and-rollback.md`,
+      `modules/feature-flags.md`) — if they do not, that is the post-mortem's first lesson.
+- [ ] Open `product/99-records/incidents/INC-nnn.md` **immediately** and record in real time: the
+      incident log is the source of truth, not memory.
 
-## O princípio: mitigar primeiro, diagnosticar depois
+## The principle: mitigate first, diagnose later
 
-A ordem é deliberada e não se inverte sob pressão:
+The order is deliberate and does not invert under pressure:
 
-1. **Parar a hemorragia** (mitigação) vem antes de **perceber a causa** (diagnóstico). Rollback ou
-   kill-switch reduzem o dano em minutos; a causa-raiz pode levar horas. Diagnosticar com produção a
-   sangrar troca dano real por curiosidade.
-2. **Honestidade absoluta no relato** (`knowledge/permanent-rules.md` §honestidade — tolerância
-   zero): comunica-se o que se sabe, o que não se sabe e o que se está a fazer. Nunca minimizar,
-   nunca inventar uma causa antes de a confirmar.
-3. **Reverter não é admitir derrota** — é a resposta correta. O diagnóstico faz-se sobre o sistema já
-   estabilizado (ou numa réplica), não sobre os utilizadores.
+1. **Stopping the bleeding** (mitigation) comes before **understanding the cause** (diagnosis).
+   A rollback or kill-switch cuts the damage in minutes; the root cause can take hours.
+   Diagnosing while production bleeds trades real damage for curiosity.
+2. **Absolute honesty in the report** (`knowledge/permanent-rules.md` §2):
+   communicate what is known, what is not known and what is being done. Never minimize, never
+   invent a cause before confirming it.
+3. **Reverting is not admitting defeat** — it is the correct response. Diagnosis is done on the
+   already stabilized system (or on a replica), not on the users.
 
-## Passos (fase do incidente → agente → artefacto)
+## Steps (incident phase → agent → artifact)
 
-| # | Fase | Agente | Artefacto / ação | Depende de |
+| # | Phase | Agent | Artifact / action | Depends on |
 | --- | --- | --- | --- | --- |
-| 1 | **Triagem** | Orquestrador (+ guardião que detetou) | `INC-nnn.md` §triagem: **severidade** (tabela abaixo), **âmbito** (que serviço/módulo), **dados afetados** (há dados pessoais? corrompidos? expostos?) | sinal |
-| 2 | **Mitigação imediata** | `agents/07-devops/deployment-strategist.md` (rollback) · `agents/07-devops/feature-flags-specialist.md` (kill-switch) | mudança suspeita revertida/desligada; serviço estabilizado; timestamp no log | 1 |
-| 3 | **Avaliação de dados** (se §dados afetados ≠ nenhum) | `agents/06-data/data-auditor.md` (+ `coordenador-de-seguranca` se fuga) | extensão do dano a dados: registos tocados, proveniência, necessidade de restauro (`agents/06-data/backup-specialist.md`) | 1 |
-| 4 | **Comunicação** | Orquestrador | quem avisa quem, com que cadência (tabela abaixo); registo dos avisos em `INC-nnn.md` | 1 (arranca em paralelo com 2) |
-| 5 | **Correção definitiva** | equipa de construção via `workflows/W10-feature-evolution.md` (fatia de correção) | causa-raiz corrigida com teste que **reproduz** o incidente antes de o fechar | 2, diagnóstico |
-| 6 | **Post-mortem sem culpados** | Orquestrador + `agents/11-documentation/technical-writer.md` | `product/99-records/incidents/INC-nnn-postmortem.md` (`templates/technical/post-mortem.md.template`) | 5 |
+| 1 | **Triage** | Orchestrator (+ the guardian that detected it) | `INC-nnn.md` §triage: **severity** (table below), **scope** (which service/module), **affected data** (personal data? corrupted? exposed?) | signal |
+| 2 | **Immediate mitigation** | `agents/07-devops/deployment-strategist.md` (rollback) · `agents/07-devops/feature-flags-specialist.md` (kill-switch) | suspect change reverted/switched off; service stabilized; timestamp in the log | 1 |
+| 3 | **Data assessment** (if §affected data ≠ none) | `agents/06-data/data-auditor.md` (+ `security-coordinator` if a leak) | extent of the data damage: records touched, provenance, restore needed (`agents/06-data/backup-specialist.md`) | 1 |
+| 4 | **Communication** | Orchestrator | who informs whom, at what cadence (table below); notices recorded in `INC-nnn.md` | 1 (starts in parallel with 2) |
+| 5 | **Definitive fix** | build team via `workflows/W10-feature-evolution.md` (fix slice) | root cause fixed with a test that **reproduces** the incident before closing it | 2, diagnosis |
+| 6 | **Blameless post-mortem** | Orchestrator + `agents/11-documentation/technical-writer.md` | `product/99-records/incidents/INC-nnn-postmortem.md` (`templates/technical/post-mortem.md.template`) | 5 |
 
-**Triagem — severidade** (o que dita a cadência e quem se acorda):
+**Triage — severity** (what dictates the cadence and who gets woken up):
 
-| Sev | Critério | Exemplo multi-domínio |
+| Sev | Criterion | Multi-domain example |
 | --- | --- | --- |
-| **SEV1** | Indisponível ou dados de utilizadores em risco/expostos | Checkout de e-commerce em baixo; scoping partido num SaaS mostra dados de um cliente a outro. |
-| **SEV2** | Funcionalidade central degradada, com contorno | Pipeline de dados atrasado horas; relatórios a falhar mas leitura OK. |
-| **SEV3** | Falha localizada, impacto limitado | Um filtro devolve erro; um ecrã secundário quebrado. |
-| **SEV4** | Cosmético / sem impacto funcional | Label errado, ícone em falta. |
+| **SEV1** | Unavailable, or user data at risk/exposed | E-commerce checkout down; broken scoping in a SaaS shows one customer's data to another. |
+| **SEV2** | Core functionality degraded, with a workaround | Data pipeline hours behind; reports failing but reads OK. |
+| **SEV3** | Localized failure, limited impact | One filter returns an error; a secondary screen broken. |
+| **SEV4** | Cosmetic / no functional impact | Wrong label, missing icon. |
 
-## Pontos de decisão (aprovação humana)
+## Decision points (human approval)
 
-- **Mitigação de baixo risco não espera aprovação:** reverter para um estado bom conhecido e acionar
-  kill-switches são ações reversíveis dentro de runbook — fazem-se já (`core/quality-gates.md`
-  §Human approval matrix — nunca precisam de humano: refactors/ações reversíveis). Parar para pedir autorização a sangrar é o
-  erro.
-- **Sobe ao humano, sempre:** qualquer ação **destrutiva ou irreversível** na mitigação (apagar dados,
-  restaurar backup por cima de dados novos — `agents/06-data/disaster-recovery-planner.md`);
-  **notificar clientes/reguladores** de fuga de dados pessoais; aceitar risco residual ao reabrir o
-  serviço antes da causa-raiz estar fechada.
-- **Comunicação — cadência por severidade:** SEV1 → atualização ao utilizador/stakeholders a cada
-  30–60 min até estabilizar; SEV2 → por marco; SEV3/4 → no fecho. Quem comunica é o Orquestrador; os
-  destinatários (dono do produto, utilizadores afetados, segurança) definem-se na triagem.
+- **Low-risk mitigation does not wait for approval:** reverting to a known-good state and firing
+  kill-switches are reversible actions within a runbook — do them now (`core/quality-gates.md`
+  §Human approval matrix — never need a human: refactors/reversible actions). Stopping to ask for
+  authorization while bleeding is the mistake.
+- **Goes up to the human, always:** any **destructive or irreversible** action in the mitigation
+  (deleting data, restoring a backup over new data —
+  `agents/06-data/disaster-recovery-planner.md`); **notifying customers/regulators** of a personal
+  data leak; accepting residual risk when reopening the service before the root cause is closed.
+- **Communication — cadence by severity:** SEV1 → update the user/stakeholders every 30–60 min
+  until stable; SEV2 → per milestone; SEV3/4 → at closure. The Orchestrator communicates; the
+  recipients (product owner, affected users, security) are defined at triage.
 
-## Loops que abre
+## Loops it opens
 
-- `loops/L03-security-issues.md` — se é incidente de segurança, resolve-se por severidade e
-  entra o `coordenador-de-seguranca` como dono do risco.
-- `loops/L07-cves.md` / `playbooks/cve-response.md` — se a causa é uma vulnerabilidade de dependência.
-- `loops/L08-technical-debt.md` — as ações preventivas do post-mortem que não se fazem já entram como
-  dívida rastreável, com dono e prazo (nunca "vamos ter cuidado da próxima vez").
+- `loops/L03-security-issues.md` — if it is a security incident, it is resolved by severity and
+  the `security-coordinator` steps in as risk owner.
+- `loops/L07-cves.md` / `playbooks/cve-response.md` — if the cause is a dependency vulnerability.
+- `loops/L08-technical-debt.md` — post-mortem preventive actions not done right away enter as
+  traceable debt, with an owner and a deadline (never "we'll be careful next time").
 
-## Condição de fecho (o portão deste workflow)
+## Closing condition (this workflow's gate)
 
-O incidente **fecha** quando `checklists/post-incident.md` está completa:
+The incident **closes** when `checklists/post-incident.md` is complete:
 
-- [ ] Serviço estável e **verificado** (prova-live, não suposição); mitigação temporária substituída
-      pela correção definitiva (etapa 5) **ou** a correção está agendada com dono e a mitigação é segura.
-- [ ] Teste de regressão que **reproduz** o incidente adicionado e verde (`agents/10-quality/`).
-- [ ] Dados avaliados: restaurados/reconciliados, ou confirmado que não houve dano
+- [ ] Service stable and **verified** (live proof, not assumption); temporary mitigation replaced
+      by the definitive fix (step 5) **or** the fix is scheduled with an owner and the mitigation
+      is safe.
+- [ ] A regression test that **reproduces** the incident added and green (`agents/10-quality/`).
+- [ ] Data assessed: restored/reconciled, or confirmed undamaged
       (`agents/06-data/data-auditor.md`).
-- [ ] **Post-mortem sem culpados** escrito: linha temporal, causa-raiz, o que correu bem, ações
-      preventivas com dono e prazo (`templates/technical/post-mortem.md.template`). Foco no sistema, não
-      nas pessoas.
-- [ ] `STATE.md` atualizado; lições não-óbvias registadas (`core/project-memory.md`).
+- [ ] **Blameless post-mortem** written: timeline, root cause, what went well, preventive actions
+      with an owner and a deadline (`templates/technical/post-mortem.md.template`). Focus on the
+      system, not the people.
+- [ ] `STATE.md` updated; non-obvious lessons recorded (`core/project-memory.md`).
 
-## Recuperação de falhas (o incidente dentro do incidente)
+## Failure recovery (the incident inside the incident)
 
-| Situação | Resposta |
+| Situation | Response |
 | --- | --- |
-| Não há rollback nem flag para a mudança suspeita | Mitigar pelo meio disponível (isolar o serviço, degradar graciosamente); **1ª ação preventiva do post-mortem:** tornar aquela mudança reversível. |
-| Rollback também falha | Escalar para DR (`agents/06-data/disaster-recovery-planner.md`); acionar o dono humano — nunca improvisar destrutivo sob pânico. |
-| Causa-raiz não aparece após mitigação | Manter mitigado; diagnosticar sem pressa em réplica; não reabrir o caminho quebrado "para ver se acontece de novo" em produção. |
-| Pressão para fechar sem post-mortem | Não se fecha: o post-mortem é o que impede a repetição (`knowledge/permanent-rules.md`). SEV3/4 podem ter post-mortem curto; ter, têm. |
+| No rollback or flag for the suspect change | Mitigate by whatever means available (isolate the service, degrade gracefully); **1st preventive action of the post-mortem:** make that change reversible. |
+| The rollback fails too | Escalate to DR (`agents/06-data/disaster-recovery-planner.md`); call in the human owner — never improvise destructively under panic. |
+| Root cause not found after mitigation | Stay mitigated; diagnose unhurried on a replica; do not reopen the broken path "to see if it happens again" in production. |
+| Pressure to close without a post-mortem | It does not close: the post-mortem is what prevents repetition (`knowledge/permanent-rules.md`). SEV3/4 may have a short post-mortem; have one they must. |
 
-## Relacionados
+## Related
 
-- `checklists/post-incident.md` — a condição de fecho detalhada.
-- `templates/technical/post-mortem.md.template` — o molde do post-mortem sem culpados.
-- `playbooks/release-and-rollback.md` · `modules/feature-flags.md` — as armas de mitigação.
-- `workflows/W10-feature-evolution.md` — o caminho da correção definitiva.
-- `workflows/W09-continuous-operation.md` — a operação de onde o incidente emerge.
-- `agents/13-guardians/README.md` — os guardiões que detetam cedo.
+- `checklists/post-incident.md` — the detailed closing condition.
+- `templates/technical/post-mortem.md.template` — the blameless post-mortem template.
+- `playbooks/release-and-rollback.md` · `modules/feature-flags.md` — the mitigation weapons.
+- `workflows/W10-feature-evolution.md` — the path of the definitive fix.
+- `workflows/W09-continuous-operation.md` — the operation the incident emerges from.
+- `agents/13-guardians/README.md` — the guardians that detect early.

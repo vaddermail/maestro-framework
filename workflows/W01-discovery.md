@@ -1,98 +1,101 @@
-# W01 — Descoberta (F1)
+# W01 — Discovery (F1)
 
-> **Fase:** F1 · **Portão de saída:** P1 · **Agentes-núcleo:** `agents/00-discovery/` (12
-> especialistas), conduzidos pelo `core/orchestrator.md`.
+> **Phase:** F1 · **Exit gate:** P1 · **Core agents:** `agents/00-discovery/` (12
+> specialists), conducted by `core/orchestrator.md`.
 
-## Objetivo
+## Objective
 
-Transformar a ideia bruta (registada em F0) num **dossier de descoberta aprovado**: o problema
-nítido, quem o vive, o que se quer alcançar, como se mede o sucesso, o que custa, o que arrisca e o
-que entra no MVP. **Sem decidir nada sobre a solução** — tecnologia, ecrãs e arquitetura ficam para
-F3+. É a fase em que "nunca assumir — perguntar" (`MANIFESTO.md` §2) pesa mais: cada pressuposto não
-validado aqui vira defeito caro adiante (`knowledge/ai-pitfalls.md` §3).
+Turn the raw idea (recorded in F0) into an **approved discovery dossier**: the problem made sharp,
+who lives with it, what is to be achieved, how success is measured, what it costs, what it risks
+and what goes into the MVP. **Without deciding anything about the solution** — technology, screens
+and architecture wait for F3+. It is the phase where "never assume — ask" (`MANIFESTO.md` §2)
+weighs the most: every assumption not validated here becomes an expensive defect later
+(`knowledge/ai-pitfalls.md` §3).
 
-## Pré-condições (portão de entrada)
+## Preconditions (entry gate)
 
-- [ ] P0 fechado: memória instanciada, perfil de esforço fixado, ideia bruta em `STATE.md`.
-- [ ] Utilizador disponível para responder a lotes de perguntas (a descoberta é intensiva em Q&A).
+- [ ] P0 closed: memory instantiated, effort profile pinned, raw idea in `STATE.md`.
+- [ ] User available to answer question batches (discovery is Q&A-intensive).
 
-## Passos (agente → artefacto)
+## Steps (agent → artifact)
 
-A descoberta é uma cadeia com dependências reais (`agents/00-discovery/README.md` §Recommended working order). Todos os
-artefactos vivem em `product/00-discovery/`.
+Discovery is a chain with real dependencies (`agents/00-discovery/README.md` §Recommended working
+order). All artifacts live in `product/00-discovery/`.
 
-| # | Agente | Artefacto | Depende de |
+| # | Agent | Artifact | Depends on |
 | --- | --- | --- | --- |
-| 1 | `agents/00-discovery/idea-analyst.md` | `ideia.md` (é/não-é, pressupostos, perguntas-âncora) | ideia bruta (F0) |
-| 2 | `agents/00-discovery/problem-definer.md` | `problema.md` (problema real, público, custo de não resolver) | 1 |
-| 3 | `agents/00-discovery/stakeholder-mapper.md` | `stakeholders.md` (papéis, poder/interesse, canais) | 2 |
-| 4 | `agents/00-discovery/persona-builder.md` | `personas/` (uma por persona) | 3 |
-| 5 | `agents/00-discovery/use-case-modeler.md` | `casos-de-utilizacao/` (`CU-nnn`, jornadas ponta a ponta) | 4 |
-| 6 | `agents/00-discovery/business-goals-analyst.md` | `objetivos-e-kpis.md` (objetivos + restrições) | 2 |
-| 7 | `agents/00-discovery/kpi-definer.md` | `objetivos-e-kpis.md` (KPIs por objetivo, baseline→alvo) | 6 |
-| 8 | `agents/00-discovery/roadmap-planner.md` | `roadmap.md` (horizontes, incl. futuro) | 5,7 |
-| 9 | `agents/00-discovery/risk-analyst.md` | `riscos.md` (`R-nnn`, mitigação e dono) | 2,5 |
-| 10 | `agents/00-discovery/cost-estimator.md` | `custos.md` (construção, infra, IA, operação — ordem de grandeza) | 8 |
-| 11 | `agents/00-discovery/mvp-scoper.md` | `mvp.md` (mínimo demonstrável + cortes explícitos) | 5,12 |
-| 12 | `agents/00-discovery/prioritizer.md` | `prioridades.md` (valor × esforço × risco) | 5,9 |
+| 1 | `agents/00-discovery/idea-analyst.md` | `idea.md` (is/is-not, assumptions, anchor questions) | raw idea (F0) |
+| 2 | `agents/00-discovery/problem-definer.md` | `problem.md` (real problem, audience, cost of not solving) | 1 |
+| 3 | `agents/00-discovery/stakeholder-mapper.md` | `stakeholders.md` (roles, power/interest, channels) | 2 |
+| 4 | `agents/00-discovery/persona-builder.md` | `personas/` (one per persona) | 3 |
+| 5 | `agents/00-discovery/use-case-modeler.md` | `use-cases/` (`UC-nnn`, end-to-end journeys) | 4 |
+| 6 | `agents/00-discovery/business-goals-analyst.md` | `goals-and-kpis.md` (goals + constraints) | 2 |
+| 7 | `agents/00-discovery/kpi-definer.md` | `goals-and-kpis.md` (KPIs per goal, baseline→target) | 6 |
+| 8 | `agents/00-discovery/roadmap-planner.md` | `roadmap.md` (horizons, incl. future) | 5,7 |
+| 9 | `agents/00-discovery/risk-analyst.md` | `risks.md` (`R-nnn`, mitigation and owner) | 2,5 |
+| 10 | `agents/00-discovery/cost-estimator.md` | `costs.md` (build, infra, AI, operation — order of magnitude) | 8 |
+| 11 | `agents/00-discovery/mvp-scoper.md` | `mvp.md` (minimum demonstrable + explicit cuts) | 5,12 |
+| 12 | `agents/00-discovery/prioritizer.md` | `prioritization.md` (value × effort × risk) | 5,9 |
 
-**Paralelismo (`core/orchestrator.md` §Parallelism):** os passos 3–4 (stakeholders/personas) e 6–7
-(objetivos/KPIs) podem correr no mesmo lote de perguntas; riscos (9) corre em paralelo com objetivos.
-O MVP (11) precisa de casos de utilização priorizados (12). O Orquestrador monta o grafo pelas
-secções **Inputs**/**Interações** das fichas, não pela numeração cega.
+**Parallelism (`core/orchestrator.md` §Parallelism):** steps 3–4 (stakeholders/personas) and 6–7
+(goals/KPIs) can run in the same question batch; risks (9) runs in parallel with goals.
+The MVP (11) needs prioritized use cases (12). The Orchestrator builds the graph from the
+**Inputs**/**Interactions** sections of the specs, not from blind numbering.
 
-> **Escala ao perfil:** num protótipo, todos estes artefactos colapsam num único
-> `product/00-discovery/dossier.md` — os **títulos de secção e os IDs** (`CU-nnn`, `R-nnn`)
-> mantêm-se (`core/artifact-protocol.md`).
+> **Scales with the profile:** in a prototype, all these artifacts collapse into a single
+> `product/00-discovery/dossier.md` — the **section titles and IDs** (`UC-nnn`, `R-nnn`)
+> are kept (`core/artifact-protocol.md`).
 
-## Pontos de decisão
+## Decision points
 
-Todas as lacunas sobem ao Orquestrador, que as agrupa em **lotes por tema** (nunca à peça —
-`core/question-engine.md`). Lotes típicos de F1:
+Every gap goes up to the Orchestrator, which groups them into **batches by theme** (never
+piecemeal — `core/question-engine.md`). Typical F1 batches:
 
-- **Problema e público** — quem sente a dor, com que frequência, quanto custa hoje não resolver.
-- **Âmbito e prioridade** — o que é essencial vs desejável; o MVP.
-- **Objetivos e sucesso** — o que a organização quer alcançar e como saberá que conseguiu (baseline).
-- **Restrições e riscos** — orçamento, prazos, conformidade, dependências externas.
+- **Problem and audience** — who feels the pain, how often, what not solving it costs today.
+- **Scope and priority** — what is essential vs nice-to-have; the MVP.
+- **Goals and success** — what the organization wants to achieve and how it will know it did
+  (baseline).
+- **Constraints and risks** — budget, deadlines, compliance, external dependencies.
 
-**Aprovação humana obrigatória (P1):** o **âmbito e as prioridades** são do utilizador — o produto é
-dele (`core/orchestrator.md` §Human approval). Qualquer envolvimento de **dados pessoais** já se
-sinaliza aqui, mesmo que o tratamento se decida em fases seguintes.
+**Mandatory human approval (P1):** the **scope and the priorities** belong to the user — the
+product is theirs (`core/orchestrator.md` §Human approval). Any involvement of **personal data**
+is flagged here already, even if its processing is decided in later phases.
 
-## Loops que abre
+## Loops it opens
 
-- **Motor de perguntas em contínuo** (`core/question-engine.md`): cada lacuna vira `P-nnn` em
-  `product/01-requirements/questions-and-answers.md`; respostas provisórias (assumidas por defeito)
-  ficam marcadas para confirmação antes de P1. Não é ainda o `loops/L01-ambiguous-requirements.md`
-  formal (esse é de F2) — mas a mecânica de lote é a mesma.
+- **Question engine running continuously** (`core/question-engine.md`): each gap becomes a `P-nnn`
+  in `product/01-requirements/questions-and-answers.md`; provisional answers (assumed by default)
+  stay marked for confirmation before P1. It is not yet the formal
+  `loops/L01-ambiguous-requirements.md` (that one belongs to F2) — but the batch mechanics are the
+  same.
 
-## Portão de saída (P1)
+## Exit gate (P1)
 
 `core/quality-gates.md`:
 
-- [ ] Dossier de descoberta completo: problema nítido, stakeholders e personas confirmados, casos de
-      utilização, objetivos com KPIs (baseline→alvo), roadmap, MVP delimitado, riscos com dono.
-- [ ] MVP e prioridades **aprovados pelo utilizador**.
-- [ ] Nenhuma lacuna crítica aberta (respostas provisórias críticas confirmadas).
-- [ ] Zero decisões de solução tomadas (nenhuma escolha de tecnologia/ecrãs — isso é F3/F4).
+- [ ] Discovery dossier complete: sharp problem, stakeholders and personas confirmed, use cases,
+      goals with KPIs (baseline→target), roadmap, MVP delimited, risks with an owner.
+- [ ] MVP and priorities **approved by the user**.
+- [ ] No critical gap open (critical provisional answers confirmed).
+- [ ] Zero solution decisions made (no technology/screen choices — that is F3/F4).
 
-**Quem aprova:** o utilizador (âmbito, MVP, prioridades). **Quem verifica:** o Orquestrador
-(completude do dossier). Com P1 fechado, arranca `workflows/W02-requirements.md`.
+**Who approves:** the user (scope, MVP, priorities). **Who verifies:** the Orchestrator
+(completeness of the dossier). With P1 closed, `workflows/W02-requirements.md` starts.
 
-## Perfis de esforço
+## Effort profiles
 
-| Perfil | Profundidade de F1 |
+| Profile | F1 depth |
 | --- | --- |
-| **Protótipo** | Dossier único e curto; personas e casos de utilização mínimos; custos em ordem de grandeza grosseira. Basta o suficiente para validar a ideia. |
-| **Produto interno** | Dossier completo; personas reais dos utilizadores conhecidos; riscos com dono nomeado. |
-| **Produto comercial** | + análise de mercado/concorrência informal nas restrições; KPIs com baseline medido, não estimado. |
-| **Plataforma empresarial** | + stakeholders multi-equipa e conformidade explícita nas restrições; roadmap por horizontes formais que alimenta a arquitetura (F3). |
+| **Prototype** | Single short dossier; minimal personas and use cases; costs at a rough order of magnitude. Just enough to validate the idea. |
+| **Internal product** | Full dossier; real personas of the known users; risks with a named owner. |
+| **Commercial product** | + informal market/competition analysis in the constraints; KPIs with a measured baseline, not an estimated one. |
+| **Enterprise platform** | + multi-team stakeholders and explicit compliance in the constraints; roadmap in formal horizons that feeds the architecture (F3). |
 
-## Relacionados
+## Related
 
-- `agents/00-discovery/README.md` — a categoria, a ordem e o grafo de dependências.
-- `workflows/W00-project-kickoff.md` — a fase anterior (fornece a ideia bruta).
-- `workflows/W02-requirements.md` — a fase seguinte (consome o dossier).
-- `core/question-engine.md` — como se colocam os lotes desta fase.
-- `core/artifact-protocol.md` — a árvore `product/00-discovery/` e os IDs.
-- `templates/discovery/idea.md.template` — o molde do primeiro artefacto.
+- `agents/00-discovery/README.md` — the category, the order and the dependency graph.
+- `workflows/W00-project-kickoff.md` — the previous phase (supplies the raw idea).
+- `workflows/W02-requirements.md` — the next phase (consumes the dossier).
+- `core/question-engine.md` — how this phase's batches are asked.
+- `core/artifact-protocol.md` — the `product/00-discovery/` tree and the IDs.
+- `templates/discovery/idea.md.template` — the mold for the first artifact.

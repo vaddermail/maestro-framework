@@ -1,126 +1,130 @@
-# Fonte Única de Conteúdos · um catálogo serve UI, tooltips e IA
+# Single Source of Content · one catalog serves UI, tooltips and AI
 
-> **Validação em produção:** 2.ª confirmação em domínio distinto do projeto-mãe (P2 — curadoria de 2026-08; nuance confirmada: vocabulário/dropdowns de uma fonte única,
-> editável e auditada). O desenho mantém-se; a confiança sobe.
+> **Production validation:** 2nd confirmation in a domain distinct from the origin project (P2 —
+> 2026-08 curation round; nuance confirmed: vocabulary/dropdowns from a single source, editable
+> and audited). The design stands; confidence rises.
 
-Módulo reutilizável para o **conteúdo textual do produto** — labels, descrições, mensagens, tooltips,
-ajuda — viver numa **só fonte editável**, de onde tudo o resto deriva. É o padrão single-source-of-truth
-(`knowledge/proven-patterns.md` §4) aplicado às strings que o utilizador lê.
+Reusable module for the product's **textual content** — labels, descriptions, messages, tooltips,
+help — to live in a **single editable source**, from which everything else derives. It is the
+single-source-of-truth pattern (`knowledge/proven-patterns.md` §4) applied to the strings the user
+reads.
 
-## O problema que resolve
+## The problem it solves
 
-O mesmo texto tende a ser escrito muitas vezes: o label do botão, o tooltip que o explica, a entrada
-no manual, a resposta que um assistente de IA dá sobre essa função. Quando estão duplicados, **divergem**
-— o botão diz uma coisa, a ajuda diz outra, a IA inventa uma terceira. É a classe de bug mais teimosa
-que existe, porque cada cópia parece correta isoladamente.
+The same text tends to be written many times: the button label, the tooltip explaining it, the
+manual entry, the answer an AI assistant gives about that function. When duplicated, they
+**diverge** — the button says one thing, the help another, the AI invents a third. It is the most
+stubborn bug class there is, because each copy looks correct in isolation.
 
-Pior no produto com IA: se o assistente de ajuda é *grounded* num texto diferente do que o ecrã mostra,
-mente com confiança. A honestidade de conteúdo é tolerância zero (`knowledge/permanent-rules.md`
-§2) — e só se garante se houver **uma** origem.
+Worse in an AI product: if the help assistant is *grounded* in text different from what the screen
+shows, it lies with confidence. Content honesty is zero-tolerance (`knowledge/permanent-rules.md`
+§2) — and it is only guaranteed if there is **one** origin.
 
-## O modelo (conceitos e entidades, agnóstico de stack)
+## The model (concepts and entities, stack-agnostic)
 
-- **Catálogo** — o ficheiro (ou conjunto tipado) que é a **única** origem editável de conteúdo. Cada
-  entrada tem uma **chave estável** por convenção (`dominio.entidade.acao.aspeto`, ex.:
-  `fatura.emitir.tooltip`).
-- **Entrada de conteúdo** — para cada chave: o texto curto (label), a explicação (tooltip/descrição),
-  e — quando aplicável — a **entrada de ajuda rica com exemplos**. A ajuda completa não é um documento
-  à parte: é o mesmo catálogo, no seu nível mais detalhado.
-- **Consumidores** — todos derivam, nenhum reescreve:
-  - **UI** — o ecrã lê o label e o tooltip pela chave.
-  - **Menu de ajuda** — renderiza as entradas ricas com exemplos.
-  - **Grounding de IA** — qualquer assistente do produto responde a partir do **mesmo** catálogo; a
-    ajuda que serve o humano é o contexto que serve a IA (`modules/ai-observability.md`).
-  - **Testes/guardrails** — verificam cobertura e ausência de duplicação.
-- **Proveniência de estado** — entradas de módulos ainda-por-construir marcam-se `Planeado`, para a IA
-  saber que existem sem afirmar que já funcionam.
+- **Catalog** — the file (or typed set) that is the **only** editable origin of content. Each entry
+  has a **stable key** by convention (`domain.entity.action.aspect`, e.g. `invoice.issue.tooltip`).
+- **Content entry** — for each key: the short text (label), the explanation (tooltip/description),
+  and — where applicable — the **rich help entry with examples**. The full help is not a separate
+  document: it is the same catalog, at its most detailed level.
+- **Consumers** — all derive, none rewrites:
+  - **UI** — the screen reads the label and the tooltip by key.
+  - **Help menu** — renders the rich entries with examples.
+  - **AI grounding** — any product assistant answers from the **same** catalog; the help that
+    serves the human is the context that serves the AI (`modules/ai-observability.md`).
+  - **Tests/guardrails** — verify coverage and absence of duplication.
+- **State provenance** — entries for modules yet-to-be-built are marked `Planned`, so the AI knows
+  they exist without claiming they already work.
 
-Distinto de, mas alinhado com, dois vizinhos: **tokens de design** (cores, espaçamento —
-`agents/03-experience/design-system-architect.md`) são o SSOT do *visual*; **i18n**
-(`agents/03-experience/internationalization-specialist.md`) é a mesma disciplina de strings
-externas estendida a várias línguas. O catálogo é a fundação de ambos.
+Distinct from, but aligned with, two neighbors: **design tokens** (colors, spacing —
+`agents/03-experience/design-system-architect.md`) are the SSOT of the *visual*; **i18n**
+(`agents/03-experience/internationalization-specialist.md`) is the same externalized-strings
+discipline extended to several languages. The catalog is the foundation of both.
 
-## Regras inegociáveis (numeradas, verificáveis)
+## Non-negotiable rules (numbered, verifiable)
 
-1. **Nenhuma string de conteúdo hardcoded fora do catálogo.** Verificável: um teste que varre o código
-   e falha se encontrar texto visível ao utilizador embutido (`knowledge/proven-patterns.md`
-   §7).
-2. **Uma chave, um texto.** O mesmo conceito não tem duas entradas; verificável por deteção de valores
-   duplicados no catálogo.
-3. **Toda a ação/controlo tem tooltip.** Verificável: um teste que percorre os componentes de ação e
-   falha se algum não referencia uma chave de tooltip (`knowledge/origin-lessons.md` §D2).
-4. **A ajuda e o grounding de IA leem o mesmo catálogo.** Não há um "documento de ajuda" paralelo nem
-   um *prompt* com texto copiado; a IA é *grounded* na fonte, não numa cópia.
-5. **Chaves seguem a convenção declarada.** Uma chave nova respeita o padrão `dominio.entidade.acao.aspeto`;
-   verificável por lint de chaves.
-6. **Entradas de módulos não-prontos marcam-se `Planeado`.** A IA nunca afirma que algo funciona por
-   existir a entrada; o estado é explícito.
-7. **Remover uma funcionalidade remove as suas entradas.** Sem chaves órfãs; verificável por deteção de
-   chaves referenciadas-mas-inexistentes e existentes-mas-nunca-referenciadas.
+1. **No content string hardcoded outside the catalog.** Verifiable: a test that sweeps the code and
+   fails on finding user-visible text embedded (`knowledge/proven-patterns.md` §7).
+2. **One key, one text.** The same concept does not have two entries; verifiable by detecting
+   duplicate values in the catalog.
+3. **Every action/control has a tooltip.** Verifiable: a test that walks the action components and
+   fails if any does not reference a tooltip key (`knowledge/origin-lessons.md` §D2).
+4. **The help and the AI grounding read the same catalog.** There is no parallel "help document" nor
+   a *prompt* with copied text; the AI is *grounded* in the source, not in a copy.
+5. **Keys follow the declared convention.** A new key respects the `domain.entity.action.aspect`
+   pattern; verifiable by key linting.
+6. **Entries for not-ready modules are marked `Planned`.** The AI never claims something works just
+   because the entry exists; the state is explicit.
+7. **Removing a feature removes its entries.** No orphan keys; verifiable by detecting keys that are
+   referenced-but-nonexistent and existent-but-never-referenced.
 
-## Como se adota num produto novo (passos)
+## How to adopt it in a new product (steps)
 
-1. **Definir o formato do catálogo** (`core/decision-engine.md`): um módulo tipado na linguagem do
-   produto (ex.: `conteudos.ts`) é o mais simples e dá verificação em compilação; ficheiros de
-   mensagens (i18n) quando há multilíngua desde o início.
-2. **Fixar a convenção de chaves** e documentá-la no glossário do produto.
-3. **Criar o acessor único** `t(chave, params?)` — o ponto por onde todo o consumidor lê.
-4. **Forçar por construção:** componentes do design system que **não deixam** criar um botão/ação sem
-   passar uma chave de tooltip (`knowledge/origin-lessons.md` §D3).
-5. **Ligar os guardrails:** testes de "sem strings soltas", "toda a ação tem tooltip", "sem chaves
-   órfãs", "sem duplicados".
-6. **Apontar o assistente de IA ao catálogo** como fonte de grounding — a mesma que alimenta o menu de
-   ajuda (`agents/11-documentation/user-help-writer.md`).
-7. **Estender o padrão aos contratos**, se aplicável: uma só declaração de schema alimenta validação,
-   tipos e documentação (`knowledge/origin-lessons.md` §C2) — o mesmo princípio noutra camada.
+1. **Define the catalog format** (`core/decision-engine.md`): a typed module in the product's
+   language (e.g. `content.ts`) is the simplest and gives compile-time checking; message files
+   (i18n) when there is multilingual support from the start.
+2. **Fix the key convention** and document it in the product glossary.
+3. **Create the single accessor** `t(key, params?)` — the point through which every consumer reads.
+4. **Enforce by construction:** design-system components that **refuse** to create a button/action
+   without being passed a tooltip key (`knowledge/origin-lessons.md` §D3).
+5. **Wire up the guardrails:** tests for "no loose strings", "every action has a tooltip", "no
+   orphan keys", "no duplicates".
+6. **Point the AI assistant at the catalog** as its grounding source — the same one that feeds the
+   help menu (`agents/11-documentation/user-help-writer.md`).
+7. **Extend the pattern to contracts**, if applicable: a single schema declaration feeds
+   validation, types and documentation (`knowledge/origin-lessons.md` §C2) — the same principle at
+   another layer.
 
-## Variações e trade-offs
+## Variations and trade-offs
 
-- **Módulo tipado vs ficheiros i18n.** Tipado: erro de chave em compilação, refactor seguro, sem
-  infra; mono-língua na base. i18n: multilíngua e pluralização de raiz, mas mais cerimónia e
-  verificação em runtime. Se há hipótese realista de segunda língua, começar em i18n poupa migração.
-- **Catálogo único vs por módulo.** Um ficheiro gigante não escala à leitura; partir por domínio
-  (`conteudos/faturacao.ts`, `conteudos/suporte.ts`) mantendo o acessor único preserva a fonte única
-  sem o monólito.
-- **Ajuda inline vs base de conhecimento separada.** Mantê-las **na mesma fonte** é o ponto do módulo;
-  se a base de conhecimento crescer para artigos longos, gera-se **a partir** do catálogo, nunca em
-  paralelo a ele.
-- **Onde reside o grounding de IA.** Compor o contexto da IA a partir do catálogo em runtime evita
-  deriva, mas custa tokens; se cachear, invalidar sempre que o catálogo muda — a paridade não é
-  negociável.
+- **Typed module vs i18n files.** Typed: key errors at compile time, safe refactors, no infra;
+  single-language at its base. i18n: multilingual and pluralization from the ground up, but more
+  ceremony and runtime checking. If a second language is realistically likely, starting with i18n
+  saves a migration.
+- **Single catalog vs per module.** One giant file does not scale for reading; splitting by domain
+  (`content/billing.ts`, `content/support.ts`) while keeping the single accessor preserves the
+  single source without the monolith.
+- **Inline help vs separate knowledge base.** Keeping them **in the same source** is the point of
+  the module; if the knowledge base grows into long articles, generate them **from** the catalog,
+  never in parallel to it.
+- **Where the AI grounding lives.** Composing the AI context from the catalog at runtime avoids
+  drift, but costs tokens; if caching, invalidate whenever the catalog changes — parity is
+  non-negotiable.
 
-## Exemplo (multi-domínio)
+## Example (multi-domain)
 
-**Plataforma SaaS — tooltip, ajuda e chatbot coerentes.** A ação "Arquivar projeto" tem
-`projeto.arquivar.label` = "Arquivar", `projeto.arquivar.tooltip` = "Remove o projeto das listas
-ativas; reversível em Definições > Arquivo", e `projeto.arquivar.ajuda` com um exemplo passo-a-passo.
-O botão, o painel de ajuda e o chatbot de suporte leem as três da mesma entrada — quando o
-comportamento muda (deixa de ser reversível), edita-se **um** sítio e os três consumidores acompanham.
-O chatbot nunca contradiz o tooltip porque bebe da mesma fonte.
+**SaaS platform — coherent tooltip, help and chatbot.** The "Archive project" action has
+`project.archive.label` = "Archive", `project.archive.tooltip` = "Removes the project from active
+lists; reversible in Settings > Archive", and `project.archive.help` with a step-by-step example.
+The button, the help panel and the support chatbot read all three from the same entry — when the
+behavior changes (it stops being reversible), **one** place is edited and the three consumers
+follow. The chatbot never contradicts the tooltip because it drinks from the same source.
 
-**Loja online — mensagem de erro única.** "Cartão recusado pelo banco emissor" vive em
-`checkout.pagamento.recusado`. Aparece no ecrã de checkout, no email de falha e no artigo de ajuda
-"Porque foi recusado o meu pagamento?" — sem três versões que envelhecem em separado.
+**Online store — single error message.** "Card declined by the issuing bank" lives in
+`checkout.payment.declined`. It appears on the checkout screen, in the failure email and in the
+help article "Why was my payment declined?" — without three versions aging separately.
 
-## Armadilhas conhecidas
+## Known pitfalls
 
-- **Strings soltas que reaparecem:** sem o teste-varredura (regra 1), o hardcoding volta ao terceiro
-  sprint — a regra que não é verificada deixa de ser cumprida.
-- **Prompt de IA com texto copiado:** copiar a ajuda para dentro de um *system prompt* recria a
-  duplicação que o módulo elimina; o prompt referencia o catálogo, não o transcreve.
-- **Chaves por posição/índice** (`msg_42`) em vez de semânticas: tornam o catálogo ilegível e o
-  refactor perigoso.
-- **Duplicar em vez de reutilizar** "porque este contexto é ligeiramente diferente": se o texto é o
-  mesmo, é uma chave; se é mesmo diferente, é outra chave com nome próprio — nunca duas cópias iguais.
-- **Ajuda que envelhece à parte do produto:** manter a ajuda como documento separado reintroduz a
-  divergência; a ajuda **é** o catálogo no seu nível rico (`agents/13-guardians/documentation-guardian.md`).
+- **Loose strings creeping back:** without the sweep test (rule 1), hardcoding returns by the third
+  sprint — a rule that is not verified stops being followed.
+- **AI prompt with copied text:** copying the help into a *system prompt* recreates the duplication
+  the module eliminates; the prompt references the catalog, it does not transcribe it.
+- **Positional/index keys** (`msg_42`) instead of semantic ones: they make the catalog unreadable
+  and refactoring dangerous.
+- **Duplicating instead of reusing** "because this context is slightly different": if the text is
+  the same, it is one key; if it is truly different, it is another key with its own name — never
+  two identical copies.
+- **Help aging apart from the product:** keeping the help as a separate document reintroduces the
+  divergence; the help **is** the catalog at its rich level
+  (`agents/13-guardians/documentation-guardian.md`).
 
-## Relacionados
+## Related
 
-- `knowledge/proven-patterns.md` — §4 SSOT, §7 guardrails que varrem tudo.
-- `agents/11-documentation/user-help-writer.md` — a ajuda completa com exemplos como fonte única.
-- `agents/04-frontend/frontend-architect.md` — SSOT de conteúdos na app cliente.
-- `agents/03-experience/design-system-architect.md` — o SSOT irmão, dos tokens visuais.
-- `agents/03-experience/internationalization-specialist.md` — a mesma disciplina em várias línguas.
-- `modules/ai-observability.md` — o catálogo como grounding do assistente do produto.
-- `knowledge/origin-lessons.md` — §D1, §D2 (catálogo e guardrails), §C2 (contratos).
+- `knowledge/proven-patterns.md` — §4 SSOT, §7 guardrails that sweep everything.
+- `agents/11-documentation/user-help-writer.md` — the full help with examples as a single source.
+- `agents/04-frontend/frontend-architect.md` — content SSOT in the client app.
+- `agents/03-experience/design-system-architect.md` — the sibling SSOT, for visual tokens.
+- `agents/03-experience/internationalization-specialist.md` — the same discipline across languages.
+- `modules/ai-observability.md` — the catalog as grounding for the product assistant.
+- `knowledge/origin-lessons.md` — §D1, §D2 (catalog and guardrails), §C2 (contracts).

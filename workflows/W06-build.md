@@ -1,141 +1,151 @@
-# W06 — Construção (Fase F6)
+# W06 — Build (Phase F6)
 
-Como se transforma a especificação aprovada em código a funcionar, **fatia vertical a fatia
-vertical**, sem que a fase se torne um mega-lote onde tudo depende de tudo. É a fase mais longa do
-ciclo (`core/lifecycle.md`) e a que mais defeitos gera se a disciplina se perder — por isso o
-portão é **por fatia** (P6), não só no fim.
+How the approved specification becomes working code, **vertical slice by vertical slice**,
+without the phase turning into a mega-batch where everything depends on everything. It is the
+longest phase of the lifecycle (`core/lifecycle.md`) and the one that breeds the most defects
+when discipline slips — which is why the gate is **per slice** (P6), not only at the end.
 
-> **Fase:** F6 · **Portão de entrada:** P5 (especificação aprovada — só aqui se desbloqueia código)
-> · **Portão de saída:** P6b (MVP completo vs spec; harness de regressão verde)
-> · **Workflow anterior:** `workflows/W05-specification.md` · **seguinte:** `workflows/W07-quality-and-security.md`
+> **Phase:** F6 · **Entry gate:** P5 (approved specification — only here is code unlocked)
+> · **Exit gate:** P6b (complete MVP vs spec; regression harness green)
+> · **Previous workflow:** `workflows/W05-specification.md`
+> · **next:** `workflows/W07-quality-and-security.md`
 
-## Objetivo
+## Objective
 
-Transformar a especificação aprovada em produto a funcionar, fatia vertical a fatia vertical — cada
-fatia entregue de ponta a ponta (dados → backend → frontend → testes), verificada com prova-live
-real e fechada pelo portão P6, até o MVP completo passar P6b com a aceitação do utilizador.
+Turn the approved specification into a working product, vertical slice by vertical slice — each
+slice delivered end to end (data → backend → frontend → tests), verified with a real live proof
+and closed by the P6 gate, until the complete MVP passes P6b with the user's acceptance.
 
-## Pré-condições (verificar antes de escrever a primeira linha)
+## Preconditions (check before writing the first line)
 
-- [ ] `product/04-specification/` em estado `aprovado` (P5 passou) — regras, máquinas de estado,
-      modelo de dados lógico e contrato de backend existem e foram revistos.
-- [ ] ADRs de F3 fixados e stack escolhida em versões estáveis (`product/02-architecture/stack.md`).
-- [ ] Design system com tokens e wireframes dos fluxos críticos validados (`product/03-experience/`).
-- [ ] `product/06-tests/test-strategy.md` escrita pelo
-      `agents/10-quality/test-strategist.md` — a fatia 0 e o plano de testes derivam dela, e
-      o `agents/12-reviewers/test-reviewer.md` exige-a como input em F7.
-- [ ] Repositório com esqueleto criado, CI de qualidade e de segurança armados
-      (`pipelines/ci-quality.md`, `pipelines/ci-security.md`) — o primeiro merge já corre verde.
-      Se existir um **starter validado** para a stack escolhida em F3, o esqueleto arranca dele
-      (`starters/README.md`) em vez de se construir à mão — mesma exigência, custo de fatia 0 ~zero.
+- [ ] `product/04-specification/` in `approved` state (P5 passed) — rules, state machines,
+      logical data model and backend contract exist and were reviewed.
+- [ ] F3 ADRs pinned and the chosen stack on stable versions (`product/02-architecture/stack.md`).
+- [ ] Design system with tokens and wireframes of the critical flows validated
+      (`product/03-experience/`).
+- [ ] `product/06-tests/test-strategy.md` written by
+      `agents/10-quality/test-strategist.md` — slice 0 and the test plan derive from it, and
+      `agents/12-reviewers/test-reviewer.md` demands it as input in F7.
+- [ ] Repository with the skeleton created, quality and security CI armed
+      (`pipelines/ci-quality.md`, `pipelines/ci-security.md`) — the first merge already runs
+      green. If a **validated starter** exists for the stack chosen in F3, the skeleton starts
+      from it (`starters/README.md`) instead of being built by hand — same bar, slice 0 cost
+      ~zero.
 
-Se algo falta, **não se começa a construir** — devolve-se a fase que o produz (regra 2 do ciclo).
+If anything is missing, **the build does not start** — return it to the phase that produces it
+(lifecycle rule 2).
 
-## O princípio: fatia vertical, não camada horizontal
+## The principle: vertical slice, not horizontal layer
 
-Uma **fatia vertical** entrega uma funcionalidade de ponta a ponta — dados → backend → frontend →
-testes — pequena o suficiente para caber num portão e grande o suficiente para ser demonstrável. Não
-se constrói "toda a base de dados", depois "todo o backend": constrói-se *uma* funcionalidade
-completa, prova-se, integra-se, e só então a seguinte.
+A **vertical slice** delivers a feature end to end — data → backend → frontend → tests — small
+enough to fit through a gate and big enough to be demonstrable. One does not build "the whole
+database", then "the whole backend": one builds *one* complete feature, proves it, integrates
+it, and only then the next.
 
-- **Porquê:** camadas horizontais só se validam no fim (integração big-bang), quando corrigir é
-  caro; fatias verticais dão prova-live cedo e isolam a regressão à fatia (`knowledge/origin-lessons.md` A4, E1).
-- **Ordem das fatias:** primeiro as que sustentam o esqueleto de risco (autenticação, autorização/scoping,
-  a entidade central e a sua máquina de estados); depois as que dependem delas. O `priorizador`
-  (`agents/00-discovery/prioritizer.md`) já deu a ordem de valor; o Orquestrador ordena por
-  dependência técnica dentro dela.
-- **Fatias independentes correm em paralelo** (`core/orchestrator.md` §Parallelism); fatias que
-  partilham a mesma entidade central, não.
+- **Why:** horizontal layers only validate at the end (big-bang integration), when fixing is
+  expensive; vertical slices give an early live proof and isolate regressions to the slice
+  (`knowledge/origin-lessons.md` A4, E1).
+- **Slice order:** first the ones that support the risk skeleton (authentication,
+  authorization/scoping, the central entity and its state machine); then the ones that depend on
+  them. The `prioritizer` (`agents/00-discovery/prioritizer.md`) already gave the value order;
+  the Orchestrator orders by technical dependency within it.
+- **Independent slices run in parallel** (`core/orchestrator.md` §Parallelism); slices that
+  share the same central entity do not.
 
-## Anatomia de uma fatia (a sequência interna)
+## Anatomy of a slice (the internal sequence)
 
-| Passo | Quem | Input → Output | Camada de modelo |
+| Step | Who | Input → Output | Model tier |
 | --- | --- | --- | --- |
-| 1. Plano da fatia | Orquestrador | Spec do módulo → plano autocontido (RF/RN cobertos, ficheiros a tocar, testes a escrever) | Padrão |
-| 2. Dados | `agents/06-data/data-modeler.md` + `agents/06-data/migration-engineer.md` | Modelo lógico → migração expand-contract + invariantes na BD | Topo (migração/invariantes) |
-| 3. Backend | `agents/05-backend/` (autorização, regra de negócio, contrato) | Contrato de backend → caso-de-uso transacional + endpoint | Padrão (Topo se RBAC/estado/fluxo crítico) |
-| 4. Contrato/tipos | `agents/05-backend/api-designer.md` | Schema único → snapshot (OpenAPI/equivalente) regenerado por comando | Económico |
-| 5. Frontend | `agents/04-frontend/` (ecrã, integração de API, estado) | Wireframe + design system + snapshot → ecrã com tooltips, filtros, estados de erro | Económico (Padrão em lógica de cliente) |
-| 6. Testes | `agents/10-quality/` | Critérios de aceitação → unitários (regra), integração (BD real), smoke E2E | Económico (Padrão na lógica de risco) |
-| 7. Prova-live + registo | Orquestrador (verificação independente) | Fatia → evidência real + `STATE.md` atualizado | Padrão |
+| 1. Slice plan | Orchestrator | Module spec → self-contained plan (FR/BR covered, files to touch, tests to write) | Standard |
+| 2. Data | `agents/06-data/data-modeler.md` + `agents/06-data/migration-engineer.md` | Logical model → expand-contract migration + invariants in the DB | Top (migration/invariants) |
+| 3. Backend | `agents/05-backend/` (authorization, business rule, contract) | Backend contract → transactional use case + endpoint | Standard (Top if RBAC/state/critical flow) |
+| 4. Contract/types | `agents/05-backend/api-designer.md` | Single schema → snapshot (OpenAPI/equivalent) regenerated by command | Economy |
+| 5. Frontend | `agents/04-frontend/` (screen, API integration, state) | Wireframe + design system + snapshot → screen with tooltips, filters, error states | Economy (Standard for client logic) |
+| 6. Tests | `agents/10-quality/` | Acceptance criteria → unit (rule), integration (real DB), smoke E2E | Economy (Standard for risk logic) |
+| 7. Live proof + record | Orchestrator (independent verification) | Slice → real evidence + `STATE.md` updated | Standard |
 
-**Dar a spec completa à cabeça** de cada passo (A4/roteamento §6): um plano autocontido corta turnos
-de ida-e-volta e reduz o custo de IA.
+**Give the full spec upfront** at each step (A4/routing §6): a self-contained plan cuts
+round-trip turns and reduces AI cost.
 
-## Regras inegociáveis durante a construção
+## Non-negotiable rules during the build
 
-1. **A spec ganha.** Se ao construir se descobre que a spec está errada ou incompleta, **para-se e
-   atualiza-se a spec primeiro** (com aprovação, `core/artifact-protocol.md` regra 4), depois
-   o código. Nunca se "corrige em código" contra a spec em silêncio — isso cria a segunda fonte de
-   verdade (`knowledge/ai-pitfalls.md` §7).
-2. **Sem scope creep.** A fatia entrega o que o plano diz. "Já agora refiz também…" é decisão do
-   utilizador, não iniciativa do agente (`knowledge/ai-pitfalls.md` §5). Aditivo dentro do
-   plano avança; lateral/destrutivo pergunta.
-3. **Invariantes duros na BD + guards na app** (`knowledge/proven-patterns.md` §5): a
-   constraint é a última linha; a app dá o erro amigável. Um teste insere a linha ilegal e afirma a
-   violação **pelo nome**.
-4. **Autorização, scoping e ocultação de sensíveis 100% no servidor** (`modules/rbac-and-scoping.md`):
-   o cliente declara, o servidor confirma; fail-closed; fora-de-scope → 404.
-5. **Reversibilidade por fatia:** migração com plano de *down* (`playbooks/expand-contract-db-migration.md`);
-   mudança de risco atrás de flag (`modules/feature-flags.md`); nunca largar o que está em uso no
-   mesmo passo.
-6. **SSOT de conteúdo e de contrato:** labels/tooltips/ajuda do catálogo único
-   (`modules/single-source-of-content.md`); tipos e doc derivam do schema único, regenerados por
-   comando, nunca à mão (`knowledge/origin-lessons.md` E4).
+1. **The spec wins.** If while building one finds the spec wrong or incomplete, **stop and
+   update the spec first** (with approval, `core/artifact-protocol.md` rule 4), then the code.
+   Never "fix it in code" against the spec in silence — that creates the second source of truth
+   (`knowledge/ai-pitfalls.md` §7).
+2. **No scope creep.** The slice delivers what the plan says. "While at it I also redid…" is the
+   user's decision, not the agent's initiative (`knowledge/ai-pitfalls.md` §5). Additive within
+   the plan proceeds; lateral/destructive asks.
+3. **Hard invariants in the DB + guards in the app** (`knowledge/proven-patterns.md` §5): the
+   constraint is the last line; the app gives the friendly error. A test inserts the illegal row
+   and asserts the violation **by name**.
+4. **Authorization, scoping and sensitive-field hiding 100% on the server**
+   (`modules/rbac-and-scoping.md`): the client declares, the server confirms; fail-closed;
+   out-of-scope → 404.
+5. **Reversibility per slice:** migration with a *down* plan
+   (`playbooks/expand-contract-db-migration.md`); risky change behind a flag
+   (`modules/feature-flags.md`); never drop what is in use in the same step.
+6. **SSOT for content and contract:** labels/tooltips/help from the single catalog
+   (`modules/single-source-of-content.md`); types and docs derive from the single schema,
+   regenerated by command, never by hand (`knowledge/origin-lessons.md` E4).
 
-## Pontos de decisão
+## Decision points
 
-As aprovações humanas de F6, consolidadas (formato do `core/question-engine.md`, em lotes por
-fatia — nunca uma interrupção à peça):
+The human approvals of F6, consolidated (format of `core/question-engine.md`, in batches per
+slice — never one interruption at a time):
 
-- **Aceitação do MVP (P6b)** — só o utilizador aceita; regista-se em `STATE.md`.
-- **Âmbito novo a meio da fase** — funcionalidade não especificada volta a F5 pelo motor de
-  perguntas; nunca se implementa por iniciativa do agente.
-- **Alteração à especificação** — quando o código e a spec divergem, a spec ganha: muda-se a spec
-  às claras primeiro (aprovada pelo utilizador) e só depois o código.
-- **Dívida técnica assumida** — registá-la em `loops/L08-technical-debt.md` é decisão visível, com
-  o utilizador ciente do juro.
+- **MVP acceptance (P6b)** — only the user accepts; record it in `STATE.md`.
+- **New scope mid-phase** — an unspecified feature goes back to F5 through the question engine;
+  it is never implemented on the agent's initiative.
+- **Change to the specification** — when code and spec diverge, the spec wins: change the spec
+  in the open first (approved by the user) and only then the code.
+- **Technical debt taken on** — recording it in `loops/L08-technical-debt.md` is a visible
+  decision, with the user aware of the interest.
 
-## Loops ativos nesta fase
+## Loops active in this phase
 
-- `loops/L02-failing-tests.md` — enquanto houver teste vermelho, corrige-se a **causa** (nunca o
-  teste, salvo teste provadamente errado). Não se integra vermelho.
-- `loops/L04-code-smells.md` — smells acima do limiar melhoram-se sem mudar comportamento.
-- `loops/L05-inconsistencies.md` — divergência docs↔código↔dados reconcilia-se com a fonte de verdade.
+- `loops/L02-failing-tests.md` — while there is a red test, fix the **cause** (never the test,
+  except a provably wrong test). Red does not get merged.
+- `loops/L04-code-smells.md` — smells above the threshold are improved without changing behavior.
+- `loops/L05-inconsistencies.md` — docs↔code↔data divergence is reconciled with the source of
+  truth.
 
-## O portão por fatia (P6) e o da fase (P6b)
+## The per-slice gate (P6) and the phase gate (P6b)
 
-**P6 (cada fatia → merge):** `checklists/definition-of-done.md` + `checklists/pre-merge.md` —
-testes verdes (front **e** back, correm separados), spec respeitada, revisão de PR
-(`checklists/pr-review.md`), sem segredos, reversível, **prova-live real** feita. Verificação
-independente: quem escreveu a fatia não é quem a dá por pronta (`core/quality-gates.md`).
+**P6 (each slice → merge):** `checklists/definition-of-done.md` + `checklists/pre-merge.md` —
+green tests (front **and** back, run separately), spec respected, PR review
+(`checklists/pr-review.md`), no secrets, reversible, **real live proof** done. Independent
+verification: whoever wrote the slice is not who declares it done (`core/quality-gates.md`).
 
-**P6b (F6 → F7):** MVP completo confrontado com a especificação (todos os RF do MVP têm código e
-teste rastreável); harness de regressão verde no ambiente-alvo; dívida técnica não resolvida
-**registada** (`loops/L08-technical-debt.md`), não escondida. É aqui que o utilizador **aceita o
+**P6b (F6 → F7):** complete MVP checked against the specification (every MVP FR has traceable
+code and tests); regression harness green in the target environment; unresolved technical debt
+**recorded** (`loops/L08-technical-debt.md`), not hidden. This is where the user **accepts the
 MVP**.
 
-## Escala ao perfil de esforço
+## Scale to the effort profile
 
-| Perfil | Como muda |
+| Profile | What changes |
 | --- | --- |
-| Protótipo | Fatias maiores, testes só na lógica de risco, revisão P6 pelo próprio Orquestrador; prova-live continua obrigatória. |
-| Produto interno | Estrutura completa; revisão em painel nos fluxos críticos. |
-| Produto comercial / Plataforma | Fatias pequenas e frequentes; paridade real de BD a cada fatia que mexe em dados (`knowledge/ai-pitfalls.md` §15); registo de consumo de IA por fatia. |
+| Prototype | Bigger slices, tests only on risk logic, P6 review by the Orchestrator itself; live proof remains mandatory. |
+| Internal product | Full structure; panel review on the critical flows. |
+| Commercial product / Platform | Small, frequent slices; real DB parity on every slice touching data (`knowledge/ai-pitfalls.md` §15); AI consumption recorded per slice. |
 
-## Anti-padrões
+## Anti-patterns
 
-- ❌ Construir por camadas (toda a BD → todo o backend) e integrar no fim → ✅ fatias verticais demonstráveis.
-- ❌ Corrigir a spec em código sem atualizar a spec → ✅ spec primeiro, com aprovação.
-- ❌ "Testes verdes, logo funciona" → ✅ prova-live real é gate insubstituível (`knowledge/ai-pitfalls.md` §2).
-- ❌ Migração que larga/renomeia o que está em uso no mesmo passo → ✅ expand-contract.
-- ❌ Fatia gigante que nunca fecha o portão → ✅ se não cabe num P6, parte-se em duas.
+- ❌ Building by layers (whole DB → whole backend) and integrating at the end → ✅ demonstrable
+  vertical slices.
+- ❌ Fixing the spec in code without updating the spec → ✅ spec first, with approval.
+- ❌ "Tests are green, so it works" → ✅ the real live proof is an irreplaceable gate
+  (`knowledge/ai-pitfalls.md` §2).
+- ❌ A migration that drops/renames what is in use in the same step → ✅ expand-contract.
+- ❌ A giant slice that never closes the gate → ✅ if it does not fit through one P6, split it in
+  two.
 
-## Relacionados
+## Related
 
-- `core/lifecycle.md` — F6 no mapa geral.
-- `core/quality-gates.md` — P5, P6, P6b em detalhe.
+- `core/lifecycle.md` — F6 on the overall map.
+- `core/quality-gates.md` — P5, P6, P6b in detail.
 - `checklists/definition-of-done.md` · `checklists/pre-merge.md` · `checklists/pr-review.md`
 - `playbooks/expand-contract-db-migration.md` · `pipelines/ci-quality.md`
-- `knowledge/proven-patterns.md` — os padrões que cada fatia aplica.
-- `workflows/W07-quality-and-security.md` — o escrutínio que se segue ao MVP.
+- `knowledge/proven-patterns.md` — the patterns every slice applies.
+- `workflows/W07-quality-and-security.md` — the scrutiny that follows the MVP.

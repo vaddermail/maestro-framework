@@ -1,122 +1,128 @@
-# Integrações Externas Read-Only · o sistema-mestre é contrato assumido
+# Read-Only External Integrations · the master system is an assumed contract
 
-Módulo reutilizável para dados cuja **verdade vive noutro sistema**: um diretório de identidade, um
-ERP, um sistema de projetos, um catálogo de produtos. O produto **lê** e reflete, **nunca edita** os
-campos que a origem gere — e comporta-se com honestidade quando a origem está indisponível.
+Reusable module for data whose **truth lives in another system**: an identity directory, an ERP, a
+project system, a product catalog. The product **reads** and reflects, **never edits** the fields
+the source manages — and behaves honestly when the source is unavailable.
 
-## O problema que resolve
+## The problem it solves
 
-Muitos produtos consomem dados que não lhes pertencem. A tentação é copiá-los e passar a tratá-los
-como próprios — e então:
+Many products consume data that does not belong to them. The temptation is to copy it and start
+treating it as their own — and then:
 
-- os campos geridos lá fora ficam **editáveis** aqui, as duas cópias divergem, e ninguém sabe qual é a
-  verdade (a classe de bug de `knowledge/proven-patterns.md` §4);
-- cada re-sincronização cria **duplicados** por se fazer insert cego em vez de upsert;
-- quando a origem cai, o produto ou mostra dados velhos como se fossem frescos, ou rebenta — em vez de
-  dizer honestamente o que sabe.
+- fields managed out there become **editable** here, the two copies diverge, and nobody knows which
+  is the truth (the bug class of `knowledge/proven-patterns.md` §4);
+- every re-sync creates **duplicates** by doing a blind insert instead of an upsert;
+- when the source goes down, the product either shows stale data as if fresh, or blows up — instead
+  of honestly saying what it knows.
 
-A postura correta é tratar o sistema externo como **contrato assumido**: read-only, com carimbo de
-origem, e um comportamento degradado explícito.
+The correct posture is treating the external system as an **assumed contract**: read-only, with a
+source stamp, and an explicit degraded behavior.
 
-## O modelo (conceitos e entidades, agnóstico de stack)
+## The model (concepts and entities, stack-agnostic)
 
-- **Sistema-mestre** — a origem que **detém** um conjunto de campos. O produto é, para esses campos,
-  um **espelho** — nunca um coautor.
-- **Réplica local** — a cópia que o produto guarda para poder funcionar e fazer *joins*. Cada registo
-  carrega o **ID externo estável**, o **carimbo** (`origem`, `sincronizadoEm`) e, idealmente, o
-  **payload bruto** de origem como proveniência (`modules/audit-and-provenance.md`).
-- **Campos geridos externamente vs campos locais.** Uma entidade pode ter campos que vêm da origem
-  (read-only) **e** campos que são do produto (editáveis) — a fronteira é explícita, não implícita.
-  Ex.: o nome e o departamento de um colaborador vêm do diretório; a preferência de tema é local.
-- **Porta de integração (adapter)** — o único ponto que fala com o sistema externo, atrás de uma
-  interface. Em dev/test, um **adapter fake** devolve dados de exemplo (`knowledge/origin-lessons.md`
+- **Master system** — the source that **owns** a set of fields. For those fields, the product is a
+  **mirror** — never a co-author.
+- **Local replica** — the copy the product keeps to be able to function and do *joins*. Each record
+  carries the **stable external ID**, the **stamp** (`source`, `syncedAt`) and, ideally, the **raw
+  source payload** as provenance (`modules/audit-and-provenance.md`).
+- **Externally managed fields vs local fields.** An entity may have fields coming from the source
+  (read-only) **and** fields owned by the product (editable) — the boundary is explicit, not
+  implicit. E.g.: an employee's name and department come from the directory; the theme preference
+  is local.
+- **Integration gateway (adapter)** — the only point that talks to the external system, behind an
+  interface. In dev/test, a **fake adapter** returns sample data (`knowledge/origin-lessons.md`
   §C9).
-- **Sincronização** — o processo que traz dados da origem: `upsert por ID externo`, nunca insert cego
-  (`knowledge/proven-patterns.md` §2). Corre por executor único (`modules/job-queue.md`).
-- **Escrita-de-volta (opcional)** — quando o produto *precisa* de propor mudanças à origem, é **também**
-  uma porta, desde cedo, mesmo que comece no-op; não se dilui na lógica local.
+- **Synchronization** — the process that brings data from the source: `upsert by external ID`,
+  never a blind insert (`knowledge/proven-patterns.md` §2). It runs on a single executor
+  (`modules/job-queue.md`).
+- **Write-back (optional)** — when the product *needs* to propose changes to the source, it is
+  **also** a gateway, from early on, even if it starts as a no-op; it does not dissolve into local
+  logic.
 
-## Regras inegociáveis (numeradas, verificáveis)
+## Non-negotiable rules (numbered, verifiable)
 
-1. **Campos geridos pela origem são read-only no produto.** Verificável: não existe formulário nem
-   endpoint que os edite; uma tentativa é rejeitada pelo servidor, não só escondida na UI
+1. **Fields managed by the source are read-only in the product.** Verifiable: no form or endpoint
+   edits them; an attempt is rejected by the server, not just hidden in the UI
    (`knowledge/proven-patterns.md` §6).
-2. **Sincronização é upsert por ID externo estável.** Verificável: sincronizar o mesmo lote N vezes não
-   cria duplicados (teste de idempotência).
-3. **Todo o registo replicado carrega carimbo de origem.** `origem` + `sincronizadoEm` presentes;
-   verificável por schema/teste. A UI pode mostrar "atualizado há X".
-4. **A origem prevalece nos campos que gere.** Num conflito, a verdade do sistema-mestre ganha nos seus
-   campos; os campos locais não são tocados pela sincronização.
-5. **Comportamento honesto quando a origem está indisponível.** Verificável: com o adapter a falhar, o
-   produto serve a última réplica **marcada como possivelmente desatualizada** (ou recusa
-   explicitamente), e **loga** a degradação — nunca finge frescura (`knowledge/proven-patterns.md`
-   §10).
-6. **Todo o acesso externo passa pela porta.** Nenhuma chamada dispersa ao sistema-mestre; verificável
-   por a existência de um único adapter e um fake em test.
-7. **Escrita-de-volta, se existir, é explícita e reversível.** Nunca uma edição local silenciosa que
-   "talvez" chegue à origem; é uma operação nomeada, com desfecho observável.
+2. **Synchronization is an upsert by stable external ID.** Verifiable: syncing the same batch N
+   times creates no duplicates (idempotency test).
+3. **Every replicated record carries a source stamp.** `source` + `syncedAt` present; verifiable by
+   schema/test. The UI can show "updated X ago".
+4. **The source prevails on the fields it manages.** In a conflict, the master system's truth wins
+   on its fields; local fields are untouched by the sync.
+5. **Honest behavior when the source is unavailable.** Verifiable: with the adapter failing, the
+   product serves the last replica **marked as possibly stale** (or refuses explicitly), and
+   **logs** the degradation — it never fakes freshness (`knowledge/proven-patterns.md` §10).
+6. **All external access goes through the gateway.** No scattered calls to the master system;
+   verifiable by the existence of a single adapter and a fake in test.
+7. **Write-back, if it exists, is explicit and reversible.** Never a silent local edit that "maybe"
+   reaches the source; it is a named operation with an observable outcome.
 
-## Como se adota num produto novo (passos)
+## How to adopt it in a new product (steps)
 
-1. **Mapear a fronteira de propriedade** com o utilizador (`core/question-engine.md`): que campos
-   são da origem (read-only) e quais são locais (editáveis). Esta lista é a decisão central.
-2. **Definir a réplica local** com ID externo, carimbo e (se viável) payload bruto.
-3. **Desenhar a porta de integração** e escrever o **adapter fake** antes do real — dev não depende do
-   sistema externo estar de pé.
-4. **Implementar a sincronização** por upsert idempotente, agendada via `modules/job-queue.md`.
-5. **Definir o comportamento degradado** por caso: servir stale-com-aviso, ou recusar; sempre logado.
-6. **Bloquear a edição dos campos geridos** no servidor (não só na UI) e marcá-los como read-only no
-   catálogo de conteúdos (`modules/single-source-of-content.md`).
-7. **Se houver escrita-de-volta**, criar a porta desde já, mesmo no-op, para o desenho não a esquecer.
+1. **Map the ownership boundary** with the user (`core/question-engine.md`): which fields belong to
+   the source (read-only) and which are local (editable). This list is the central decision.
+2. **Define the local replica** with external ID, stamp and (if feasible) raw payload.
+3. **Design the integration gateway** and write the **fake adapter** before the real one — dev does
+   not depend on the external system being up.
+4. **Implement the synchronization** as an idempotent upsert, scheduled via `modules/job-queue.md`.
+5. **Define the degraded behavior** case by case: serve stale-with-warning, or refuse; always
+   logged.
+6. **Block editing of managed fields** on the server (not only in the UI) and mark them as
+   read-only in the content catalog (`modules/single-source-of-content.md`).
+7. **If there is write-back**, create the gateway right away, even as a no-op, so the design does
+   not forget it.
 
-## Variações e trade-offs
+## Variations and trade-offs
 
-- **Pull agendado vs push por webhook vs on-demand.** Pull agendado é o mais simples e robusto (a
-  origem não precisa de saber de nós). Webhook dá frescura mas exige endpoint fiável e reconciliação
-  na mesma. On-demand (buscar à origem a cada leitura) evita réplica mas acopla a disponibilidade e a
-  latência — raramente vale a pena.
-- **Réplica completa vs cache com TTL.** Réplica permite *joins* e funciona offline da origem; cache
-  com TTL é mais leve mas não serve consultas ricas. A escolha segue o padrão de acesso
+- **Scheduled pull vs webhook push vs on-demand.** Scheduled pull is the simplest and most robust
+  (the source needs no knowledge of us). Webhooks give freshness but require a reliable endpoint
+  and reconciliation all the same. On-demand (fetching from the source on every read) avoids a
+  replica but couples availability and latency — rarely worth it.
+- **Full replica vs cache with TTL.** A replica allows *joins* and works with the source offline; a
+  TTL cache is lighter but does not serve rich queries. The choice follows the access pattern
   (`agents/06-data/data-modeler.md`).
-- **Stale-com-aviso vs recusar na indisponibilidade.** Para dados de contexto (nome, foto), servir
-  stale com aviso é aceitável; para decisões sensíveis (permissões efetivas, saldos), recusar é mais
-  honesto. Decide-se por campo, não em bloco.
-- **Guardar payload bruto ou só campos usados.** O bruto é proveniência e à-prova-de-futuro (campos
-  que ainda não usamos), ao custo de espaço; recomendado quando o espaço não é crítico.
+- **Stale-with-warning vs refusing on unavailability.** For context data (name, photo), serving
+  stale with a warning is acceptable; for sensitive decisions (effective permissions, balances),
+  refusing is more honest. Decided per field, not wholesale.
+- **Store the raw payload or only the fields used.** The raw payload is provenance and
+  future-proofing (fields we do not use yet), at the cost of space; recommended when space is not
+  critical.
 
-## Exemplo (multi-domínio)
+## Example (multi-domain)
 
-**App interna — identidade a partir do diretório corporativo.** Nome, email e departamento vêm do
-Entra/LDAP: read-only, com `sincronizadoEm`. A app junta-lhes campos locais (preferências, atribuições
-internas) que **edita à vontade**. Uma sincronização noturna faz upsert por `objectId`; correr duas
-vezes não duplica ninguém. Se o diretório estiver em baixo à hora do login, mostra-se o perfil da
-última sincronização com "dados de HH:MM" e regista-se a degradação — não se inventa um perfil.
+**Internal app — identity from the corporate directory.** Name, email and department come from
+Entra/LDAP: read-only, with `syncedAt`. The app adds local fields (preferences, internal
+assignments) that it **edits freely**. A nightly sync upserts by `objectId`; running it twice
+duplicates nobody. If the directory is down at login time, the profile from the last sync is shown
+with "data as of HH:MM" and the degradation is logged — no profile is invented.
 
-**E-commerce — catálogo vindo do PIM.** Título, descrição e preço-base são do PIM (read-only); stock e
-promoções da loja são locais. O feed do PIM faz upsert por SKU; um SKU que desaparece do feed marca-se
-`descontinuado`, não se apaga (reversibilidade — `knowledge/permanent-rules.md` §4). Se o PIM
-falha, a loja continua a vender com o último catálogo, sinalizando internamente que está stale.
+**E-commerce — catalog from the PIM.** Title, description and base price belong to the PIM
+(read-only); the store's stock and promotions are local. The PIM feed upserts by SKU; a SKU that
+disappears from the feed is marked `discontinued`, not deleted (reversibility —
+`knowledge/permanent-rules.md` §4). If the PIM fails, the store keeps selling with the last
+catalog, flagging internally that it is stale.
 
-## Armadilhas conhecidas
+## Known pitfalls
 
-- **Insert cego na sincronização:** duplica a cada corrida e perde proveniência — a regra 2 (upsert por
-  ID externo) existe exatamente para isto.
-- **Campos geridos editáveis "só desta vez":** a exceção torna-se a regra e as cópias divergem; a
-  fronteira de propriedade (passo 1) tem de ser dura.
-- **Fingir frescura na indisponibilidade:** servir dados velhos **sem** aviso lê-se como atuais e leva
-  a decisões erradas; o silêncio é a falha (`knowledge/proven-patterns.md` §10).
-- **Acoplar dev ao sistema externo:** sem adapter fake, ninguém desenvolve com a origem em baixo e os
-  testes ficam frágeis (`knowledge/origin-lessons.md` §C9).
-- **Chamadas dispersas ao mestre:** sem porta única, uma escapa à instrumentação e ao fake; centralizar
-  (regra 6).
-- **Apagar em vez de marcar removido:** um registo que sai do feed pode voltar; marcar `descontinuado`
-  é reversível, apagar não.
+- **Blind insert in the sync:** duplicates on every run and loses provenance — rule 2 (upsert by
+  external ID) exists precisely for this.
+- **Managed fields editable "just this once":** the exception becomes the rule and the copies
+  diverge; the ownership boundary (step 1) must be hard.
+- **Faking freshness on unavailability:** serving stale data **without** a warning reads as current
+  and leads to wrong decisions; the silence is the failure (`knowledge/proven-patterns.md` §10).
+- **Coupling dev to the external system:** without a fake adapter, nobody develops while the source
+  is down and the tests turn brittle (`knowledge/origin-lessons.md` §C9).
+- **Scattered calls to the master:** without a single gateway, one escapes the instrumentation and
+  the fake; centralize (rule 6).
+- **Deleting instead of marking removed:** a record that leaves the feed may come back; marking
+  `discontinued` is reversible, deleting is not.
 
-## Relacionados
+## Related
 
-- `knowledge/proven-patterns.md` — §2 upsert por ID estável, §4 SSOT, §10 fallbacks visíveis.
-- `agents/06-data/data-modeler.md` — réplica, chaves externas e padrões de acesso.
-- `modules/job-queue.md` — a sincronização por executor único.
-- `modules/audit-and-provenance.md` — payload bruto e carimbo de origem como proveniência.
-- `modules/single-source-of-content.md` — marcar campos geridos externamente como read-only.
-- `knowledge/origin-lessons.md` — §C9 (porta + adapter fake + upsert idempotente).
+- `knowledge/proven-patterns.md` — §2 upsert by stable ID, §4 SSOT, §10 visible fallbacks.
+- `agents/06-data/data-modeler.md` — replica, external keys and access patterns.
+- `modules/job-queue.md` — synchronization on a single executor.
+- `modules/audit-and-provenance.md` — raw payload and source stamp as provenance.
+- `modules/single-source-of-content.md` — marking externally managed fields as read-only.
+- `knowledge/origin-lessons.md` — §C9 (gateway + fake adapter + idempotent upsert).

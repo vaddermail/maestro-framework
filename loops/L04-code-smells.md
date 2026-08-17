@@ -1,86 +1,90 @@
 # L04 — Code Smells
 
-> Loop `L04` da framework Maestro — persiste enquanto existirem code smells acima do limiar
-> acordado, melhorando a estrutura **sem mudar comportamento**. Segue a anatomia de `loops/README.md`.
+> Loop `L04` of the Maestro framework — persists while code smells above the agreed threshold
+> exist, improving structure **without changing behavior**. Follows the anatomy in
+> `loops/README.md`.
 
-Duplicação, complexidade e acoplamento não partem o sistema hoje — encarecem cada mudança amanhã.
-Este loop existe para que a dívida de legibilidade se pague em fatias pequenas e verificáveis, nunca
-num "grande refactor" que ninguém consegue rever nem reverter em bloco.
+Duplication, complexity and coupling do not break the system today — they make every change more
+expensive tomorrow. This loop exists so that readability debt is paid off in small, verifiable
+slices, never in one "big refactor" nobody can review or revert as a block.
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Quando corre** | F6 (por fatia, ao fechar); F9 (cadência do guardião) |
-| **Agente que executa a ação** | `agents/13-guardians/quality-guardian.md` deteta e mede; o dono do código (`agents/04-frontend/` ou `agents/05-backend/`) aplica o refactor; um revisor (`agents/12-reviewers/`) confirma que o comportamento não mudou |
-| **Modelo sugerido** | Económico para refactors mecânicos (extrair função, renomear); Padrão para reestruturações com risco de comportamento (`core/model-routing.md`) |
+| **When it runs** | F6 (per slice, on closing); F9 (guardian's cadence) |
+| **Agent that executes the action** | `agents/13-guardians/quality-guardian.md` detects and measures; the code owner (`agents/04-frontend/` or `agents/05-backend/`) applies the refactor; a reviewer (`agents/12-reviewers/`) confirms behavior did not change |
+| **Suggested model** | Economy for mechanical refactors (extract function, rename); Standard for restructurings with behavior risk (`core/model-routing.md`) |
 
-## Métrica de progresso
+## Progress metric
 
-Número de violações acima do limiar definido para o perfil de esforço do projeto (duplicação %,
-complexidade ciclomática, tamanho de função/módulo, acoplamento) — contagem total reportada pelo
-guardião, comparável ciclo a ciclo.
+Number of violations above the threshold defined for the project's effort profile (duplication %,
+cyclomatic complexity, function/module size, coupling) — total count reported by the guardian,
+comparable cycle to cycle.
 
-Limiares por defeito (na calibração de F0 o utilizador aceita-os ou fixa outros — o valor acordado
-regista-se no `CLAUDE.md` do projeto; `workflows/W00-project-kickoff.md` §Pontos de decisão):
+Default thresholds (in the F0 calibration the user accepts them or sets others — the agreed value
+is recorded in the project's `CLAUDE.md`; `workflows/W00-project-kickoff.md` §Decision points):
 
-| Perfil | Duplicação | Complexidade por função | Tamanho de função |
+| Profile | Duplication | Complexity per function | Function size |
 | --- | --- | --- | --- |
-| Protótipo | — (loop desarmado) | — | — |
-| Produto interno | ≤5% | ≤15 | ≤80 linhas |
-| Produto comercial | ≤3% | ≤10 | ≤60 linhas |
-| Plataforma empresarial | ≤2% | ≤10 | ≤50 linhas |
+| Prototype | — (loop disarmed) | — | — |
+| Internal product | ≤5% | ≤15 | ≤80 lines |
+| Commercial product | ≤3% | ≤10 | ≤60 lines |
+| Enterprise platform | ≤2% | ≤10 | ≤50 lines |
 
-## Condição de entrada
+## Entry condition
 
-`agents/13-guardians/quality-guardian.md` relata ≥1 smell acima do limiar acordado.
+`agents/13-guardians/quality-guardian.md` reports ≥1 smell above the agreed threshold.
 
-## Ação (o corpo da iteração)
+## Action (the body of the iteration)
 
-1. Escolher o smell de maior **juro** (o que mais encarece mudanças futuras), não o maior em linhas.
-2. Confirmar (ou escrever) o teste de comportamento que cobre a área — é a rede de segurança que prova
-   que nada mudou; sem ela, não se refatora.
-3. Refatorar sem alterar comportamento observável.
-4. Correr a suite antes **e** depois: têm de ficar idênticas (mesmos testes verdes, mesmo resultado
-   funcional) — qualquer diferença é regressão, não melhoria.
+1. Pick the smell with the highest **interest** (the one that makes future changes most
+   expensive), not the biggest in lines.
+2. Confirm (or write) the behavior test covering the area — it is the safety net proving that
+   nothing changed; without it, no refactoring.
+3. Refactor without changing observable behavior.
+4. Run the suite before **and** after: they must be identical (same tests green, same functional
+   result) — any difference is a regression, not an improvement.
 
-## Condição de saída (sucesso)
+## Exit condition (success)
 
-Contagem de smells ≤ limiar acordado, com os testes de comportamento verdes antes e depois,
-confirmado por um revisor que não fez o refactor. **Nunca** se sobe o limiar para o smell "passar" —
-isso é fraudar a métrica (`loops/README.md` §Princípios transversais).
+Smell count ≤ the agreed threshold, with the behavior tests green before and after, confirmed by a
+reviewer who did not do the refactor. The threshold is **never** raised so the smell "passes" —
+that is gaming the metric (`loops/README.md` §Cross-cutting principles).
 
-## Salvaguarda anti-loop-infinito
+## Anti-infinite-loop safeguard
 
-- **Estagnação:** 3 iterações sem baixar a contagem de smells → parar.
-- **Oscilação:** refatorar A introduz um smell equivalente em B (duplicação movida, não eliminada) →
-  parar de imediato; sinal de que falta uma abstração partilhada, não mais refactor pontual.
-- **Teto duro:** 5 iterações por área de código. Ultrapassado, sobe ao utilizador: pode ser sinal de um
-  problema arquitetural que um refactor local não resolve (candidato a `loops/L08-technical-debt.md`
-  em vez de correção imediata).
+- **Stagnation:** 3 iterations without lowering the smell count → stop.
+- **Oscillation:** refactoring A introduces an equivalent smell in B (duplication moved, not
+  eliminated) → stop immediately; a sign that a shared abstraction is missing, not that more point
+  refactoring is needed.
+- **Hard cap:** 5 iterations per code area. Once exceeded, escalate to the user: it may signal an
+  architectural problem a local refactor cannot solve (a candidate for
+  `loops/L08-technical-debt.md` instead of an immediate fix).
 
-## Registo em STATE.md
+## STATE.md record
 
 ```
-L04 · code smells · métrica 23→14→14 · iter 3 (teto 5) · último progresso: iter 2 · estado: EM RISCO
+L04 · code smells · metric 23→14→14 · iter 3 (cap 5) · last progress: iter 2 · status: AT RISK
 ```
 
-## Exemplo (plataforma de dados — pipeline de ingestão)
+## Example (data platform — ingestion pipeline)
 
-O guardião reporta a mesma lógica de "normalizar nome de coluna" duplicada em quatro conectores de
-fonte (CSV, API, BD externa, ficheiro Excel), cada cópia já ligeiramente diferente das outras —
-duplicação acima do limiar e uma bifurcação silenciosa a começar. O engenheiro de dados escreve
-primeiro um teste que fixa o comportamento atual de cada conector (mesmo com as pequenas diferenças),
-extrai uma função `normalizarNomeColuna` partilhada e parametrizável, e migra os quatro conectores um
-a um, correndo a suite entre cada migração. Resultado: quatro chamadas à mesma função, zero mudança de
-comportamento, smell fechado. Sem os testes de fixação prévios, a extração teria uniformizado à força
-as diferenças reais entre conectores — mudança de comportamento disfarçada de refactor.
+The guardian reports the same "normalize column name" logic duplicated across four source
+connectors (CSV, API, external DB, Excel file), each copy already slightly different from the
+others — duplication above the threshold and a silent fork beginning. The data engineer first
+writes a test pinning each connector's current behavior (even with the small differences), extracts
+a shared, parameterizable `normalizeColumnName` function, and migrates the four connectors one by
+one, running the suite between each migration. Result: four calls to the same function, zero
+behavior change, smell closed. Without the prior pinning tests, the extraction would have
+force-uniformized the real differences between connectors — a behavior change disguised as a
+refactor.
 
-## Relacionados
+## Related
 
-- `agents/13-guardians/quality-guardian.md` — deteta e mede os smells.
-- `agents/13-guardians/README.md` — cadência e relatório comum do guardião.
-- `checklists/definition-of-done.md` · `checklists/pre-merge.md` — onde este loop se verifica por fatia.
-- `pipelines/ci-quality.md` — a medição automatizada que alimenta a métrica.
-- `knowledge/proven-patterns.md` — os padrões-alvo de muitos destes refactors.
-- `loops/L08-technical-debt.md` — para onde escala um smell que é sintoma estrutural.
+- `agents/13-guardians/quality-guardian.md` — detects and measures the smells.
+- `agents/13-guardians/README.md` — the guardian's cadence and common report.
+- `checklists/definition-of-done.md` · `checklists/pre-merge.md` — per-slice checks of this loop.
+- `pipelines/ci-quality.md` — the automated measurement that feeds the metric.
+- `knowledge/proven-patterns.md` — the target patterns of many of these refactors.
+- `loops/L08-technical-debt.md` — where a smell that is a structural symptom escalates.

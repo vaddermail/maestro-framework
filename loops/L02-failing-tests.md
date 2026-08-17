@@ -1,79 +1,79 @@
-# L02 — Testes Falhados
+# L02 — Failing Tests
 
-> Loop `L02` da framework Maestro — persiste enquanto existirem testes a falhar, corrigindo
-> sempre a **causa**, nunca o teste (salvo prova de que o teste está errado). Segue a anatomia de
+> Loop `L02` of the Maestro framework — persists while failing tests exist, always fixing the
+> **cause**, never the test (unless the test is proven wrong). Follows the anatomy in
 > `loops/README.md`.
 
-Um teste falhado é o detetor mais barato de defeito que a framework tem — e o mais fácil de fraudar
-("comentar o teste", "subir o timeout", "apagar o assert incómodo"). Este loop existe para que a única
-saída aceite seja o sistema a comportar-se corretamente, nunca o detetor calado.
+A failing test is the cheapest defect detector the framework has — and the easiest to defraud
+("comment out the test", "raise the timeout", "delete the inconvenient assert"). This loop exists
+so that the only accepted exit is the system behaving correctly, never a silenced detector.
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Quando corre** | F6 (contínuo, por fatia); reaberto em F7 pelo harness de regressão e em F9 a cada mudança |
-| **Agente que executa a ação** | O dono do código que falha — `agents/04-frontend/` ou `agents/05-backend/` conforme a camada — corrige a causa; coordenado por `agents/10-quality/test-strategist.md`. Só se decide "teste errado" com prova anexa (requisito/spec que o contradiz), nunca por conveniência |
-| **Modelo sugerido** | Padrão para a correção; sobe a Topo se a causa raiz tocar RBAC, máquina de estado ou fluxo crítico com reversibilidade (`core/model-routing.md`) |
+| **When it runs** | F6 (continuous, per slice); reopened in F7 by the regression harness and in F9 on every change |
+| **Agent that executes the action** | The owner of the failing code — `agents/04-frontend/` or `agents/05-backend/` depending on the layer — fixes the cause; coordinated by `agents/10-quality/test-strategist.md`. "Wrong test" is only decided with attached proof (the requirement/spec it contradicts), never for convenience |
+| **Suggested model** | Standard for the fix; escalates to Top if the root cause touches RBAC, a state machine or a critical flow with reversibility (`core/model-routing.md`) |
 
-## Métrica de progresso
+## Progress metric
 
-Número de testes em estado `a falhar` reportado pelo harness (unitários + integração + E2E +
-regressão, somados), na última corrida completa.
+Number of tests in `failing` state reported by the harness (unit + integration + E2E + regression,
+summed), in the last complete run.
 
-## Condição de entrada
+## Entry condition
 
-O harness de testes reporta ≥1 teste a falhar numa corrida (local, CI, ou regressão).
+The test harness reports ≥1 failing test in a run (local, CI, or regression).
 
-## Ação (o corpo da iteração)
+## Action (the body of the iteration)
 
-1. Isolar o teste falhado e identificar a **causa raiz** — nunca parar na primeira hipótese;
-   reproduzir antes de corrigir.
-2. Decidir: bug no código (regra geral) ou teste provado errado (exceção — anexar a prova: qual
-   requisito/spec/critério de aceitação o teste contradiz).
-3. Aplicar a correção mínima e reversível na causa (nunca no sintoma nem no detetor —
-   `loops/README.md` §Princípios transversais).
-4. Correr a suite completa localmente, frontend e backend separados, **ambos** verdes antes de
-   declarar a iteração feita.
+1. Isolate the failing test and identify the **root cause** — never stop at the first hypothesis;
+   reproduce before fixing.
+2. Decide: bug in the code (the general rule) or test proven wrong (the exception — attach the
+   proof: which requirement/spec/acceptance criterion the test contradicts).
+3. Apply the minimal, reversible fix to the cause (never to the symptom or the detector —
+   `loops/README.md` §Cross-cutting principles).
+4. Run the full suite locally, frontend and backend separately, **both** green before declaring
+   the iteration done.
 
-## Condição de saída (sucesso)
+## Exit condition (success)
 
-Zero testes a falhar, confirmado por uma corrida independente do harness (CI ou outro agente/revisor —
-nunca só a corrida local de quem corrigiu, que é auto-validação).
+Zero failing tests, confirmed by an independent run of the harness (CI or another agent/reviewer —
+never just the local run of whoever fixed it, which is self-validation).
 
-## Salvaguarda anti-loop-infinito
+## Anti-infinite-loop safeguard
 
-- **Estagnação:** 3 corridas consecutivas sem baixar a contagem de testes falhados → parar.
-- **Oscilação:** o mesmo conjunto de testes falhados reaparece (fingerprint da lista de testes
-  repete-se) — sinal de que a correção anterior não tocou a causa, ou introduziu uma regressão que
-  desfaz o progresso; parar de imediato.
-- **Teto duro:** 6 iterações por fatia/PR. Ultrapassado, sobe ao utilizador: pode ser sintoma de que a
-  fatia é maior do que uma sessão resolve, de um problema arquitetural, ou de dois requisitos
-  contraditórios materializados em dois testes que não podem ambos passar (nesse caso, o problema é
-  de facto `loops/L01-ambiguous-requirements.md`, não deste loop).
+- **Stagnation:** 3 consecutive runs without lowering the failing test count → stop.
+- **Oscillation:** the same set of failing tests reappears (the fingerprint of the test list
+  repeats) — a sign that the previous fix did not touch the cause, or introduced a regression that
+  undoes the progress; stop immediately.
+- **Hard cap:** 6 iterations per slice/PR. Once exceeded, escalate to the user: it may be a
+  symptom that the slice is bigger than one session can solve, of an architectural problem, or of
+  two contradictory requirements materialized in two tests that cannot both pass (in that case the
+  problem actually belongs to `loops/L01-ambiguous-requirements.md`, not to this loop).
 
-## Registo em STATE.md
+## STATE.md record
 
 ```
-L02 · testes falhados · métrica 12→7→7 · iter 3 (teto 6) · último progresso: iter 2 · estado: EM RISCO
+L02 · failing tests · metric 12→7→7 · iter 3 (cap 6) · last progress: iter 2 · status: AT RISK
 ```
 
-## Exemplo (e-commerce — carrinho e cupões)
+## Example (e-commerce — cart and coupons)
 
-A suite de integração falha em `carrinho.aplicar-cupao.test`: um cupão de 20% aplicado a um carrinho
-com um item já em saldo deveria dar erro ("cupões não acumulam com saldo"), mas o teste regista que o
-desconto foi aplicado na mesma. A hipótese inicial ("o teste está desatualizado") falha ao verificar:
-**RN-014** confirma explicitamente que cupão e saldo não acumulam. A causa real é um `if` que só
-verifica o primeiro item do carrinho, não todos. Corrige-se a função `calcularDesconto` para iterar
-todos os itens; a suite volta a verde nas duas camadas (unitário do cálculo + integração do fluxo de
-checkout). Sem esta disciplina, a "correção rápida" teria sido comentar o teste — escondendo um bug de
-faturação real.
+The integration suite fails on `cart.apply-coupon.test`: a 20% coupon applied to a cart with an
+item already on sale should return an error ("coupons do not stack with sale prices"), but the
+test records that the discount was applied anyway. The initial hypothesis ("the test is outdated")
+fails on verification: **BR-014** explicitly confirms that coupon and sale price do not stack. The
+real cause is an `if` that only checks the first cart item, not all of them. The
+`calculateDiscount` function is fixed to iterate over all items; the suite goes back to green on
+both layers (unit for the calculation + integration for the checkout flow). Without this
+discipline, the "quick fix" would have been commenting out the test — hiding a real billing bug.
 
-## Relacionados
+## Related
 
-- `agents/10-quality/README.md` — a categoria que fornece o harness e a estratégia.
-- `agents/10-quality/test-strategist.md` — coordena a suite e a rede de segurança.
-- `agents/10-quality/regression-test-engineer.md` — o harness que reabre este loop em F7/F9.
-- `checklists/definition-of-done.md` · `checklists/pre-merge.md` — os portões que este loop tem de satisfazer.
-- `core/quality-gates.md` — P6 não passa com testes vermelhos.
-- `knowledge/ai-pitfalls.md` — §2, "funciona sem prova", a armadilha gémea deste loop.
+- `agents/10-quality/README.md` — the category that provides the harness and the strategy.
+- `agents/10-quality/test-strategist.md` — coordinates the suite and the safety net.
+- `agents/10-quality/regression-test-engineer.md` — the harness that reopens this loop in F7/F9.
+- `checklists/definition-of-done.md` · `checklists/pre-merge.md` — the gates this loop must satisfy.
+- `core/quality-gates.md` — P6 does not pass with red tests.
+- `knowledge/ai-pitfalls.md` — §2, "works without proof", this loop's twin pitfall.

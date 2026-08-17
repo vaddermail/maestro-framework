@@ -1,83 +1,84 @@
-# L08 — Dívida Técnica
+# L08 — Technical Debt
 
-> Loop `L08` da framework Maestro — persiste enquanto existir dívida técnica registada,
-> reduzindo-a de forma planeada e reversível, priorizada pelo juro que cobra, nunca pelo tamanho do
-> item. Segue a anatomia de `loops/README.md`.
+> Loop `L08` of the Maestro framework — persists while recorded technical debt exists, reducing it
+> in a planned, reversible way, prioritized by the interest it charges, never by the size of the
+> item. Follows the anatomy in `loops/README.md`.
 
-Dívida técnica não registada não é "zero dívida" — é dívida invisível, a mais cara de todas, porque
-ninguém a prioriza. Este loop existe para que a dívida seja uma lista viva, com juro estimado, que se
-paga deliberadamente — nunca num "big-bang" de fim de trimestre.
+Unrecorded technical debt is not "zero debt" — it is invisible debt, the most expensive kind of
+all, because nobody prioritizes it. This loop exists so that debt is a living list, with estimated
+interest, paid down deliberately — never in an end-of-quarter "big bang".
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Quando corre** | F9 — planeado, por ciclo (não por evento) |
-| **Agente que executa a ação** | O Orquestrador prioriza e planeia o ciclo; o agente dono da área do item (`agents/05-backend/`, `agents/04-frontend/`, `agents/06-data/`, `agents/07-devops/`, conforme o item) executa |
-| **Modelo sugerido** | Padrão para planear e executar; Topo quando o item exige rever uma decisão de arquitetura (ADR) para se resolver de vez (`core/model-routing.md`) |
+| **When it runs** | F9 — planned, per cycle (not per event) |
+| **Agent that executes the action** | The Orchestrator prioritizes and plans the cycle; the agent that owns the item's area (`agents/05-backend/`, `agents/04-frontend/`, `agents/06-data/`, `agents/07-devops/`, depending on the item) executes |
+| **Suggested model** | Standard for planning and executing; Top when the item requires revisiting an architecture decision (ADR) to be resolved for good (`core/model-routing.md`) |
 
-## Métrica de progresso
+## Progress metric
 
-**Juro total estimado** da dívida registada e por pagar — custo recorrente em tempo/risco/atrito
-(ex.: horas perdidas por mês, incidentes evitáveis, lentidão de mudança), não a contagem nem o tamanho
-dos itens. Um item pequeno com juro alto prioriza-se antes de um item grande com juro baixo.
+**Total estimated interest** of the recorded, unpaid debt — recurring cost in time/risk/friction
+(e.g. hours lost per month, avoidable incidents, slowness of change), not the count nor the size of
+the items. A small item with high interest is prioritized before a large item with low interest.
 
-## Condição de entrada
+## Entry condition
 
-Existe ≥1 item de dívida técnica registado (em `STATE.md` ou no registo de dívida do projeto) com
-juro estimado > 0, ainda por pagar.
+There is ≥1 recorded technical-debt item (in `STATE.md` or the project's debt register) with
+estimated interest > 0, still unpaid.
 
-## Ação (o corpo da iteração)
+## Action (the body of the iteration)
 
-1. Ordenar os itens por **juro**, não por tamanho nem por antiguidade.
-2. Escolher o item de maior juro e desenhar o **menor passo aditivo e reversível** que o reduz — nunca
-   um big-bang que reescreve tudo de uma vez (`knowledge/permanent-rules.md` §3, §4).
-3. Implementar atrás de feature flag quando o passo tiver risco de regressão
+1. Order the items by **interest**, not by size nor by age.
+2. Pick the highest-interest item and design the **smallest additive, reversible step** that
+   reduces it — never a big-bang that rewrites everything at once
+   (`knowledge/permanent-rules.md` §3, §4).
+3. Implement behind a feature flag when the step carries regression risk
    (`modules/feature-flags.md`).
-4. Medir se o juro baixou de facto (o sintoma que motivou o registo desapareceu ou diminuiu
-   mensuravelmente) — não basta a sensação de "código mais limpo".
+4. Measure whether the interest actually dropped (the symptom that motivated the record
+   disappeared or measurably decreased) — the feeling of "cleaner code" is not enough.
 
-## Condição de saída (sucesso)
+## Exit condition (success)
 
-Juro total ≤ limiar acordado com o utilizador para o ciclo. Defaults por perfil (na escala de juro
-deste loop): protótipo — loop desarmado; produto interno ≤10; produto comercial ≤6; plataforma
-empresarial ≤3. O valor acordado na calibração de F0 regista-se no `CLAUDE.md` do projeto
-(`workflows/W00-project-kickoff.md` §Pontos de decisão). Um item dado por fechado tem prova de
-que o juro parou de se acumular, não só de que o código mudou.
+Total interest ≤ the threshold agreed with the user for the cycle. Defaults per profile (on this
+loop's interest scale): prototype — loop disarmed; internal product ≤10; commercial product ≤6;
+enterprise platform ≤3. The value agreed during F0 calibration is recorded in the project's
+`CLAUDE.md` (`workflows/W00-project-kickoff.md` §Decision points). An item counted as closed has
+proof that the interest stopped accruing, not just that the code changed.
 
-## Salvaguarda anti-loop-infinito
+## Anti-infinite-loop safeguard
 
-- **Estagnação:** 3 itens pagos consecutivamente sem o juro total baixar → parar o ciclo.
-- **Oscilação:** pagar a dívida A cria dívida B de juro equivalente (trocar um atalho por outro) →
-  parar de imediato; sinal de que o passo escolhido não era realmente aditivo/estrutural.
-- **Teto duro:** 5 itens por ciclo de planeamento, independentemente do progresso. Ultrapassado, o
-  ciclo para: regista-se o que foi pago, o que ficou, e o porquê (falta de tempo, item maior do que
-  estimado, decisão de arquitetura pendente), e sobe-se ao utilizador para replanear o próximo ciclo —
-  nunca se estica um ciclo indefinidamente para "terminar a lista".
+- **Stagnation:** 3 items paid consecutively without lowering the total interest → stop the cycle.
+- **Oscillation:** paying debt A creates debt B with equivalent interest (swapping one shortcut for
+  another) → stop immediately; sign that the chosen step was not truly additive/structural.
+- **Hard cap:** 5 items per planning cycle, regardless of progress. Once exceeded, the cycle stops:
+  record what was paid, what remains, and why (lack of time, item larger than estimated, pending
+  architecture decision), and escalate to the user to replan the next cycle — never stretch a cycle
+  indefinitely to "finish the list".
 
-## Registo em STATE.md
+## STATE.md ledger
 
 ```
-L08 · dívida técnica · métrica juro 40h/mês→28h/mês→28h/mês · iter 3 (teto 5) · último progresso: iter 2 · estado: EM RISCO
+L08 · technical debt · metric interest 40h/mo→28h/mo→28h/mo · iter 3 (cap 5) · last progress: iter 2 · status: AT RISK
 ```
 
-## Exemplo (plataforma de dados — pipeline de relatórios)
+## Example (data platform — reporting pipeline)
 
-O registo de dívida tem um item antigo: "o job noturno de agregação corre em série, 6h de duração, 1
-pessoa precisa de o reiniciar manualmente quando falha a meio" — juro estimado: ~4h/semana de atenção
-manual + risco de relatórios atrasados. É o item de maior juro do ciclo (mais do que um item maior —
-"migrar o ORM" — que tem juro quase zero porque raramente dói). O passo aditivo escolhido: não
-reescrever o pipeline inteiro, só torná-lo **retomável por etapa** (checkpoint a cada fonte de dados
-processada), atrás de flag. Depois de um mês em produção, as falhas a meio deixam de exigir reinício
-manual — o juro medido cai para quase zero. O item "migrar o ORM" continua na lista, sem se tocar,
-porque o seu juro não justificou o ciclo.
+The debt register has an old item: "the nightly aggregation job runs serially, takes 6h, and 1
+person has to restart it manually when it fails midway" — estimated interest: ~4h/week of manual
+attention + risk of late reports. It is the highest-interest item of the cycle (more than a bigger
+item — "migrate the ORM" — whose interest is near zero because it rarely hurts). The additive step
+chosen: not rewriting the whole pipeline, just making it **resumable per stage** (a checkpoint
+after each data source processed), behind a flag. After a month in production, midway failures no
+longer require a manual restart — the measured interest drops to near zero. The "migrate the ORM"
+item stays on the list, untouched, because its interest did not justify the cycle.
 
-## Relacionados
+## Related
 
-- `core/orchestrator.md` — §Effort profiles; os defaults do limiar vivem na §Condição de saída
-  deste loop e o valor do projeto no seu `CLAUDE.md`.
-- `core/project-memory.md` — onde a dívida técnica se regista e se acompanha entre sessões.
-- `modules/feature-flags.md` — como pagar dívida com risco atrás de kill-switch.
-- `knowledge/proven-patterns.md` — os padrões-alvo de muitos pagamentos de dívida.
-- `workflows/W09-continuous-operation.md` — a cadência de F9 onde este loop corre por defeito.
-- `workflows/W10-feature-evolution.md` — quando um item de dívida se converte em pedido de evolução.
+- `core/orchestrator.md` — §Effort profiles; the threshold defaults live in this loop's
+  §Exit condition and the project's value in its `CLAUDE.md`.
+- `core/project-memory.md` — where technical debt is recorded and tracked across sessions.
+- `modules/feature-flags.md` — how to pay down risky debt behind a kill-switch.
+- `knowledge/proven-patterns.md` — the target patterns of many debt payments.
+- `workflows/W09-continuous-operation.md` — the F9 cadence where this loop runs by default.
+- `workflows/W10-feature-evolution.md` — when a debt item converts into an evolution request.

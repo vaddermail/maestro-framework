@@ -1,78 +1,78 @@
-# L06 — Documentação Desatualizada
+# L06 — Outdated Documentation
 
-> Loop `L06` da framework Maestro — persiste enquanto existir documentação fora de sincronia com
-> o estado real do produto, atualizando sempre a partir da fonte. Segue a anatomia de
+> Loop `L06` of the Maestro framework — persists while documentation exists that is out of sync
+> with the product's real state, always updating from the source. Follows the anatomy in
 > `loops/README.md`.
 
-Documentação errada é pior do que nenhuma — engana com confiança. Este loop existe para que a
-documentação nunca fique "asneira conhecida e tolerada": ou está sincronizada, ou está marcada e em
-correção.
+Wrong documentation is worse than none — it misleads with confidence. This loop exists so that
+documentation never becomes "a known, tolerated mess": either it is in sync, or it is flagged and
+being fixed.
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Quando corre** | F9 (cadência do guardião); disparado também logo após qualquer mudança relevante ao código/produto |
-| **Agente que executa a ação** | `agents/13-guardians/documentation-guardian.md` deteta e atualiza; `agents/11-documentation/technical-writer.md` escreve quando a mudança é substancial; `agents/12-reviewers/documentation-reviewer.md` confirma sincronia |
-| **Modelo sugerido** | Económico quando a atualização é mecânica (espelhar uma mudança já clara no código/spec); Padrão quando exige reconciliar com uma decisão de negócio (`core/model-routing.md`) |
+| **When it runs** | F9 (the guardian's cadence); also triggered right after any relevant change to the code/product |
+| **Agent that executes the action** | `agents/13-guardians/documentation-guardian.md` detects and updates; `agents/11-documentation/technical-writer.md` writes when the change is substantial; `agents/12-reviewers/documentation-reviewer.md` confirms sync |
+| **Suggested model** | Economy when the update is mechanical (mirroring a change already clear in the code/spec); Standard when it requires reconciling with a business decision (`core/model-routing.md`) |
 
-## Métrica de progresso
+## Progress metric
 
-Número de documentos/secções detetados como desatualizados (referência a algo que já mudou, exemplo
-que já não corresponde ao comportamento real, link para artefacto obsoleto).
+Number of documents/sections detected as outdated (reference to something that has already changed,
+example that no longer matches real behavior, link to an obsolete artifact).
 
-## Condição de entrada
+## Entry condition
 
-`agents/13-guardians/documentation-guardian.md` (ou qualquer agente/revisor) deteta ≥1 documento
-que diverge do estado real do código/produto.
+`agents/13-guardians/documentation-guardian.md` (or any agent/reviewer) detects ≥1 document that
+diverges from the real state of the code/product.
 
-## Ação (o corpo da iteração)
+## Action (the body of the iteration)
 
-1. Confirmar a **fonte de verdade atual** do facto documentado (código, spec aprovada, ADR) — nunca
-   inventar o que mudou; se a fonte não for clara, o loop não avança sozinho, pergunta-se
-   (`core/question-engine.md`).
-2. Atualizar a documentação a partir dessa fonte, com exemplos reais e correntes.
-3. Se o facto vive também em labels/ajuda de UI, atualizar a **fonte única**
-   (`modules/single-source-of-content.md`) em vez de duplicar a correção em dois sítios.
-4. Marcar o artefacto como `aprovado` de novo (`core/artifact-protocol.md`).
+1. Confirm the **current source of truth** for the documented fact (code, approved spec, ADR) —
+   never invent what changed; if the source is unclear, the loop does not advance on its own — it
+   asks (`core/question-engine.md`).
+2. Update the documentation from that source, with real, current examples.
+3. If the fact also lives in UI labels/help text, update the **single source**
+   (`modules/single-source-of-content.md`) instead of duplicating the fix in two places.
+4. Mark the artifact as `approved` again (`core/artifact-protocol.md`).
 
-## Condição de saída (sucesso)
+## Exit condition (success)
 
-Zero documentos detetados como desatualizados; `agents/12-reviewers/documentation-reviewer.md`
-confirma a sincronia numa passagem independente.
+Zero documents detected as outdated; `agents/12-reviewers/documentation-reviewer.md` confirms the
+sync in an independent pass.
 
-## Salvaguarda anti-loop-infinito
+## Anti-infinite-loop safeguard
 
-- **Estagnação:** 3 ciclos de atualização sem reduzir a contagem de documentos desatualizados → parar.
-- **Oscilação:** o mesmo documento volta a divergir logo no ciclo seguinte → sinal de que está a ser
-  mantido manualmente onde devia ser derivado (ex.: referência de API que devia gerar-se do schema,
-  `agents/11-documentation/api-documenter.md`) — parar e propor a automação em vez de repetir a
-  correção manual.
-- **Teto duro:** 4 iterações por documento. Ultrapassado, sobe ao utilizador com a proposta de mudar a
-  forma como aquele documento se mantém (gerado vs. escrito à mão).
+- **Stagnation:** 3 update cycles without reducing the count of outdated documents → stop.
+- **Oscillation:** the same document diverges again in the very next cycle → sign that it is being
+  maintained by hand where it should be derived (e.g. an API reference that should be generated
+  from the schema, `agents/11-documentation/api-documenter.md`) — stop and propose the automation
+  instead of repeating the manual fix.
+- **Hard cap:** 4 iterations per document. Once exceeded, escalate to the user with a proposal to
+  change how that document is maintained (generated vs. hand-written).
 
-## Registo em STATE.md
+## STATE.md ledger
 
 ```
-L06 · documentação · métrica 8→4→4 · iter 3 (teto 4) · último progresso: iter 2 · estado: EM RISCO
+L06 · documentation · metric 8→4→4 · iter 3 (cap 4) · last progress: iter 2 · status: AT RISK
 ```
 
-## Exemplo (app interna — ferramenta de aprovação de despesas)
+## Example (internal app — expense approval tool)
 
-O runbook de operação (`product/07-operations/runbooks/reprocessar-despesa-falhada.md`) descreve um
-comando `npm run reprocess -- --id=X`, mas a fatia de F6 mais recente substituiu o script CLI por um
-botão no backoffice ("Reprocessar"), sem atualizar o runbook. O guardião de documentação deteta a
-divergência na sua cadência semanal ao cruzar o runbook com o `CHANGELOG.md`. Confirma a fonte (o
-código do backoffice, já em produção), reescreve o runbook com o novo procedimento e uma nota de
-migração ("antes: CLI; agora: botão X no ecrã Y, mesma permissão"), e pede ao
-`revisor-de-documentacao` para confirmar contra o comportamento real. Sem este loop, o próximo
-incidente às 3h da manhã seguiria um runbook que já não existe.
+The operations runbook (`product/07-operations/runbooks/reprocess-failed-expense.md`) describes a
+command `npm run reprocess -- --id=X`, but the most recent F6 slice replaced the CLI script with a
+button in the backoffice ("Reprocess"), without updating the runbook. The documentation guardian
+detects the divergence on its weekly cadence by cross-checking the runbook against `CHANGELOG.md`.
+It confirms the source (the backoffice code, already in production), rewrites the runbook with the
+new procedure and a migration note ("before: CLI; now: button X on screen Y, same permission"), and
+asks the `documentation-reviewer` to confirm against real behavior. Without this loop, the next
+3 a.m. incident would follow a runbook that no longer exists.
 
-## Relacionados
+## Related
 
-- `agents/13-guardians/documentation-guardian.md` — dono da cadência de deteção e correção.
-- `agents/13-guardians/README.md` — cadências e relatório comum aos guardiões.
-- `agents/12-reviewers/documentation-reviewer.md` — verificação independente.
-- `agents/11-documentation/technical-writer.md` — quem escreve quando a mudança é substancial.
-- `modules/single-source-of-content.md` — evita duplicar a correção em ecrã e documento.
-- `workflows/W09-continuous-operation.md` — a cadência de F9 onde este loop corre por defeito.
+- `agents/13-guardians/documentation-guardian.md` — owner of the detection-and-fix cadence.
+- `agents/13-guardians/README.md` — cadences and the report shared by all guardians.
+- `agents/12-reviewers/documentation-reviewer.md` — independent verification.
+- `agents/11-documentation/technical-writer.md` — who writes when the change is substantial.
+- `modules/single-source-of-content.md` — avoids duplicating the fix in screen and document.
+- `workflows/W09-continuous-operation.md` — the F9 cadence where this loop runs by default.

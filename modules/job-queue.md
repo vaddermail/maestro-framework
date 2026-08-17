@@ -1,129 +1,133 @@
-# Fila de Jobs · executor único, submissão múltipla
+# Job Queue · single executor, multiple submission
 
-> **Validação em produção:** 2.ª confirmação em domínio distinto do projeto-mãe (P2 — curadoria de 2026-08; nuances confirmadas: executor único, kill-switch por variável de
-> ambiente, falhas nunca silenciosas). O desenho mantém-se; a confiança sobe.
+> **Production validation:** 2nd confirmation in a domain distinct from the origin project (P2 —
+> 2026-08 curation round; nuances confirmed: single executor, kill-switch via environment
+> variable, failures never silent). The design stands; confidence rises.
 
-Módulo reutilizável para **trabalho assíncrono fiável**: vários pontos do sistema submetem trabalho,
-**um** executor drena-o, e nenhum efeito acontece duas vezes. Encapsula o padrão "fila com executor
-único" (`knowledge/proven-patterns.md` §1) numa capacidade adotável isoladamente.
+Reusable module for **reliable asynchronous work**: several points of the system submit work,
+**one** executor drains it, and no effect happens twice. It encapsulates the "queue with a single
+executor" pattern (`knowledge/proven-patterns.md` §1) as a capability adoptable on its own.
 
-## O problema que resolve
+## The problem it solves
 
-Sempre que um efeito não deve bloquear o pedido que o originou — enviar um email, chamar uma
-integração externa, recalcular um agregado, gerar um relatório — a tentação é executá-lo em linha.
-Isso encadeia três defeitos clássicos:
+Whenever an effect should not block the request that originated it — sending an email, calling an
+external integration, recomputing an aggregate, generating a report — the temptation is to run it
+inline. That chains three classic defects:
 
-- **Efeitos duplicados:** dois produtores disparam o mesmo email; um retry reenvia o que já tinha ido.
-- **Efeitos perdidos:** o pedido confirma ao utilizador, mas o processo morre antes de o efeito correr.
-- **Efeitos fantasma:** o efeito corre e **depois** a transação faz rollback — notificou-se algo que
-  nunca aconteceu.
+- **Duplicated effects:** two producers fire the same email; a retry resends what had already gone.
+- **Lost effects:** the request confirms to the user, but the process dies before the effect runs.
+- **Ghost effects:** the effect runs and **then** the transaction rolls back — something that never
+  happened got notified.
 
-A fila resolve isto separando **submeter** (barato, transacional, muitos) de **executar** (um só,
-idempotente, observável). O detalhe de *porquê* está em `knowledge/origin-lessons.md` §C5.
+The queue solves this by separating **submitting** (cheap, transactional, many) from **executing**
+(one only, idempotent, observable). The detail of *why* is in `knowledge/origin-lessons.md` §C5.
 
-## O modelo (conceitos e entidades, agnóstico de stack)
+## The model (concepts and entities, stack-agnostic)
 
-- **Job** — uma unidade de trabalho: `tipo`, `payload`, `fingerprint`, `estado`, `tentativas`,
-  `disponivelEm`, `resultado/erro`. Não presume tabela, tópico ou ficheiro — é o conceito.
-- **Produtor** — qualquer via que submete: um handler HTTP, um cron, um comando de CLI, um botão de
-  backoffice. Submeter é `inserir-se-não-existe` pelo `fingerprint`.
-- **Fingerprint** — chave **estável e determinística** que identifica o efeito, não a tentativa:
-  `tipo:entidade:contexto` (ex.: `email-boas-vindas:cliente#4471`). Dois produtores com o mesmo
-  fingerprint produzem **um** job.
-- **Executor (worker)** — **único** por tipo de trabalho. Reclama jobs elegíveis, executa, marca o
-  desfecho. Único não significa uma máquina: significa que **um** consumidor processa cada job de cada
-  vez (garantido por lock/claim atómico), mesmo com várias réplicas.
-- **Backoff** — em falha, o job volta à fila com `disponivelEm` adiado exponencialmente (ex.:
-  1min, 5min, 25min) e `tentativas++`.
-- **DLQ (dead-letter queue)** — destino dos jobs que esgotaram as tentativas: **não** desaparecem,
-  ficam visíveis para triagem manual.
-- **Estados** — `pendente → em-execução → concluído` | `falhado(→retry)` | `morto(DLQ)`. É uma
-  máquina de estados pequena (`modules/state-machines.md`).
+- **Job** — a unit of work: `type`, `payload`, `fingerprint`, `state`, `attempts`, `availableAt`,
+  `result/error`. It presumes no table, topic or file — it is the concept.
+- **Producer** — any path that submits: an HTTP handler, a cron, a CLI command, a backoffice button.
+  Submitting is `insert-if-absent` by `fingerprint`.
+- **Fingerprint** — a **stable, deterministic** key identifying the effect, not the attempt:
+  `type:entity:context` (e.g. `welcome-email:customer#4471`). Two producers with the same
+  fingerprint produce **one** job.
+- **Executor (worker)** — **single** per type of work. It claims eligible jobs, executes, marks the
+  outcome. Single does not mean one machine: it means **one** consumer processes each job at a time
+  (guaranteed by atomic lock/claim), even with several replicas.
+- **Backoff** — on failure, the job returns to the queue with `availableAt` postponed exponentially
+  (e.g. 1min, 5min, 25min) and `attempts++`.
+- **DLQ (dead-letter queue)** — the destination of jobs that exhausted their attempts: they do
+  **not** disappear, they stay visible for manual triage.
+- **States** — `pending → running → completed` | `failed(→retry)` | `dead(DLQ)`. It is a small
+  state machine (`modules/state-machines.md`).
 
-Ligação natural ao **transactional outbox**: o job é inserido **dentro da transação** do facto que o
-origina (`knowledge/proven-patterns.md` §3), pelo que rollback ⇒ zero jobs, sem código
-extra.
+Natural link to the **transactional outbox**: the job is inserted **inside the transaction** of the
+fact that originates it (`knowledge/proven-patterns.md` §3), so rollback ⇒ zero jobs, with no extra
+code.
 
-## Regras inegociáveis (numeradas, verificáveis)
+## Non-negotiable rules (numbered, verifiable)
 
-1. **Submissão é `inserir-se-não-existe` por fingerprint.** Verificável: submeter o mesmo fingerprint
-   N vezes cria **um** job; um teste afirma-o.
-2. **Um só executor efetiva cada job.** O claim é atómico (lock/`SELECT … FOR UPDATE SKIP LOCKED` ou
-   equivalente). Verificável: dois workers em paralelo sobre a mesma fila nunca executam o mesmo job
-   (teste de concorrência).
-3. **A execução é idempotente.** Mesmo que um job corra duas vezes (falha após efeito, antes de marcar
-   concluído), o efeito líquido é um só — a idempotência é do **handler**, ancorada no fingerprint.
-4. **Falha de um item nunca aborta o lote.** Cada job é uma transação independente; um erro marca esse
-   job e o executor prossegue.
-5. **Nada falha em silêncio.** Todo o erro é logado com o fingerprint e correlação; esgotar tentativas
-   move para a **DLQ**, nunca apaga (`knowledge/proven-patterns.md` §10).
-6. **Retries com backoff e teto.** Há um número máximo de tentativas e um crescimento do intervalo;
-   sem teto, um job envenenado martela o sistema para sempre.
-7. **Estado de cada job é consultável.** Existe forma de responder "onde está este trabalho?" sem ler
-   logs — pendente, a correr, concluído, morto, com contagem de tentativas e último erro.
-8. **Kill-switch por tipo/canal.** Um tipo de job pode ser suspenso sem novo deploy
-   (`modules/feature-flags.md`); os jobs acumulam-se em `pendente`, não se perdem.
+1. **Submission is `insert-if-absent` by fingerprint.** Verifiable: submitting the same fingerprint
+   N times creates **one** job; a test asserts it.
+2. **Only one executor effects each job.** The claim is atomic (lock/`SELECT … FOR UPDATE SKIP
+   LOCKED` or equivalent). Verifiable: two workers in parallel over the same queue never execute the
+   same job (concurrency test).
+3. **Execution is idempotent.** Even if a job runs twice (failure after the effect, before marking
+   completed), the net effect is a single one — idempotency belongs to the **handler**, anchored on
+   the fingerprint.
+4. **One item's failure never aborts the batch.** Each job is an independent transaction; an error
+   marks that job and the executor moves on.
+5. **Nothing fails silently.** Every error is logged with the fingerprint and correlation;
+   exhausting attempts moves to the **DLQ**, never deletes (`knowledge/proven-patterns.md` §10).
+6. **Retries with backoff and a ceiling.** There is a maximum number of attempts and a growing
+   interval; without a ceiling, a poisoned job hammers the system forever.
+7. **Each job's state is queryable.** There is a way to answer "where is this work?" without reading
+   logs — pending, running, completed, dead, with attempt count and last error.
+8. **Kill-switch per type/channel.** A job type can be suspended without a new deploy
+   (`modules/feature-flags.md`); jobs pile up in `pending`, they are not lost.
 
-## Como se adota num produto novo (passos)
+## How to adopt it in a new product (steps)
 
-1. **Decidir o substrato** com o utilizador (`core/decision-engine.md`): tabela na BD relacional
-   (o mais simples e transacional — recomendado por defeito), ou broker dedicado se o volume o exigir.
-   Não introduzir infraestrutura de filas antes de a precisar.
-2. **Definir o registo de Job** e o índice único parcial sobre `fingerprint` **onde** o job ainda está
-   ativo (garante a regra 1 na camada mais baixa — `knowledge/proven-patterns.md` §5).
-3. **Criar a porta de submissão** `enfileirar(tx, tipo, payload)` que participa na transação do
-   chamador (outbox).
-4. **Escrever o executor** com claim atómico, ciclo de drenagem, backoff, DLQ e logging estruturado.
-5. **Registar os handlers por tipo**, cada um idempotente e com fake em dev/test.
-6. **Expor o estado** (backoffice ou endpoint) e ligar o **kill-switch por tipo** às flags.
-7. **Testar a lógica de risco:** dedupe, concorrência de dois workers, retry/backoff, caminho para DLQ
+1. **Decide the substrate** with the user (`core/decision-engine.md`): a table in the relational DB
+   (the simplest and transactional — recommended by default), or a dedicated broker if volume
+   demands it. Do not introduce queue infrastructure before needing it.
+2. **Define the Job record** and the partial unique index on `fingerprint` **where** the job is
+   still active (guarantees rule 1 at the lowest layer — `knowledge/proven-patterns.md` §5).
+3. **Create the submission gateway** `enqueue(tx, type, payload)` that participates in the caller's
+   transaction (outbox).
+4. **Write the executor** with atomic claim, drain loop, backoff, DLQ and structured logging.
+5. **Register the handlers per type**, each idempotent and with a fake in dev/test.
+6. **Expose the state** (backoffice or endpoint) and wire the **per-type kill-switch** to the flags.
+7. **Test the risky logic:** dedupe, two-worker concurrency, retry/backoff, path to the DLQ
    (`knowledge/permanent-rules.md` §7).
 
-## Variações e trade-offs
+## Variations and trade-offs
 
-- **Fila na BD vs broker dedicado.** BD: transacional com o resto do domínio (outbox trivial),
-  observável por SQL, ótima até milhares/min. Broker (Redis/RabbitMQ/SQS/…): escala e fan-out
-  maiores, mas o outbox deixa de ser grátis e ganha-se uma peça de infra para operar. Comece na BD.
-- **Executor único lógico vs físico.** Uma réplica só evita concorrência mas é um ponto único de
-  paragem; várias réplicas com claim atómico (`SKIP LOCKED`) dão tolerância a falhas mantendo "um por
-  job". Prefira o segundo assim que a disponibilidade importe.
-- **Ordenação.** A fila simples não garante ordem entre jobs; se a ordem importa (eventos por
-  agregado), particione por chave e serialize dentro da partição — ver `agents/05-backend/events-specialist.md`.
-- **Prioridades.** Uma coluna de prioridade ou filas separadas por classe evita que relatórios
-  pesados atrasem emails urgentes — só a partir do momento em que compete por vazão.
+- **Queue in the DB vs dedicated broker.** DB: transactional with the rest of the domain (trivial
+  outbox), observable via SQL, great up to thousands/min. Broker (Redis/RabbitMQ/SQS/…): greater
+  scale and fan-out, but the outbox stops being free and you gain a piece of infra to operate. Start
+  in the DB.
+- **Logical vs physical single executor.** A single replica avoids concurrency but is a single point
+  of stoppage; several replicas with atomic claim (`SKIP LOCKED`) give fault tolerance while keeping
+  "one per job". Prefer the latter as soon as availability matters.
+- **Ordering.** The simple queue does not guarantee order across jobs; if order matters (events per
+  aggregate), partition by key and serialize within the partition — see
+  `agents/05-backend/events-specialist.md`.
+- **Priorities.** A priority column or separate queues per class keeps heavy reports from delaying
+  urgent emails — only once they compete for throughput.
 
-## Exemplo (multi-domínio)
+## Example (multi-domain)
 
-**E-commerce — email de confirmação de encomenda.** Ao confirmar o pagamento, o handler insere na
-mesma transação um job `email-confirmacao:encomenda#8812`. Se o gateway confirma mas a app cai antes
-de commit, a transação inteira reverte: nem encomenda nem email. Se dois webhooks do gateway chegarem
-(duplicação normal), o fingerprint garante um único email. O executor envia; se o SMTP falha, backoff
-e retry; ao fim de 5 tentativas, DLQ visível para o suporte investigar.
+**E-commerce — order confirmation email.** On payment confirmation, the handler inserts, in the same
+transaction, a job `order-confirmation-email:order#8812`. If the gateway confirms but the app
+crashes before commit, the whole transaction reverts: no order and no email. If two gateway webhooks
+arrive (normal duplication), the fingerprint guarantees a single email. The executor sends; if SMTP
+fails, backoff and retry; after 5 attempts, a DLQ visible for support to investigate.
 
-**Plataforma de dados — reprocessamento de um lote.** Um cron noturno e um botão "reprocessar agora"
-no backoffice submetem ambos `recalcular-agregado:2026-07`. Como partilham fingerprint, coincidindo
-no tempo geram **um** job, não dois recálculos concorrentes sobre a mesma partição.
+**Data platform — reprocessing a batch.** A nightly cron and a "reprocess now" backoffice button
+both submit `recalculate-aggregate:2026-07`. Since they share the fingerprint, coinciding in time
+they generate **one** job, not two concurrent recalculations over the same partition.
 
-## Armadilhas conhecidas
+## Known pitfalls
 
-- **Fingerprint que inclui a tentativa** (timestamp, UUID aleatório) anula o dedupe — tem de ser
-  estável no **efeito**, não no evento.
-- **Handler não idempotente** transforma um retry legítimo num efeito duplicado; a regra 3 é sobre o
-  handler, não sobre a fila.
-- **DLQ que ninguém olha** é um cemitério silencioso — precisa de alerta e de dono
+- **A fingerprint that includes the attempt** (timestamp, random UUID) defeats the dedupe — it must
+  be stable on the **effect**, not on the event.
+- **A non-idempotent handler** turns a legitimate retry into a duplicated effect; rule 3 is about
+  the handler, not the queue.
+- **A DLQ nobody looks at** is a silent graveyard — it needs an alert and an owner
   (`agents/13-guardians/README.md`).
-- **Efeito antes do commit** (enviar o email e *depois* gravar) reintroduz o efeito-fantasma; o job
-  entra na transação, a entrega é sempre pós-commit.
-- **Claim não atómico** (ler-marcar-executar sem lock) reabre a corrida TOCTOU que a regra 2 fecha —
-  ver `knowledge/origin-lessons.md` §C4.
-- **Sem teto de tentativas**, um job envenenado consome o executor indefinidamente.
+- **Effect before commit** (send the email and *then* persist) reintroduces the ghost effect; the
+  job joins the transaction, delivery is always post-commit.
+- **Non-atomic claim** (read-mark-execute without a lock) reopens the TOCTOU race that rule 2 closes
+  — see `knowledge/origin-lessons.md` §C4.
+- **Without an attempt ceiling**, a poisoned job consumes the executor indefinitely.
 
-## Relacionados
+## Related
 
-- `knowledge/proven-patterns.md` — §1 fila única, §3 outbox, §10 fallbacks visíveis.
-- `agents/05-backend/queue-specialist.md` — o agente que implementa este módulo.
-- `agents/05-backend/events-specialist.md` — outbox, ordering e idempotência de eventos.
-- `modules/state-machines.md` — os estados do job como máquina explícita.
-- `modules/feature-flags.md` — o kill-switch por tipo/canal.
-- `modules/ai-observability.md` — quando os jobs chamam modelos de IA, contabilizar o consumo.
+- `knowledge/proven-patterns.md` — §1 single queue, §3 outbox, §10 visible fallbacks.
+- `agents/05-backend/queue-specialist.md` — the agent that implements this module.
+- `agents/05-backend/events-specialist.md` — outbox, ordering and event idempotency.
+- `modules/state-machines.md` — the job's states as an explicit machine.
+- `modules/feature-flags.md` — the per-type/channel kill-switch.
+- `modules/ai-observability.md` — when jobs call AI models, account for the consumption.
 - `knowledge/origin-lessons.md` — §C4 (locks/TOCTOU), §C5 (outbox).

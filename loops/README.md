@@ -1,112 +1,117 @@
-# Loops — persistência inteligente
+# Loops — intelligent persistence
 
-Um **loop** é um processo de convergência: repete uma ação enquanto uma condição indesejável persistir,
-até essa condição desaparecer **ou** até uma salvaguarda decidir que não está a convergir e subir ao
-utilizador. Onde um workflow (`workflows/README.md`) é uma sequência que termina quando o último passo
-corre, um loop termina quando o **estado do mundo** atinge o alvo — ou quando prova que não vai atingir.
+A **loop** is a convergence process: it repeats an action while an undesirable condition persists,
+until that condition disappears **or** a safeguard decides it is not converging and escalates to
+the user. Where a workflow (`workflows/README.md`) is a sequence that ends when the last step runs,
+a loop ends when the **state of the world** reaches the target — or when it proves it never will.
 
-Os loops existem porque a maioria dos problemas de software não se resolve num passo: requisitos
-ambíguos geram mais perguntas, um teste corrigido revela outro a falhar, um CVE tratado destapa um
-seguinte. A framework não deixa isto ao improviso da sessão: cada tipo de problema recorrente tem um
-loop com regras explícitas de entrada, saída e **anti-teimosia** — porque um agente de IA, deixado a
-insistir, tanto converge como entra num ciclo interminável a "corrigir" a mesma coisa (ver
+Loops exist because most software problems are not solved in one step: ambiguous requirements breed
+more questions, one fixed test reveals another failing, one handled CVE uncovers the next one. The
+framework does not leave this to session improvisation: each recurring problem type has a loop with
+explicit entry, exit and **anti-stubbornness** rules — because an AI agent left to insist is as
+likely to converge as to enter an endless cycle "fixing" the same thing (see
 `knowledge/ai-pitfalls.md`).
 
-## Anatomia de um loop (secções fixas)
+## Anatomy of a loop (fixed sections)
 
-Todo o `Lnn` segue a mesma estrutura, para o Orquestrador saltar de um para outro sem reaprender o
-formato:
+Every `Lnn` follows the same structure, so the Orchestrator can jump from one to another without
+relearning the format:
 
-| Secção | O que responde | Regra |
+| Section | What it answers | Rule |
 | --- | --- | --- |
-| **Identificação** | Nome, quando corre, que agente(s) executa a ação, modelo sugerido | Tabela no topo |
-| **Métrica de progresso** | O número mensurável que o loop faz baixar | Tem de ser **contável e comparável** entre iterações — não "sensação de melhoria" |
-| **Condição de entrada** | O que abre o loop | Um facto verificável (`há N itens no estado X`), não uma intenção |
-| **Ação (o corpo da iteração)** | O que se faz **uma vez** por iteração | Um passo pequeno e reversível; delega no agente dono do problema |
-| **Condição de saída (sucesso)** | Quando o loop fecha por ter resolvido | Métrica a zero (ou ≤ limiar acordado) e verificado por quem não produziu |
-| **Salvaguarda anti-loop-infinito** | Quando o loop para **sem** ter resolvido | Regra dos 3 (abaixo) + tetos duros; sobe ao utilizador com diagnóstico |
-| **Registo em STATE.md** | O rasto que fica | Linha de *ledger* do loop, atualizada a cada iteração |
-| **Relacionados** | Para onde o leitor segue | 3–8 caminhos que existam no `_meta/INVENTORY.md` |
+| **Identification** | Name, when it runs, which agent(s) execute the action, suggested model | Table at the top |
+| **Progress metric** | The measurable number the loop drives down | Must be **countable and comparable** across iterations — not a "feeling of improvement" |
+| **Entry condition** | What opens the loop | A verifiable fact (`there are N items in state X`), not an intention |
+| **Action (the body of the iteration)** | What is done **once** per iteration | One small, reversible step; delegates to the agent that owns the problem |
+| **Exit condition (success)** | When the loop closes because it resolved | Metric at zero (or ≤ the agreed threshold), verified by someone who did not produce the fix |
+| **Anti-infinite-loop safeguard** | When the loop stops **without** resolving | Rule of 3 (below) + hard caps; escalates to the user with a diagnosis |
+| **STATE.md record** | The trail left behind | The loop's ledger line, updated every iteration |
+| **Related** | Where the reader goes next | 3–8 paths that exist in `_meta/INVENTORY.md` |
 
-## A salvaguarda anti-loop-infinito (a "regra dos 3")
+## The anti-infinite-loop safeguard (the "rule of 3")
 
-Nenhum loop corre indefinidamente. A salvaguarda base, obrigatória em **todos** os loops:
+No loop runs indefinitely. The base safeguard, mandatory in **all** loops:
 
-> **3 iterações consecutivas sem progresso → parar o loop, registar o diagnóstico e subir ao utilizador
-> com opções.** "Sem progresso" = a métrica de progresso do loop não desceu estritamente entre iterações.
+> **3 consecutive iterations without progress → stop the loop, record the diagnosis and escalate to
+> the user with options.** "Without progress" = the loop's progress metric did not strictly
+> decrease between iterations.
 
-Isto operacionaliza a linha do `core/orchestrator.md` §Recovery ("loop que não converge → parar").
-Cada loop especializa a regra com três defesas complementares:
+This operationalizes the line in `core/orchestrator.md` §Recovery and exceptions ("loop that does
+not converge → stop"). Each loop specializes the rule with three complementary defenses:
 
-1. **Estagnação** — a métrica não desce em 3 iterações seguidas (o caso base acima).
-2. **Oscilação** — a métrica desce e volta a subir para o mesmo valor (ex.: corrigir A parte B, corrigir
-   B parte A). Detetada por *fingerprint* do estado: se um estado já visto se repete, é ciclo, não
-   progresso — parar de imediato, não esperar pela 3.ª iteração.
-3. **Teto duro** — um número máximo absoluto de iterações por loop (definido em cada `Lnn`),
-   independentemente de haver ou não progresso, para o caso patológico de "progresso" infinitesimal.
+1. **Stagnation** — the metric does not decrease for 3 consecutive iterations (the base case above).
+2. **Oscillation** — the metric goes down and comes back up to the same value (e.g. fixing A breaks
+   B, fixing B breaks A). Detected by a state *fingerprint*: if an already-seen state repeats, it
+   is a cycle, not progress — stop immediately, do not wait for the 3rd iteration.
+3. **Hard cap** — an absolute maximum number of iterations per loop (set in each `Lnn`),
+   regardless of whether there is progress, for the pathological case of infinitesimal "progress".
 
-Quando uma salvaguarda dispara, o Orquestrador **não insiste nem inventa** (`knowledge/ai-pitfalls.md`
-#3, #20): escreve em `STATE.md` → "Decisões pendentes" o que tentou, porque não convergiu e que opções
-existem (mudar de abordagem, aceitar risco residual, cortar âmbito), e devolve a decisão a quem a pode
-tomar. Uma corrida abortada por salvaguarda **não é falha do loop** — é o loop a fazer o seu trabalho.
+When a safeguard fires, the Orchestrator **neither insists nor invents** (`knowledge/ai-pitfalls.md`
+#3, #20): it writes in `STATE.md` → "Decisões pendentes" what it tried, why it did not converge and
+what options exist (change approach, accept residual risk, cut scope), and returns the decision to
+whoever can make it. A run aborted by a safeguard **is not a loop failure** — it is the loop doing
+its job.
 
-## Convenção `Lnn` e ledger em STATE.md
+## The `Lnn` convention and the STATE.md ledger
 
-- Loops numerados `Lnn-nome.md` (`_meta/STYLE-GUIDE.md` §6). A numeração não implica ordem de
-  execução: os loops disparam por **condição**, não por sequência.
-- Cada loop ativo tem **uma linha de ledger** em `STATE.md` (secção "Em curso"), atualizada a cada
-  iteração, no formato:
+- Loops numbered `Lnn-name.md` (`_meta/STYLE-GUIDE.md` §6). Numbering does not imply execution
+  order: loops fire by **condition**, not by sequence.
+- Each active loop has **one ledger line** in `STATE.md` ("Em curso" section), updated every
+  iteration, in the format:
 
   ```
-  L02 · testes falhados · métrica 12→7→7 · iter 3 (teto 6) · último progresso: iter 2 · estado: EM RISCO
+  L02 · failing tests · metric 12→7→7 · iter 3 (cap 6) · last progress: iter 2 · status: AT RISK
   ```
 
-  Regista: a métrica ao longo das iterações (para se ver a tendência), a iteração atual e o teto, quando
-  houve progresso pela última vez, e o estado (`em curso` / `em risco` / `parado — subiu ao utilizador`
-  / `fechado`). Ao fechar, colapsa-se para uma linha no "Registo histórico" (`core/project-memory.md`
-  §Higiene). Isto garante que a próxima sessão retoma um loop a meio **sem re-perguntar**.
+  It records: the metric across iterations (so the trend is visible), the current iteration and the
+  cap, when progress last happened, and the status (`in progress` / `at risk` / `stopped —
+  escalated to the user` / `closed`). On closing, it collapses into one line in "Registo histórico"
+  (`core/project-memory.md` §Memory hygiene). This guarantees the next session resumes a loop
+  midway **without re-asking**.
 
-## Quem abre, quem corre, quem fecha
+## Who opens, who runs, who closes
 
-- **Abre:** o Orquestrador, quando um workflow o dita (ex.: `W02` abre `L01`) ou quando um agente/guardião
-  reporta a condição de entrada. Loops de operação (L03/L05/L06/L07/L08) também disparam por cadência ou
-  evento em F9 (`workflows/W09-continuous-operation.md`).
-- **Corre:** o agente dono do problema executa a ação de cada iteração (nomeado na Identificação de cada
-  `Lnn`); o Orquestrador coordena, mede a métrica e aplica a salvaguarda. O modelo escolhe-se por tarefa
-  (`core/model-routing.md`): a **ação** pode ser económica; a **decisão de aceitar risco ou
-  parar** pede juízo (topo).
-- **Fecha:** o portão (`core/quality-gates.md`) ou o guardião, com **verificação independente** —
-  quem produziu a correção nunca é quem declara o loop fechado (`knowledge/ai-pitfalls.md` #20).
+- **Opens:** the Orchestrator, when a workflow dictates it (e.g. `W02` opens `L01`) or when an
+  agent/guardian reports the entry condition. Operation loops (L03/L05/L06/L07/L08) also fire by
+  cadence or event in F9 (`workflows/W09-continuous-operation.md`).
+- **Runs:** the agent that owns the problem executes each iteration's action (named in each `Lnn`'s
+  Identification); the Orchestrator coordinates, measures the metric and applies the safeguard. The
+  model is chosen per task (`core/model-routing.md`): the **action** can be Economy; the **decision
+  to accept risk or stop** demands judgment (Top).
+- **Closes:** the gate (`core/quality-gates.md`) or the guardian, with **independent verification**
+  — whoever produced the fix never declares the loop closed (`knowledge/ai-pitfalls.md` #20).
 
-## Princípios transversais (não repetir, referenciar)
+## Cross-cutting principles (do not repeat, reference)
 
-- **Corrigir a causa, nunca o sintoma nem o detetor.** Não se apaga o teste que falha nem se sobe o
-  limiar para o smell passar — isso é fraudar a métrica. Detalhe por loop (L02, L04).
-- **Cada iteração é reversível** (`knowledge/permanent-rules.md` §3): um passo de loop que não se
-  pode desfazer exige aprovação humana antes de correr.
-- **Prioridade por severidade/risco**, não por ordem de deteção (L03, L07): resolve-se primeiro o que
-  mais dói.
-- **Honestidade da métrica** (`knowledge/permanent-rules.md` §2): a métrica reporta-se com o valor
-  real; um loop declarado fechado tem de o provar (métrica verificada, não afirmada).
+- **Fix the cause, never the symptom or the detector.** The failing test is not deleted and the
+  threshold is not raised so the smell passes — that is gaming the metric. Per-loop detail (L02,
+  L04).
+- **Every iteration is reversible** (`knowledge/permanent-rules.md` §3): a loop step that cannot be
+  undone requires human approval before running.
+- **Priority by severity/risk**, not by detection order (L03, L07): what hurts most is solved
+  first.
+- **Metric honesty** (`knowledge/permanent-rules.md` §2): the metric is reported at its real value;
+  a loop declared closed has to prove it (metric verified, not asserted).
 
-## Os loops da framework
+## The framework's loops
 
-| Loop | Condição que persegue | Agente/dono | Fase típica |
+| Loop | Condition it chases | Agent/owner | Typical phase |
 | --- | --- | --- | --- |
-| `loops/L01-ambiguous-requirements.md` | Requisitos ambíguos/contraditórios/em falta | `agents/01-requirements/ambiguity-hunter.md` | F2 (e onde surja ambiguidade) |
-| `loops/L02-failing-tests.md` | Testes a falhar | `agents/10-quality/` | F6 (contínuo) |
-| `loops/L03-security-issues.md` | Achados de segurança abertos | `agents/09-security/security-coordinator.md` | F7, F9 |
-| `loops/L04-code-smells.md` | Code smells acima do limiar | `agents/13-guardians/quality-guardian.md` | F6, F9 |
-| `loops/L05-inconsistencies.md` | Divergência docs↔código↔dados | Agente dono da fonte de verdade | Contínuo |
-| `loops/L06-outdated-documentation.md` | Documentação fora de sincronia | `agents/13-guardians/documentation-guardian.md` | F9 (e após cada mudança) |
-| `loops/L07-cves.md` | CVEs por triar | `agents/13-guardians/security-guardian.md` | F9 (cadência + evento) |
-| `loops/L08-technical-debt.md` | Dívida técnica registada | Orquestrador + agente relevante | F9 (planeado) |
+| `loops/L01-ambiguous-requirements.md` | Ambiguous/contradictory/missing requirements | `agents/01-requirements/ambiguity-hunter.md` | F2 (and wherever ambiguity appears) |
+| `loops/L02-failing-tests.md` | Failing tests | `agents/10-quality/` | F6 (continuous) |
+| `loops/L03-security-issues.md` | Open security findings | `agents/09-security/security-coordinator.md` | F7, F9 |
+| `loops/L04-code-smells.md` | Code smells above the threshold | `agents/13-guardians/quality-guardian.md` | F6, F9 |
+| `loops/L05-inconsistencies.md` | Docs↔code↔data divergence | Agent that owns the source of truth | Continuous |
+| `loops/L06-outdated-documentation.md` | Documentation out of sync | `agents/13-guardians/documentation-guardian.md` | F9 (and after every change) |
+| `loops/L07-cves.md` | CVEs to triage | `agents/13-guardians/security-guardian.md` | F9 (cadence + event) |
+| `loops/L08-technical-debt.md` | Recorded technical debt | Orchestrator + relevant agent | F9 (planned) |
 
-## Relacionados
+## Related
 
-- `core/orchestrator.md` — quem abre/coordena/fecha os loops (§Recuperação: a origem da regra dos 3).
-- `workflows/README.md` — os processos que abrem loops dentro das fases.
-- `core/quality-gates.md` — o que um loop tem de satisfazer para fechar.
-- `core/project-memory.md` — onde vive o ledger de cada loop (`STATE.md`).
-- `knowledge/ai-pitfalls.md` — a teimosia e a auto-validação que os loops travam.
-- `core/model-routing.md` — que modelo executa a ação vs. decide parar.
+- `core/orchestrator.md` — who opens/coordinates/closes the loops (§Recovery and exceptions: the
+  origin of the rule of 3).
+- `workflows/README.md` — the processes that open loops within the phases.
+- `core/quality-gates.md` — what a loop must satisfy to close.
+- `core/project-memory.md` — where each loop's ledger lives (`STATE.md`).
+- `knowledge/ai-pitfalls.md` — the stubbornness and self-validation the loops stop.
+- `core/model-routing.md` — which model executes the action vs. decides to stop.

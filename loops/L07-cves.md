@@ -1,80 +1,81 @@
 # L07 — CVEs
 
-> Loop `L07` da framework Maestro — persiste enquanto existirem CVEs por triar, conduzindo cada
-> um a um estado terminal (corrigido, mitigado, ou não-aplicável). Segue a anatomia de
+> Loop `L07` of the Maestro framework — persists while there are CVEs left to triage, driving each
+> one to a terminal state (fixed, mitigated, or not-applicable). Follows the anatomy in
 > `loops/README.md`.
 
-Um CVE publicado sobre um componente que usamos não é uma tarefa opcional — é uma janela de tempo que
-se fecha a favorecer quem ataca. Este loop existe para que nenhum CVE fique "em análise" sem dono nem
-prazo.
+A published CVE on a component we use is not an optional task — it is a window of time closing in
+the attacker's favor. This loop exists so that no CVE sits "under analysis" with no owner and no
+deadline.
 
-## Identificação
+## Identification
 
-| Campo | Valor |
+| Field | Value |
 | --- | --- |
-| **Quando corre** | F9 — cadência de varrimento diário + por evento (publicação de CVE que afete o SBOM) |
-| **Agente que executa a ação** | `agents/13-guardians/security-guardian.md`, seguindo `playbooks/cve-response.md`; coordena com `agents/13-guardians/dependency-guardian.md` quando a correção é um bump de dependência |
-| **Modelo sugerido** | Padrão para triagem e CVEs de severidade baixa/média; Topo para análise de impacto e plano de patch de CVEs críticos (`core/model-routing.md`) |
+| **When it runs** | F9 — daily scan cadence + per event (publication of a CVE affecting the SBOM) |
+| **Agent that executes the action** | `agents/13-guardians/security-guardian.md`, following `playbooks/cve-response.md`; coordinates with `agents/13-guardians/dependency-guardian.md` when the fix is a dependency bump |
+| **Suggested model** | Standard for triage and low/medium-severity CVEs; Top for impact analysis and patch planning of critical CVEs (`core/model-routing.md`) |
 
-## Métrica de progresso
+## Progress metric
 
-Número de CVEs aplicáveis (afetam um componente do SBOM) ainda sem **estado terminal**
-(corrigido-e-validado / mitigado-com-risco-aceite / não-aplicável-justificado).
+Number of applicable CVEs (affecting an SBOM component) still without a **terminal state**
+(fixed-and-validated / mitigated-with-accepted-risk / not-applicable-justified).
 
-## Condição de entrada
+## Entry condition
 
-Um feed de CVE, um aviso de dependência, ou um scanner de `pipelines/ci-security.md` reporta ≥1 CVE
-que afeta um componente presente no SBOM (`agents/09-security/sbom-manager.md`), ainda sem estado
-terminal.
+A CVE feed, a dependency advisory, or a scanner from `pipelines/ci-security.md` reports ≥1 CVE
+affecting a component present in the SBOM (`agents/09-security/sbom-manager.md`), still without a
+terminal state.
 
-## Ação (o corpo da iteração)
+## Action (the body of the iteration)
 
-Segue `playbooks/cve-response.md` passo a passo:
+Follows `playbooks/cve-response.md` step by step:
 
-1. Confirmar aplicabilidade contra o SBOM (versão afetada, componente realmente usado).
-2. Analisar impacto real cruzando com o threat model (explorabilidade no contexto concreto, não só o
-   score).
-3. Planear: patch disponível? risco de regressão? mitigação temporária possível?
-4. Aplicar o patch (ou acionar o `guardiao-de-dependencias` para o bump) atrás de flag se o risco de
-   regressão for alto.
-5. Validar: regressão verde + prova-live que confirma que a vulnerabilidade fechou.
+1. Confirm applicability against the SBOM (affected version, component actually used).
+2. Analyze real impact by cross-checking with the threat model (exploitability in the concrete
+   context, not just the score).
+3. Plan: patch available? regression risk? temporary mitigation possible?
+4. Apply the patch (or trigger the `dependency-guardian` for the bump) behind a flag if the
+   regression risk is high.
+5. Validate: green regression + live proof confirming the vulnerability is closed.
 
-## Condição de saída (sucesso)
+## Exit condition (success)
 
-Zero CVEs aplicáveis sem estado terminal. Cada um documentado: corrigido e validado, mitigado com
-risco residual assinado pelo utilizador, ou não-aplicável com a justificação escrita.
+Zero applicable CVEs without a terminal state. Each one documented: fixed and validated, mitigated
+with residual risk signed off by the user, or not-applicable with the justification written down.
 
-## Salvaguarda anti-loop-infinito
+## Anti-infinite-loop safeguard
 
-- **Estagnação:** 3 iterações sobre o mesmo CVE sem o mover de estado → parar esse CVE especificamente.
-- **Oscilação:** aplicar o patch de um CVE reintroduz outro (o bump quebra uma dependência que volta a
-  ficar vulnerável numa versão diferente) → parar de imediato, tratar como decisão de arquitetura de
-  dependências, não como mais uma tentativa.
-- **Teto duro:** 4 iterações por CVE. Ultrapassado, o CVE sobe a candidato a **risco residual** — nunca
-  fica silenciado sem decisão; o utilizador decide aceitar (com prazo de revisão), mitigar de outra
-  forma, ou financiar a migração maior que o resolve.
+- **Stagnation:** 3 iterations on the same CVE without moving its state → stop that CVE
+  specifically.
+- **Oscillation:** patching one CVE reintroduces another (the bump breaks a dependency that becomes
+  vulnerable again in a different version) → stop immediately; treat it as a dependency-architecture
+  decision, not as one more attempt.
+- **Hard cap:** 4 iterations per CVE. Once exceeded, the CVE escalates to a **residual risk**
+  candidate — it is never silenced without a decision; the user decides to accept (with a review
+  deadline), mitigate some other way, or fund the larger migration that resolves it.
 
-## Registo em STATE.md
+## STATE.md ledger
 
 ```
-L07 · CVEs · métrica 4→2→2 · iter 3 (teto 4) · último progresso: iter 2 · estado: EM RISCO
+L07 · CVEs · metric 4→2→2 · iter 3 (cap 4) · last progress: iter 2 · status: AT RISK
 ```
 
-## Exemplo (e-commerce — checkout com processamento de imagens de produto)
+## Example (e-commerce — checkout with product image processing)
 
-O varrimento diário sinaliza um CVE crítico numa biblioteca de processamento de imagens usada para
-gerar miniaturas de produto ao carregar novos artigos. Confirmado no SBOM: versão afetada até 3.2.1,
-usamos 3.2.0. Threat model: a biblioteca processa ficheiros carregados por fornecedores autenticados
-no painel de catálogo — explorável, superfície limitada a esse papel. Patch disponível em 3.2.2, sem
-breaking changes. Aplica-se já; regressão verde; prova-live com uma imagem malformada conhecida
-(rejeitada corretamente). O CVE fecha como corrigido-e-validado, SBOM atualizado, lição registada:
-"processamento de imagem de terceiros: manter na última patch; superfície = upload de fornecedores."
+The daily scan flags a critical CVE in an image-processing library used to generate product
+thumbnails when new items are uploaded. Confirmed in the SBOM: affected up to version 3.2.1, we use
+3.2.0. Threat model: the library processes files uploaded by authenticated suppliers in the catalog
+panel — exploitable, surface limited to that role. Patch available in 3.2.2, no breaking changes.
+Applied right away; green regression; live proof with a known malformed image (correctly rejected).
+The CVE closes as fixed-and-validated, SBOM updated, lesson recorded: "third-party image
+processing: keep on the latest patch; surface = supplier uploads."
 
-## Relacionados
+## Related
 
-- `agents/13-guardians/security-guardian.md` — dono do ciclo completo deste loop.
-- `playbooks/cve-response.md` — o procedimento passo-a-passo que a ação segue.
-- `agents/09-security/sbom-manager.md` — o inventário sem o qual não há análise de impacto fiável.
-- `agents/13-guardians/dependency-guardian.md` — executa os bumps de correção.
-- `checklists/pre-production-security.md` — o portão que este loop tem de satisfazer antes do go-live.
-- `workflows/W09-continuous-operation.md` — a cadência de F9 onde este loop corre por defeito.
+- `agents/13-guardians/security-guardian.md` — owner of this loop's full cycle.
+- `playbooks/cve-response.md` — the step-by-step procedure the action follows.
+- `agents/09-security/sbom-manager.md` — the inventory without which impact analysis is unreliable.
+- `agents/13-guardians/dependency-guardian.md` — executes the corrective bumps.
+- `checklists/pre-production-security.md` — the gate this loop must satisfy before go-live.
+- `workflows/W09-continuous-operation.md` — the F9 cadence where this loop runs by default.

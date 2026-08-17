@@ -1,139 +1,142 @@
-# W09 — Operação Contínua (Fase F9)
+# W09 — Continuous Operation (Phase F9)
 
-A fase que **nunca acaba**. Um produto não está "acabado" quando entra em produção — é aí que começa a
-viver (`MANIFESTO.md` §10: a manutenção começa no dia 0). F9 mantém-no saudável para sempre através de
-uma **equipa permanente de guardiões**, cada um a vigiar uma dimensão na sua **cadência própria**, sem
-esperar que um humano se lembre de olhar. Onde um revisor de F7 pergunta "está bom para lançar?", um
-guardião pergunta "continua bom, hoje?".
+The phase that **never ends**. A product is not "done" when it reaches production — that is where it
+starts to live (`MANIFESTO.md` §10: maintenance starts on day 0). F9 keeps it healthy forever
+through a **permanent team of guardians**, each watching one dimension at its **own cadence**,
+without waiting for a human to remember to look. Where an F7 reviewer asks "is it good enough to
+launch?", a guardian asks "is it still good, today?".
 
-> **Fase:** F9 (perpétua) · **Portão de entrada:** P8 (produto em produção, com rollback ensaiado)
-> · **Portão de saída:** não há — há **cadências (P9)** e os loops L02–L08 sempre armados
-> · **Workflow anterior:** `workflows/W08-launch.md` · **transversais:** `workflows/W10-feature-evolution.md`, `workflows/W11-incident-response.md`
+> **Phase:** F9 (perpetual) · **Entry gate:** P8 (product in production, rollback rehearsed)
+> · **Exit gate:** none — there are **cadences (P9)** and loops L02–L08 always armed
+> · **Previous workflow:** `workflows/W08-launch.md` · **cross-cutting:**
+> `workflows/W10-feature-evolution.md`, `workflows/W11-incident-response.md`
 
-## Objetivo
+## Objective
 
-Manter o produto seguro, rápido, barato, documentado e recuperável ao longo dos anos — com prova real,
-nunca "parece bem". Cada ciclo de guardião termina em **estado terminal auditável** (resolvido /
-mitigado / não-aplicável), e o não-óbvio volta à memória do projeto (`core/project-memory.md`);
-o que é geral e da framework sobe à mãe na cadência do perfil
-(`playbooks/report-framework-improvements.md`).
+Keep the product secure, fast, cheap, documented and recoverable over the years — with real proof,
+never "looks fine". Each guardian cycle ends in an **auditable terminal state** (resolved /
+mitigated / not-applicable), and the non-obvious goes back into project memory
+(`core/project-memory.md`); what is general and framework-level goes up to the upstream framework
+at the profile's cadence (`playbooks/report-framework-improvements.md`).
 
-## Pré-condições (portão de entrada)
+## Preconditions (entry gate)
 
-- [ ] P8 passou: produto em produção, monitorização ativa, rollback ensaiado, `product/07-operations/`
-      completo (runbooks, SLOs, observabilidade, plano DR).
-- [ ] Perfil de esforço confirmado em `STATE.md` — decide **quais** guardiões correm e com que
-      cadência (`core/orchestrator.md` §Effort profiles).
-- [ ] Molde de relatório disponível (`templates/technical/guardian-report.md.template`).
+- [ ] P8 passed: product in production, monitoring active, rollback rehearsed,
+      `product/07-operations/` complete (runbooks, SLOs, observability, DR plan).
+- [ ] Effort profile confirmed in `STATE.md` — it decides **which** guardians run and at what
+      cadence (`core/orchestrator.md` §Effort profiles).
+- [ ] Report template available (`templates/technical/guardian-report.md.template`).
 
-## Passos (agente → artefacto → cadência)
+## Steps (agent → artifact → cadence)
 
-F9 não é uma sequência única: é um **conjunto de ciclos agendados** que o Orquestrador orquestra em
-paralelo. Cada guardião corre o seu ciclo fixo — **analisa → planeia → aplica → valida → documenta** —
-e escreve em `product/99-records/guardians/<dimensao>-AAAA-MM-DD.md`.
+F9 is not a single sequence: it is a **set of scheduled cycles** that the Orchestrator runs in
+parallel. Each guardian runs its fixed cycle — **analyze → plan → apply → validate → document** —
+and writes to `product/99-records/guardians/<dimension>-YYYY-MM-DD.md`.
 
-| # | Guardião | Vigia | Cadência | Encadeia / escala para |
+| # | Guardian | Watches | Cadence | Chains / escalates to |
 | --- | --- | --- | --- | --- |
-| 1 | `agents/13-guardians/security-guardian.md` | CVEs, deps, containers, SO, cloud | diária + por CVE | aciona (2); `loops/L07-cves.md`, `loops/L03-security-issues.md`, `playbooks/cve-response.md` |
-| 2 | `agents/13-guardians/dependency-guardian.md` | atualização deliberada (não-segurança) | semanal + mensal (majors) | `playbooks/dependency-updates.md`, `loops/L08-technical-debt.md` |
-| 3 | `agents/13-guardians/performance-guardian.md` | CPU/RAM, queries, APIs, cache, LCP/CLS/TTFB vs orçamentos | contínua + semanal | alimenta (4) |
-| 4 | `agents/13-guardians/cost-guardian.md` | custos de infra, APIs e IA (produto e desenvolvimento) | mensal + alerta por anomalia | **lê a saída de (3)** |
-| 5 | `agents/13-guardians/quality-guardian.md` | code smells, duplicação, complexidade, cobertura, deriva de arquitetura | semanal + por release | `loops/L04-code-smells.md`, `loops/L08-technical-debt.md` |
-| 6 | `agents/13-guardians/documentation-guardian.md` | sincronia docs↔código↔produto | por release + semanal | `loops/L05-inconsistencies.md`, `loops/L06-outdated-documentation.md` |
-| 7 | `agents/13-guardians/backup-guardian.md` | existência **e restauro real** dos backups | verificação diária + ensaio periódico | `workflows/W11-incident-response.md` se o restauro falha |
-| 8 | `agents/13-guardians/value-guardian.md` | KPIs de negócio vs alvos de `product/00-discovery/goals-and-kpis.md` | mensal + por alvo com prazo a vencer | alvo falhado → decisão de produto sobe ao utilizador; pode disparar (9) |
-| 9 | `agents/13-guardians/feature-evolution-agent.md` | pedidos novos em produção | por evento (pedido) | dispara `workflows/W10-feature-evolution.md` |
+| 1 | `agents/13-guardians/security-guardian.md` | CVEs, deps, containers, OS, cloud | daily + per CVE | triggers (2); `loops/L07-cves.md`, `loops/L03-security-issues.md`, `playbooks/cve-response.md` |
+| 2 | `agents/13-guardians/dependency-guardian.md` | deliberate updates (non-security) | weekly + monthly (majors) | `playbooks/dependency-updates.md`, `loops/L08-technical-debt.md` |
+| 3 | `agents/13-guardians/performance-guardian.md` | CPU/RAM, queries, APIs, cache, LCP/CLS/TTFB vs budgets | continuous + weekly | feeds (4) |
+| 4 | `agents/13-guardians/cost-guardian.md` | infra, API and AI costs (product and development) | monthly + anomaly alert | **reads the output of (3)** |
+| 5 | `agents/13-guardians/quality-guardian.md` | code smells, duplication, complexity, coverage, architecture drift | weekly + per release | `loops/L04-code-smells.md`, `loops/L08-technical-debt.md` |
+| 6 | `agents/13-guardians/documentation-guardian.md` | docs↔code↔product sync | per release + weekly | `loops/L05-inconsistencies.md`, `loops/L06-outdated-documentation.md` |
+| 7 | `agents/13-guardians/backup-guardian.md` | existence **and real restore** of backups | daily check + periodic drill | `workflows/W11-incident-response.md` if the restore fails |
+| 8 | `agents/13-guardians/value-guardian.md` | business KPIs vs targets in `product/00-discovery/goals-and-kpis.md` | monthly + per target with a due date | missed target → product decision goes up to the user; may trigger (9) |
+| 9 | `agents/13-guardians/feature-evolution-agent.md` | new requests in production | per event (request) | triggers `workflows/W10-feature-evolution.md` |
 
-**Encadeamento entre guardiões (`agents/13-guardians/README.md`):** o Orquestrador não os corre em
-silos — o de Segurança aciona o de Dependências quando o patch exige atualizar; o de Custos lê a saída
-do de Performance (uma query lenta que escalou a fatura); o de Qualidade e o da Documentação partilham
-os mesmos loops de reconciliação. **Reportam todos ao Orquestrador**, que agrupa as perguntas ao
-utilizador em lotes (nunca à peça — `core/question-engine.md`).
+**Chaining between guardians (`agents/13-guardians/README.md`):** the Orchestrator does not run
+them in silos — Security triggers Dependencies when a patch requires an update; Cost reads
+Performance's output (a slow query that inflated the bill); Quality and Documentation share the
+same reconciliation loops. **They all report to the Orchestrator**, which groups the questions to
+the user into batches (never one by one — `core/question-engine.md`).
 
-> **Escala ao perfil:** as cadências concretas de cada guardião por perfil vivem na **tabela única**
-> de `agents/13-guardians/README.md` §Cadences per profile — num protótipo ficam todos desativados
-> até à decisão de continuar; na plataforma empresarial soma-se a revisão global periódica
-> (`workflows/W12-global-review.md`).
+> **Scales with the profile:** each guardian's concrete cadences per profile live in the **single
+> table** in `agents/13-guardians/README.md` §Cadences per profile — in a prototype they are all
+> disabled until the decision to continue; on an enterprise platform add the periodic global
+> review (`workflows/W12-global-review.md`).
 
-## Pontos de decisão
+## Decision points
 
-- **Aprovação humana** (`core/orchestrator.md` §Human approval): só o utilizador **aceita risco
-  residual** (um CVE que se decide não corrigir já), autoriza **gastar dinheiro** (upgrade de infra
-  proposto pelo guardião de custos), aprova **majors** de dependências com risco, ou toca em **dados
-  pessoais**. O guardião recomenda com evidência; **não decide**.
-- **Agrupar perguntas.** As pendências de vários guardiões juntam-se num lote coerente por ciclo, não
-  uma interrupção por achado (`core/question-engine.md`); ficam visíveis em `STATE.md` →
-  "Decisões pendentes" enquanto o utilizador não responde.
-- **Estados terminais obrigatórios.** Nenhum achado fica "em análise" sem dono e sem prazo: termina
-  **resolvido** (com prova), **mitigado** (risco aceite pelo utilizador) ou **não-aplicável**
-  (justificado).
+- **Human approval** (`core/orchestrator.md` §Human approval): only the user **accepts residual
+  risk** (a CVE deliberately left unfixed for now), authorizes **spending money** (an infra
+  upgrade proposed by the cost guardian), approves risky dependency **majors**, or touches
+  **personal data**. The guardian recommends with evidence; **it does not decide**.
+- **Batch the questions.** Pending items from several guardians are grouped into one coherent
+  batch per cycle, not one interruption per finding (`core/question-engine.md`); they stay visible
+  in `STATE.md` → "Decisões pendentes" until the user answers.
+- **Terminal states are mandatory.** No finding stays "under analysis" without an owner and a
+  deadline: it ends **resolved** (with proof), **mitigated** (risk accepted by the user) or
+  **not-applicable** (justified).
 
-Exemplo multi-domínio: num **SaaS B2B**, o guardião de segurança triava um CVE numa lib de PDF e, como
-não há caminho de exploração no produto, marca **não-aplicável** com justificação; num **e-commerce**,
-o de custos deteta que a fatura de IA da pesquisa disparou e propõe um kill-switch por modelo
-(`modules/ai-observability.md`); numa **app interna**, o de backups faz o ensaio mensal de
-restauro e descobre um dump corrompido — o que **vira incidente**.
+Multi-domain example: in a **B2B SaaS**, the security guardian triages a CVE in a PDF lib and,
+since the product has no exploitation path, marks it **not-applicable** with justification; in an
+**e-commerce**, the cost guardian detects that the search AI bill spiked and proposes a per-model
+kill-switch (`modules/ai-observability.md`); in an **internal app**, the backup guardian runs the
+monthly restore drill and finds a corrupted dump — which **becomes an incident**.
 
-## Encaminhamento: quando um ciclo deixa de ser um ciclo
+## Escalation: when a cycle stops being a cycle
 
-- **Achado → incidente.** Quando um achado ultrapassa a dimensão do guardião (um CVE a ser explorado
-  ativamente, uma degradação a virar indisponibilidade, um restauro que falha), **escala para**
-  `workflows/W11-incident-response.md` — triagem, mitigação, comunicação, post-mortem sem culpados
+- **Finding → incident.** When a finding outgrows the guardian's dimension (a CVE being actively
+  exploited, a degradation turning into an outage, a restore that fails), it **escalates to**
+  `workflows/W11-incident-response.md` — triage, mitigation, communication, blameless post-mortem
   (`checklists/post-incident.md`).
-- **Pedido novo → evolução.** Um pedido de funcionalidade em produção entra pelo
-  `agents/13-guardians/feature-evolution-agent.md`, que dispara
-  `workflows/W10-feature-evolution.md` — o mini-ciclo que reexecuta F2→F8 em miniatura, com os
-  portões das fases que toca (`core/lifecycle.md` regra 4). Não se "mete a feature direto em
-  produção" saltando os portões.
+- **New request → evolution.** A feature request in production enters through
+  `agents/13-guardians/feature-evolution-agent.md`, which triggers
+  `workflows/W10-feature-evolution.md` — the mini-cycle that re-runs F2→F8 in miniature, with the
+  gates of the phases it touches (`core/lifecycle.md` rule 4). Features are not "pushed straight
+  to production" skipping the gates.
 
-## Loops que abre
+## Loops it opens
 
-Em F9 os loops L02–L08 estão **sempre armados** (`core/lifecycle.md` F9), acionados pelos
-guardiões: `loops/L02-failing-tests.md`, `loops/L03-security-issues.md`,
-`loops/L04-code-smells.md`, `loops/L05-inconsistencies.md`, `loops/L06-outdated-documentation.md`,
-`loops/L07-cves.md`, `loops/L08-technical-debt.md`. Salvaguarda: três iterações sem progresso param o
-loop e sobem ao utilizador (`loops/README.md`).
+In F9 loops L02–L08 are **always armed** (`core/lifecycle.md` F9), triggered by the guardians:
+`loops/L02-failing-tests.md`, `loops/L03-security-issues.md`, `loops/L04-code-smells.md`,
+`loops/L05-inconsistencies.md`, `loops/L06-outdated-documentation.md`, `loops/L07-cves.md`,
+`loops/L08-technical-debt.md`. Safeguard: three iterations without progress stop the loop and
+escalate to the user (`loops/README.md`).
 
-## Portão de saída (P9 — cadências, não fase)
+## Exit gate (P9 — cadences, not a phase)
 
-F9 não fecha — **cumpre-se por cadência** (`core/quality-gates.md` P9). Cada ciclo de guardião
-"passa" quando:
+F9 never closes — **it is met by cadence** (`core/quality-gates.md` P9). Each guardian cycle
+"passes" when:
 
-- [ ] O relatório do ciclo está escrito em `product/99-records/guardians/` **com números e estados
-      terminais** — um relatório sem números e sem estados terminais **não fecha** o ciclo.
-- [ ] Nenhum achado ficou "em análise" sem dono e prazo; o que subiu ao utilizador está em `STATE.md`.
-- [ ] As mudanças aplicadas foram **validadas com prova real** e têm caminho de reversão
-      (`modules/feature-flags.md` quando aplicável).
-- [ ] As lições não-óbvias foram para `STATE.md` (`core/project-memory.md`); as que são da
-      **framework** foram para `FRAMEWORK-IMPROVEMENTS.md`, e o reporte seguiu na cadência do
-      perfil (`playbooks/report-framework-improvements.md`).
+- [ ] The cycle report is written in `product/99-records/guardians/` **with numbers and terminal
+      states** — a report without numbers and terminal states **does not close** the cycle.
+- [ ] No finding was left "under analysis" without an owner and a deadline; whatever went up to
+      the user is in `STATE.md`.
+- [ ] Applied changes were **validated with real proof** and have a reversal path
+      (`modules/feature-flags.md` when applicable).
+- [ ] Non-obvious lessons went to `STATE.md` (`core/project-memory.md`); the ones that belong to
+      the **framework** went to `FRAMEWORK-IMPROVEMENTS.md`, and the report went out at the
+      profile's cadence (`playbooks/report-framework-improvements.md`).
 
-**Quem verifica:** o Orquestrador, por cadência. **Quem aprova:** o utilizador, **por exceção** (só
-quando há risco residual, dinheiro, dados ou produção em jogo).
+**Who verifies:** the Orchestrator, per cadence. **Who approves:** the user, **by exception**
+(only when residual risk, money, data or production is at stake).
 
-## Perfis de esforço
+## Effort profiles
 
-| Perfil | Como muda F9 |
+| Profile | How F9 changes |
 | --- | --- |
-| **Protótipo** | Guardiões desativados até a decisão de evoluir para produto; sem cadências. |
-| **Produto interno** | Guardiões em cadência mensal; loops armados; DR verificado periodicamente. |
-| **Produto comercial** | Cadência semanal + alertas; guardião de custos com anomalias; on-call para incidentes (W11). |
-| **Plataforma empresarial** | Cadências apertadas, ensaio de DR regular, revisão global periódica (`workflows/W12-global-review.md`), custos de IA com kill-switch por modelo. |
+| **Prototype** | Guardians disabled until the decision to evolve into a product; no cadences. |
+| **Internal product** | Guardians on a monthly cadence; loops armed; DR verified periodically. |
+| **Commercial product** | Weekly cadence + alerts; cost guardian with anomaly detection; on-call for incidents (W11). |
+| **Enterprise platform** | Tight cadences, regular DR drills, periodic global review (`workflows/W12-global-review.md`), AI costs with a per-model kill-switch. |
 
-## Anti-padrões
+## Anti-patterns
 
-- ❌ "Está em produção, está acabado" → ✅ a manutenção começa no dia 0; guardiões em cadência.
-- ❌ Backup que existe mas nunca se restaurou → ✅ ensaio real de restauro é o que conta.
-- ❌ Achado "em análise" eterno → ✅ estado terminal com dono e prazo.
-- ❌ Feature nova metida direto em produção → ✅ `workflows/W10-feature-evolution.md` com portões.
-- ❌ Metralhadora de perguntas ao utilizador a cada achado → ✅ lotes por ciclo.
+- ❌ "It's in production, it's done" → ✅ maintenance starts on day 0; guardians on cadence.
+- ❌ A backup that exists but was never restored → ✅ a real restore drill is what counts.
+- ❌ A finding "under analysis" forever → ✅ terminal state with an owner and a deadline.
+- ❌ New feature pushed straight to production → ✅ `workflows/W10-feature-evolution.md` with gates.
+- ❌ Machine-gunning the user with questions on every finding → ✅ batches per cycle.
 
-## Relacionados
+## Related
 
-- `agents/13-guardians/README.md` — cadências, deveres comuns e formato de relatório.
-- `workflows/W10-feature-evolution.md` — pedidos novos; `workflows/W11-incident-response.md` — quando um achado vira incidente.
+- `agents/13-guardians/README.md` — cadences, shared duties and report format.
+- `workflows/W10-feature-evolution.md` — new requests; `workflows/W11-incident-response.md` —
+  when a finding becomes an incident.
 - `core/lifecycle.md` (F9) · `core/quality-gates.md` (P9) · `core/project-memory.md`.
-- `loops/README.md` — os loops L02–L08 armados em produção.
+- `loops/README.md` — loops L02–L08 armed in production.
 - `templates/technical/guardian-report.md.template` · `checklists/post-incident.md`.
-- `playbooks/report-framework-improvements.md` — o reporte de melhorias na cadência de F9.
-- `agents/12-reviewers/README.md` — os olhos pontuais de F7, a montante dos guardiões.
+- `playbooks/report-framework-improvements.md` — the improvement report at F9's cadence.
+- `agents/12-reviewers/README.md` — F7's point-in-time eyes, upstream of the guardians.

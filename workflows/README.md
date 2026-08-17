@@ -1,85 +1,86 @@
-# Workflows — os processos que ligam agentes
+# Workflows — the processes that connect agents
 
-Um workflow é a **receita de execução de uma fase** do ciclo de vida (`core/lifecycle.md`):
-diz que agentes trabalham, por que ordem, que artefactos produzem, que perguntas se colocam ao
-utilizador, que loops abrem e qual o portão que fecha a fase. Se o `core/orchestrator.md` é o
-maestro e as fichas de agente são os músicos, os workflows são a **partitura**.
+A workflow is the **execution recipe of a phase** of the lifecycle (`core/lifecycle.md`):
+it says which agents work, in what order, which artifacts they produce, which questions go to the
+user, which loops open and which gate closes the phase. If `core/orchestrator.md` is the
+conductor and the agent specs are the musicians, the workflows are the **score**.
 
-O Orquestrador não improvisa: em cada momento sabe em que fase o projeto está (lendo `STATE.md`,
-nunca de memória) e executa o workflow correspondente até o seu portão passar. Um workflow nunca
-substitui os portões (`core/quality-gates.md`) nem o motor de perguntas
-(`core/question-engine.md`) — apenas os sequencia.
+The Orchestrator does not improvise: at every moment it knows which phase the project is in
+(by reading `STATE.md`, never from memory) and runs the matching workflow until its gate passes. A
+workflow never replaces the gates (`core/quality-gates.md`) or the question engine
+(`core/question-engine.md`) — it only sequences them.
 
-## Convenção de nomes
+## Naming convention
 
-| Prefixo | Significado | Exemplo |
+| Prefix | Meaning | Example |
 | --- | --- | --- |
-| `Wnn` | Workflow de fase, numerado pela ordem do ciclo de vida | `W00`–`W09` |
-| `W10`–`W12` | Workflows transversais, disparados sob condição (não por ordem de fase) | evolução, incidente, revisão global |
+| `Wnn` | Phase workflow, numbered by lifecycle order | `W00`–`W09` |
+| `W10`–`W12` | Cross-cutting workflows, triggered on condition (not by phase order) | evolution, incident, global review |
 
-Correspondência workflow ↔ fase ↔ portão (o mapa de leitura obrigatório):
+Workflow ↔ phase ↔ gate correspondence (the mandatory reading map):
 
-| Workflow | Fase | Portão de saída | Agentes-núcleo |
+| Workflow | Phase | Exit gate | Core agents |
 | --- | --- | --- | --- |
-| `workflows/W00-project-kickoff.md` | F0 Arranque | P0 | Orquestrador |
-| `workflows/W01-discovery.md` | F1 Descoberta | P1 | `agents/00-discovery/` |
-| `workflows/W02-requirements.md` | F2 Requisitos | P2 | `agents/01-requirements/` + `loops/L01-ambiguous-requirements.md` |
-| `workflows/W03-architecture.md` | F3 Arquitetura | P3 | `agents/02-architecture/` |
-| `workflows/W04-experience.md` | F4 Experiência | P4 | `agents/03-experience/` |
-| `workflows/W05-specification.md` | F5 Especificação | P5 (desbloqueia código) | modeladores + desenhador de APIs + modelador de ameaças |
-| `workflows/W06-build.md` | F6 Construção | P6/P6b | `agents/04-frontend/`, `agents/05-backend/`, `agents/06-data/`, `agents/10-quality/` |
-| `workflows/W07-quality-and-security.md` | F7 Qualidade & Segurança | P7 | `agents/12-reviewers/`, `agents/09-security/` |
-| `workflows/W08-launch.md` | F8 Lançamento | P8 | `agents/07-devops/`, `agents/08-infrastructure/` |
-| `workflows/W09-continuous-operation.md` | F9 Operação | cadências (P9) | `agents/13-guardians/` |
-| `workflows/W10-feature-evolution.md` | reentra F2→F8 | portões das fases tocadas | `agents/13-guardians/feature-evolution-agent.md` |
-| `workflows/W11-incident-response.md` | transversal a F9 | `checklists/post-incident.md` | resposta + post-mortem |
-| `workflows/W12-global-review.md` | sob pedido | consolidação | painel completo de revisores |
+| `workflows/W00-project-kickoff.md` | F0 Kickoff | P0 | Orchestrator |
+| `workflows/W01-discovery.md` | F1 Discovery | P1 | `agents/00-discovery/` |
+| `workflows/W02-requirements.md` | F2 Requirements | P2 | `agents/01-requirements/` + `loops/L01-ambiguous-requirements.md` |
+| `workflows/W03-architecture.md` | F3 Architecture | P3 | `agents/02-architecture/` |
+| `workflows/W04-experience.md` | F4 Experience | P4 | `agents/03-experience/` |
+| `workflows/W05-specification.md` | F5 Specification | P5 (unlocks code) | modelers + API designer + threat modeler |
+| `workflows/W06-build.md` | F6 Build | P6/P6b | `agents/04-frontend/`, `agents/05-backend/`, `agents/06-data/`, `agents/10-quality/` |
+| `workflows/W07-quality-and-security.md` | F7 Quality & Security | P7 | `agents/12-reviewers/`, `agents/09-security/` |
+| `workflows/W08-launch.md` | F8 Launch | P8 | `agents/07-devops/`, `agents/08-infrastructure/` |
+| `workflows/W09-continuous-operation.md` | F9 Operation | cadences (P9) | `agents/13-guardians/` |
+| `workflows/W10-feature-evolution.md` | re-enters F2→F8 | gates of the phases touched | `agents/13-guardians/feature-evolution-agent.md` |
+| `workflows/W11-incident-response.md` | cross-cutting over F9 | `checklists/post-incident.md` | response + post-mortem |
+| `workflows/W12-global-review.md` | on request | consolidation | full panel of reviewers |
 
-## Estrutura de cada workflow (secções fixas)
+## Structure of every workflow (fixed sections)
 
-Todo o `Wnn` segue a mesma anatomia, para o Orquestrador saltar de um para outro sem reaprender o
-formato:
+Every `Wnn` follows the same anatomy, so the Orchestrator can jump from one to another without
+relearning the format:
 
-1. **Objetivo** — o que a fase entrega, numa frase.
-2. **Pré-condições (portão de entrada)** — que artefactos têm de estar `aprovado` para arrancar.
-3. **Passos (agente → artefacto)** — a sequência, com dependências e o que cada passo escreve.
-4. **Pontos de decisão** — o que sobe ao utilizador (`core/question-engine.md`) ou ao motor de
-   decisão (`core/decision-engine.md`); onde há aprovação humana obrigatória.
-5. **Loops que abre** — os `loops/` que correm dentro da fase e a sua condição de saída.
-6. **Portão de saída** — os critérios verificáveis de `core/quality-gates.md` e quem aprova.
-7. **Perfis de esforço** — como o perfil (`core/orchestrator.md` §Effort profiles) dimensiona a fase.
-8. **Relacionados** — para onde o leitor segue.
+1. **Objective** — what the phase delivers, in one sentence.
+2. **Preconditions (entry gate)** — which artifacts must be `approved` before starting.
+3. **Steps (agent → artifact)** — the sequence, with dependencies and what each step writes.
+4. **Decision points** — what goes up to the user (`core/question-engine.md`) or to the decision
+   engine (`core/decision-engine.md`); where human approval is mandatory.
+5. **Loops it opens** — the `loops/` that run inside the phase and their exit condition.
+6. **Exit gate** — the verifiable criteria from `core/quality-gates.md` and who approves.
+7. **Effort profiles** — how the profile (`core/orchestrator.md` §Effort profiles) sizes the phase.
+8. **Related** — where the reader goes next.
 
-## Como se executa um workflow
+## How a workflow is executed
 
-1. **Ler o estado.** O Orquestrador lê `STATE.md` e confirma a fase ativa e o perfil de esforço.
-2. **Confirmar a pré-condição.** Os artefactos de entrada existem e estão `aprovado`? Se não, o
-   workflow anterior não fechou — não se arranca este (`core/lifecycle.md` §1, sem saltos).
-3. **Percorrer os passos por dependência**, não pela numeração cega: um passo arranca quando os seus
-   inputs existem (grafo montado a partir das fichas, `core/orchestrator.md`). Passos independentes
-   podem correr em paralelo; painéis correm às cegas (`core/orchestrator.md` §Parallelism).
-4. **Agrupar as perguntas em lotes** por fase, nunca à peça (`core/question-engine.md`).
-5. **Fechar os loops** abertos antes de tentar o portão.
-6. **Passar o portão** — verificação independente + aprovação humana onde é obrigatória — e registar
-   em `STATE.md`. Só então o próximo workflow arranca.
+1. **Read the state.** The Orchestrator reads `STATE.md` and confirms the active phase and the
+   effort profile.
+2. **Confirm the precondition.** Do the input artifacts exist and are they `approved`? If not, the
+   previous workflow did not close — this one does not start (`core/lifecycle.md` §1, no skipping).
+3. **Walk the steps by dependency**, not by blind numbering: a step starts when its inputs exist
+   (graph built from the specs, `core/orchestrator.md`). Independent steps may run in parallel;
+   panels run blind (`core/orchestrator.md` §Parallelism).
+4. **Group the questions into batches** per phase, never piecemeal (`core/question-engine.md`).
+5. **Close the open loops** before attempting the gate.
+6. **Pass the gate** — independent verification + human approval where mandatory — and record it
+   in `STATE.md`. Only then does the next workflow start.
 
-## Regras transversais a todos os workflows
+## Rules that cut across all workflows
 
-- **Voltar atrás é normal.** Descobrir num workflow tardio que falta trabalho a montante devolve à
-  fase anterior — regista-se a razão em `STATE.md` (`core/lifecycle.md` §2). Isso não é falha
-  do processo; avançar sem portão é que é.
-- **Cada passo escreve.** Output que não fica num artefacto de `product/` não existe
-  (`core/artifact-protocol.md` §1). Um workflow "corrido" sem artefactos escritos não correu.
-- **Routing por tarefa.** O Orquestrador escolhe a camada de modelo de cada passo
-  (`core/model-routing.md`) — nunca o modelo de topo por reflexo em toda a fila de agentes.
-- **Segurança é transversal.** O `agents/09-security/security-coordinator.md` tem assento em
-  todos os workflows; segurança não é uma fase, é uma dimensão (`core/lifecycle.md` §5).
+- **Going back is normal.** Discovering in a late workflow that upstream work is missing sends you
+  back to the earlier phase — the reason is recorded in `STATE.md` (`core/lifecycle.md` §2). That
+  is not a process failure; moving on without the gate is.
+- **Every step writes.** Output that does not land in a `product/` artifact does not exist
+  (`core/artifact-protocol.md` §1). A workflow "run" without written artifacts did not run.
+- **Routing per task.** The Orchestrator picks the model tier for each step
+  (`core/model-routing.md`) — never the top model by reflex across the whole queue of agents.
+- **Security is cross-cutting.** `agents/09-security/security-coordinator.md` has a seat in
+  every workflow; security is not a phase, it is a dimension (`core/lifecycle.md` §5).
 
-## Relacionados
+## Related
 
-- `core/lifecycle.md` — as fases que estes workflows executam.
-- `core/orchestrator.md` — quem os conduz.
-- `core/quality-gates.md` — os portões que fecham cada fase.
-- `core/artifact-protocol.md` — a árvore `product/` que os workflows preenchem.
-- `agents/README.md` — as fichas dos agentes que cada passo invoca.
-- `loops/README.md` — os loops que correm dentro das fases.
+- `core/lifecycle.md` — the phases these workflows execute.
+- `core/orchestrator.md` — who conducts them.
+- `core/quality-gates.md` — the gates that close each phase.
+- `core/artifact-protocol.md` — the `product/` tree the workflows fill in.
+- `agents/README.md` — the specs of the agents each step invokes.
+- `loops/README.md` — the loops that run inside the phases.

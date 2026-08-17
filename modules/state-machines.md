@@ -1,144 +1,148 @@
-# Máquinas de Estado · fluxos críticos como estados e transições explícitos
+# State Machines · critical flows as explicit states and transitions
 
-> **Validação em produção:** 2.ª confirmação em domínio distinto do projeto-mãe (P2 — curadoria de 2026-08; nuance confirmada: máquinas **puras no contrato partilhado**
-> api↔web, a api como autoridade — nunca duplicar entre camadas). O desenho mantém-se; a confiança sobe.
+> **Production validation:** 2nd confirmation in a domain distinct from the origin project (P2 —
+> 2026-08 curation round; nuance confirmed: **pure** machines in the shared api↔web contract, the
+> api as the authority — never duplicated across layers). The design stands; confidence rises.
 
-Um módulo para modelar **qualquer fluxo em que uma entidade passa por fases** com efeitos irreversíveis
-pelo caminho — uma encomenda (carrinho → paga → expedida → entregue), um artigo (rascunho → em revisão →
-publicado → arquivado), um pedido de suporte (aberto → em curso → resolvido → fechado), uma subscrição
-(ativa → suspensa → cancelada). Em vez de dispersar `if estado == …` por todo o código, o fluxo declara-se
-como uma **máquina de estados explícita**: os estados possíveis, as **transições permitidas**, os
-**efeitos colaterais transacionais** de cada uma, **quem** a pode disparar, e quais os **estados
-terminais irreversíveis**. É o esqueleto que os módulos de aprovações e de ciclo de vida usam por baixo.
+A module for modeling **any flow where an entity moves through phases** with irreversible effects
+along the way — an order (cart → paid → shipped → delivered), an article (draft → in review →
+published → archived), a support ticket (open → in progress → resolved → closed), a subscription
+(active → suspended → cancelled). Instead of scattering `if state == …` across the code, the flow is
+declared as an **explicit state machine**: the possible states, the **allowed transitions**, each
+one's **transactional side effects**, **who** may trigger it, and which are the **irreversible
+terminal states**. It is the skeleton the approvals and lifecycle modules use underneath.
 
-## O problema que resolve
+## The problem it solves
 
-Quando um fluxo crítico vive espalhado em condicionais, aparecem os defeitos mais caros de um sistema:
+When a critical flow lives spread across conditionals, a system's most expensive defects appear:
 
-- **Transições impossíveis que acontecem.** Uma encomenda "cancelada" volta a "expedida" porque nenhum
-  sítio proibiu essa passagem. O estado torna-se inconsistente e ninguém sabe como lá chegou.
-- **Efeitos meio-feitos.** A transição "expedir" devia baixar stock, cobrar o cliente e notificar; um
-  caminho faz duas das três e uma falha deixa o mundo a meio, sem rollback.
-- **Estados terminais que se reabrem.** Algo "reembolsado" ou "eliminado" — que devia ser final — é
-  mexido de novo, corrompendo dados que já tinham fechado contas.
-- **Corridas na transição.** Duas ações concorrentes leem o mesmo estado e ambas transitam, executando o
-  efeito duas vezes (cobrar duas vezes, expedir duas vezes).
+- **Impossible transitions that happen.** A "cancelled" order goes back to "shipped" because nowhere
+  forbade that passage. The state becomes inconsistent and nobody knows how it got there.
+- **Half-done effects.** The "ship" transition should decrement stock, charge the customer and
+  notify; one path does two of the three and a failure leaves the world halfway, with no rollback.
+- **Terminal states that reopen.** Something "refunded" or "deleted" — which should be final — gets
+  touched again, corrupting data that had already closed the books.
+- **Races on the transition.** Two concurrent actions read the same state and both transition,
+  running the effect twice (charging twice, shipping twice).
 
-A máquina de estados explícita fecha os quatro: só transições declaradas são possíveis, cada uma é
-atómica com os seus efeitos, os terminais têm guarda, e a transição adquire um lock.
+The explicit state machine closes all four: only declared transitions are possible, each is atomic
+with its effects, terminals are guarded, and the transition acquires a lock.
 
-## O modelo (conceitos e entidades, agnóstico de stack)
+## The model (concepts and entities, stack-agnostic)
 
-- **Estado (`estado`)** — uma fase nomeada e finita da entidade. O conjunto de estados é fechado e
-  conhecido; não há "estados" implícitos por combinação de flags soltas.
-- **Transição (`transicao`)** — uma passagem **declarada** de um estado de origem para um de destino, com
-  um nome (`expedir`, `cancelar`, `publicar`). O que **não** está declarado é **proibido** — a matriz de
-  transições é uma allow-list, não uma deny-list.
-- **Guarda (`guarda`)** — a pré-condição que uma transição exige para ser legal (`há stock`, `pagamento
-  confirmado`, `revisor atribuído`). Uma guarda falhada recusa a transição com erro claro, sem efeito.
-- **Efeito (`efeito`)** — as consequências que a transição produz, **todas na mesma transação**: mutações
-  de dados, eventos emitidos (via `modules/job-queue.md`/outbox), entradas de auditoria. Ou tudo
-  acontece, ou nada (rollback).
-- **Autoridade da transição** — quem a pode disparar (que perfil/âmbito), confirmado no servidor
-  (`modules/rbac-and-scoping.md`). *Poder transitar* é distinto de *a transição ser legal*: a autoridade é
-  sobre o ator, a guarda é sobre o estado.
-- **Estado terminal (`terminal`)** — um estado do qual **não sai nenhuma transição**. É irreversível por
-  construção e protegido por guarda: nenhuma operação o reabre.
-- **Overlay (camada ortogonal)** — quando uma preocupação temporária compete com o estado permanente
-  (reserva sobre atribuição, rascunho-de-edição sobre publicado), modela-se como **camada separada** que
-  se aplica por cima, e o estado apresentado **deriva** das duas — nunca se sobrescreve o permanente
-  (`knowledge/proven-patterns.md` §9).
+- **State (`state`)** — a named, finite phase of the entity. The set of states is closed and known;
+  there are no implicit "states" formed by combinations of loose flags.
+- **Transition (`transition`)** — a **declared** passage from an origin state to a destination one,
+  with a name (`ship`, `cancel`, `publish`). What is **not** declared is **forbidden** — the
+  transition matrix is an allow-list, not a deny-list.
+- **Guard (`guard`)** — the precondition a transition requires to be legal (`stock available`,
+  `payment confirmed`, `reviewer assigned`). A failed guard refuses the transition with a clear
+  error, with no effect.
+- **Effect (`effect`)** — the consequences the transition produces, **all in the same transaction**:
+  data mutations, events emitted (via `modules/job-queue.md`/outbox), audit entries. Either
+  everything happens, or nothing (rollback).
+- **Transition authority** — who may trigger it (which role/scope), confirmed on the server
+  (`modules/rbac-and-scoping.md`). *Being able to transition* is distinct from *the transition being
+  legal*: authority is about the actor, the guard is about the state.
+- **Terminal state (`terminal`)** — a state with **no outgoing transition**. It is irreversible by
+  construction and guard-protected: no operation reopens it.
+- **Overlay (orthogonal layer)** — when a temporary concern competes with the permanent state (a
+  reservation over an assignment, an edit-draft over a published item), it is modeled as a
+  **separate layer** applied on top, and the presented state **derives** from both — the permanent
+  one is never overwritten (`knowledge/proven-patterns.md` §9).
 
-## Regras inegociáveis (numeradas, verificáveis)
+## Non-negotiable rules (numbered, verifiable)
 
-1. **Só transições declaradas são possíveis.** A matriz origem→destino é uma allow-list; qualquer
-   passagem não declarada é recusada. Teste: tentar uma transição fora da matriz falha com erro de
-   transição inválida, sem alterar o estado.
-2. **Cada transição é atómica com todos os seus efeitos.** Mutações, eventos e auditoria correm na mesma
-   transação; uma falha reverte tudo. Teste: forçar a falha de um efeito deixa o estado **inalterado** e
-   zero efeitos parciais.
-3. **A guarda avalia-se antes do efeito, dentro da transação.** Uma pré-condição falhada recusa sem
-   produzir efeito. Teste: transição com guarda falsa não muda nada.
-4. **Estados terminais não têm transição de saída.** Nenhuma operação reabre um terminal. Teste: toda a
-   transição a partir de um estado terminal é recusada; a matriz não declara nenhuma saída dele.
-5. **A transição adquire lock sobre a entidade (concorrência).** Ler-decidir-escrever sem lock permite
-   duas transições concorrentes (`knowledge/origin-lessons.md` C4/C8). Teste: duas transições
-   simultâneas sobre a mesma entidade resultam numa aplicada e uma recusada, nunca ambas.
-6. **A autoridade confirma-se no servidor.** Quem transita é validado contra os papéis concedidos
-   (`modules/rbac-and-scoping.md`), não contra o cliente. Teste: forjar o perfil não autoriza a transição.
-7. **O estado apresentado deriva; preocupações ortogonais são camadas.** Uma ação temporária nunca
-   sobrescreve estado permanente; termina-se o overlay e reverte-se à base. Teste: terminar uma camada
-   temporária devolve o estado base exato que existia antes, não um default.
-8. **Cada transição deixa rasto.** Quem, quando, de que estado para qual, e porquê
-   (`modules/audit-and-provenance.md`). Teste: o histórico reconstrói o caminho completo da entidade.
+1. **Only declared transitions are possible.** The origin→destination matrix is an allow-list; any
+   undeclared passage is refused. Test: attempting a transition outside the matrix fails with an
+   invalid-transition error, without changing the state.
+2. **Each transition is atomic with all its effects.** Mutations, events and audit run in the same
+   transaction; a failure reverts everything. Test: forcing an effect to fail leaves the state
+   **unchanged** and zero partial effects.
+3. **The guard is evaluated before the effect, inside the transaction.** A failed precondition
+   refuses without producing an effect. Test: a transition with a false guard changes nothing.
+4. **Terminal states have no outgoing transition.** No operation reopens a terminal. Test: every
+   transition out of a terminal state is refused; the matrix declares no exit from it.
+5. **The transition acquires a lock on the entity (concurrency).** Read-decide-write without a lock
+   allows two concurrent transitions (`knowledge/origin-lessons.md` C4/C8). Test: two simultaneous
+   transitions on the same entity result in one applied and one refused, never both.
+6. **Authority is confirmed on the server.** Whoever transitions is validated against the granted
+   roles (`modules/rbac-and-scoping.md`), not against the client. Test: forging the role does not
+   authorize the transition.
+7. **The presented state derives; orthogonal concerns are layers.** A temporary action never
+   overwrites permanent state; the overlay ends and the base is restored. Test: ending a temporary
+   layer returns the exact base state that existed before, not a default.
+8. **Every transition leaves a trail.** Who, when, from which state to which, and why
+   (`modules/audit-and-provenance.md`). Test: the history reconstructs the entity's full path.
 
-## Como se adota num produto novo (passos)
+## How to adopt it in a new product (steps)
 
-1. **Identificar os fluxos críticos** (aqueles com efeitos irreversíveis ou dinheiro/dados sensíveis
-   envolvidos) e, para cada um, **enumerar os estados** finitos.
-2. **Desenhar a matriz de transições** (origem → destino → nome → guarda → autoridade → efeitos) num
-   documento canónico (`templates/specification/state-machine.md.template`).
-3. **Marcar os terminais** e provar que não têm saída; decidir quais preocupações são **overlays** e não
-   estados (`knowledge/proven-patterns.md` §9).
-4. **Impor as invariantes na camada de dados** onde possível (índice único parcial para "≤1 estado aberto",
-   `CHECK` de exclusividade) além dos guards de aplicação (`knowledge/proven-patterns.md` §5).
-5. **Implementar cada transição como caso-de-uso único e transacional**, reutilizado por todas as vias de
-   entrada (`knowledge/proven-patterns.md` §8) — portal, backoffice, API partilham o mesmo
-   núcleo.
-6. **Testar a máquina exaustivamente**: cada transição legal, cada transição ilegal recusada, cada guarda,
-   e a concorrência (`agents/10-quality/unit-test-engineer.md`).
+1. **Identify the critical flows** (those with irreversible effects or money/sensitive data
+   involved) and, for each one, **enumerate the finite states**.
+2. **Design the transition matrix** (origin → destination → name → guard → authority → effects) in a
+   canonical document (`templates/specification/state-machine.md.template`).
+3. **Mark the terminals** and prove they have no exit; decide which concerns are **overlays** rather
+   than states (`knowledge/proven-patterns.md` §9).
+4. **Enforce the invariants at the data layer** where possible (partial unique index for "≤1 open
+   state", exclusivity `CHECK`) beyond the application guards (`knowledge/proven-patterns.md` §5).
+5. **Implement each transition as a single transactional use case**, reused by every entry path
+   (`knowledge/proven-patterns.md` §8) — portal, backoffice and API share the same core.
+6. **Test the machine exhaustively**: every legal transition, every illegal transition refused,
+   every guard, and the concurrency (`agents/10-quality/unit-test-engineer.md`).
 
-## Variações e trade-offs
+## Variations and trade-offs
 
-- **Máquina simples vs statechart (estados aninhados/paralelos).** A maioria dos fluxos resolve-se com
-  estados planos; aninhamento (um "ativo" com sub-estados) e regiões paralelas ganham expressividade ao
-  custo de complexidade — só quando o domínio realmente o exige.
-- **Estado como coluna vs histórico com início/fim.** Guardar só o estado atual é simples mas perde o
-  caminho; modelar como histórico de períodos (`inicio`/`fim`) dá auditoria e "estado a uma data"
-  gratuitos, mas exige derivar o atual (`knowledge/proven-patterns.md` §5).
-- **Transições disparadas por ator vs por tempo/evento.** Algumas transições são humanas (aprovar,
-  expedir); outras automáticas (expirar após 30 dias, fechar após inatividade). As automáticas correm por
-  um executor único (`modules/job-queue.md`), não por leitura ad-hoc.
-- **Efeitos síncronos vs via outbox.** Mutações do próprio agregado ficam na transição; efeitos externos
-  (email, integração) emitem-se como eventos na mesma transação e entregam-se assíncronos
-  (`knowledge/proven-patterns.md` §3).
+- **Simple machine vs statechart (nested/parallel states).** Most flows are solved with flat
+  states; nesting (an "active" with sub-states) and parallel regions gain expressiveness at the
+  cost of complexity — only when the domain truly demands it.
+- **State as a column vs history with start/end.** Storing only the current state is simple but
+  loses the path; modeling it as a history of periods (`start`/`end`) gives audit and
+  "state as of a date" for free, but requires deriving the current one
+  (`knowledge/proven-patterns.md` §5).
+- **Actor-triggered vs time/event-triggered transitions.** Some transitions are human (approve,
+  ship); others automatic (expire after 30 days, close after inactivity). The automatic ones run on
+  a single executor (`modules/job-queue.md`), not on ad-hoc reads.
+- **Synchronous effects vs via outbox.** Mutations of the aggregate itself stay in the transition;
+  external effects (email, integration) are emitted as events in the same transaction and
+  delivered asynchronously (`knowledge/proven-patterns.md` §3).
 
-## Exemplo (1–2, multi-domínio)
+## Example (1–2, multi-domain)
 
-**Encomenda de e-commerce.** Estados: `carrinho → aguarda-pagamento → paga → em-preparação → expedida →
-entregue`, com ramos `cancelada` e `reembolsada` (terminais). A transição `pagar` tem guarda "pagamento
-confirmado" e efeitos atómicos: baixar stock, criar fatura, emitir evento de expedição (Regra 2).
-`entregue` e `reembolsada` são terminais sem saída (Regra 4) — uma encomenda entregue não "volta" a
-expedida. A concorrência entre "cancelar" e "expedir" resolve-se por lock (Regra 5): uma ganha, a outra é
-recusada.
+**E-commerce order.** States: `cart → awaiting-payment → paid → preparing → shipped → delivered`,
+with `cancelled` and `refunded` branches (terminals). The `pay` transition has the guard "payment
+confirmed" and atomic effects: decrement stock, create invoice, emit the shipping event (Rule 2).
+`delivered` and `refunded` are terminals with no exit (Rule 4) — a delivered order does not "go
+back" to shipped. The concurrency between "cancel" and "ship" is resolved by lock (Rule 5): one
+wins, the other is refused.
 
-**Publicação editorial.** Um artigo percorre `rascunho → em-revisão → aprovado → publicado → arquivado`.
-"Publicar" exige guarda "revisor aprovou" e autoridade de editor (Regra 6). Uma **edição de um artigo já
-publicado** não sobrescreve o publicado: cria um **overlay** de rascunho-de-edição que coexiste, e o
-publicado só muda quando essa edição é, ela própria, aprovada e promovida (Regra 7,
-`knowledge/proven-patterns.md` §9).
+**Editorial publishing.** An article moves through `draft → in-review → approved → published →
+archived`. "Publish" requires the guard "reviewer approved" and editor authority (Rule 6). An
+**edit to an already published article** does not overwrite the published one: it creates an
+edit-draft **overlay** that coexists, and the published version only changes when that edit is,
+itself, approved and promoted (Rule 7, `knowledge/proven-patterns.md` §9).
 
-## Armadilhas conhecidas
+## Known pitfalls
 
-- **Deny-list em vez de allow-list.** Tentar proibir as transições más deixa sempre escapar uma; só o que
-  está **declarado** é permitido (Regra 1).
-- **Efeitos fora da transição da transição.** "Mudo o estado e depois disparo os efeitos" perde efeitos
-  quando a app cai no meio, e deixa o mundo a meio sem rollback (Regra 2).
-- **Reabrir um terminal "só desta vez".** Um estado final que ganha uma exceção deixa de ser final e
-  corrompe o que fechou nele (contas, stock, faturas) (Regra 4).
-- **Transitar sem lock.** A janela ler-decidir-escrever cobra duas vezes ou expede duas vezes sob
-  concorrência (Regra 5, `knowledge/origin-lessons.md` C4).
-- **Sobrescrever estado permanente com estado temporário.** A reserva de curto prazo que apaga a
-  atribuição de base é a classe de bug que os overlays evitam (Regra 7).
-- **Estado calculável guardado como coluna e a divergir.** Se o estado se pode derivar dos factos, derivá-lo;
-  duas cópias divergem (`knowledge/proven-patterns.md` §4).
+- **Deny-list instead of allow-list.** Trying to forbid the bad transitions always lets one
+  through; only what is **declared** is allowed (Rule 1).
+- **Effects outside the transition's transaction.** "I change the state and then fire the effects"
+  loses effects when the app crashes midway, and leaves the world halfway with no rollback
+  (Rule 2).
+- **Reopening a terminal "just this once".** A final state that gains an exception stops being
+  final and corrupts what closed within it (accounts, stock, invoices) (Rule 4).
+- **Transitioning without a lock.** The read-decide-write window charges twice or ships twice under
+  concurrency (Rule 5, `knowledge/origin-lessons.md` C4).
+- **Overwriting permanent state with temporary state.** The short-term reservation that erases the
+  base assignment is the bug class overlays prevent (Rule 7).
+- **Derivable state stored as a column and diverging.** If the state can be derived from the facts,
+  derive it; two copies diverge (`knowledge/proven-patterns.md` §4).
 
-## Relacionados
+## Related
 
-- `modules/approval-engine.md` — a cadeia de aprovação é uma máquina de estados.
-- `modules/entity-lifecycle.md` — onboarding/offboarding como transições com libertação de recursos.
-- `modules/job-queue.md` — efeitos externos e transições por tempo correm por executor único.
-- `modules/rbac-and-scoping.md` — a autoridade da transição confirma-se no servidor.
-- `modules/audit-and-provenance.md` — cada transição deixa rasto imutável.
-- `knowledge/proven-patterns.md` — §5 (invariantes duplos), §8 (serviço partilhado), §9 (camadas).
-- `templates/specification/state-machine.md.template` — onde se documenta a matriz de transições.
+- `modules/approval-engine.md` — the approval chain is a state machine.
+- `modules/entity-lifecycle.md` — onboarding/offboarding as transitions with resource release.
+- `modules/job-queue.md` — external effects and time-based transitions run on a single executor.
+- `modules/rbac-and-scoping.md` — the transition's authority is confirmed on the server.
+- `modules/audit-and-provenance.md` — every transition leaves an immutable trail.
+- `knowledge/proven-patterns.md` — §5 (dual invariants), §8 (shared service), §9 (layers).
+- `templates/specification/state-machine.md.template` — where the transition matrix is documented.
