@@ -59,7 +59,7 @@ corrigido isoladamente, porque a contradição vive **entre** documentos.
   respostas contraditórias, âmbito a decidir), e sobe ao utilizador com opções (cortar o requisito do
   MVP, aceitar uma ambiguidade não-crítica com risco registado, ou mudar quem decide).
 - Um utilizador que não responde **não conta como iteração sem progresso** — o motor de perguntas já
-  prevê que o loop não gira em vazio (`core/question-engine.md` §Loop associado); a salvaguarda
+  prevê que o loop não gira em vazio (`core/question-engine.md` §Associated loop); a salvaguarda
   dispara sobre lotes efetivamente respondidos que não resolveram nada.
 
 ## Registo em STATE.md
@@ -69,7 +69,7 @@ L01 · requisitos ambíguos · métrica 9→5→2 · iter 3 (teto 8) · último 
 ```
 
 Ao fechar (métrica a zero, verificado), colapsa para uma linha no "Registo histórico"
-(`core/project-memory.md` §Higiene) com a data e o total de achados resolvidos.
+(`core/project-memory.md` §Memory hygiene) com a data e o total de achados resolvidos.
 
 ## Exemplo (SaaS B2B — faturação por assinatura)
 
@@ -89,5 +89,5 @@ faturas avulsas de upsell, não à mensalidade recorrente. O `engenheiro-de-requ
 - `agents/01-requirements/ambiguity-hunter.md` — o agente dono da deteção.
 - `agents/01-requirements/README.md` — os agentes-donos que aplicam as respostas.
 - `core/quality-gates.md` — P2 não passa com achados críticos abertos.
-- `core/orchestrator.md` — §Recuperação, a origem da regra dos 3.
+- `core/orchestrator.md` — §Recovery, a origem da regra dos 3.
 - `knowledge/ai-pitfalls.md` — §3, assumir em vez de perguntar, a armadilha que este loop bloqueia.

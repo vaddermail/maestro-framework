@@ -1,83 +1,85 @@
-# 05 — Backend (engenharia do servidor)
+# 05 — Backend (server engineering)
 
-Os agentes que constroem o **lado fiável** do sistema: o servidor onde vivem a autorização, o
-scoping, a integridade transacional, a ocultação de campos sensíveis e os contratos que o cliente
-consome. O princípio que atravessa toda a categoria: **o cliente é não-fiável** — declara intenção,
-o servidor confirma e decide (`knowledge/origin-lessons.md` §C1, `modules/rbac-and-scoping.md`).
+The agents that build the **trusted side** of the system: the server, home of authorization,
+scoping, transactional integrity, the redaction of sensitive fields and the contracts the client
+consumes. The principle that runs through the whole category: **the client is untrusted** — it
+declares intent, the server confirms and decides (`knowledge/origin-lessons.md` §C1,
+`modules/rbac-and-scoping.md`).
 
-## Fase(s) e quando entra
+## Phase(s) and when it enters
 
-Fase dominante **F5–F6** (`core/lifecycle.md`). Divide-se em dois momentos:
+Dominant phase **F5–F6** (`core/lifecycle.md`). It splits into two moments:
 
-- **F5 (especificação):** o `desenhador-de-apis.md` fixa o **contrato** — recursos, erros, paginação,
-  versionamento — como fonte única que alimenta validação, tipos do servidor, tipos do cliente e a
-  documentação (`knowledge/origin-lessons.md` §C2). Nada de código ainda; é o *quê* da API.
-- **F6 (construção):** os especialistas implementam esse contrato em fatias verticais
-  (`workflows/W06-build.md`), na ordem dados → backend → frontend, com testes contínuos.
+- **F5 (specification):** `desenhador-de-apis.md` fixes the **contract** — resources, errors,
+  pagination, versioning — as the single source feeding validation, server types, client types and
+  the documentation (`knowledge/origin-lessons.md` §C2). No code yet; it is the *what* of the API.
+- **F6 (build):** the specialists implement that contract in vertical slices
+  (`workflows/W06-build.md`), in the order data → backend → frontend, with continuous tests.
 
-## Anatomia uniforme de módulo (a regra que unifica a categoria)
+## Uniform module anatomy (the rule that unifies the category)
 
-Todo o módulo de backend desta framework tem **três camadas**, sempre pela mesma ordem
+Every backend module in this framework has **three layers**, always in the same order
 (`knowledge/origin-lessons.md` §C3):
 
-| Camada | Responsabilidade | O que **não** faz |
+| Layer | Responsibility | What it does **not** do |
 | --- | --- | --- |
-| **Bordo fino** (protocolo) | Traduz HTTP/gRPC/mensagem em chamada tipada; valida a *forma* do input; devolve o formato de erro padrão | Não decide autorização nem regra de negócio |
-| **Orquestração** | Confirma autoridade e scoping (servidor), abre transação, compõe os passos, aciona efeitos secundários via outbox | Não fala protocolo; não contém a regra pura |
-| **Domínio puro/transacional** | A regra de negócio como função que recebe a ligação de BD (ou dados já carregados); testável sem HTTP, componível dentro de transações maiores | Não conhece HTTP, headers, nem o formato de resposta |
+| **Thin edge** (protocol) | Translates HTTP/gRPC/message into a typed call; validates the *shape* of the input; returns the standard error format | Decides neither authorization nor business rules |
+| **Orchestration** | Confirms authority and scoping (server), opens the transaction, composes the steps, triggers side effects via outbox | Speaks no protocol; does not hold the pure rule |
+| **Pure/transactional domain** | The business rule as a function that receives the DB connection (or data already loaded); testable without HTTP, composable inside larger transactions | Knows nothing of HTTP, headers, or the response format |
 
-*Porquê:* a lógica difícil fica testável sem rede e reutilizável dentro de transações maiores — e a
-mesma operação servida por várias vias (portal, backoffice, API, CLI) partilha o núcleo transacional,
-diferindo só no bordo (`knowledge/proven-patterns.md` §8). Os revisores verificam esta
-separação em `agents/12-reviewers/backend-reviewer.md`.
+*Why:* the hard logic stays testable without the network and reusable inside larger transactions —
+and the same operation served through several routes (portal, backoffice, API, CLI) shares the
+transactional core, differing only at the edge (`knowledge/proven-patterns.md` §8). Reviewers
+verify this separation in `agents/12-reviewers/backend-reviewer.md`.
 
-## Agentes da categoria
+## Agents in this category
 
-**Contrato e estilos de API**
-- `agents/05-backend/api-designer.md` — desenha o contrato (recursos, erros, paginação) e escolhe o estilo com o utilizador; SSOT do contrato.
-- `agents/05-backend/rest-specialist.md` — REST: recursos, verbos, códigos, HATEOAS pragmático, OpenAPI.
-- `agents/05-backend/graphql-specialist.md` — GraphQL: schema, resolvers, N+1, autorização por campo.
-- `agents/05-backend/grpc-specialist.md` — gRPC: protobuf, streaming, versionamento de mensagens.
-- `agents/05-backend/api-versioning-specialist.md` — versiona e depreca APIs sem partir clientes.
+**Contract and API styles**
+- `agents/05-backend/api-designer.md` — designs the contract (resources, errors, pagination) and chooses the style with the user; SSOT of the contract.
+- `agents/05-backend/rest-specialist.md` — REST: resources, verbs, status codes, pragmatic HATEOAS, OpenAPI.
+- `agents/05-backend/graphql-specialist.md` — GraphQL: schema, resolvers, N+1, per-field authorization.
+- `agents/05-backend/grpc-specialist.md` — gRPC: protobuf, streaming, message versioning.
+- `agents/05-backend/api-versioning-specialist.md` — versions and deprecates APIs without breaking clients.
 
-**Identidade e acesso**
-- `agents/05-backend/authentication-specialist.md` — authn: OIDC/OAuth2, sessões vs tokens, MFA, contas de serviço.
-- `agents/05-backend/authorization-specialist.md` — authz: RBAC/ABAC, scoping no servidor, cliente não-fiável, fail-closed.
+**Identity and access**
+- `agents/05-backend/authentication-specialist.md` — authn: OIDC/OAuth2, sessions vs tokens, MFA, service accounts.
+- `agents/05-backend/authorization-specialist.md` — authz: RBAC/ABAC, server-side scoping, untrusted client, fail-closed.
 
-**Desempenho e assíncrono**
-- `agents/05-backend/caching-specialist.md` — caching por camadas, chaves, TTL, invalidação, estampede.
-- `agents/05-backend/queue-specialist.md` — filas de trabalho: executor único, dedupe por fingerprint, retries, DLQ.
-- `agents/05-backend/events-specialist.md` — eventos de domínio/integração: outbox, ordering, idempotência.
-- `agents/05-backend/scalability-architect.md` — escala horizontal/vertical, gargalos, backpressure, limites.
+**Performance and async**
+- `agents/05-backend/caching-specialist.md` — layered caching, keys, TTL, invalidation, stampede.
+- `agents/05-backend/queue-specialist.md` — job queues: single executor, dedupe by fingerprint, retries, DLQ.
+- `agents/05-backend/events-specialist.md` — domain/integration events: outbox, ordering, idempotency.
+- `agents/05-backend/scalability-architect.md` — horizontal/vertical scale, bottlenecks, backpressure, limits.
 
-**Observabilidade**
-- `agents/05-backend/logging-specialist.md` — logging estruturado, níveis, correlação, sem segredos nos logs.
-- `agents/05-backend/metrics-specialist.md` — métricas RED/USE, SLIs, cardinalidade sob controlo.
-- `agents/05-backend/observability-architect.md` — traces + logs + métricas correlacionados; alertas acionáveis; custos de IA visíveis.
-- `agents/05-backend/ai-features-specialist.md` — funcionalidades LLM: grounding na fonte única, prompts versionados, evals executáveis, guardrails/fallback, créditos e observabilidade de IA aplicados.
+**Observability**
+- `agents/05-backend/logging-specialist.md` — structured logging, levels, correlation, no secrets in the logs.
+- `agents/05-backend/metrics-specialist.md` — RED/USE metrics, SLIs, cardinality under control.
+- `agents/05-backend/observability-architect.md` — traces + logs + metrics correlated; actionable alerts; AI costs visible.
+- `agents/05-backend/ai-features-specialist.md` — LLM features: grounding on the single source, versioned prompts, executable evals, guardrails/fallback, credits and AI observability applied.
 
-## Ordem de trabalho recomendada
+## Recommended order of work
 
-1. **Contrato primeiro** (`desenhador-de-apis`) — decide o estilo com o utilizador e escreve o
-   contrato; é o input de todos os outros.
-2. **Identidade e acesso** (`especialista-de-autenticacao` → `especialista-de-autorizacao`) — antes de
-   qualquer endpoint que devolva dados; authn estabelece *quem*, authz decide *o quê/qual subconjunto*.
-3. **Implementação do estilo escolhido** (um de `rest`/`graphql`/`grpc`) sobre a anatomia de três
-   camadas, fatia a fatia.
-4. **Desempenho e assíncrono** conforme a fatia exige — caching, filas, eventos.
-5. **Observabilidade** desde a primeira fatia — logging e métricas não são um retoque final.
+1. **Contract first** (`desenhador-de-apis`) — decides the style with the user and writes the
+   contract; it is everyone else's input.
+2. **Identity and access** (`especialista-de-autenticacao` → `especialista-de-autorizacao`) — before
+   any endpoint that returns data; authn establishes *who*, authz decides *what/which subset*.
+3. **Implementation of the chosen style** (one of `rest`/`graphql`/`grpc`) on top of the three-layer
+   anatomy, slice by slice.
+4. **Performance and async** as the slice demands — caching, queues, events.
+5. **Observability** from the first slice — logging and metrics are not a final touch-up.
 
-## Como o Orquestrador a convoca
+## How the Orchestrator summons it
 
-O `core/orchestrator.md` monta o grafo de dependências a partir das secções **Inputs**/**Interações**
-de cada ficha. Em F5 chama só o `desenhador-de-apis`; em F6 chama os especialistas na ordem acima,
-por fatia vertical, coordenando com `agents/06-data/` (a montante — o modelo persistido) e
-`agents/04-frontend/` (a jusante — o consumidor do contrato). Autorização, scoping, integridade e
-ocultação de sensíveis são **responsabilidade exclusiva** desta camada (`templates/specification/backend-contract.md.template`).
+`core/orchestrator.md` assembles the dependency graph from the **Inputs**/**Interactions** sections
+of each agent spec. In F5 it calls only the `desenhador-de-apis`; in F6 it calls the specialists in
+the order above, per vertical slice, coordinating with `agents/06-data/` (upstream — the persisted
+model) and `agents/04-frontend/` (downstream — the consumer of the contract). Authorization,
+scoping, integrity and the redaction of sensitive fields are the **exclusive responsibility** of
+this layer (`templates/specification/backend-contract.md.template`).
 
-## Relacionados
+## Related
 
-- `agents/06-data/README.md` — a verdade persistida que o backend orquestra.
-- `agents/04-frontend/README.md` — o cliente não-fiável que consome os contratos.
-- `modules/rbac-and-scoping.md` · `modules/job-queue.md` · `modules/state-machines.md` — capacidades reutilizáveis que os agentes aplicam.
-- `knowledge/proven-patterns.md` · `knowledge/origin-lessons.md` §C — os padrões que a categoria implementa.
+- `agents/06-data/README.md` — the persisted truth the backend orchestrates.
+- `agents/04-frontend/README.md` — the untrusted client that consumes the contracts.
+- `modules/rbac-and-scoping.md` · `modules/job-queue.md` · `modules/state-machines.md` — reusable capabilities the agents apply.
+- `knowledge/proven-patterns.md` · `knowledge/origin-lessons.md` §C — the patterns the category implements.

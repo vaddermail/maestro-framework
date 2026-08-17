@@ -2,7 +2,7 @@
 
 > **Como usar:** copia para `product/99-records/guardians/{{dimensao}}-AAAA-MM-DD.md`, um ficheiro
 > por ciclo. Todo o `agents/13-guardians/` usa este molde. Um relatório sem números e sem estados
-> terminais **não fecha o ciclo** — formato definido em `agents/13-guardians/README.md` §Formato de
+> terminais **não fecha o ciclo** — formato definido em `agents/13-guardians/README.md` §Cycle report format —
 > relatório do ciclo.
 
 ## Cabeçalho

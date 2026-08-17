@@ -1,97 +1,98 @@
-# Guardiões — a equipa permanente de produção
+# Guardians — the permanent production team
 
-A categoria que materializa o princípio 10 do `MANIFESTO.md`: **a manutenção começa no dia 0**. Um
-produto não está "acabado" quando entra em produção — é aí que começa a viver. Os guardiões são a
-equipa que o mantém vivo anos depois, cada um vigiando **uma** dimensão em **cadência própria**,
-sem esperar que um humano se lembre de olhar.
+The category that embodies principle 10 of `MANIFESTO.md`: **maintenance starts on day 0**. A
+product is not "finished" when it reaches production — that is where it starts to live. The
+guardians are the team that keeps it alive years later, each watching **one** dimension on **its
+own cadence**, without waiting for a human to remember to look.
 
-Todos pertencem à fase **F9 — operação contínua** (`core/lifecycle.md`), orquestrada pelo
-`workflows/W09-continuous-operation.md`. Não são pontuais como os revisores de F7
-(`agents/12-reviewers/`): os revisores dão um parecer num marco e saem; os guardiões **nunca
-acabam** — voltam na cadência seguinte. Onde um revisor pergunta "está bom para lançar?", um guardião
-pergunta "continua bom, hoje?".
+All belong to phase **F9 — continuous operation** (`core/lifecycle.md`), orchestrated by
+`workflows/W09-continuous-operation.md`. They are not one-off like the F7 reviewers
+(`agents/12-reviewers/`): reviewers give a verdict at a milestone and leave; guardians **never
+finish** — they come back on the next cadence. Where a reviewer asks "is it good enough to
+launch?", a guardian asks "is it still good, today?".
 
-## O que distingue um guardião
+## What sets a guardian apart
 
-- **Cadência própria** (diária/semanal/mensal ou por evento), não uma convocação única.
-- **Ciclo fixo:** analisa → planeia → aplica → valida → documenta. Nunca aplica sem validar; nunca
-  fecha sem escrever.
-- **Estados terminais auditáveis:** cada achado do ciclo termina resolvido, mitigado (risco residual
-  aceite pelo utilizador) ou não-aplicável (justificado). Não há "em análise" pendente sem dono e
-  sem prazo.
-- **Reporta ao Orquestrador** (`core/orchestrator.md`), que agrupa perguntas ao utilizador e
-  encadeia guardiões entre si (o de Segurança aciona o de Dependências; o de Custos lê a saída do de
-  Performance).
+- **Own cadence** (daily/weekly/monthly or per event), not a single convocation.
+- **Fixed cycle:** analyze → plan → apply → validate → document. Never applies without validating;
+  never closes without writing.
+- **Auditable terminal states:** every finding of the cycle ends resolved, mitigated (residual
+  risk accepted by the user) or not-applicable (justified). No "under analysis" pending without an
+  owner and a deadline.
+- **Reports to the Orchestrator** (`core/orchestrator.md`), which batches questions to the user
+  and chains guardians together (Security triggers Dependencies; Costs reads Performance's
+  output).
 
-## Agentes desta categoria
+## Agents in this category
 
-| Agente | Vigia | Cadência típica |
+| Agent | Watches | Typical cadence |
 | --- | --- | --- |
-| `agents/13-guardians/security-guardian.md` | CVEs, dependências, containers, SO, cloud (exemplar) | diária + por CVE |
-| `agents/13-guardians/dependency-guardian.md` | atualização deliberada de dependências (não-segurança) | semanal + mensal (majors) |
-| `agents/13-guardians/performance-guardian.md` | CPU, RAM, queries, APIs, cache, LCP/CLS/TTFB vs orçamentos | contínua + semanal |
-| `agents/13-guardians/cost-guardian.md` | custos de infra, APIs e IA (produto e desenvolvimento) | mensal + alerta por anomalia |
-| `agents/13-guardians/quality-guardian.md` | code smells, duplicação, complexidade, cobertura, deriva de arquitetura | semanal + por release |
-| `agents/13-guardians/documentation-guardian.md` | sincronia docs↔código↔produto | por release + semanal |
-| `agents/13-guardians/backup-guardian.md` | existência **e** restauro real dos backups | verificação diária + ensaio periódico |
-| `agents/13-guardians/value-guardian.md` | KPIs de negócio vs alvos da descoberta — o valor prometido aconteceu? | mensal |
-| `agents/13-guardians/feature-evolution-agent.md` | pedidos novos em produção (coordenador de W10) | por evento (pedido) |
+| `agents/13-guardians/security-guardian.md` | CVEs, dependencies, containers, OS, cloud (exemplar) | daily + per CVE |
+| `agents/13-guardians/dependency-guardian.md` | deliberate dependency updates (non-security) | weekly + monthly (majors) |
+| `agents/13-guardians/performance-guardian.md` | CPU, RAM, queries, APIs, cache, LCP/CLS/TTFB vs budgets | continuous + weekly |
+| `agents/13-guardians/cost-guardian.md` | infra, API and AI costs (product and development) | monthly + anomaly alert |
+| `agents/13-guardians/quality-guardian.md` | code smells, duplication, complexity, coverage, architecture drift | weekly + per release |
+| `agents/13-guardians/documentation-guardian.md` | docs↔code↔product sync | per release + weekly |
+| `agents/13-guardians/backup-guardian.md` | existence **and** real restore of backups | daily check + periodic drill |
+| `agents/13-guardians/value-guardian.md` | business KPIs vs discovery targets — did the promised value happen? | monthly |
+| `agents/13-guardians/feature-evolution-agent.md` | new requests in production (W10 coordinator) | per event (request) |
 
-## Cadências por perfil (a fonte única)
+## Cadences per profile (the single source)
 
-Esta tabela é a **fonte única** das cadências — `core/orchestrator.md` §Effort profiles e
-`workflows/W09-continuous-operation.md` remetem para aqui. No **protótipo**, todos os guardiões ficam
-**desativados** até à decisão de continuar. Um projeto pode **apertar** uma cadência (nunca alargar
-sem risco aceite pelo utilizador), registando-a no seu `CLAUDE.md`.
+This table is the **single source** of cadences — `core/orchestrator.md` §Effort profiles and
+`workflows/W09-continuous-operation.md` point here. In the **prototype**, all guardians stay
+**disabled** until the decision to continue. A project may **tighten** a cadence (never loosen it
+without user-accepted risk), recording it in its `CLAUDE.md`.
 
-| Guardião | Produto interno | Produto comercial | Plataforma empresarial |
+| Guardian | Internal product | Commercial product | Enterprise platform |
 | --- | --- | --- | --- |
-| Segurança | semanal + por CVE crítico | diária + por CVE | diária + por CVE |
-| Dependências | mensal | semanal + mensal (majors) | semanal + mensal (majors) |
-| Performance | mensal | contínua + semanal | contínua + semanal |
-| Custos | mensal | mensal + alerta por anomalia | mensal + alerta por anomalia |
-| Qualidade | mensal | semanal + por release | semanal + por release |
-| Documentação | por release | por release + semanal | por release + semanal |
-| Backups | verificação semanal + ensaio trimestral | verificação diária + ensaio mensal | verificação diária + ensaio mensal + DR regular |
-| Valor (KPIs) | mensal | mensal + por alvo com prazo a vencer | mensal + por alvo com prazo a vencer |
-| Evolução de features | por evento | por evento | por evento |
+| Security | weekly + per critical CVE | daily + per CVE | daily + per CVE |
+| Dependencies | monthly | weekly + monthly (majors) | weekly + monthly (majors) |
+| Performance | monthly | continuous + weekly | continuous + weekly |
+| Costs | monthly | monthly + anomaly alert | monthly + anomaly alert |
+| Quality | monthly | weekly + per release | weekly + per release |
+| Documentation | per release | per release + weekly | per release + weekly |
+| Backups | weekly check + quarterly drill | daily check + monthly drill | daily check + monthly drill + regular DR |
+| Value (KPIs) | monthly | monthly + per target near its deadline | monthly + per target near its deadline |
+| Feature evolution | per event | per event | per event |
 
-Na plataforma empresarial soma-se a revisão global periódica (`workflows/W12-global-review.md`).
+On the enterprise platform, the periodic global review is added (`workflows/W12-global-review.md`).
 
-## Deveres comuns a todos
+## Duties shared by all
 
-1. **Ciclo analisa→planeia→aplica→valida→documenta**, com prova real antes de fechar (nunca "parece
-   bem" — `core/quality-gates.md`, `knowledge/permanent-rules.md` §7).
-2. **Reversibilidade:** toda a mudança que um guardião aplica tem caminho de reversão; risco atrás de
-   flag quando aplicável (`modules/feature-flags.md`).
-3. **Honestidade:** relatar o estado real com números — nunca um "tudo bem" cosmético
+1. **The analyze→plan→apply→validate→document cycle**, with real proof before closing (never
+   "looks fine" — `core/quality-gates.md`, `knowledge/permanent-rules.md` §7).
+2. **Reversibility:** every change a guardian applies has a reversal path; risk behind a flag when
+   applicable (`modules/feature-flags.md`).
+3. **Honesty:** report the real state with numbers — never a cosmetic "all good"
    (`knowledge/permanent-rules.md` §2).
-4. **Só o utilizador aceita risco residual** e decide âmbito/dinheiro/dados/produção — o guardião
-   recomenda, não decide (`MANIFESTO.md` §8).
-5. **Abrir o loop certo** quando o achado persiste: L03 (segurança), L04 (code smells), L05/L06
-   (docs), L07 (CVEs), L08 (dívida técnica) — ver `loops/README.md`.
-6. **Escrever tudo** em `product/99-records/guardians/` e as lições não-óbvias em `STATE.md`
-   (`core/project-memory.md`).
+4. **Only the user accepts residual risk** and decides scope/money/data/production — the guardian
+   recommends, it does not decide (`MANIFESTO.md` §8).
+5. **Open the right loop** when the finding persists: L03 (security), L04 (code smells), L05/L06
+   (docs), L07 (CVEs), L08 (technical debt) — see `loops/README.md`.
+6. **Write everything** in `product/99-records/guardians/` and the non-obvious lessons in
+   `STATE.md` (`core/project-memory.md`).
 
-## Formato de relatório do ciclo
+## Cycle report format
 
-Todos usam o mesmo molde — `templates/technical/guardian-report.md.template` — escrito em
-`product/99-records/guardians/<dimensao>-AAAA-MM-DD.md`, com: janela do ciclo, achados por estado
-terminal (resolvido / mitigado / não-aplicável, cada um justificado), ações aplicadas e como foram
-validadas, o que subiu ao utilizador, e a tendência face ao ciclo anterior. Um relatório sem números
-e sem estados terminais não fecha o ciclo.
+All use the same mold — `templates/technical/guardian-report.md.template` — written to
+`product/99-records/guardians/<dimension>-YYYY-MM-DD.md`, with: the cycle window, findings by
+terminal state (resolved / mitigated / not-applicable, each justified), actions applied and how
+they were validated, what was escalated to the user, and the trend against the previous cycle. A
+report without numbers and without terminal states does not close the cycle.
 
-## Como o Orquestrador os convoca
+## How the Orchestrator convenes them
 
-Em F9, o `workflows/W09-continuous-operation.md` agenda cada guardião na sua cadência e recolhe os
-relatórios. Fora de cadência, um evento aciona o guardião certo (um CVE → Segurança; uma anomalia de
-custo → Custos; um pedido novo → Agente de Evolução, que dispara `workflows/W10-feature-evolution.md`).
-Quando um achado ultrapassa a dimensão de um guardião (um CVE a ser explorado, uma degradação a
-virar indisponibilidade), escala para `workflows/W11-incident-response.md`.
+In F9, `workflows/W09-continuous-operation.md` schedules each guardian on its cadence and collects
+the reports. Outside the cadence, an event triggers the right guardian (a CVE → Security; a cost
+anomaly → Costs; a new request → the Evolution Agent, which fires
+`workflows/W10-feature-evolution.md`). When a finding outgrows one guardian's dimension (a CVE
+being exploited, a degradation turning into unavailability), it escalates to
+`workflows/W11-incident-response.md`.
 
-## Relacionados
+## Related
 
 - `core/lifecycle.md` (F9) · `workflows/W09-continuous-operation.md` · `workflows/W10-feature-evolution.md`
-- `agents/12-reviewers/README.md` — os olhos pontuais de F7, a montante dos guardiões.
+- `agents/12-reviewers/README.md` — the one-off eyes of F7, upstream of the guardians.
 - `templates/technical/guardian-report.md.template` · `loops/README.md`
-- `agents/README.md` — o índice global e os tipos de agente.
+- `agents/README.md` — the global index and the agent types.

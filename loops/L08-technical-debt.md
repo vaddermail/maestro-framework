@@ -74,7 +74,7 @@ porque o seu juro não justificou o ciclo.
 
 ## Relacionados
 
-- `core/orchestrator.md` — §Perfis de esforço; os defaults do limiar vivem na §Condição de saída
+- `core/orchestrator.md` — §Effort profiles; os defaults do limiar vivem na §Condição de saída
   deste loop e o valor do projeto no seu `CLAUDE.md`.
 - `core/project-memory.md` — onde a dívida técnica se regista e se acompanha entre sessões.
 - `modules/feature-flags.md` — como pagar dívida com risco atrás de kill-switch.

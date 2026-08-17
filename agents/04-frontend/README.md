@@ -1,61 +1,63 @@
-# 04 — Frontend (engenharia do cliente)
+# 04 — Frontend (client engineering)
 
-A categoria que constrói a **aplicação cliente**: a estrutura da app, os ecrãs, a ligação à API, o
-estado/cache e os testes de UI. Trabalha na fase **F6** (construção — `workflows/W06-build.md`),
-a jusante da experiência (F4, `agents/03-experience/`) e em paralelo com o backend
-(`agents/05-backend/`) e os dados (`agents/06-data/`), sob o contrato de API que o servidor publica.
+The category that builds the **client application**: the app structure, the screens, the API
+integration, the state/cache and the UI tests. It works in phase **F6** (build —
+`workflows/W06-build.md`), downstream of experience (F4, `agents/03-experience/`) and in parallel
+with the backend (`agents/05-backend/`) and data (`agents/06-data/`), under the API contract the
+server publishes.
 
-> Princípio da categoria: o **cliente é não-fiável** (`knowledge/proven-patterns.md` §6).
-> O frontend assume que só recebe o que o perfil ativo pode ver e que o servidor confirma toda a
-> autoridade — a UI pode esconder e desabilitar por UX, nunca por segurança. E todo o texto que chega
-> ao utilizador vem da **fonte única de conteúdos** (`modules/single-source-of-content.md`), nunca
-> hardcoded no ecrã.
+> Category principle: the **client is untrusted** (`knowledge/proven-patterns.md` §6).
+> The frontend assumes it only receives what the active profile may see and that the server
+> confirms all authority — the UI may hide and disable for UX, never for security. And every piece
+> of text that reaches the user comes from the **single source of content**
+> (`modules/single-source-of-content.md`), never hardcoded in the screen.
 
-## Agentes desta categoria
+## Agents in this category
 
-| Agente | Uma linha |
+| Agent | One line |
 | --- | --- |
-| `agents/04-frontend/frontend-architect.md` | Estrutura da app cliente: routing, camadas, convenções, arranque da camada de conteúdos (SSOT) e dos tokens. |
-| `agents/04-frontend/screen-implementer.md` | Constrói cada ecrã a partir do wireframe + design system, com **tooltip em toda a ação** e **filtros/ordenação em toda a lista**. |
-| `agents/04-frontend/api-integrator.md` | Cliente de API tipado gerado do contrato, **mocks que espelham o servidor** (MSW ou equivalente), erros normalizados (RFC 7807). |
-| `agents/04-frontend/state-and-cache-specialist.md` | Estado do cliente, cache de dados do servidor, sincronização e invalidação; camadas base+overlay. |
-| `agents/04-frontend/frontend-test-engineer.md` | Testes de componentes/ecrãs (com axe) e smoke E2E do cliente em viewport pequeno **e** grande. |
+| `agents/04-frontend/frontend-architect.md` | Client app structure: routing, layers, conventions, bootstrap of the content layer (SSOT) and of the tokens. |
+| `agents/04-frontend/screen-implementer.md` | Builds each screen from the wireframe + design system, with a **tooltip on every action** and **filters/sorting on every list**. |
+| `agents/04-frontend/api-integrator.md` | Typed API client generated from the contract, **mocks that mirror the server** (MSW or equivalent), normalized errors (RFC 7807). |
+| `agents/04-frontend/state-and-cache-specialist.md` | Client state, server-data cache, synchronization and invalidation; base+overlay layers. |
+| `agents/04-frontend/frontend-test-engineer.md` | Component/screen tests (with axe) and client E2E smoke in a small **and** a large viewport. |
 
-## Ordem de trabalho recomendada
+## Recommended order of work
 
-1. **Arquiteto de Frontend** monta o esqueleto: routing, camadas, convenções e a **camada de
-   conteúdos tipada** + consumo dos tokens do design system — *antes* de existir qualquer ecrã.
-2. **Integrador de API** gera o cliente tipado e os mocks a partir do contrato, para que os ecrãs
-   tenham dados coerentes desde o primeiro dia (dev + testes).
-3. **Especialista de Estado e Cache** define a política de cache/invalidação e as camadas de estado
-   que os ecrãs vão reutilizar.
-4. **Implementador de Ecrãs** constrói ecrã a ecrã sobre estas fundações (tooltips, filtros, estados
-   de carregamento/erro/vazio).
-5. **Engenheiro de Testes Frontend** cobre componentes e ecrãs e corre o smoke E2E; acompanha em
-   paralelo, não só no fim.
+1. **Frontend Architect** sets up the skeleton: routing, layers, conventions and the **typed
+   content layer** + consumption of the design system tokens — *before* any screen exists.
+2. **API Integrator** generates the typed client and the mocks from the contract, so that the
+   screens have coherent data from day one (dev + tests).
+3. **State & Cache Specialist** defines the cache/invalidation policy and the state layers the
+   screens will reuse.
+4. **Screen Implementer** builds screen by screen on these foundations (tooltips, filters,
+   loading/error/empty states).
+5. **Frontend Test Engineer** covers components and screens and runs the E2E smoke; it follows
+   along in parallel, not only at the end.
 
-> Os passos 2–4 iteram por **fatia vertical** (`workflows/W06-build.md`): um ecrã de cada vez,
-> com o seu cliente, mocks, estado e testes — nunca "todos os ecrãs primeiro, integração depois".
+> Steps 2–4 iterate by **vertical slice** (`workflows/W06-build.md`): one screen at a time, with
+> its client, mocks, state and tests — never "all the screens first, integration later".
 
-## Como o Orquestrador a convoca
+## How the Orchestrator summons it
 
-O `core/orchestrator.md` ativa a categoria quando o portão de F4 passou (wireframes + design system
-aprovados) e o contrato de API existe (do `agents/05-backend/api-designer.md`). Monta o grafo
-de dependências a partir das secções **Inputs**/**Interações** das fichas: o arquiteto primeiro, depois
-os restantes em fatias. Devolve controlo aos revisores de F7 (`agents/12-reviewers/frontend-reviewer.md`,
-`agents/12-reviewers/ux-reviewer.md`) e, em produção, ao `agents/13-guardians/performance-guardian.md`.
+`core/orchestrator.md` activates the category when the F4 gate has passed (wireframes + design
+system approved) and the API contract exists (from `agents/05-backend/api-designer.md`). It builds
+the dependency graph from the **Inputs**/**Interactions** sections of the agent specs: the
+architect first, then the rest in slices. It hands control back to the F7 reviewers
+(`agents/12-reviewers/frontend-reviewer.md`, `agents/12-reviewers/ux-reviewer.md`) and, in
+production, to `agents/13-guardians/performance-guardian.md`.
 
-## Fase(s)
+## Phase(s)
 
-**F6 (construção)** é a fase dominante. A categoria **consome** F4 (experiência) e o contrato de F5, e
-**alimenta** F7 (revisão/qualidade). Em F9, os ecrãs e o cliente evoluem via
+**F6 (build)** is the dominant phase. The category **consumes** F4 (experience) and the F5
+contract, and **feeds** F7 (review/quality). In F9, the screens and the client evolve via
 `workflows/W10-feature-evolution.md`.
 
-## Relacionados
+## Related
 
-- `agents/README.md` — índice global e tipos de agente.
-- `agents/03-experience/README.md` — o que esta categoria recebe (wireframes, design system, tokens).
-- `agents/05-backend/README.md` — o outro lado do contrato de API.
-- `agents/10-quality/README.md` — a estratégia de testes e o E2E multi-perfil de sistema completo.
-- `modules/single-source-of-content.md` · `modules/rbac-and-scoping.md` — os módulos que a categoria aplica.
-- `workflows/W06-build.md` — o processo de fatia vertical em que a categoria vive.
+- `agents/README.md` — global index and agent types.
+- `agents/03-experience/README.md` — what this category receives (wireframes, design system, tokens).
+- `agents/05-backend/README.md` — the other side of the API contract.
+- `agents/10-quality/README.md` — the test strategy and the full-system multi-profile E2E.
+- `modules/single-source-of-content.md` · `modules/rbac-and-scoping.md` — the modules this category applies.
+- `workflows/W06-build.md` — the vertical-slice process this category lives in.

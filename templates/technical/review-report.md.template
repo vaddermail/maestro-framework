@@ -3,7 +3,7 @@
 > **Como usar:** copia para `product/99-records/reviews/{{dimensao}}-{{fatia}}-AAAA-MM-DD.md`. Todo
 > o revisor de `agents/12-reviewers/` usa este molde **sem alterações**, para o
 > `agents/12-reviewers/review-consolidator.md` os poder fundir sem tradução. Formato definido em
-> `agents/12-reviewers/README.md` §Formato do relatório.
+> `agents/12-reviewers/README.md` §Report format.
 
 ## 1. Cabeçalho
 

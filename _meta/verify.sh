@@ -159,7 +159,8 @@ while IFS='|' read -r alvo sec; do
   # IDs de item (A1, C4, RF-12, …) não são títulos: basta existirem como token no alvo
   if [ "$achou" -eq 0 ]; then
     prim=${sec%% *}
-    if printf '%s' "$prim" | grep -qE '^[A-Za-z]{1,3}-?[0-9]+$' && grep -qE "(^|[^A-Za-z0-9])${prim}([^A-Za-z0-9]|$)" "$alvo"; then
+    prim1=$(printf '%s' "$prim" | grep -oE '^[A-Za-z]{1,3}-?[0-9]+' || true)
+    if printf '%s' "$prim" | grep -qE '^[A-Za-z]{1,3}-?[0-9]+([–-][A-Za-z]{0,3}-?[0-9]+)?$' && [ -n "$prim1" ] && grep -qE "(^|[^A-Za-z0-9])${prim1}([^A-Za-z0-9]|$)" "$alvo"; then
       achou=1
     fi
   fi

@@ -1,68 +1,81 @@
-# 06 — Dados (a verdade persistida)
+# 06 — Data (the persisted truth)
 
-Os agentes que desenham, protegem e mantêm o **estado persistido** do sistema — a camada onde os
-invariantes de negócio se tornam inegociáveis porque uma violação **corrompe dados**, não apenas
-uma resposta HTTP. O princípio que atravessa toda a categoria: **a base de dados é a última linha
-de defesa da integridade** — constraint na BD, guard amigável na aplicação, uma só fonte de verdade
-por facto (`knowledge/proven-patterns.md` §4–§5, `knowledge/origin-lessons.md` §B,§C).
+The agents that design, protect and maintain the system's **persisted state** — the layer where
+business invariants become non-negotiable because a violation **corrupts data**, not just an HTTP
+response. The principle that runs through the whole category: **the database is the last line of
+defense for integrity** — constraint in the DB, friendly guard in the application, one single
+source of truth per fact (`knowledge/proven-patterns.md` §4–§5, `knowledge/origin-lessons.md` §B,§C).
 
-## Fase(s) e quando entra
+## Phase(s) and when it enters
 
-Fase dominante **F5–F6** (`core/lifecycle.md`), com um pé em F8–F9:
+Dominant phase **F5–F6** (`core/lifecycle.md`), with a foot in F8–F9:
 
-- **F5 (especificação):** o `modelador-de-dados.md` deriva o **modelo lógico agnóstico**
-  (`templates/specification/logical-data-model.md.template`) das regras de negócio e das
-  máquinas de estado — entidades, relações, invariantes — **sem** escolher motor de BD. É o *quê*
-  dos dados.
-- **F6 (construção):** o modelo lógico vira modelo físico; o `engenheiro-de-migracoes` materializa-o
-  em migrações aditivas; o `especialista-de-indexes` e o `otimizador-de-desempenho-de-bd` afinam o
-  acesso; o `auditor-de-dados` instala trilhos de auditoria e proveniência.
-- **F8–F9 (lançamento e operação):** o `especialista-de-backups`, o `planeador-de-disaster-recovery`
-  e o `gestor-de-versionamento-de-schema` garantem que os dados sobrevivem a falhas e que os
-  ambientes não divergem. O `agents/13-guardians/backup-guardian.md` **opera** em cadência o
-  que estes agentes **desenharam**.
+- **F5 (specification):** the `data-modeler.md` derives the **engine-agnostic logical model**
+  (`templates/specification/logical-data-model.md.template`) from the business rules and the
+  state machines — entities, relations, invariants — **without** choosing a DB engine. It is the
+  *what* of the data.
+- **F6 (build):** the logical model becomes the physical model; the `migration-engineer`
+  materializes it in additive migrations; the `indexing-specialist` and the
+  `db-performance-optimizer` tune the access; the `data-auditor` installs audit trails and
+  provenance.
+- **F8–F9 (launch and operation):** the `backup-specialist`, the `disaster-recovery-planner`
+  and the `schema-versioning-manager` ensure the data survives failures and the environments do
+  not diverge. `agents/13-guardians/backup-guardian.md` **operates** on cadence what these
+  agents **designed**.
 
-## Agentes da categoria
+## Agents in this category
 
-**Modelo e integridade**
-- `agents/06-data/data-modeler.md` — modelo lógico agnóstico → físico; invariantes na BD, relações bidirecionais com fonte única, seeds com datas relativas.
-- `agents/06-data/migration-engineer.md` — migrações expand-contract, sempre com plano de reversão; nunca larga/renomeia o que está em uso.
-- `agents/06-data/schema-versioning-manager.md` — versão do schema, ordem das migrações, seeds por ambiente, ambientes convergentes.
+**Model and integrity**
+- `agents/06-data/data-modeler.md` — engine-agnostic logical model → physical; invariants in the
+  DB, bidirectional relations with a single source, seeds with relative dates.
+- `agents/06-data/migration-engineer.md` — expand-contract migrations, always with a rollback
+  plan; never drops/renames what is in use.
+- `agents/06-data/schema-versioning-manager.md` — schema version, migration order, seeds per
+  environment, convergent environments.
 
-**Desempenho de acesso**
-- `agents/06-data/indexing-specialist.md` — índices por padrão de acesso real; custo de escrita vs. leitura, índices parciais e compostos.
-- `agents/06-data/db-performance-optimizer.md` — diagnóstico de queries lentas por plano de execução, particionamento, ajuste de configuração.
+**Access performance**
+- `agents/06-data/indexing-specialist.md` — indexes per real access pattern; write vs. read cost,
+  partial and composite indexes.
+- `agents/06-data/db-performance-optimizer.md` — slow-query diagnosis by execution plan,
+  partitioning, configuration tuning.
 
-**Confiança e sobrevivência**
-- `agents/06-data/data-auditor.md` — trilhos de auditoria imutáveis, proveniência de dados tocados por IA, retenção e qualidade de dados.
-- `agents/06-data/backup-specialist.md` — backups automáticos, RPO por classe de dados, restauro **testado** (não presumido).
-- `agents/06-data/disaster-recovery-planner.md` — RTO/RPO do sistema, runbooks de recuperação, exercícios periódicos de perda catastrófica.
+**Trust and survival**
+- `agents/06-data/data-auditor.md` — immutable audit trails, provenance of AI-touched data,
+  retention and data quality.
+- `agents/06-data/backup-specialist.md` — automatic backups, RPO per data class, **tested**
+  restore (not presumed).
+- `agents/06-data/disaster-recovery-planner.md` — system RTO/RPO, recovery runbooks, periodic
+  catastrophic-loss drills.
 
-## Ordem de trabalho recomendada
+## Recommended order of work
 
-1. **Modelo primeiro** (`modelador-de-dados`) — deriva entidades, relações e invariantes das regras
-   de negócio (`agents/01-requirements/business-rules-modeler.md`); é o input de todos os outros.
-2. **Materialização e versão** (`engenheiro-de-migracoes` + `gestor-de-versionamento-de-schema`) —
-   cada mudança de schema é uma migração aditiva versionada e reversível.
-3. **Acesso** (`especialista-de-indexes` → `otimizador-de-desempenho-de-bd`) — índices desenhados dos
-   padrões de acesso; o otimizador diagnostica o que escapou quando aparecem queries lentas.
-4. **Confiança** (`auditor-de-dados`) — auditoria e proveniência não são um retoque final.
-5. **Sobrevivência** (`especialista-de-backups` → `planeador-de-disaster-recovery`) — backups são um
-   input do plano de DR; o DR cobre o desastre que o backup sozinho não resolve.
+1. **Model first** (`data-modeler`) — derives entities, relations and invariants from the business
+   rules (`agents/01-requirements/business-rules-modeler.md`); it is the input for everyone else.
+2. **Materialization and versioning** (`migration-engineer` + `schema-versioning-manager`) —
+   every schema change is a versioned, reversible additive migration.
+3. **Access** (`indexing-specialist` → `db-performance-optimizer`) — indexes designed from the
+   access patterns; the optimizer diagnoses what slipped through when slow queries appear.
+4. **Trust** (`data-auditor`) — audit and provenance are not a final touch-up.
+5. **Survival** (`backup-specialist` → `disaster-recovery-planner`) — backups are an input to the
+   DR plan; DR covers the disaster the backup alone does not solve.
 
-## Como o Orquestrador a convoca
+## How the Orchestrator convenes it
 
-O `core/orchestrator.md` monta o grafo de dependências a partir das secções **Inputs**/**Interações**
-de cada ficha. Em F5 chama só o `modelador-de-dados`; em F6 chama os restantes por fatia vertical,
-coordenando **a montante** com `agents/01-requirements/` (regras e invariantes) e **a jusante** com
-`agents/05-backend/` (que orquestra a escrita em transações — `knowledge/origin-lessons.md`
-§C3–C4). A integridade transacional e a autorização vivem no backend; **a integridade estrutural
-(constraints, chaves, unicidade) vive aqui** e é imposta pela própria BD.
+`core/orchestrator.md` builds the dependency graph from the **Inputs**/**Interactions** sections
+of each agent spec. In F5 it calls only the `data-modeler`; in F6 it calls the rest per vertical
+slice, coordinating **upstream** with `agents/01-requirements/` (rules and invariants) and
+**downstream** with `agents/05-backend/` (which orchestrates writes in transactions —
+`knowledge/origin-lessons.md` §C3–C4). Transactional integrity and authorization live in the
+backend; **structural integrity (constraints, keys, uniqueness) lives here** and is enforced by
+the DB itself.
 
-## Relacionados
+## Related
 
-- `agents/05-backend/README.md` — quem orquestra a escrita nos dados que esta categoria modela.
-- `agents/08-infrastructure/README.md` — onde a BD corre; storage, HA e backup de **infra** (não de dados).
-- `agents/13-guardians/backup-guardian.md` — opera em cadência os backups que aqui se desenham.
-- `modules/state-machines.md` · `modules/audit-and-provenance.md` · `modules/entity-lifecycle.md` — capacidades reutilizáveis que os agentes aplicam.
-- `knowledge/proven-patterns.md` §4–§5 · `knowledge/origin-lessons.md` §B,§C — os padrões que a categoria implementa.
+- `agents/05-backend/README.md` — who orchestrates the writes into the data this category models.
+- `agents/08-infrastructure/README.md` — where the DB runs; storage, HA and **infra** backup (not
+  data).
+- `agents/13-guardians/backup-guardian.md` — operates on cadence the backups designed here.
+- `modules/state-machines.md` · `modules/audit-and-provenance.md` · `modules/entity-lifecycle.md`
+  — reusable capabilities the agents apply.
+- `knowledge/proven-patterns.md` §4–§5 · `knowledge/origin-lessons.md` §B,§C — the patterns the
+  category implements.

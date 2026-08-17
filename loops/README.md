@@ -35,7 +35,7 @@ Nenhum loop corre indefinidamente. A salvaguarda base, obrigatória em **todos**
 > **3 iterações consecutivas sem progresso → parar o loop, registar o diagnóstico e subir ao utilizador
 > com opções.** "Sem progresso" = a métrica de progresso do loop não desceu estritamente entre iterações.
 
-Isto operacionaliza a linha do `core/orchestrator.md` §Recuperação ("loop que não converge → parar").
+Isto operacionaliza a linha do `core/orchestrator.md` §Recovery ("loop que não converge → parar").
 Cada loop especializa a regra com três defesas complementares:
 
 1. **Estagnação** — a métrica não desce em 3 iterações seguidas (o caso base acima).

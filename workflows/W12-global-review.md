@@ -31,7 +31,7 @@ legado antes de lhe mexer).
       com ou sem auditoria adversarial.
 - [ ] Os artefactos do âmbito existem e estão acessíveis (código, specs de `product/04-specification/`,
       ADRs de `product/02-architecture/`). Um revisor sem artefacto **declara-o** em "fora de âmbito",
-      não inventa (`agents/12-reviewers/README.md` §formato).
+      não inventa (`agents/12-reviewers/README.md` §Report format).
 
 ## Passos (agente → artefacto)
 

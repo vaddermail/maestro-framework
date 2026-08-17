@@ -38,7 +38,7 @@ valor também se mantém.
 ## Quando termina
 
 Um ciclo termina quando **cada KPI da régua** está num estado terminal registado
-(`agents/13-guardians/README.md` §Formato de relatório do ciclo):
+(`agents/13-guardians/README.md` §Cycle report format):
 
 - **Resolvido** — no rumo para o alvo, ou alvo atingido com guard-rail saudável, validado por
   leitura real.

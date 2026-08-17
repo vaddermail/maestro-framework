@@ -102,7 +102,7 @@ O revisor mede contra a estratégia declarada; pergunta pouco, via Orquestrador 
 - **Não escreve nem corrige testes** — é dos `engenheiro-de-testes-*` da categoria `10-qualidade`.
 - **Não audita se o risco está todo coberto** (buracos) — é do `agents/10-quality/coverage-auditor.md`;
   fronteira explícita: aquele nomeia o que **falta**, este julga a qualidade do que **existe** (artesania
-  vs buracos, `agents/10-quality/coverage-auditor.md` §Limitações). A cadência também difere:
+  vs buracos, `agents/10-quality/coverage-auditor.md` §Limitations). A cadência também difere:
   o auditor acompanha a construção fatia a fatia dentro da categoria de qualidade (consultado já em
   F6); este revisor só entra no painel independente e às cegas de F7 — nunca durante a construção.
 - **Não executa testes de carga/performance** — é do

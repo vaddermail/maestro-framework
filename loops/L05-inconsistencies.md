@@ -31,7 +31,7 @@ comportamento real observado do sistema).
 
 1. Identificar a **fonte de verdade declarada** para aquele facto (regra geral:
    `product/04-specification/` ganha sobre o código; código+testes ganham sobre um documento
-   secundário desatualizado — `core/project-memory.md` §Camadas de memória).
+   secundário desatualizado — `core/project-memory.md` §Memory layers).
 2. Se a fonte de verdade estiver certa, corrigir o lado divergente para a igualar.
 3. Se a fonte de verdade estiver **errada**, corrigir a fonte primeiro, com aprovação do utilizador
    (`MANIFESTO.md` §8), e só depois propagar aos artefactos que dependiam dela.
@@ -72,7 +72,7 @@ precisam de ticket de reversão — este ficou três meses divergente sem ningu�
 
 ## Relacionados
 
-- `core/artifact-protocol.md` — §Regras de manuseamento, a regra de precedência da spec.
+- `core/artifact-protocol.md` — §Handling rules, a regra de precedência da spec.
 - `core/project-memory.md` — a estratificação de fontes de verdade.
 - `knowledge/proven-patterns.md` — §4, §7, SSOT e guardrails automáticos.
 - `agents/13-guardians/documentation-guardian.md` — deteta divergências docs↔código na sua cadência.

@@ -1,63 +1,64 @@
-# 08 — Infraestrutura
+# 08 — Infrastructure
 
-**Onde o produto corre.** Esta categoria decide e desenha a fundação física/virtual sobre a qual
-tudo o resto assenta: alojamento (cloud, on-prem ou híbrido), rede, TLS, storage, backup de infra e
-alta disponibilidade. A pergunta que a categoria responde é "onde e sobre que máquinas isto vive, a
-que custo, com que garantias e com que caminho de saída" — nunca "que tecnologia usamos no código"
-(isso é `agents/02-architecture/`) nem "como levamos o commit até lá" (isso é `agents/07-devops/`).
+**Where the product runs.** This category decides and designs the physical/virtual foundation on
+which everything else rests: hosting (cloud, on-prem or hybrid), network, TLS, storage, infra
+backup and high availability. The question the category answers is "where and on which machines
+does this live, at what cost, with what guarantees and with what exit path" — never "which
+technology do we use in the code" (that is `agents/02-architecture/`) nor "how do we get the
+commit there" (that is `agents/07-devops/`).
 
-## Fase dominante
+## Dominant phase
 
-**F8 — lançamento** (`workflows/W08-launch.md`). A **decisão** de alojamento, porém, é
-estrutural e cara de reverter, por isso o `arbitro-de-alojamento.md` é convocado já em **F3**
-(`workflows/W03-architecture.md`), a par da arquitetura, e apenas **executada** em F8. Storage, rede e
-HA são revisitados sempre que a escala ou os requisitos de disponibilidade mudam (F9).
+**F8 — launch** (`workflows/W08-launch.md`). The hosting **decision**, however, is structural and
+expensive to reverse, which is why `arbitro-de-alojamento.md` is convened as early as **F3**
+(`workflows/W03-architecture.md`), alongside the architecture, and only **executed** in F8.
+Storage, network and HA are revisited whenever scale or availability requirements change (F9).
 
-## Agentes desta categoria
+## Agents in this category
 
-| Agente | Tipo | O que produz |
+| Agent | Type | What it produces |
 | --- | --- | --- |
-| `agents/08-infrastructure/hosting-arbiter.md` | Árbitro | ADR de alojamento (cloud/on-prem/híbrido) por custo, dados, equipa e conformidade |
-| `agents/08-infrastructure/aws-specialist.md` | Especialista | Proposta AWS: necessidades → serviços, custo mensal, armadilhas, lock-in |
-| `agents/08-infrastructure/azure-specialist.md` | Especialista | Proposta Azure (forte quando há Entra ID / Microsoft 365) |
-| `agents/08-infrastructure/google-cloud-specialist.md` | Especialista | Proposta GCP (dados/analytics, Kubernetes maduro) |
-| `agents/08-infrastructure/hetzner-specialist.md` | Especialista | Proposta Hetzner (custo/benefício europeu, dedicados e cloud) |
-| `agents/08-infrastructure/ovh-specialist.md` | Especialista | Proposta OVH (soberania europeia, bare-metal, anti-DDoS) |
-| `agents/08-infrastructure/digitalocean-specialist.md` | Especialista | Proposta DigitalOcean (simplicidade primeiro, PaaS gerido) |
-| `agents/08-infrastructure/on-premises-specialist.md` | Especialista | Proposta on-prem: VMs, hipervisores, responsabilidade total |
-| `agents/08-infrastructure/network-architect.md` | Especialista | VPN, firewall, DNS, segmentação, exposição mínima |
-| `agents/08-infrastructure/tls-ssl-specialist.md` | Especialista | Certificados, renovação automática, TLS moderno em todo o lado |
-| `agents/08-infrastructure/storage-specialist.md` | Especialista | Blocos/objetos/ficheiros, ciclos de vida, encriptação em repouso |
-| `agents/08-infrastructure/infra-backup-specialist.md` | Especialista | Backup de infra e configuração, restauro testado |
-| `agents/08-infrastructure/high-availability-architect.md` | Especialista | Redundância, failover, zonas, graceful degradation |
+| `agents/08-infrastructure/hosting-arbiter.md` | Arbiter | Hosting ADR (cloud/on-prem/hybrid) by cost, data, team and compliance |
+| `agents/08-infrastructure/aws-specialist.md` | Specialist | AWS proposal: needs → services, monthly cost, pitfalls, lock-in |
+| `agents/08-infrastructure/azure-specialist.md` | Specialist | Azure proposal (strong when Entra ID / Microsoft 365 is present) |
+| `agents/08-infrastructure/google-cloud-specialist.md` | Specialist | GCP proposal (data/analytics, mature Kubernetes) |
+| `agents/08-infrastructure/hetzner-specialist.md` | Specialist | Hetzner proposal (European cost/benefit, dedicated servers and cloud) |
+| `agents/08-infrastructure/ovh-specialist.md` | Specialist | OVH proposal (European sovereignty, bare-metal, anti-DDoS) |
+| `agents/08-infrastructure/digitalocean-specialist.md` | Specialist | DigitalOcean proposal (simplicity first, managed PaaS) |
+| `agents/08-infrastructure/on-premises-specialist.md` | Specialist | On-prem proposal: VMs, hypervisors, full responsibility |
+| `agents/08-infrastructure/network-architect.md` | Specialist | VPN, firewall, DNS, segmentation, minimal exposure |
+| `agents/08-infrastructure/tls-ssl-specialist.md` | Specialist | Certificates, automatic renewal, modern TLS everywhere |
+| `agents/08-infrastructure/storage-specialist.md` | Specialist | Block/object/file storage, lifecycles, encryption at rest |
+| `agents/08-infrastructure/infra-backup-specialist.md` | Specialist | Infra and configuration backup, tested restore |
+| `agents/08-infrastructure/high-availability-architect.md` | Specialist | Redundancy, failover, zones, graceful degradation |
 
-## Como o árbitro usa os especialistas
+## How the arbiter uses the specialists
 
-O `arbitro-de-alojamento.md` **não vende nenhuma plataforma** — aplica o `core/decision-engine.md`:
-enquadra a pergunta com critérios pesados (custo total, competência da equipa, conformidade/soberania
-de dados, reversibilidade/lock-in, maturidade), convoca 2–4 especialistas para proporem **às cegas** o
-mapeamento das necessidades do produto para a sua plataforma (com custo mensal e armadilhas honestas),
-compara e escreve o ADR. Cada especialista **avalia a sua cloud, não a defende**: um especialista que
-conclua "para este caso a minha plataforma é cara ou excessiva" está a dar uma proposta válida.
+`arbitro-de-alojamento.md` **sells no platform** — it applies `core/decision-engine.md`: it frames
+the question with weighted criteria (total cost, team competence, compliance/data sovereignty,
+reversibility/lock-in, maturity), convenes 2–4 specialists to propose **blind** the mapping of the
+product's needs onto their platform (with monthly cost and honest pitfalls), compares and writes
+the ADR. Each specialist **evaluates its cloud, does not defend it**: a specialist concluding "for
+this case my platform is expensive or excessive" is delivering a valid proposal.
 
-## Ordem de trabalho recomendada
+## Recommended order of work
 
-1. **F3 —** o `arbitro-de-alojamento` corre o painel de especialistas → ADR de alojamento aprovado.
-2. **F8 —** o especialista da plataforma escolhida detalha o desenho (rede, storage, TLS, HA) em
-   articulação com `agents/07-devops/` (IaC, containers, deploy).
-3. **F9 —** revisitar custo (`agents/13-guardians/cost-guardian.md`) e disponibilidade quando a
-   escala muda; qualquer troca de plataforma reabre o ADR (`core/decision-engine.md`).
+1. **F3 —** `arbitro-de-alojamento` runs the specialist panel → approved hosting ADR.
+2. **F8 —** the chosen platform's specialist details the design (network, storage, TLS, HA) in
+   coordination with `agents/07-devops/` (IaC, containers, deploy).
+3. **F9 —** revisit cost (`agents/13-guardians/cost-guardian.md`) and availability when scale
+   changes; any platform switch reopens the ADR (`core/decision-engine.md`).
 
-## Como o Orquestrador a convoca
+## How the Orchestrator convenes it
 
-O `core/orchestrator.md` monta o grafo a partir das secções **Inputs**/**Interações** das fichas.
-A entrada natural é o portão de F3 exigir um ADR de alojamento aprovado antes de arquitetura de infra,
-e o portão de F8 (`core/quality-gates.md`) exigir a infra desenhada, com TLS, backup e
-rollback prontos, antes do go-live.
+`core/orchestrator.md` builds the graph from the **Inputs**/**Interactions** sections of the agent
+specs. The natural entry is the F3 gate requiring an approved hosting ADR before infra
+architecture, and the F8 gate (`core/quality-gates.md`) requiring the infra designed, with TLS,
+backup and rollback ready, before go-live.
 
-## Relacionados
+## Related
 
-- `agents/07-devops/` — leva o commit até esta infra (IaC, containers, CI/CD, deploy).
-- `agents/02-architecture/` — decide o estilo/stack do software que aqui corre.
-- `agents/09-security/infrastructure-analyst.md` — audita a infra desenhada.
+- `agents/07-devops/` — takes the commit to this infra (IaC, containers, CI/CD, deploy).
+- `agents/02-architecture/` — decides the style/stack of the software that runs here.
+- `agents/09-security/infrastructure-analyst.md` — audits the designed infra.
 - `core/decision-engine.md` · `agents/README.md` · `_meta/INVENTORY.md`

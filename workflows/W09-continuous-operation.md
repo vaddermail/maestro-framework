@@ -51,7 +51,7 @@ os mesmos loops de reconciliação. **Reportam todos ao Orquestrador**, que agru
 utilizador em lotes (nunca à peça — `core/question-engine.md`).
 
 > **Escala ao perfil:** as cadências concretas de cada guardião por perfil vivem na **tabela única**
-> de `agents/13-guardians/README.md` §Cadências por perfil — num protótipo ficam todos desativados
+> de `agents/13-guardians/README.md` §Cadences per profile — num protótipo ficam todos desativados
 > até à decisão de continuar; na plataforma empresarial soma-se a revisão global periódica
 > (`workflows/W12-global-review.md`).
 

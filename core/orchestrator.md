@@ -53,8 +53,8 @@ removes — phases and gates:
 | Profile | When | Effect |
 | --- | --- | --- |
 | **Prototype** | validate an idea, assumed disposable | F1–F5 condensed into short dossiers; minimal review panel (security + architecture); guardians disabled until a decision to continue. |
-| **Internal product** | known users, contained risk | Full process; panel review on critical flows; guardians per the single cadence table (`agents/13-guardians/README.md` §Cadências por perfil). |
-| **Commercial product** | paying customers, reputation at stake | Full process; adversarial audit before go-live; guardians per the single cadence table (`agents/13-guardians/README.md` §Cadências por perfil); pentest mandatory. |
+| **Internal product** | known users, contained risk | Full process; panel review on critical flows; guardians per the single cadence table (`agents/13-guardians/README.md` §Cadences per profile). |
+| **Commercial product** | paying customers, reputation at stake | Full process; adversarial audit before go-live; guardians per the single cadence table (`agents/13-guardians/README.md` §Cadences per profile); pentest mandatory. |
 | **Enterprise platform** | multi-team, compliance, years of life | Everything above + ASVS level 2+, DR exercised, ADRs for every structural decision, periodic global review (W12). |
 
 Switching profiles midway is legitimate (e.g. an approved prototype becomes a product) — it is

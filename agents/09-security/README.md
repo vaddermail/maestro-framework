@@ -1,79 +1,78 @@
-# 09 — Segurança
+# 09 — Security
 
-Robustez em profundidade, ao longo de **todo** o ciclo de vida. Ao contrário das outras categorias,
-segurança **não é uma fase** — é uma dimensão transversal (F1–F9): entra na descoberta (o que
-protegemos e de quem), no desenho (ameaças e controlos), na construção (código sem as falhas do
-OWASP), na verificação (ASVS, pentest, scans) e na operação (guardião de segurança, CVEs). Por isso
-esta categoria tem um **coordenador** com assento em todas as fases, e não apenas especialistas
-pontuais.
+Defense in depth, across the **entire** lifecycle. Unlike the other categories, security **is not
+a phase** — it is a cross-cutting dimension (F1–F9): it enters discovery (what we protect and from
+whom), design (threats and controls), build (code free of the OWASP flaws), verification (ASVS,
+pentest, scans) and operation (security guardian, CVEs). That is why this category has a
+**coordinator** with a seat in every phase, not just one-off specialists.
 
-## O princípio: cliente não-fiável, servidor única autoridade
+## The principle: untrusted client, server as sole authority
 
-Toda a categoria assenta numa regra herdada do projeto-mãe (`knowledge/origin-lessons.md`):
-**autorização, scoping e ocultação de dados sensíveis vivem no servidor; o cliente só declara
-intenção.** Blur no cliente é cosmético; um dado que um perfil não pode ver **não sai** do servidor.
-Os agentes de autorização e least-privilege ecoam o `modules/rbac-and-scoping.md`.
+The whole category rests on a rule inherited from the origin project (`knowledge/origin-lessons.md`):
+**authorization, scoping and hiding of sensitive data live on the server; the client only declares
+intent.** Client-side blur is cosmetic; data a profile cannot see **does not leave** the server.
+The authorization and least-privilege agents echo `modules/rbac-and-scoping.md`.
 
-## Agentes desta categoria
+## Agents in this category
 
-| Agente | Uma linha | Fase dominante |
+| Agent | One line | Dominant phase |
 | --- | --- | --- |
-| `agents/09-security/security-coordinator.md` | Orquestra a segurança transversal; dono do risco residual | F1–F9 |
-| `agents/09-security/threat-modeler.md` | Threat modeling (STRIDE ou equivalente) por funcionalidade crítica | F5 |
-| `agents/09-security/owasp-top10-specialist.md` | Cobertura sistemática do OWASP Top 10 no design e na revisão | F3, F7 |
-| `agents/09-security/asvs-specialist.md` | Verificação ASVS por nível (L1–L3) conforme o risco | F7 |
-| `agents/09-security/cis-benchmarks-specialist.md` | Benchmarks CIS para SO, BD, cloud e containers | F8 |
-| `agents/09-security/hardening-specialist.md` | Hardening de servidores/serviços: superfícies mínimas | F8 |
-| `agents/09-security/http-headers-specialist.md` | CSP, HSTS, frame-ancestors e restantes headers de segurança | F6, F8 |
-| `agents/09-security/secure-authentication-specialist.md` | Autenticação robusta: sessões, credenciais, MFA, recuperação de conta | F5–F6 |
-| `agents/09-security/authorization-and-least-privilege-specialist.md` | Autorização e least privilege no servidor, papel a papel | F5–F7 |
-| `agents/09-security/sast-specialist.md` | Análise estática do código no CI: regras, triagem, zero ruído tolerado | F6–F7 |
-| `agents/09-security/dast-specialist.md` | Testes dinâmicos sobre a aplicação a correr | F7 |
-| `agents/09-security/pentester.md` | Pentest com âmbito, regras de empenhamento e relatório acionável | F7 |
-| `agents/09-security/dependency-analyst.md` | Vulnerabilidades nas dependências: audit, triagem, correção deliberada | F6–F9 |
-| `agents/09-security/supply-chain-specialist.md` | Cadeia de fornecimento: builds reprodutíveis, proveniência, pacotes maliciosos | F6–F8 |
-| `agents/09-security/sbom-manager.md` | Inventário SBOM do que se entrega e das suas licenças/vulnerabilidades | F8–F9 |
-| `agents/09-security/exposed-secrets-hunter.md` | Segredos no código, histórico e logs: deteção, rotação, resposta | F6–F9 |
-| `agents/09-security/secrets-and-rotation-manager.md` | Política de segredos: onde vivem, quem acede, rotação e resposta a fuga | F5–F9 |
-| `agents/09-security/container-analyst.md` | Segurança de imagens/containers: base mínima, non-root, scan | F7–F8 |
-| `agents/09-security/infrastructure-analyst.md` | Auditoria de segurança da infra/cloud desenhada pela categoria 08 | F8 |
-| `agents/09-security/tls-specialist.md` | Política TLS da aplicação: versões, cifras, renovação | F8 |
-| `agents/09-security/waf-specialist.md` | WAF: regras, exceções documentadas, modo de bloqueio gradual | F8 |
-| `agents/09-security/privacy-specialist.md` | RGPD por desenho: mapa de dados pessoais, bases legais, DPIA, direitos dos titulares | F2, F5, F7 |
-| `agents/09-security/ai-security-specialist.md` | Segurança das funcionalidades LLM: prompt injection, output não-fiável, agency, BYOK | F5–F9 |
+| `agents/09-security/security-coordinator.md` | Orchestrates cross-cutting security; owner of the residual risk | F1–F9 |
+| `agents/09-security/threat-modeler.md` | Threat modeling (STRIDE or equivalent) per critical feature | F5 |
+| `agents/09-security/owasp-top10-specialist.md` | Systematic OWASP Top 10 coverage in design and review | F3, F7 |
+| `agents/09-security/asvs-specialist.md` | ASVS verification by level (L1–L3) according to risk | F7 |
+| `agents/09-security/cis-benchmarks-specialist.md` | CIS benchmarks for OS, DB, cloud and containers | F8 |
+| `agents/09-security/hardening-specialist.md` | Server/service hardening: minimal surfaces | F8 |
+| `agents/09-security/http-headers-specialist.md` | CSP, HSTS, frame-ancestors and the remaining security headers | F6, F8 |
+| `agents/09-security/secure-authentication-specialist.md` | Robust authentication: sessions, credentials, MFA, account recovery | F5–F6 |
+| `agents/09-security/authorization-and-least-privilege-specialist.md` | Authorization and least privilege on the server, role by role | F5–F7 |
+| `agents/09-security/sast-specialist.md` | Static code analysis in CI: rules, triage, zero noise tolerated | F6–F7 |
+| `agents/09-security/dast-specialist.md` | Dynamic testing against the running application | F7 |
+| `agents/09-security/pentester.md` | Pentest with scope, rules of engagement and an actionable report | F7 |
+| `agents/09-security/dependency-analyst.md` | Vulnerabilities in dependencies: audit, triage, deliberate fixing | F6–F9 |
+| `agents/09-security/supply-chain-specialist.md` | Supply chain: reproducible builds, provenance, malicious packages | F6–F8 |
+| `agents/09-security/sbom-manager.md` | SBOM inventory of what ships and of its licenses/vulnerabilities | F8–F9 |
+| `agents/09-security/exposed-secrets-hunter.md` | Secrets in code, history and logs: detection, rotation, response | F6–F9 |
+| `agents/09-security/secrets-and-rotation-manager.md` | Secrets policy: where they live, who accesses them, rotation and leak response | F5–F9 |
+| `agents/09-security/container-analyst.md` | Image/container security: minimal base, non-root, scan | F7–F8 |
+| `agents/09-security/infrastructure-analyst.md` | Security audit of the infra/cloud designed by category 08 | F8 |
+| `agents/09-security/tls-specialist.md` | The application's TLS policy: versions, ciphers, renewal | F8 |
+| `agents/09-security/waf-specialist.md` | WAF: rules, documented exceptions, gradual blocking mode | F8 |
+| `agents/09-security/privacy-specialist.md` | GDPR by design: personal-data map, legal bases, DPIA, data-subject rights | F2, F5, F7 |
+| `agents/09-security/ai-security-specialist.md` | Security of LLM features: prompt injection, untrusted output, agency, BYOK | F5–F9 |
 
-## Mapa de cobertura: design → build → verify → operate
+## Coverage map: design → build → verify → operate
 
-| Momento | Quem entra | O que produz |
+| Moment | Who enters | What it produces |
 | --- | --- | --- |
-| **Design (F1–F5)** | `coordenador-de-seguranca`, `modelador-de-ameacas`, `especialista-owasp-top10` | Ameaças por funcionalidade crítica, controlos exigidos, requisitos de segurança |
-| **Build (F6)** | `especialista-owasp-top10`, `especialista-de-headers-http` | Código sem as falhas do Top 10; headers de segurança configurados |
-| **Verify (F7)** | `especialista-asvs`, `revisor-de-seguranca`, `pentester` | Verificação ASVS por nível, revisão contra threat model, pentest |
-| **Operate (F8–F9)** | `especialista-cis-benchmarks`, `especialista-de-hardening`, `guardiao-de-seguranca` | Infra endurecida, benchmarks aplicados, vigilância contínua de CVEs |
+| **Design (F1–F5)** | `security-coordinator`, `threat-modeler`, `owasp-top10-specialist` | Threats per critical feature, required controls, security requirements |
+| **Build (F6)** | `owasp-top10-specialist`, `http-headers-specialist` | Code free of the Top 10 flaws; security headers configured |
+| **Verify (F7)** | `asvs-specialist`, `security-reviewer`, `pentester` | ASVS verification by level, review against the threat model, pentest |
+| **Operate (F8–F9)** | `cis-benchmarks-specialist`, `hardening-specialist`, `security-guardian` | Hardened infra, benchmarks applied, continuous CVE watch |
 
-## Ordem de trabalho recomendada
+## Recommended order of work
 
-1. **Coordenador** abre a dimensão em F1 e define o **perfil de risco** do produto (calibra o esforço
-   de todos os outros — L1 vs L3 no ASVS, STRIDE completo vs superficial).
-2. **Modelador de ameaças** corre por cada funcionalidade crítica assim que a especificação (F5)
-   estabiliza; alimenta o design com controlos.
-3. **Especialista OWASP Top 10** acompanha o desenho e a construção (F3, F6) e revê o código (F7).
-4. **ASVS** verifica em F7 contra o nível de risco decidido.
-5. **CIS, hardening e headers** endurecem a infra e o serviço em F8, antes do go-live.
-6. O coordenador **fecha a dimensão** consolidando o risco residual, que o utilizador assina.
+1. The **coordinator** opens the dimension in F1 and sets the product's **risk profile** (calibrating
+   everyone else's effort — L1 vs L3 on ASVS, full vs shallow STRIDE).
+2. The **threat modeler** runs per critical feature as soon as the specification (F5) stabilizes;
+   feeds the design with controls.
+3. The **OWASP Top 10 specialist** follows design and build (F3, F6) and reviews the code (F7).
+4. **ASVS** verifies in F7 against the decided risk level.
+5. **CIS, hardening and headers** harden the infra and the service in F8, before go-live.
+6. The coordinator **closes the dimension** by consolidating the residual risk, which the user signs.
 
-## Como o Orquestrador a convoca
+## How the Orchestrator convenes it
 
-O `core/orchestrator.md` **não trata segurança como uma paragem única**: inscreve o coordenador
-como participante permanente e convoca cada especialista no portão da sua fase
-(`core/quality-gates.md`). O gate de segurança do go-live é a
-`checklists/pre-production-security.md`; a automação corre em `pipelines/ci-security.md`; os
-problemas encontrados alimentam o `loops/L03-security-issues.md` (e o `loops/L07-cves.md` na
-operação). A revisão independente é do `agents/12-reviewers/security-reviewer.md`.
+`core/orchestrator.md` **does not treat security as a single stop**: it enrolls the coordinator
+as a permanent participant and convenes each specialist at the gate of their phase
+(`core/quality-gates.md`). The go-live security gate is
+`checklists/pre-production-security.md`; automation runs in `pipelines/ci-security.md`; the
+issues found feed `loops/L03-security-issues.md` (and `loops/L07-cves.md` in
+operation). Independent review belongs to `agents/12-reviewers/security-reviewer.md`.
 
-## Relacionados
+## Related
 
-- `agents/13-guardians/security-guardian.md` — a continuação em produção desta categoria.
-- `modules/rbac-and-scoping.md` · `modules/audit-and-provenance.md` — capacidades que a segurança exige.
+- `agents/13-guardians/security-guardian.md` — this category's continuation in production.
+- `modules/rbac-and-scoping.md` · `modules/audit-and-provenance.md` — capabilities security demands.
 - `checklists/pre-production-security.md` · `pipelines/ci-security.md`
-- `workflows/W07-quality-and-security.md` — a fase onde a categoria se concentra.
+- `workflows/W07-quality-and-security.md` — the phase where the category concentrates.

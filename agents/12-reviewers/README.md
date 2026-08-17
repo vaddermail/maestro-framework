@@ -1,73 +1,75 @@
-# 12 — Revisores
+# 12 — Reviewers
 
-Os **olhos independentes** do produto. Esta categoria não constrói nada: examina o que outros
-construíram, cada revisor por **uma dimensão**, e devolve um **relatório de achados verificáveis**. A
-fase dominante é **F7** (`workflows/W07-quality-and-security.md`), o portão de pré-lançamento; os
-mesmos revisores são reconvocados a cada marco e na revisão global sob pedido
-(`workflows/W12-global-review.md`). O princípio que os justifica é uma armadilha de IA concreta:
-**quem produz nunca valida o próprio trabalho** (`knowledge/ai-pitfalls.md` §20) e **uma só
-perspetiva não chega** (§21).
+The product's **independent eyes**. This category builds nothing: it examines what others have
+built, each reviewer along **one dimension**, and returns a **report of verifiable findings**. The
+dominant phase is **F7** (`workflows/W07-quality-and-security.md`), the pre-launch gate; the same
+reviewers are reconvened at every milestone and in the global review on request
+(`workflows/W12-global-review.md`). The principle that justifies them is a concrete AI pitfall:
+**whoever produces never validates their own work** (`knowledge/ai-pitfalls.md` §20) and **a
+single perspective is not enough** (§21).
 
-## O que é um painel de revisão
+## What a review panel is
 
-Um painel são **várias revisões independentes, às cegas, da mesma coisa**. Independentes: cada
-revisor recebe os mesmos artefactos e o mesmo âmbito, mas **não lê os relatórios dos outros** enquanto
-trabalha — a convergência de dois pareceres separados é sinal forte; a contaminação por um parecer
-alheio destrói esse sinal. Uma dimensão por revisor evita o "revisor omnisciente" que passa por tudo
-com pouca profundidade em cada coisa (`MANIFESTO.md` §1). O `agents/12-reviewers/review-consolidator.md`
-funde os relatórios **depois**, num plano único priorizado, sem duplicados nem contradições — é o
-único agente da categoria que lê todos os relatórios.
+A panel is **several independent, blind reviews of the same thing**. Independent: each reviewer
+receives the same artifacts and the same scope, but **does not read the others' reports** while
+working — convergence of two separate opinions is a strong signal; contamination by someone
+else's opinion destroys that signal. One dimension per reviewer avoids the "omniscient reviewer"
+who passes over everything with little depth in each thing (`MANIFESTO.md` §1). The
+`agents/12-reviewers/review-consolidator.md` merges the reports **afterwards** into a single
+prioritized plan, without duplicates or contradictions — it is the only agent in the category
+that reads all the reports.
 
-## Agentes da categoria
+## Agents in this category
 
-| Agente | Uma linha |
+| Agent | One line |
 | --- | --- |
-| `agents/12-reviewers/architecture-reviewer.md` | Adesão à arquitetura decidida (ADRs) e integridade das fronteiras entre módulos. |
-| `agents/12-reviewers/frontend-reviewer.md` | Código/UX do cliente: SSOT de conteúdos, tokens, estados de ecrã, tratamento de erros. |
-| `agents/12-reviewers/backend-reviewer.md` | Servidor: autorização vs scoping, transações, invariantes, adesão ao contrato de API. |
-| `agents/12-reviewers/ux-reviewer.md` | Fluxos reais percorridos de ponta a ponta contra personas e casos de utilização. |
-| `agents/12-reviewers/devops-reviewer.md` | Pipelines, deploy/rollback, segredos fora do Git, flags de risco. |
-| `agents/12-reviewers/performance-reviewer.md` | Orçamentos de performance, queries, caching. |
+| `agents/12-reviewers/architecture-reviewer.md` | Adherence to the decided architecture (ADRs) and integrity of module boundaries. |
+| `agents/12-reviewers/frontend-reviewer.md` | Client code/UX: content SSOT, tokens, screen states, error handling. |
+| `agents/12-reviewers/backend-reviewer.md` | Server: authorization vs scoping, transactions, invariants, adherence to the API contract. |
+| `agents/12-reviewers/ux-reviewer.md` | Real flows walked end to end against personas and use cases. |
+| `agents/12-reviewers/devops-reviewer.md` | Pipelines, deploy/rollback, secrets out of Git, risk flags. |
+| `agents/12-reviewers/performance-reviewer.md` | Performance budgets, queries, caching. |
 | `agents/12-reviewers/security-reviewer.md` | Threat model, OWASP, least privilege. |
-| `agents/12-reviewers/documentation-reviewer.md` | Sincronia docs↔código e completude da ajuda. |
-| `agents/12-reviewers/test-reviewer.md` | Substância dos testes, não só a existência. |
-| `agents/12-reviewers/review-consolidator.md` | Funde os relatórios num plano único priorizado, sem duplicados nem contradições. |
+| `agents/12-reviewers/documentation-reviewer.md` | Docs↔code sync and help completeness. |
+| `agents/12-reviewers/test-reviewer.md` | The substance of the tests, not just their existence. |
+| `agents/12-reviewers/review-consolidator.md` | Merges the reports into a single prioritized plan, without duplicates or contradictions. |
 
-## Formato do relatório (comum a todos)
+## Report format (common to all)
 
-Todos os revisores escrevem no **mesmo molde** — `templates/technical/review-report.md.template` —
-para o consolidador os poder fundir sem tradução. O relatório tem:
+All reviewers write in the **same mold** — `templates/technical/review-report.md.template` — so
+the consolidator can merge them without translation. The report has:
 
-1. **Cabeçalho** — revisor (dimensão), âmbito revisto (que fatia/commits/artefactos), data, modelo e
-   esforço usados (`core/model-routing.md`). Rastreabilidade do que foi olhado.
-2. **Veredicto global** — `passa` · `passa-com-ressalvas` · `bloqueia`. Um único bloqueador basta para
-   bloquear; o veredicto liga ao portão de F7 (`core/quality-gates.md`).
-3. **Achados, ordenados por severidade** — cada um com: `id`, severidade (**bloqueador · maior ·
-   menor · nit**), localização (`ficheiro:linha` ou artefacto), o defeito em uma frase, o **cenário de
-   falha concreto** (inputs/estado → resultado errado — nunca "parece frágil"), a recomendação e a
-   **confiança** (`confirmado` se reproduzido, `plausível` se por inspeção).
-4. **O que foi verificado e passou** — para dar confiança, não só o negativo; e para o consolidador
-   saber o que já está coberto.
-5. **Fora de âmbito / não verificável** — honestidade absoluta (`knowledge/permanent-rules.md`
-   §2): o que este revisor não olhou e porquê (falta de artefacto, dimensão de outro revisor).
+1. **Header** — reviewer (dimension), scope reviewed (which slice/commits/artifacts), date, model
+   and effort used (`core/model-routing.md`). Traceability of what was looked at.
+2. **Global verdict** — `pass` · `pass-with-caveats` · `block`. A single blocker is enough to
+   block; the verdict ties into the F7 gate (`core/quality-gates.md`).
+3. **Findings, ordered by severity** — each with: `id`, severity (**blocker · major · minor ·
+   nit**), location (`file:line` or artifact), the defect in one sentence, the **concrete failure
+   scenario** (inputs/state → wrong result — never "looks fragile"), the recommendation and the
+   **confidence** (`confirmed` if reproduced, `plausible` if by inspection).
+4. **What was verified and passed** — to give confidence, not just the negative; and so the
+   consolidator knows what is already covered.
+5. **Out of scope / not verifiable** — absolute honesty (`knowledge/permanent-rules.md`
+   §2): what this reviewer did not look at and why (missing artifact, another reviewer's
+   dimension).
 
-Regra transversal: um achado **confirmado** vale mais do que dez suspeitas; ordenar por risco real,
-não por número de achados. Achados de correção, autorização, dinheiro, dados pessoais e fluxos
-irreversíveis recebem o máximo escrutínio (`MANIFESTO.md` §9).
+Cross-cutting rule: one **confirmed** finding is worth more than ten suspicions; order by real
+risk, not by number of findings. Findings about correctness, authorization, money, personal data
+and irreversible flows get maximum scrutiny (`MANIFESTO.md` §9).
 
-## Como o Orquestrador monta o painel
+## How the Orchestrator assembles the panel
 
-O `workflows/W07-quality-and-security.md` (F7) lança os revisores **em paralelo** sobre a mesma
-fatia/release, cada um com o seu âmbito e os artefactos de que precisa (o Orquestrador —
-`core/orchestrator.md` — resolve os inputs a partir das secções **Inputs** de cada ficha). Nenhum
-revisor é o autor do que revê. Terminadas as revisões, o `consolidador-de-revisoes` produz o plano
-único; os achados bloqueadores voltam à equipa de construção e, se forem transversais, alimentam os
-loops (`loops/L02-failing-tests.md`, `loops/L03-security-issues.md`,
-`loops/L04-code-smells.md`, `loops/L05-inconsistencies.md`). A revisão fecha quando o portão de F7
-passa; para revisões extensas e adversariais, o painel escala para
+`workflows/W07-quality-and-security.md` (F7) launches the reviewers **in parallel** over the same
+slice/release, each with its own scope and the artifacts it needs (the Orchestrator —
+`core/orchestrator.md` — resolves the inputs from the **Inputs** sections of each agent spec). No
+reviewer is the author of what it reviews. Once the reviews are done, the `review-consolidator`
+produces the single plan; blocking findings go back to the build team and, when cross-cutting,
+feed the loops (`loops/L02-failing-tests.md`, `loops/L03-security-issues.md`,
+`loops/L04-code-smells.md`, `loops/L05-inconsistencies.md`). The review closes when the F7 gate
+passes; for extensive, adversarial reviews, the panel scales up to
 `playbooks/adversarial-audit.md`.
 
-## Relacionados
+## Related
 
 - `agents/README.md` · `agents/_template/AGENT-TEMPLATE.md`
 - `templates/technical/review-report.md.template` · `checklists/pr-review.md` · `checklists/pre-merge.md`

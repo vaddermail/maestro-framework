@@ -1,66 +1,68 @@
-# 07 — DevOps (do commit à produção)
+# 07 — DevOps (from commit to production)
 
-Categoria da **fase F8 (Lançamento)** — e presente em F6 (empacotamento) e F9 (operação). Reúne os
-especialistas que transformam código verde e revisto num sistema **entregue, repetível e reversível**:
-empacotamento em containers, infraestrutura como código, configuração de servidores, fluxo de Git e
-pipelines de CI/CD em cada plataforma. Tudo o que aqui se produz é **código versionado** (Dockerfile,
-manifests, módulos Terraform, playbooks, workflows de pipeline) — nunca cliques manuais numa consola
-que ninguém consegue reproduzir.
+Category of **phase F8 (Launch)** — also present in F6 (packaging) and F9 (operation). It gathers
+the specialists who turn green, reviewed code into a system that is **delivered, repeatable and
+reversible**: packaging into containers, infrastructure as code, server configuration, Git flow and
+CI/CD pipelines on each platform. Everything produced here is **versioned code** (Dockerfile,
+manifests, Terraform modules, playbooks, pipeline workflows) — never manual clicks in a console
+nobody can reproduce.
 
-Estes agentes decidem **como se constrói, empacota e entrega**; **onde corre** (cloud vs on-prem,
-rede, storage, HA) é da `agents/08-infrastructure/README.md`, e **se é seguro** é da
-`agents/09-security/README.md`. A fronteira mantém-se nítida para não haver trabalho duplicado.
+These agents decide **how it is built, packaged and delivered**; **where it runs** (cloud vs
+on-prem, network, storage, HA) belongs to `agents/08-infrastructure/README.md`, and **whether it is
+secure** belongs to `agents/09-security/README.md`. The boundary stays sharp so no work is
+duplicated.
 
-## Agentes desta categoria
+## Agents in this category
 
-| Agente | Responsabilidade única |
+| Agent | Single responsibility |
 | --- | --- |
-| `agents/07-devops/docker-specialist.md` | Imagens mínimas, multi-stage, non-root, reprodutíveis |
-| `agents/07-devops/kubernetes-specialist.md` | Workloads, probes, limits, RBAC do cluster — e quando **não** usar k8s |
-| `agents/07-devops/terraform-specialist.md` | IaC declarativa: estado, módulos, `plan` revisto antes de `apply` |
-| `agents/07-devops/ansible-specialist.md` | Configuração idempotente de servidores; inventários e vault |
-| `agents/07-devops/github-specialist.md` | Fluxo Git: branches, PRs, proteções, CODEOWNERS, releases por tag |
-| `agents/07-devops/github-actions-specialist.md` | Pipelines no GitHub Actions: caching, matrizes, segredos, ambientes |
-| `agents/07-devops/azure-devops-specialist.md` | Azure Pipelines/Boards/Repos: equivalências e especificidades |
+| `agents/07-devops/docker-specialist.md` | Minimal, multi-stage, non-root, reproducible images |
+| `agents/07-devops/kubernetes-specialist.md` | Workloads, probes, limits, cluster RBAC — and when **not** to use k8s |
+| `agents/07-devops/terraform-specialist.md` | Declarative IaC: state, modules, `plan` reviewed before `apply` |
+| `agents/07-devops/ansible-specialist.md` | Idempotent server configuration; inventories and vault |
+| `agents/07-devops/github-specialist.md` | Git flow: branches, PRs, protections, CODEOWNERS, tag-based releases |
+| `agents/07-devops/github-actions-specialist.md` | GitHub Actions pipelines: caching, matrices, secrets, environments |
+| `agents/07-devops/azure-devops-specialist.md` | Azure Pipelines/Boards/Repos: equivalences and specifics |
 | `agents/07-devops/gitlab-ci-specialist.md` | GitLab CI: stages, runners, environments, review apps |
-| `agents/07-devops/deployment-strategist.md` | Estratégia de entrega: blue-green/canary/rolling, gates, rollback ensaiado |
-| `agents/07-devops/secrets-manager.md` | Segredos em pipelines e runtime: injeção, rotação, zero no Git |
-| `agents/07-devops/feature-flags-specialist.md` | Flags de lançamento: exposição gradual, kill-switch, limpeza de flags mortas |
-| `agents/07-devops/nginx-specialist.md` | nginx: reverse proxy, TLS, caching, limites e timeouts |
+| `agents/07-devops/deployment-strategist.md` | Delivery strategy: blue-green/canary/rolling, gates, rehearsed rollback |
+| `agents/07-devops/secrets-manager.md` | Secrets in pipelines and runtime: injection, rotation, zero in Git |
+| `agents/07-devops/feature-flags-specialist.md` | Launch flags: gradual exposure, kill switch, dead-flag cleanup |
+| `agents/07-devops/nginx-specialist.md` | nginx: reverse proxy, TLS, caching, limits and timeouts |
 | `agents/07-devops/apache-specialist.md` | Apache httpd: vhosts, proxies, TLS, hardening |
-| `agents/07-devops/cdn-specialist.md` | CDN: cache por tipo de rota, invalidação, edge |
-| `agents/07-devops/cloudflare-specialist.md` | Cloudflare: DNS, proxy, WAF, regras e page rules |
-| `agents/07-devops/load-balancing-specialist.md` | Balanceamento de carga: algoritmos, health checks, sessões |
+| `agents/07-devops/cdn-specialist.md` | CDN: caching per route type, invalidation, edge |
+| `agents/07-devops/cloudflare-specialist.md` | Cloudflare: DNS, proxy, WAF, rules and page rules |
+| `agents/07-devops/load-balancing-specialist.md` | Load balancing: algorithms, health checks, sessions |
 
-## Ordem de trabalho recomendada
+## Recommended order of work
 
-1. **Empacotar** — `especialista-docker` produz a imagem reprodutível (base do resto).
-2. **Escolher plataforma de entrega** — com o utilizador, via `core/decision-engine.md`: a
-   plataforma de pipeline (`github-actions` / `azure-devops` / `gitlab-ci`) segue quase sempre o
-   alojamento do repositório (decisão do `especialista-github` e da infra escolhida em F3/F8).
-3. **Definir o fluxo Git** — `especialista-github` fixa branches, proteções e releases; é pré-requisito
-   de qualquer pipeline (a pipeline reage a eventos de Git).
-4. **Provisionar** — `especialista-terraform` (recursos cloud/on-prem) e/ou `especialista-ansible`
-   (configuração de servidores existentes), consoante o alvo decidido pela `08-infraestrutura/`.
-5. **Orquestrar workloads** — `especialista-kubernetes` **só se** a decisão de arquitetura o justificar
-   (ver a própria ficha: quando **não** usar k8s).
-6. **Automatizar** — a pipeline concreta (`github-actions` / `azure-devops` / `gitlab-ci`) liga
-   build → testes → segurança → entrega, consumindo `pipelines/ci-quality.md`, `pipelines/ci-security.md`
-   e `pipelines/cd-delivery.md` (que são **agnósticos** de plataforma; estes agentes materializam-nos).
+1. **Package** — the `docker-specialist` produces the reproducible image (the base for the rest).
+2. **Choose the delivery platform** — with the user, via `core/decision-engine.md`: the pipeline
+   platform (`github-actions` / `azure-devops` / `gitlab-ci`) almost always follows the repository
+   hosting (a decision of the `github-specialist` and of the infra chosen in F3/F8).
+3. **Define the Git flow** — the `github-specialist` fixes branches, protections and releases; it
+   is a prerequisite for any pipeline (the pipeline reacts to Git events).
+4. **Provision** — `terraform-specialist` (cloud/on-prem resources) and/or `ansible-specialist`
+   (configuration of existing servers), depending on the target decided by `08-infrastructure/`.
+5. **Orchestrate workloads** — `kubernetes-specialist` **only if** the architecture decision
+   justifies it (see its own spec: when **not** to use k8s).
+6. **Automate** — the concrete pipeline (`github-actions` / `azure-devops` / `gitlab-ci`) wires
+   build → tests → security → delivery, consuming `pipelines/ci-quality.md`,
+   `pipelines/ci-security.md` and `pipelines/cd-delivery.md` (which are platform-**agnostic**;
+   these agents materialize them).
 
-## Como o Orquestrador a convoca
+## How the Orchestrator convenes it
 
-Na fase F8 (`workflows/W08-launch.md`), o `core/orchestrator.md` ativa **apenas** os especialistas
-correspondentes às decisões já fechadas em F3 (`product/02-architecture/`) — não se instancia Kubernetes
-nem Terraform "por defeito". A escolha entre plataformas concorrentes (GitHub Actions vs Azure DevOps vs
-GitLab CI; Terraform vs Ansible vs ambos) faz-se com o utilizador pelo `core/decision-engine.md`, com
-ADR (`templates/project/ADR-DECISION.md.template`). A aprovação humana para produção é **indelegável**
-(`core/quality-gates.md`).
+In phase F8 (`workflows/W08-launch.md`), the `core/orchestrator.md` activates **only** the
+specialists matching the decisions already closed in F3 (`product/02-architecture/`) — Kubernetes
+and Terraform are not instantiated "by default". The choice between competing platforms (GitHub
+Actions vs Azure DevOps vs GitLab CI; Terraform vs Ansible vs both) is made with the user through
+`core/decision-engine.md`, with an ADR (`templates/project/ADR-DECISION.md.template`). Human
+approval for production is **non-delegable** (`core/quality-gates.md`).
 
-## Relacionados
+## Related
 
-- `agents/08-infrastructure/README.md` — onde corre (cloud/on-prem, rede, storage, HA).
-- `agents/09-security/README.md` — hardening, scan de containers/infra, segredos.
-- `pipelines/README.md` — os pipelines de referência que estes agentes materializam por plataforma.
-- `agents/12-reviewers/devops-reviewer.md` — revê pipelines, deploys, rollback e segredos.
-- `workflows/W08-launch.md` — o processo de fase que os coordena.
+- `agents/08-infrastructure/README.md` — where it runs (cloud/on-prem, network, storage, HA).
+- `agents/09-security/README.md` — hardening, container/infra scanning, secrets.
+- `pipelines/README.md` — the reference pipelines these agents materialize per platform.
+- `agents/12-reviewers/devops-reviewer.md` — reviews pipelines, deploys, rollback and secrets.
+- `workflows/W08-launch.md` — the phase process that coordinates them.
