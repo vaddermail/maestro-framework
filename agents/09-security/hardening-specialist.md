@@ -10,7 +10,7 @@
 | **Alias** | Hardening Specialist |
 | **Category** | `09-security` |
 | **Phases** | F8 (launch/infra); revisited in F9 for each new component/service |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard (effort low→medium): shrinking the attack surface takes judgment about what is truly needed vs. what can be closed (`core/model-routing.md`) |
 
 ## Objective

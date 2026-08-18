@@ -202,9 +202,9 @@ explicitly.** Heavy suites (WASM/in-memory DB) in parallel blow up the machine v
 
 ## What **not** to generalize (warnings)
 
-- Names and rules specific to the origin domain (3-path offboarding, value-based tiers, SIM pool)
-  are **examples** of the mechanics — generalize the pattern (atomic transaction, outbox, double
-  invariants, authority services), not the domain.
+- Flow names and rule sets specific to the origin domain are **examples** of the mechanics —
+  generalize the pattern (atomic transaction, outbox, double invariants, authority services), not
+  the domain.
 - Concrete stack choices (lightweight DB engine in dev, exact library combination, "numeric as
   string" for money) are that project's trade-offs — the pattern matters, the choice is decided
   case by case (`core/decision-engine.md`).

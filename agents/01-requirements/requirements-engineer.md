@@ -11,7 +11,7 @@
 | **Alias** | Requirements Engineer |
 | **Category** | `01-requirements` |
 | **Phases** | F2 (main) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`); raise to Top when a requirement encodes subtle business logic (that goes to the `business-rules-modeler`) |
 
 ## Objective
@@ -84,7 +84,7 @@ It never fills a gap with the "plausible" value; a gap becomes a question.
    confirmation email"), never an unobservable intention ("the system is easy to use" — that is
    NFR or UX).
 3. **Stable, eternal ID.** `FR-012` is never reused for another requirement, even if the original
-   dies (it is marked `obsolete`) — `core/artifact-protocol.md` §3.
+   dies (it is marked `obsolete`) — `core/artifact-protocol.md` §H3.
 4. **Traceability upstream and downstream.** Each `FR` cites the use case(s) and the priority that
    originate it; and it is left ready for the `acceptance-criteria-writer` to
    hang criteria on it. An orphan `FR` (without an origin) is suspect.
@@ -109,7 +109,7 @@ It never fills a gap with the "plausible" value; a gap becomes a question.
 - **Does not define domain terms** — that belongs to `agents/01-requirements/glossary-curator.md`.
 - **Does not decide MVP scope or priorities** — it comes ready from
   `agents/00-discovery/mvp-scoper.md` and `agents/00-discovery/prioritizer.md`; the Engineer
-  consumes, it does not networkfine.
+  consumes, it does not redefine.
 - **Does not design screens or UX flows** — that belongs to `agents/03-experience/` (F4).
 
 ## Workflow

@@ -11,7 +11,7 @@
 | **Alias** | Ansible Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (server configuration); consulted in F9 for reconfigurations |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) — playbooks are standardized; raise only to design the role/inventory structure of a large fleet |
 
 ## Objective

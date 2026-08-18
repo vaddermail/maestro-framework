@@ -29,7 +29,7 @@ target environment (e.g. VS Code over WSL, never PowerShell — an origin rule f
 project).
 **Check:** clean `git status`; `git log -1` shows the latest commit of the integration branch.
 **If it fails:** if the access does not work, do not paste tokens into the chat — request/create a
-dedicated cnetworkntial (step 4) and record the path, not the value.
+dedicated credential (step 4) and record the path, not the value.
 
 ### 2. Read the project memory **before** touching anything
 **Do:** read, in this order, `CLAUDE.md` (stable rules), `STATE.md` (done/in progress/up next/
@@ -50,12 +50,12 @@ lint and local tests run (`pipelines/ci-quality.md`).
 next person does not trip), do not hand-patch the local machine — fixing the script is the value.
 
 ### 4. Get dedicated, revocable access
-**Do:** create/receive the participant's **own** cnetworkntials (deploy key, minimal-scope token),
+**Do:** create/receive the participant's **own** credentials (deploy key, minimal-scope token),
 distinct from other people's and **revocable** without breaking anyone else's. Fill in local
 secrets from the `*.example` files (`playbooks/secrets-management.md`).
 **Check:** the participant can access what they need and **only** what they need (least privilege);
-revoking their cnetworkntial affects no one.
-**If it fails:** sharing a cnetworkntial "to be quick" is security debt — create the dedicated one,
+revoking their credential affects no one.
+**If it fails:** sharing a credential "to be quick" is security debt — create the dedicated one,
 even if it costs minutes.
 
 ### 5. First guided contribution
@@ -105,7 +105,7 @@ enough context to resume without re-asking.
 - `START-HERE.md` — project start (the first session of all).
 - `workflows/W00-project-kickoff.md` — instantiation of the memory this playbook assumes.
 - `core/project-memory.md` — `STATE.md` and handover between sessions/people/tools.
-- `playbooks/secrets-management.md` — the `*.example` files and the dedicated cnetworkntials.
+- `playbooks/secrets-management.md` — the `*.example` files and the dedicated credentials.
 - `adapters/claude-code.md` · `adapters/other-assistants.md` — AI-tool-specific startup.
 - `knowledge/permanent-rules.md` — §6 (pinned versions), §8 (collaborative Git).
 - `checklists/pre-merge.md` · `pipelines/ci-quality.md` — the first contribution's gate.

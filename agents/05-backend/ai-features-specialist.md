@@ -12,7 +12,7 @@
 | **Alias** | AI Features Engineer |
 | **Category** | `05-backend` |
 | **Phases** | F5 (specification); F6 (build, per slice) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort; **Top** for critical grounding and evals |
 
 Detailed routing follows `core/model-routing.md`; choosing the **product's model**

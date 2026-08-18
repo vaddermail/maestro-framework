@@ -10,7 +10,7 @@
 | **Alias** | REST Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F6 (build); consulted in F5 when the `api-designer` weighs REST |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective
@@ -105,7 +105,7 @@ Orchestrator:
 implements: `POST` accepts `Idempotency-Key` (the client can repeat after a timeout without
 duplicating the order — dedupe by key via `modules/job-queue.md`). The handler validates only the
 **shape** and delegates to the orchestration, which confirms the `buyer` authority, opens a
-transaction and calls the domain function `criarEncomenda(tx, …)`. Success → `201` +
+transaction and calls the domain function `createOrder(tx, …)`. Success → `201` +
 `Location: /orders/{id}`. Out of stock → `409` with `application/problem+json`
 (`type: out_of_stock`, `productId` extension). A request for another buyer's order → `404` (not
 `403`, so as not to reveal it exists). The OpenAPI regenerates and the tests assert the `409` by

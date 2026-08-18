@@ -11,7 +11,7 @@
 | **Alias** | Coverage Auditor |
 | **Category** | `10-quality` |
 | **Phases** | F7 (quality gate); consulted in F6 |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | Standard for the routine audit; **Top** for the adversarial judgment of where the risk gaps are (`core/model-routing.md`) |
 
 ## Objective

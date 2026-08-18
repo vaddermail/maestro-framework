@@ -71,7 +71,7 @@ flows** are validated by the user — UX decisions can be revisited, but **never
 - F4 does not run a dedicated numbered loop; its iteration is the **wireframe review cycle** with
   the user (flow by flow) until the screen map stabilizes. **Safeguard** (`loops/README.md`):
   3 rounds without convergence on a screen → the Orchestrator isolates the open decision and
-  raises it as a single question, instead of networksigning blindly. Accessibility findings that
+  raises it as a single question, instead of redesigning blindly. Accessibility findings that
   imply flow rework reopen step 1 — record it in `STATE.md`.
 
 ## Exit gate (P4)

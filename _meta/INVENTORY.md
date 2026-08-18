@@ -186,7 +186,7 @@ When adding/removing files (see `playbooks/add-an-agent.md`), update this invent
 - `agents/09-security/waf-specialist.md` — WAF: rules, false-positive tuning, blocking mode.
 - `agents/09-security/privacy-specialist.md` — (Privacy & Data Protection Specialist) GDPR by design: personal data map, legal bases, DPIA, data subject rights.
 - `agents/09-security/ai-security-specialist.md` — (AI/LLM Security Specialist) security of LLM features: prompt injection, untrusted output, excessive agency, BYOK.
-- `agents/09-security/secure-authentication-specialist.md` — authn review: cnetworkntials, sessions, MFA, account recovery.
+- `agents/09-security/secure-authentication-specialist.md` — authn review: credentials, sessions, MFA, account recovery.
 - `agents/09-security/authorization-and-least-privilege-specialist.md` — least privilege end to end: app, DB, cloud, CI.
 - `agents/09-security/secrets-and-rotation-manager.md` — secrets policy: inventory, key rotation, emergency break-glass.
 - `agents/09-security/pentester.md` — authorized penetration tests on the product itself, with scope and report.

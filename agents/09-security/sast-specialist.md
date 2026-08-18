@@ -11,7 +11,7 @@
 | **Alias** | Static Application Security Testing Specialist |
 | **Category** | `09-security` |
 | **Phases** | F6 (integrates into CI) → F9 (continuous); security gate in F7 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Economy** for the baseline scan; **Standard** to triage findings (telling a real vulnerability from a false positive requires reading the code and the flow) — `core/model-routing.md` |
 
 ## Objective

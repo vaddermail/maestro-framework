@@ -11,7 +11,7 @@
 | **Alias** | Non-Functional Requirements Specifier |
 | **Category** | `01-requirements` |
 | **Phases** | F2 (main); consulted in F3 (sizes the architecture) and F7 (it gets verified) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`); raise to Top for **legal/regulatory compliance** and security NFRs, where getting the requirement right up front saves expensive rework |
 
 ## Objective

@@ -11,7 +11,7 @@
 | **Alias** | Unit Test Engineer |
 | **Category** | `10-quality` |
 | **Phases** | F6 (with each vertical slice) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard for business rules and invariants; **Economy** for mechanical case tables from the plan (`core/model-routing.md`) |
 
 ## Objective

@@ -11,7 +11,7 @@
 | **Alias** | CQRS Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** when the proposal includes **event sourcing** (a decision that is hard to reverse) — `core/model-routing.md` |
 
 ## Objective

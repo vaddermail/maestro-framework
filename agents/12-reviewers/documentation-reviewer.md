@@ -11,7 +11,7 @@
 | **Alias** | Documentation Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch panel); reconvened per milestone and in `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Standard** for checking mechanical sync (commands, paths, renamed terms); **Top, medium effort** to judge whether a divergence is cosmetic or factual and whether the help's grounding is faithful to the real per-profile behavior (`core/model-routing.md`) |
 
 ## Objective

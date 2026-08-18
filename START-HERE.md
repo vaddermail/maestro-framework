@@ -75,7 +75,8 @@ Following `workflows/W00-project-kickoff.md`:
      `templates/project/FRAMEWORK-IMPROVEMENTS.md.template` — the record, from day 0, of what
      this project teaches the framework (`knowledge/README.md` §How knowledge circulates).
    - The `product/` tree as per `core/artifact-protocol.md`.
-2. Record in `STATE.md`: date, framework version copied (`_meta/VERSION.md`), AI tool in use,
+2. Record in `STATE.md`: date, framework version copied (`_meta/VERSION.md`), upstream framework
+   repository (where the copy came from — the destination of improvement reports), AI tool in use,
    and the raw idea exactly as the user gave it (unedited).
 3. If you are in a Git repository, propose the first commit to the user ("project foundation").
    Do not make it without their confirmation.

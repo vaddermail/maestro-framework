@@ -10,7 +10,7 @@
 | **Alias** | gRPC Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F6 (build); consulted in F5 when the `api-designer` is considering gRPC |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; raise it for streaming design and message evolution (`core/model-routing.md`) |
 
 ## Objective

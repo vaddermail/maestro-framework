@@ -10,7 +10,7 @@
 | **Alias** | Design System Architect |
 | **Category** | `03-experience` |
 | **Phases** | F4 (defines); consulted in F6 (usage) and F7 (review) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; the token structure is a cross-cutting decision with long reach (`core/model-routing.md`) |
 
 ## Objective

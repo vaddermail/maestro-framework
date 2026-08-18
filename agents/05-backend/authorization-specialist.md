@@ -11,7 +11,7 @@
 | **Alias** | Authorization Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (access model design); F6 (implementation in each slice) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** — multi-profile RBAC/ABAC and scoping are hard reasoning where getting it right the first time avoids expensive defects (`core/model-routing.md`) |
 
 ## Objective

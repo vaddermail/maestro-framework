@@ -11,7 +11,7 @@
 | **Alias** | Quality Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); inherits the harness and the risk map from F6/F7 |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | **Standard** for the routine weekly sweep; **Top, medium effort** to judge architecture drift against the ADRs and risk-coverage holes (`core/model-routing.md`) |
 
 ## Objective

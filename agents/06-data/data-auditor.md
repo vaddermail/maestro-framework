@@ -10,7 +10,7 @@
 | **Alias** | Data Auditor |
 | **Category** | `06-data` |
 | **Phases** | F5 (audit/retention design); F6 (implementation); F9 (continuous quality verification) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; **Top** for a retention policy with legal implications (personal data, deletion obligations) (`core/model-routing.md`) |
 
 ## Objective

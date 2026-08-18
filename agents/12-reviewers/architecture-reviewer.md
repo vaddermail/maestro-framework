@@ -11,7 +11,7 @@
 | **Alias** | Architecture Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Standard** for the boundary sweep; **Top, medium effort** to judge structural drift and subtle layer violations (`core/model-routing.md`) |
 
 ## Objective
@@ -44,7 +44,7 @@ trigger `agents/02-architecture/architecture-arbiter.md`.
 | `product/02-architecture/stack.md` and module diagram | `agents/02-architecture/architecture-arbiter.md` (F3) | Yes | Prescribed boundaries and dependencies |
 | Code/spec of the slice under review | F5–F6 | Yes | What is being reviewed |
 | `product/04-specification/backend-contract.md` | F5 | No | Where the app↔server boundary is defined |
-| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
+| `CLAUDE.md` §Closed decisions · `STATE.md` §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
 
 Without ADRs and a module diagram, the reviewer does not proceed on assumptions — it returns the
 list of gaps (`core/question-engine.md`).

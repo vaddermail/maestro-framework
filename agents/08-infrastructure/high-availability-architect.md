@@ -11,7 +11,7 @@
 | **Alias** | High Availability Architect |
 | **Category** | `08-infrastructure` |
 | **Phases** | F3 (HA design as an architecture constraint) and F8 (materialization) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top, medium effort** — designing failover, quorum and graceful degradation is distinctive reasoning where getting it right the first time saves outages (`core/model-routing.md`) |
 
 ## Objective

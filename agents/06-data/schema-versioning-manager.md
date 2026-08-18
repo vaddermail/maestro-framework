@@ -10,7 +10,7 @@
 | **Alias** | Schema Version Manager |
 | **Category** | `06-data` |
 | **Phases** | F6 (set up the versioning discipline); F8–F9 (keep environments convergent) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; drop to **Economy** for routine seed maintenance and environment synchronization (`core/model-routing.md`) |
 
 ## Objective

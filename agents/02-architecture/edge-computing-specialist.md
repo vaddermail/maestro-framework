@@ -12,7 +12,7 @@
 | **Alias** | Edge Computing Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); informs F8 (infrastructure/CDN) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** when the proposal involves **data replicated at the edge with coherence** (distinctive reasoning, expensive errors) — `core/model-routing.md` |
 
 ## Objective

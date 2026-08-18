@@ -11,7 +11,7 @@
 | **Alias** | SEO Specialist |
 | **Category** | `03-experience` |
 | **Phases** | F4 (defines the technical SEO strategy); consulted in F6; verified in F7 — **only when applicable** |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Economy** for bulk pattern-based metadata generation (`core/model-routing.md`) |
 
 ## Objective

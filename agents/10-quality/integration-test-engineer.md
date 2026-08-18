@@ -11,7 +11,7 @@
 | **Alias** | Integration Test Engineer |
 | **Category** | `10-quality` |
 | **Phases** | F6 (with each vertical slice) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort — transactions, contracts and concurrency are risk logic (`core/model-routing.md`) |
 
 ## Objective

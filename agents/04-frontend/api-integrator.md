@@ -10,7 +10,7 @@
 | **Alias** | API Integrator |
 | **Category** | `04-frontend` |
 | **Phases** | F6 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard for the typed client and the shape guard; **Economy** for mirroring mocks from the contract (`core/model-routing.md`) |
 
 ## Objective

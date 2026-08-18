@@ -11,7 +11,7 @@
 | **Alias** | AWS Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if AWS is chosen) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort; raise to **Top** for multi-year/egress cost analysis on large architectures (`core/model-routing.md`) |
 
 ## Objective

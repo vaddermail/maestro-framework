@@ -11,7 +11,7 @@
 | **Alias** | Documentation Architect |
 | **Category** | `11-documentation` |
 | **Phases** | F1 (installs the structure); revisited at each milestone (F3, F5, F8) and in F9 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) — a structural decision with trade-offs, but not top-tier reasoning |
 
 ## Objective

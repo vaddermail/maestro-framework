@@ -11,7 +11,7 @@
 | **Alias** | Exposed Secrets Hunter |
 | **Category** | `09-security` |
 | **Phases** | F6 (integrates into CI; scans the existing history) → F9 (continuous) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Economy** for the scan (regex/entropy, tool-driven); **Standard** to triage (validate whether it is a real, live secret) and coordinate the response to a leak — `core/model-routing.md` |
 
 ## Objective

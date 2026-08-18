@@ -11,8 +11,8 @@
 | **Alias** | Roadmap Planner |
 | **Category** | `00-discovery` |
 | **Phases** | F1 (end of discovery); revisited in F9 when the product evolves |
-| **Type** | specialist |
-| **Suggested model** | Default, medium effort (`core/model-routing.md`) |
+| **Type** | `specialist` |
+| **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective
 
@@ -46,7 +46,7 @@ decisions and returns to the Orchestrator.
 | `product/00-discovery/goals-and-kpis.md` | `business-goals-analyst`, `kpi-definer` (F1) | Yes | The thread of value the horizons must serve |
 | `product/00-discovery/risks.md` | `risk-analyst` (F1) | No | Risks that push items earlier/later |
 | `product/00-discovery/costs.md` | `cost-estimator` (F1) | No | Effort viability per horizon |
-| `STATE.md` §Decisions | Project memory | No | Closed decisions that fix or forbid items |
+| `CLAUDE.md` §Closed decisions | Project memory | No | Closed decisions that fix or forbid items |
 
 If the prioritization or the MVP does not exist, the planner **does not invent the order**: it
 triggers the missing agents via the Orchestrator and records the block.

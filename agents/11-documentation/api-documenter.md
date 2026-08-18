@@ -11,7 +11,7 @@
 | **Alias** | API Documenter |
 | **Category** | `11-documentation` |
 | **Phases** | F5 (when the contract exists) → F6 (per slice) → F9 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy, low effort (`core/model-routing.md`) — the reference is **generated** from the contract; the judgment is in enriching descriptions and verifying the generation, not in writing from scratch |
 
 ## Objective

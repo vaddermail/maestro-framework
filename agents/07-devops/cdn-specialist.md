@@ -11,7 +11,7 @@
 | **Alias** | CDN Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (strategy and configuration); operated in F9 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; raise to **Top** for the correctness of the cache key and of invalidation (serving stale content/another user's content is an expensive bug) (`core/model-routing.md`) |
 
 ## Objective

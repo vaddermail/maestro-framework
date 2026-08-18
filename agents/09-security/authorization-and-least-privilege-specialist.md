@@ -12,7 +12,7 @@
 | **Alias** | Least Privilege Specialist |
 | **Category** | `09-security` |
 | **Phases** | F5–F8 (from the permission model to cloud/CI provisioning); review in F7; consulted in F9 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** for the multi-plane privilege design; Standard for routine auditing (`core/model-routing.md`) |
 
 ## Objective

@@ -12,7 +12,7 @@
 | **Alias** | Software Supply Chain Specialist |
 | **Category** | `09-security` |
 | **Phases** | F3 (policy when the stack is fixed), F6–F8 (build/CI), F9 (continuous watch) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard; **Top** to reason about dependency confusion / compromised build attacks (`core/model-routing.md`) |
 
 ## Objective

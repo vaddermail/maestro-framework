@@ -12,7 +12,7 @@
 | **Alias** | Domain-Driven Design Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); feeds F5 (specification) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top**, medium effort — designing context boundaries and aggregates is distinctive reasoning whose errors are expensive to reverse (`core/model-routing.md`) |
 
 ## Objective

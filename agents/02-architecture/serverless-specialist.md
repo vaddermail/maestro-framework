@@ -12,7 +12,7 @@
 | **Alias** | Serverless / FaaS Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); informs F8 (infrastructure) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** when the proposal implies **deep lock-in** to a vendor (an expensive decision to reverse) — `core/model-routing.md` |
 
 ## Objective

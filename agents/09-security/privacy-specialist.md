@@ -10,7 +10,7 @@
 | **Alias** | Privacy & Data Protection Specialist |
 | **Category** | `09-security` |
 | **Phases** | F2 (privacy requirements); F5 (data map, legal bases, DPIA); F7 (verification) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** (medium effort) for legal-basis judgment and the DPIA — getting it wrong here has legal cost and expensive rework; **Standard** to keep the data map current (`core/model-routing.md`) |
 
 ## Objective

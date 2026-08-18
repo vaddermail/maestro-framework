@@ -12,7 +12,7 @@
 | **Alias** | Clean Architecture Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective

@@ -10,7 +10,7 @@
 | **Alias** | Logging Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (log standard), F6 (build); consulted in F9 and W11 (incidents) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Economy** to instrument routine modules against an already defined standard (`core/model-routing.md`) |
 
 ## Objective

@@ -212,3 +212,12 @@ F7 close), issue #14 (B2B SaaS, F8 close), issue #15 (internal app, F9 cadence).
 - [ ] PR open with the summary table and the pending questions; no merge decision taken by the
       agent.
 - [ ] Issues commented (and closed after merge) with verdict and version.
+
+## Related
+
+- `playbooks/framework-curation.md` — the procedure this agent executes, round by round.
+- `knowledge/candidates.md` — the waiting room it maintains: entries, confirmations, expiry.
+- `knowledge/README.md` — the circuit that curation closes (signals up, releases down).
+- `templates/project/FRAMEWORK-IMPROVEMENTS.md.template` — where the reports it triages come from.
+- `core/extensibility.md` — the rules a promotion must respect when it lands in the framework.
+- `_meta/VERSION.md` — promotions are MINOR releases recorded in the changelog.

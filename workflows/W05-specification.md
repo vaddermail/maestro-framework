@@ -11,7 +11,7 @@ Produce the **canonical, technology-agnostic functional source of truth**: the b
 consolidated per module, the critical flows as state machines, the logical data model and the
 backend contract (authorization, scoping, integrity, sensitive fields). It is the document that
 **survives code rewrites** — when code and spec diverge, the spec wins
-(`core/artifact-protocol.md` §4). **Only after P5 is product code written** (F6).
+(`core/artifact-protocol.md` §H4). **Only after P5 is product code written** (F6).
 
 ## Preconditions (entry gate)
 

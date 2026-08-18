@@ -11,7 +11,7 @@
 | **Alias** | GCP Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if GCP is chosen) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort; raise to **Top** for scale data/analytics pipelines (`core/model-routing.md`) |
 
 ## Objective
@@ -127,7 +127,7 @@ recommend the arbiter consider cheaper platforms." — a valid proposal.
 - Set per-query cost limits in BigQuery from the start — it is the analog of the cost kill-switch
   (`knowledge/origin-lessons.md`).
 - Workload Identity instead of service-account JSON keys — it eliminates the most common
-  cnetworkntial leak on GCP (`agents/07-devops/secrets-manager.md`).
+  credential leak on GCP (`agents/07-devops/secrets-manager.md`).
 
 ## Anti-patterns
 

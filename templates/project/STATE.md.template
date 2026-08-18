@@ -68,7 +68,16 @@ and update instead of duplicating.*
 
 - **{{lesson}}.** Why: {{the root cause}}. How to apply: {{the concrete rule from now on}}.
 
-## 8. Historical log
+## 8. Debt
+
+*Technical debt **accepted knowingly** — not everything left undone, only what was decided to
+carry, with an owner and a trigger for paying it. This is what stops reviewers and guardians
+from re-flagging, cycle after cycle, something already accepted (`loops/L08-technical-debt.md`).*
+
+- **{{debt}}.** Accepted on {{yyyy-mm-dd}} because: {{reason}}. Owner: {{who}}. Pay when:
+  {{concrete trigger}}.
+
+## 9. Historical log
 
 *Previous sessions/milestones, summarized. The detail lives in Git (`git log`) and in
 `CHANGELOG.md`.*

@@ -8,7 +8,7 @@ when things go wrong. It operationalizes reversibility by default
 ## The problem it solves
 
 Without flags, every risky change is coupled to the deploy cycle: turning it off means reverting
-code, rebuilding and networkploying — minutes or hours during which the incident goes on. And there is
+code, rebuilding and redeploying — minutes or hours during which the incident goes on. And there is
 no way to expose a feature to 5% of users, nor to cut off an expensive integration in seconds.
 
 Flags give **three levers** that deploys alone do not: roll out gradually, cut off immediately, and

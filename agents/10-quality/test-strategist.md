@@ -11,7 +11,7 @@
 | **Alias** | Test Strategist |
 | **Category** | `10-quality` |
 | **Phases** | F6 (defines the strategy before the build); revisits in F7 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** for the strategy of critical flows with reversibility (`core/model-routing.md`) |
 
 ## Objective

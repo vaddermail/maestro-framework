@@ -10,7 +10,7 @@
 | **Alias** | Migrations Engineer |
 | **Category** | `06-data` |
 | **Phases** | F6 (schema materialization); F9 (schema evolution in production) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** for expand-contract migrations over live data with legacy (reversibility is distinctive reasoning); **Standard** for purely additive greenfield migrations (`core/model-routing.md`) |
 
 ## Objective

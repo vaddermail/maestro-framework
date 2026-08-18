@@ -11,7 +11,7 @@
 | **Alias** | Feature Flags Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F6 (introduced in the code), F8 (go-live), F9 (operation and hygiene) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** for designing kill-switches for risky changes; **Standard** to add a simple flag (`core/model-routing.md`) |
 
 ## Objective
@@ -26,7 +26,7 @@ concretizes the `modules/feature-flags.md` module.
 
 - Convened by the Orchestrator in F6 when a slice introduces a risky change (a new flow, a
   notification channel, an external integration) that should be born toggleable.
-- In F8 by the `agents/07-devops/deployment-strategist.md` when reversal by networkploy is slow and
+- In F8 by the `agents/07-devops/deployment-strategist.md` when reversal by redeploy is slow and
   the change needs a kill-switch.
 - In F9: exposing a feature to a % of users, cutting consumption when a limit is hit, or the
   periodic hygiene review (removing dead flags).
@@ -79,14 +79,14 @@ In the `core/question-engine.md` format:
 1. **Safe default.** The new/risky starts OFF; whatever generates cost starts OFF with backlog
    draining on enable (`knowledge/proven-patterns.md` §10; `modules/feature-flags.md`).
 2. **Toggleable without a deploy.** The flag is read at runtime; changing its value requires no
-   rebuild/networkploy — that is its reason to exist (`knowledge/permanent-rules.md` §3).
+   rebuild/redeploy — that is its reason to exist (`knowledge/permanent-rules.md` §3).
 3. **Evaluated in a single place (SSOT).** One central evaluator, not scattered `if`s; a
    verifiable naming convention (`knowledge/proven-patterns.md` §4).
 4. **Two-level kill-switch** for cost/risk: persisted granular config **+** environment
    master-switch — two independent cuts (`modules/feature-flags.md`).
 5. **The old path does not break with the flag OFF.** With the flag off, the previous behavior
    works intact — otherwise it is not reversible.
-6. **Flags hold no secrets.** They are non-secret config; cnetworkntials belong to the
+6. **Flags hold no secrets.** They are non-secret config; credentials belong to the
    `agents/07-devops/secrets-manager.md`.
 7. **Mandatory hygiene.** Every flag has an owner, a purpose and a retirement deadline; a
    guardrail calls out dead/orphaned flags and feeds `loops/L08-technical-debt.md`.
@@ -121,7 +121,7 @@ In the `core/question-engine.md` format:
 ## Examples
 
 **Example (B2B SaaS, new billing engine):** A new billing calculation replaces the old one — high
-risk of divergence. The specialist creates the `FATURACAO_MOTOR_NOVO` flag with default OFF,
+risk of divergence. The specialist creates the `BILLING_NEW_ENGINE` flag with default OFF,
 evaluated in a single service. With OFF, the old engine runs intact. It exposes first to 5% of the
 tenants (segment), compares results, ramps up gradually. If a tenant reports an error, it cuts the
 flag at runtime **without a deploy** and returns to the old engine instantly. It is temporary:
@@ -139,14 +139,14 @@ once re-enabled, they drain.
 ## Best practices
 
 - Every risky change is born behind a flag — removing a flag is cheaper than reverting an incident
-  by networkploy.
+  by redeploy.
 - Default OFF for the new and for what costs money; exposure ramps deliberately, not by omission.
 - Date the flag's death the day it is born; hygiene is what prevents the eternal `if`.
 - A single evaluator — scattered flag `if`s are the runtime version of duplicated code.
 
 ## Anti-patterns
 
-- ❌ A flag that requires a networkploy to change → ✅ read at runtime, hot-toggleable.
+- ❌ A flag that requires a redeploy to change → ✅ read at runtime, hot-toggleable.
 - ❌ New behavior on by default → ✅ default OFF; turn on once validated.
 - ❌ Flag OFF breaking the old path → ✅ the old path works intact with OFF.
 - ❌ Flags piling up ownerless, dateless → ✅ catalog with owner/purpose/retirement date + guardrail.

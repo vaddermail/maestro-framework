@@ -10,7 +10,7 @@
 | **Alias** | State & Cache Specialist |
 | **Category** | `04-frontend` |
 | **Phases** | F6 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** for hard invalidation and for decomposing state into base+overlay layers (`core/model-routing.md`) |
 
 ## Objective

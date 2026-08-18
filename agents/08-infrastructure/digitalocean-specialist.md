@@ -11,7 +11,7 @@
 | **Alias** | DigitalOcean Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if DO is chosen) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort (`core/model-routing.md`) |
 
 ## Objective

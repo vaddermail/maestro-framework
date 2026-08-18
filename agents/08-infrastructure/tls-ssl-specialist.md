@@ -11,7 +11,7 @@
 | **Alias** | TLS/SSL Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F8 (materialization); operated in F9 (continuous renewal) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard** (`core/model-routing.md`); the task is largely automatable, `Economy` for routine configuration and `Standard` for the trust-chain design |
 
 ## Objective

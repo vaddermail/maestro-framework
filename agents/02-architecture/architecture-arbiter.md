@@ -11,7 +11,7 @@
 | **Alias** | Architecture Arbiter |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); reconvened by `workflows/W10-feature-evolution.md` when a new feature challenges the decided style |
-| **Type** | Arbiter |
+| **Type** | `arbiter` |
 | **Suggested model** | **Top**, medium→high effort — architecture arbitration is distinctive reasoning with costly reversal, where getting it right the first time saves months (`core/model-routing.md`) |
 
 ## Objective
@@ -47,7 +47,7 @@ data (e.g. real expected scale, number of teams): in that case it writes the dec
 | Weighted criteria matrix | Orchestrator, derived from F2 | Yes | Functional fit, total cost, operational complexity, team competence, reversibility, maturity, lock-in |
 | `product/01-requirements/` (NFR) | F2 | Yes | Scale, availability, latency, compliance — what pressures the decision |
 | `product/00-discovery/` (team, budget, roadmap) | F1 | Yes | Number of teams, operational maturity, horizon |
-| `STATE.md` §Closed decisions | Memory | No | Already-closed constraints the decision cannot contradict |
+| `CLAUDE.md` §Closed decisions | Memory | No | Already-closed constraints the decision cannot contradict |
 
 If a proposal arrives without an operating cost or without a reversal path, the arbiter **does not
 complete it by deduction of its own**: it returns it to the specialist (via the Orchestrator) — an

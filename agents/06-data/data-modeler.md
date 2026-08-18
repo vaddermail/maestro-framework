@@ -10,7 +10,7 @@
 | **Alias** | Data Modeler |
 | **Category** | `06-data` |
 | **Phases** | F5 (logical model); F6 (derivation into the physical model) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top**, medium effort — invariants and relational integrity are distinctive reasoning where getting it right the first time avoids data corruption (`core/model-routing.md`) |
 
 ## Objective

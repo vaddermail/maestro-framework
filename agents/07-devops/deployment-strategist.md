@@ -11,7 +11,7 @@
 | **Alias** | Deployment Strategist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (go-live); operated in F9 (every release) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** — deploy and rollback are critical flow with reversibility, where getting it right the first time saves incidents (`core/model-routing.md`) |
 
 ## Objective
@@ -90,7 +90,7 @@ In the `core/question-engine.md` format:
    never rebuild in production (`knowledge/proven-patterns.md` §2).
 6. **Schema and code decoupled via expand-contract.** The DB changes additively first, so the code
    rollback works against the schema (`playbooks/expand-contract-db-migration.md`).
-7. **Risky change behind a flag.** When reversal by networkploy is slow, the feature ships toggleable
+7. **Risky change behind a flag.** When reversal by redeploy is slow, the feature ships toggleable
    via flag/kill-switch (`agents/07-devops/feature-flags-specialist.md`).
 8. **Objective, pre-agreed rollback criterion.** Defined before the release
    (error/latency/health), not decided in the heat of the incident.
@@ -167,7 +167,7 @@ if the migration fails). No canary — it would be complexity without value for 
 | `agents/06-data/migration-engineer.md` | parallel — coordinates the expand-contract schema with the release |
 | `agents/07-devops/secrets-manager.md` | upstream — secrets injected at runtime |
 | `agents/07-devops/load-balancing-specialist.md` | parallel — drain/pools for blue-green/canary |
-| `agents/07-devops/feature-flags-specialist.md` | parallel — risk toggleable without a networkploy |
+| `agents/07-devops/feature-flags-specialist.md` | parallel — risk toggleable without a redeploy |
 | `agents/08-infrastructure/infra-backup-specialist.md` | upstream — verified backup before promoting |
 
 ## Done criteria

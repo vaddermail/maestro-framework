@@ -11,7 +11,7 @@
 | **Alias** | Docker Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (packaging for delivery); consulted in F6 (dev/CI image) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) — the Dockerfile is standardized; raise only to design caching/multi-stage for a complex build |
 
 ## Objective
@@ -62,7 +62,7 @@ Via the Orchestrator, in a batch (`core/question-engine.md`):
 - *Base image:* **distroless/scratch** (minimal, no shell — more secure, harder to debug) vs
   **slim** (has a shell and a package manager — easier to operate, larger surface)? Default
   recommendation: distroless for production, slim if the team has no remote-debug tooling yet.
-- *Target registry:* which one, and is it private? (affects pipeline cnetworkntials and the
+- *Target registry:* which one, and is it private? (affects pipeline credentials and the
   `agents/07-devops/secrets-manager.md`).
 - *Multi-architecture* (amd64 + arm64)? Only if the target demands it — it doubles build time.
 

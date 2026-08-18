@@ -11,7 +11,7 @@
 | **Alias** | End-to-End Test Engineer |
 | **Category** | `10-quality` |
 | **Phases** | F6 (complete flows) and F7 (full matrix before launch) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort — the multi-profile matrix and the critical flows are risk logic (`core/model-routing.md`) |
 
 ## Objective

@@ -11,7 +11,7 @@
 | **Alias** | GitHub Actions Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (CI/CD pipelines); consulted in F6 (early quality CI) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) — workflows are standardized; raise only to design complex caching/matrices or the deploy gate |
 
 ## Objective
@@ -122,7 +122,7 @@ generates the SBOM. `cd.yml` builds the image, authenticates to AWS via **OIDC**
 keys), deploys to `staging` automatically and stops at the `production` Environment, which
 requires approval from two reviewers. A third-party deploy action is pinned by SHA. Proof run: a
 PR with a red API test gets the `api` check failed and the merge blocked; once fixed, it promotes
-to staging, gets approved, goes to production; the rollback (networkploy of the previous tag) is
+to staging, gets approved, goes to production; the rollback (redeploy of the previous tag) is
 rehearsed and works.
 
 ## Best practices

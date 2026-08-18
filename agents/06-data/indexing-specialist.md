@@ -10,7 +10,7 @@
 | **Alias** | Index Specialist |
 | **Category** | `06-data` |
 | **Phases** | F6 (indexes per slice); F9 (index review in operation) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort — designing from access patterns is engineering work with clear rules (`core/model-routing.md`) |
 
 ## Objective

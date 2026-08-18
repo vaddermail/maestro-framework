@@ -11,7 +11,7 @@
 | **Alias** | Infrastructure Backup Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F8 (materialization); operated in F9 (continuous verification with the guardian) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard** (`core/model-routing.md`); the task is largely procedural, with the care going into the restore proof |
 
 ## Objective

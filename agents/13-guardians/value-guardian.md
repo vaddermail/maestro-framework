@@ -12,7 +12,7 @@
 | **Alias** | Value Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); inherits the F1 yardstick (`agents/00-discovery/kpi-definer.md`) |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | **Standard** for the KPI-by-KPI monthly reading; **Top, medium effort** to diagnose a deviation with crossed causes or to prepare a revise/invest/kill escalation — judgment with product consequences (`core/model-routing.md`) |
 
 ## Objective

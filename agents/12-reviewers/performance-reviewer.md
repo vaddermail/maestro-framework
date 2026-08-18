@@ -12,7 +12,7 @@ measuring them under load and without monitoring production.
 | **Alias** | Performance Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (review panel before launch); reconvened by `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Standard** for finding triage; **Top, medium effort** to judge query execution plans and caching trade-offs under load (`core/model-routing.md`) |
 
 ## Objective

@@ -51,7 +51,7 @@ residual risk** — but only by an explicit user decision, recorded in
   structural one.
 - **Hard cap:** 4 attempts per individual finding. Once exceeded, the finding escalates as a
   candidate for **residual risk** — it is never silenced; the user decides to accept the risk, cut
-  the feature, or networksign (escalate to `agents/09-security/threat-modeler.md` if structural).
+  the feature, or redesign (escalate to `agents/09-security/threat-modeler.md` if structural).
 
 ## STATE.md record
 
@@ -63,7 +63,7 @@ L03 · security · metric 5→3→3 · iter 3 (cap 4) · last progress: iter 2 �
 
 The `pentester` reports a critical finding: an employee can see another employee's salary record by
 changing the `id` in the URL (IDOR). The `security-coordinator` classifies it as critical and
-exploitable (it requires no special cnetworkntials). The
+exploitable (it requires no special credentials). The
 `authorization-and-least-privilege-specialist` fixes it: the route now always filters by the
 server-side identity, never by the request's `id`, and returns 404 (not 403) outside the scope.
 Regression green; live proof confirms that another employee's `id` now returns 404. The finding

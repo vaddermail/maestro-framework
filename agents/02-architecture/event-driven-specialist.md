@@ -11,7 +11,7 @@
 | **Alias** | Event-Driven Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture panel) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium→high effort (delivery guarantees and idempotency are risk reasoning); raise to **Top** when delivery correctness is critical (payments, data that cannot be lost) (`core/model-routing.md`) |
 
 ## Objective
@@ -127,7 +127,7 @@ flow (defines the guarantee needed)?
 event backbone for the fan-out: from a single "order created" fact derive, decoupled from each
 other, the confirmation email, the stock update, the search indexing, the invoice issuance and the
 audit trail — each consumer evolves and scales without touching the others. At-least-once
-guarantee with idempotent consumers (dedupe key `encomenda:id:consumidor`); outbox in the
+guarantee with idempotent consumers (dedupe key `order:id:consumer`); outbox in the
 order-creation transaction (never notify something that rolled back); dead-letter for the email
 that fails three times. Eventual consistency signed off: the invoice may appear seconds later —
 the business tolerates it. Honest cons: a broker to operate, distributed debugging, per-order

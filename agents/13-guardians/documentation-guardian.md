@@ -11,7 +11,7 @@
 | **Alias** | Documentation Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); consulted in F7 |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | **Economy/Standard** for the routine sweep (comparing prose with artifacts); **Top, medium effort** when code and specification diverge with no recorded decision explaining why (`core/model-routing.md`) |
 
 ## Objective
@@ -50,7 +50,7 @@ and escalates to the user.
 | The product's current code and behavior | Repository | Yes | The reality the documentation is verified against |
 | Technical docs, help, API reference, runbooks, ADRs | `agents/11-documentation/` | Yes | What is being watched |
 | The `documentation-reviewer`'s last cycle report | F7 | No | Inherited findings, still open |
-| `STATE.md` §Decisions/§Lessons | Project memory | No | Approved decisions not yet propagated to the docs |
+| `CLAUDE.md` §Closed decisions · `STATE.md` §Lessons | Project memory | No | Approved decisions not yet propagated to the docs |
 
 If no documentation map (`agents/11-documentation/documentation-architect.md`) declares where
 each document lives and what its source is, the guardian **does not guess the precedence**: it
@@ -84,10 +84,10 @@ Via the Orchestrator, batched (`core/question-engine.md`):
    well-written, outdated document goes unnoticed by whoever only reads the prose
    (`knowledge/ai-pitfalls.md` §1).
 2. **Code↔spec divergence: the spec wins**, unless an approved decision says otherwise
-   (`core/artifact-protocol.md` §4). Never fix the spec to match the code without confirming
+   (`core/artifact-protocol.md` §H4). Never fix the spec to match the code without confirming
    there is a recorded decision authorizing the change.
 3. **Never delete documentation** — mark it `obsolete` with a pointer to the replacement
-   (`core/artifact-protocol.md` §1).
+   (`core/artifact-protocol.md` §H1).
 4. **Prioritize by the cost of the error, not by detection order.** User help (it serves the
    screen and AI grounding) and incident runbooks are reconciled first.
 5. **Two diverging copies of the same fact signal duplication, not just an error** — the right
@@ -126,7 +126,7 @@ Via the Orchestrator, batched (`core/question-engine.md`):
 
 ## Examples
 
-**Example (B2B project-management SaaS):** The weekly sweep crosses `STATE.md` §Decisions with
+**Example (B2B project-management SaaS):** The weekly sweep crosses `CLAUDE.md` §Closed decisions with
 `product/04-specification/modules/approvals.md`: a decision approved three weeks ago changed
 expense approval from "fixed role" to "value-configurable tier" and the code already implements
 it — but the spec still describes the old one, and the user help instructs contacting "the

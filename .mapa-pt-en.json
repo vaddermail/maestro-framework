@@ -1,7 +1,4 @@
 {
-  "summary": "Gerar o mapa completo de renomeação de caminhos PT→EN e o glossário de terminologia",
-  "agentCount": 1,
-  "logs": [],
   "result": {
     "pastas": {
       "nucleo": "core",
@@ -537,34 +534,5 @@
       "adaptador": "adapter",
       "espelho (repo)": "mirror"
     }
-  },
-  "workflowProgress": [
-    {
-      "type": "workflow_phase",
-      "index": 1,
-      "title": "Mapa"
-    },
-    {
-      "type": "workflow_agent",
-      "index": 1,
-      "label": "mapa",
-      "phaseIndex": 1,
-      "phaseTitle": "Mapa",
-      "agentId": "a29fd8d57b6fd8b4f",
-      "model": "claude-fable-5",
-      "state": "done",
-      "startedAt": 1786984985473,
-      "queuedAt": 1786984981592,
-      "attempt": 1,
-      "lastToolName": "StructuredOutput",
-      "promptPreview": "Vais construir o MAPA DE TRADUÇÃO de caminhos da framework Maestro (PT→EN) para a criação do espelho público em inglês. Trabalha sobre /repo (lê a estrutura real com find/ls antes de responder).\n\nDevolve via schema:\n\n1. \"pastas\": mapa de TODAS as pastas → nome EN kebab-case. Fixas: nucleo→core, agentes→agents, modulos→modules, conhecimento→knowledge, adaptadores→adapters, _meta…",
-      "lastProgressAt": 1786985313796,
-      "tokens": 65481,
-      "toolCalls": 6,
-      "durationMs": 328321,
-      "resultPreview": "{\"pastas\":{\"nucleo\":\"core\",\"agentes\":\"agents\",\"agentes/00-descoberta\":\"agents/00-discovery\",\"agentes/01-requisitos\":\"agents/01-requirements\",\"agentes/02-arquitetura\":\"agents/02-architecture\",\"agentes/03-experiencia\":\"agents/03-experience\",\"agentes/04-frontend\":\"agents/04-frontend\",\"agentes/05-backend\":\"agents/05-backend\",\"agentes/06-dados\":\"agents/06-data\",\"agentes/07-devops\":\"agents/07-devops\",\"a…"
-    }
-  ],
-  "totalTokens": 65481,
-  "totalToolCalls": 6
+  }
 }

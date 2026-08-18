@@ -11,7 +11,7 @@
 | **Alias** | Security Coordinator |
 | **Category** | `09-security` |
 | **Phases** | F1 to F9 (cross-cutting dimension — permanent seat, not a phase) |
-| **Type** | Coordinator |
+| **Type** | `coordinator` |
 | **Suggested model** | Standard for tracking and consolidation; **Top** (effort medium→high) for the residual-risk judgment and for arbitrating expensive controls vs. accepted risk (`core/model-routing.md`) |
 
 ## Objective

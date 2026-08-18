@@ -10,7 +10,7 @@
 | **Alias** | OWASP Top 10 Specialist |
 | **Category** | `09-security` |
 | **Phases** | F3 (design), F6 (build), F7 (review) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard for most categories; **Top** (effort medium) for the authorization and integrity ones — authz and business-logic flaws are the distinctive reasoning (`core/model-routing.md`) |
 
 ## Objective

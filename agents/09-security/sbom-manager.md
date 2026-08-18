@@ -11,7 +11,7 @@
 | **Alias** | SBOM Manager |
 | **Category** | `09-security` |
 | **Phases** | F6 (first generation, once there is a build) → F9 (keeps it alive); consulted in F7 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Economy** to generate/regenerate the SBOM (mechanical, tool-driven); **Standard** to reconcile divergences and curate provenance (`core/model-routing.md`) |
 
 ## Objective

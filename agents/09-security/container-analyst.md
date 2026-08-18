@@ -11,7 +11,7 @@
 | **Alias** | Container Security Analyst |
 | **Category** | `09-security` |
 | **Phases** | F6 (as soon as there are images) → F9 (continuous); security gate in F7 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Economy** for the image scan (tool-driven); **Standard** for triage (contextual severity, Dockerfile/runtime misconfig) — `core/model-routing.md` |
 
 ## Objective

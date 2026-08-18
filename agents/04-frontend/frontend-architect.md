@@ -10,7 +10,7 @@
 | **Alias** | Frontend Architect |
 | **Category** | `04-frontend` |
 | **Phases** | F6 (first agent in the category); consulted in F3 on the client/server boundary |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** for the decision of how per-profile authority is reflected in the app structure (`core/model-routing.md`) |
 
 ## Objective

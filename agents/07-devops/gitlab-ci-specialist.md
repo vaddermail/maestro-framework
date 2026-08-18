@@ -11,7 +11,7 @@
 | **Alias** | GitLab CI Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (pipelines/environments); consulted in F6 (early CI) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) — the `.gitlab-ci.yml` is standardized; raise only to design review apps/environments and the production gate |
 
 ## Objective
@@ -44,7 +44,7 @@ action/approval, and a real pipeline proved the full path with a rehearsed rollb
 | `pipelines/ci-quality.md`, `ci-security.md`, `cd-delivery.md` | Framework | Yes | The agnostic contract to materialize |
 | Git flow + MR rules | `agents/07-devops/github-specialist.md` (principles) | Yes | The same principles applied to merge requests |
 | Build image/artifact | `agents/07-devops/docker-specialist.md` | Yes | What the pipeline packages |
-| Secrets and cnetworkntials | `agents/07-devops/secrets-manager.md` | Yes | Via protected/masked CI/CD variables |
+| Secrets and credentials | `agents/07-devops/secrets-manager.md` | Yes | Via protected/masked CI/CD variables |
 | Environments + promotion rules | `agents/07-devops/deployment-strategist.md` | Yes | Environments + manual deploy/approval |
 
 ## Outputs

@@ -12,8 +12,8 @@
 | **Alias** | Cost Estimator |
 | **Category** | `00-discovery` |
 | **Phases** | F1 (initial order of magnitude); refined in F3 (with stack/infra decided) |
-| **Type** | specialist |
-| **Suggested model** | Default, medium effort (`core/model-routing.md`) |
+| **Type** | `specialist` |
+| **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective
 

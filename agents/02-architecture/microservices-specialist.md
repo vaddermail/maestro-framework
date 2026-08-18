@@ -11,7 +11,7 @@
 | **Alias** | Microservices Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture panel) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium→high effort; raise to **Top** by default when the panel seriously considers distributing — this reversal is among the most expensive there is (`core/model-routing.md`) |
 
 ## Objective

@@ -11,7 +11,7 @@
 | **Alias** | Dependency Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation) |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | **Standard** for routine patch/minor bumps; **Top, medium effort** for the impact analysis of a major with breaking changes (`core/model-routing.md`) |
 
 ## Objective

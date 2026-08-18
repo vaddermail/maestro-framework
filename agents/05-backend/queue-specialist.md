@@ -10,7 +10,7 @@
 | **Alias** | Queue Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (design), F6 (build); consulted in F9 when a backlog runs out of control |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** to design delivery guarantees and reprocessing semantics for critical/irreversible flows (`core/model-routing.md`) |
 
 ## Objective

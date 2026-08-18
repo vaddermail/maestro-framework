@@ -10,7 +10,7 @@
 | **Alias** | API Versioning Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (versioning policy), F6 (application); central in W10 (feature evolution) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** for designing contract migrations with clients you do not control (`core/model-routing.md`) |
 
 ## Objective
@@ -130,11 +130,11 @@ Via the Orchestrator (`core/question-engine.md`):
 
 ## Examples
 
-**Example (internal app → public API, payments platform):** the API exposes `POST /v1/pagamentos`
+**Example (internal app → public API, payments platform):** the API exposes `POST /v1/payments`
 with
-`{ montante, moeda }`. A new feature needs to split payments by beneficiary. Two possible changes:
-(a) add an **optional** `beneficiarios[]` → **additive**, stays in `/v1`, old clients ignore it;
-(b) change `montante` from integer (cents) to decimal → **breaking** (changes the type) → forces
+`{ amount, currency }`. A new feature needs to split payments by beneficiary. Two possible changes:
+(a) add an **optional** `beneficiaries[]` → **additive**, stays in `/v1`, old clients ignore it;
+(b) change `amount` from integer (cents) to decimal → **breaking** (changes the type) → forces
 `/v2`. Option (a) is chosen for the split and (b) is avoided by keeping cents. Months later, a
 restructuring truly forces `/v2`: `/v2` is introduced alongside `/v1` (expand), clients migrate
 over 6 months (agreed deadline, because there are external partners), with the `Deprecation: true`

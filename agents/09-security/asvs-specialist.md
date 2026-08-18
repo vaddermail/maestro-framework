@@ -10,7 +10,7 @@
 | **Alias** | ASVS Specialist (Application Security Verification Standard) |
 | **Category** | `09-security` |
 | **Phases** | F2 (fixes the target level with the NFRs); F7 (formal verification before go-live) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard for L1/L2; **Top** (effort medium) for L3 and for the authorization/cryptography requirements, where judgment is distinctive (`core/model-routing.md`) |
 
 ## Objective

@@ -13,7 +13,7 @@ approves the choice of store and is warned before any rotation that could cut se
 ## Preconditions
 
 - [ ] Store/vault decided with the user (see step 2) or decision recorded in `STATE.md`.
-- [ ] Inventory of the cnetworkntials the services need (from `agents/05-backend/*`,
+- [ ] Inventory of the credentials the services need (from `agents/05-backend/*`,
       `agents/06-data/*`, `agents/07-devops/deployment-strategist.md`).
 - [ ] Access handed over **by file path**, never pasted in the chat (non-negotiable rule — step 6).
 
@@ -23,9 +23,9 @@ approves the choice of store and is warned before any rotation that could cut se
 **Do:** list everything that, if leaked, grants access or identity — passwords, tokens, API keys,
 SSH/private keys, connection strings, signing secrets, certificates. Record the inventory (name,
 where it is used, who issues it, rotation cadence) **without values**.
-**Verify:** every cnetworkntial used in code/config appears in the inventory; no entry holds the value.
+**Verify:** every credential used in code/config appears in the inventory; no entry holds the value.
 **If it fails:** if a value shows up in the inventory, delete it and replace it with a path/name; if
-a cnetworkntial is used but not inventoried, that is a gap — do not proceed without closing it.
+a credential is used but not inventoried, that is a gap — do not proceed without closing it.
 
 ### 2. Decide where they live (gitignored folder or vault)
 **Do:** choose with the user (`core/question-engine.md` format): **managed vault** (cloud
@@ -68,29 +68,29 @@ error messages or artifacts.
 **If it fails:** a value pasted into a conversation is compromised — treat it as a leak (step 8).
 
 ### 7. Rotation (periodic and event-driven)
-**Do:** run the security policy's rotation cadence — generate the new cnetworkntial, inject it,
+**Do:** run the security policy's rotation cadence — generate the new credential, inject it,
 **verify the service works with the new one**, and only then revoke the old one (expand-contract
 applied to secrets, `knowledge/permanent-rules.md` §3).
-**Verify:** the service works with the new cnetworkntial before the old one is revoked; the old one is
+**Verify:** the service works with the new credential before the old one is revoked; the old one is
 unusable after revocation.
 **If it fails:** if the new one does not work, **do not revoke the old one** — fall back to the old
 (still valid) one and investigate.
 
 ### 8. Leak response (irreversible — act now)
-**Do, in this order:** (1) **revoke** the exposed cnetworkntial immediately; (2) **rotate** — issue a
+**Do, in this order:** (1) **revoke** the exposed credential immediately; (2) **rotate** — issue a
 new one and inject it (steps 5/7); (3) **sweep the history** with
 `agents/09-security/exposed-secrets-hunter.md` to find every occurrence and other exposures;
 (4) blameless **post-mortem** (`templates/technical/post-mortem.md.template`) via
 `workflows/W11-incident-response.md`.
-**Verify:** the old cnetworkntial no longer authenticates; the history scan is clean from there on;
-the incident is recorded with the cnetworkntial rotated.
+**Verify:** the old credential no longer authenticates; the history scan is clean from there on;
+the incident is recorded with the credential rotated.
 **If it fails / never forget:** "deleting the commit" is **never** enough — Git history is forever
 and may already be cloned. Any secret that was **ever** in Git counts as compromised: rotate, do
 not rationalize.
 
 ## Rollback
 
-- **Rotation/injection** are reversible while the old cnetworkntial is not revoked: reverting means
+- **Rotation/injection** are reversible while the old credential is not revoked: reverting means
   pointing back to the old one. That is why the order is always *new one working → revoke the old
   one*, never the reverse.
 - **A leak is not reversible** — an exposure cannot be "undone"; the only path is revoke+rotate.

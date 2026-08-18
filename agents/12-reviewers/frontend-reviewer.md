@@ -11,7 +11,7 @@
 | **Alias** | Frontend Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Standard** for the SSOT, tokens and screen-state sweep; **Top, medium effort** when the finding involves a hard-to-reproduce race condition between state layers (`state-and-cache-specialist`) (`core/model-routing.md`) |
 
 ## Objective
@@ -49,7 +49,7 @@ returns to the Orchestrator to trigger `agents/04-frontend/frontend-architect.md
 | `product/03-experience/accessibility.md` and `.../responsiveness.md` | `agents/03-experience/` (F4) | Yes | The contract adherence is measured against |
 | Code of the client slice under review | F6 | Yes | What is being reviewed |
 | `product/04-specification/api-contract.md` and mock handlers | `agents/05-backend/api-designer.md`, `agents/04-frontend/api-integrator.md` | Yes | To verify error fidelity and shape |
-| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | UI debt already known and accepted (not re-flagged) |
+| `CLAUDE.md` §Closed decisions · `STATE.md` §Debt | `core/project-memory.md` | No | UI debt already known and accepted (not re-flagged) |
 
 Without the conventions and the content layer, the reviewer does not proceed on assumptions — it
 returns the list of gaps (`core/question-engine.md`).

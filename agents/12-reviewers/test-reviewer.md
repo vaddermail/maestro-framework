@@ -11,7 +11,7 @@
 | **Alias** | Test Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch panel); reconvened per milestone and in `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Standard** for reading and triaging the written tests; **Top, medium effort** for the mutation judgment (would the test fail with the bug present?) and to decide whether a mock crossed the external-I/O boundary (`core/model-routing.md`) |
 
 ## Objective

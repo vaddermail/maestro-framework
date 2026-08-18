@@ -10,7 +10,7 @@
 | **Alias** | HTTP Security Headers Specialist |
 | **Category** | `09-security` |
 | **Phases** | F6 (build, when serving the app) and F8 (at the edge: proxy/CDN) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy for the well-defined set (HSTS, X-Content-Type-Options, Referrer-Policy…); **Standard** (effort low) to design the **CSP**, which takes judgment about the real app (`core/model-routing.md`) |
 
 ## Objective

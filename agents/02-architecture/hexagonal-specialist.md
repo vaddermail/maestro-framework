@@ -12,7 +12,7 @@
 | **Alias** | Ports & Adapters Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective

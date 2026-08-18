@@ -11,7 +11,7 @@
 | **Alias** | Dynamic Application Security Testing Specialist |
 | **Category** | `09-security` |
 | **Phases** | F7 (against a test environment, pre-launch) and F9 (scheduled sweep) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Economy** for the automatic sweep; **Standard** to configure authentication/flows and triage findings (understanding whether an alert is exploitable in context) — `core/model-routing.md` |
 
 ## Objective

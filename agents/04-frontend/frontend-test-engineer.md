@@ -10,7 +10,7 @@
 | **Alias** | Frontend Test Engineer |
 | **Category** | `04-frontend` |
 | **Phases** | F6 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy for writing tests from a plan/wireframe; **Standard** for designing the client's test strategy and the flow tests involving authority (`core/model-routing.md`) |
 
 ## Objective

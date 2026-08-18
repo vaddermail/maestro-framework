@@ -10,7 +10,7 @@
 | **Alias** | Backup Specialist |
 | **Category** | `06-data` |
 | **Phases** | F8 (strategy design before go-live); F9 (operation and verification) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; **Top** for RPO/restore-strategy decisions with cost and acceptable-loss trade-offs (`core/model-routing.md`) |
 
 ## Objective

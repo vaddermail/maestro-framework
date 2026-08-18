@@ -11,7 +11,7 @@
 | **Alias** | Azure Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F3 (proposal to the hosting panel); F8 (detailed design if Azure is chosen) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort; raise to **Top** for complex identity integration or multi-year cost (`core/model-routing.md`) |
 
 ## Objective

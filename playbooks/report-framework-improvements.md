@@ -21,7 +21,7 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
 
 ## Steps
 
-1. **Consolidate.** Reread the new entries (without the `(submitted #nnn)` mark) across the five
+1. **Consolidate.** Reread the new entries (without the `(sent #nnn)` mark) across the five
    sections. Does each have the what, the why, evidence and a suggested destination? Incomplete
    ones are completed now or wait for the next submission — entries without a why and evidence are
    never sent. **Recovery sweep:** before closing consolidation, cross-check `STATE.md` (§Lessons
@@ -41,7 +41,7 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
    ("Gates, not gut feelings" — it is the circuit's only irreversible step): secret and PII
    patterns (keys, tokens, personal e-mails, IBAN/tax-ID numbers) plus the project's local list of
    forbidden terms (client names, confidential domain terms — kept in a project file, **never
-   submitted**). Only proceed with a clean sweep; the result is noted in the §Submission log.
+   submitted**). Only proceed with a clean sweep; the result is noted in the §Report log.
 3. **Open the issue** on the upstream repository, with the `improvements` label:
 
    ```
@@ -68,7 +68,7 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
    ```
 
 4. **Record the submission.** In `FRAMEWORK-IMPROVEMENTS.md`: mark the submitted entries with
-   `(submitted #nnn)` and append the line to the §Submission log. In `STATE.md`: one line under
+   `(sent #nnn)` and append the line to the §Report log. In `STATE.md`: one line under
    "Done" with the issue number. When the curation verdict arrives (a comment on the issue),
    update the log's "Result" column.
 5. **Fallback without issue access.** If the user has no account/permission on the upstream
@@ -88,7 +88,7 @@ framework to be different.
 ## Rollback
 
 Submitting an issue changes nothing in the project or the framework — a mistaken submission is
-closed with an explanatory comment, and the `(submitted #nnn)` marks are corrected in the file.
+closed with an explanatory comment, and the `(sent #nnn)` marks are corrected in the file.
 There is only one real irreversible risk: **sensitive content published in the issue** — which is
 why sanitization is an explicit step before submission; if it happens, delete/edit the issue
 immediately and treat it as a data incident in the project (`workflows/W11-incident-response.md`).

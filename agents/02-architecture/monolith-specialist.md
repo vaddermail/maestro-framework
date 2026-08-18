@@ -11,7 +11,7 @@
 | **Alias** | Monolith Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture panel) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort; raise to **Top** when reversing the decision is expensive (large product, many teams) (`core/model-routing.md`) |
 
 ## Objective

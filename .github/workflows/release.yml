@@ -20,7 +20,10 @@ jobs:
             excl=0
             while IFS= read -r l; do
               case "$l" in ''|'#'*) continue ;; esac
-              [ "$f" = "$l" ] && excl=1
+              # glob match — the SAME semantics the zip exclusion uses below, so a pattern
+              # entry can never be excluded from the ZIP yet still hashed into the manifest
+              # (which would fail --integrity in every copy).
+              case "$f" in $l) excl=1 ;; esac
             done < _meta/DO-NOT-DISTRIBUTE
             [ "$excl" = 1 ] && continue
             sha256sum "$f" >> _meta/SHA256SUMS
@@ -35,6 +38,22 @@ jobs:
           done < _meta/DO-NOT-DISTRIBUTE
           zip -qr "Maestro-${GITHUB_REF_NAME}.zip" . "${EX[@]}"
           unzip -l "Maestro-${GITHUB_REF_NAME}.zip" | tail -3
+      - name: Gate the DISTRIBUTED artifact (what projects actually copy)
+        run: |
+          # The gate above ran on the full checkout, BEFORE any exclusion. This one runs
+          # inside the extracted ZIP — the only thing that proves a copy works on day one.
+          # A self-excluding DO-NOT-DISTRIBUTE entry once shipped a release whose own gate
+          # failed on extraction; CI was green throughout. Never again.
+          rm -rf /tmp/relcheck && mkdir -p /tmp/relcheck
+          unzip -q "Maestro-${GITHUB_REF_NAME}.zip" -d /tmp/relcheck
+          for l in $(grep -vE '^\s*(#|$)' _meta/DO-NOT-DISTRIBUTE); do
+            if compgen -G "/tmp/relcheck/$l" > /dev/null; then
+              echo "✗ CONFIDENTIALITY: $l leaked into the distributed ZIP"; exit 1
+            fi
+          done
+          echo "✓ no DO-NOT-DISTRIBUTE entry present in the ZIP"
+          ( cd /tmp/relcheck && bash _meta/verify.sh )
+          ( cd /tmp/relcheck && bash _meta/verify.sh --integrity )
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}

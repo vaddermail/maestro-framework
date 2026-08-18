@@ -10,7 +10,7 @@
 | **Alias** | UI Designer |
 | **Category** | `03-experience` |
 | **Phases** | F4 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (hierarchy and tone decisions with cross-cutting impact) — `core/model-routing.md` |
 
 ## Objective

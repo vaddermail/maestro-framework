@@ -11,7 +11,7 @@
 | **Alias** | Technical Writer |
 | **Category** | `11-documentation` |
 | **Phases** | F6 (with each slice) → F9 (continuous maintenance); consulted in F5 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy, low-medium effort (`core/model-routing.md`) — standardized writing derived from an existing source; raise to Standard only when the documentation demands judgment about what the correct behavior is |
 
 ## Objective

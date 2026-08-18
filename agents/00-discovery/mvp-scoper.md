@@ -11,8 +11,8 @@
 | **Alias** | MVP Definer |
 | **Category** | `00-discovery` |
 | **Phases** | F1 (end of discovery) |
-| **Type** | specialist |
-| **Suggested model** | Default, medium effort (`core/model-routing.md`) |
+| **Type** | `specialist` |
+| **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective
 

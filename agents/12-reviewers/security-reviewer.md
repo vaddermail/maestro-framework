@@ -12,7 +12,7 @@ whoever designed the security and from whoever watches it in production.
 | **Alias** | Security Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (review panel / security gate before production); reconvened by `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Top, medium→high effort** — adversarial judgment against the threat model is exactly the deliberate "going up" of `core/model-routing.md` |
 
 ## Objective
@@ -49,7 +49,7 @@ exists to confront — it does not invent one; it records the gap and engages
 | `product/05-security/threat-model.md` | `agents/09-security/threat-modeler.md` (F5/F7) | Yes | The reference: which threats the system promises to resist |
 | Code of the scope under review (authn, authz, data input, output) | F6 | Yes | The object of the review |
 | `modules/rbac-and-scoping.md` + the product's authorization policy | F5/F6 | Yes | The least-privilege contract to verify |
-| SAST/DAST/dependency findings | `agents/09-security/sast-specialist.md`, `-dast`, `dependency-analyst` | No | It consumes them; it does not replace the tools |
+| SAST/DAST/dependency findings | `agents/09-security/sast-specialist.md`, `agents/09-security/dast-specialist.md`, `agents/09-security/dependency-analyst.md` | No | It consumes them; it does not replace the tools |
 | Compliance / personal data requirements | F2 (NFR) | No | GDPR, retention, minimization |
 | `STATE.md` §Lessons | Project memory | No | Previous vulnerabilities in the product |
 
@@ -104,7 +104,7 @@ Via the Orchestrator, batched (`core/question-engine.md`):
 - **It does not design security controls** (headers, TLS, hardening, authn policy) — those belong
   to the `agents/09-security/` specialists; the reviewer verifies their presence and correctness.
 - **It does not run SAST/DAST** — those are `agents/09-security/sast-specialist.md` and
-  `-dast.md`; the reviewer integrates the findings into its analysis.
+  `agents/09-security/dast-specialist.md`; the reviewer integrates the findings into its analysis.
 - **It does not monitor CVEs in production** — that is `agents/13-guardians/security-guardian.md`
   (F9).
 - **It does not own the product's residual risk** — that belongs to
@@ -170,7 +170,7 @@ residual risk to sign off in this cycle.
 | `agents/09-security/threat-modeler.md` | upstream — provides the reference threat model |
 | `agents/09-security/owasp-top10-specialist.md` | upstream — the design coverage this one verifies in the build |
 | `agents/09-security/pentester.md` | parallel — provides proof of real exploitation; they complement each other |
-| `agents/09-security/sast-specialist.md` · `-dast.md` | upstream — tool findings |
+| `agents/09-security/sast-specialist.md` · `agents/09-security/dast-specialist.md` | upstream — tool findings |
 | `agents/05-backend/authorization-specialist.md` | downstream — fixes the flagged authz/scoping |
 | `agents/09-security/security-coordinator.md` | supervision — owner of the product's residual risk |
 | `agents/12-reviewers/review-consolidator.md` | downstream — merges this report into the single plan |

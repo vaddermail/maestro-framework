@@ -11,7 +11,7 @@
 | **Alias** | GitHub Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F0 (Git flow from kickoff) and F8 (protections, releases); lives through the whole cycle |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) — the flow is standardized, but designing protections/CODEOWNERS benefits from judgment |
 
 ## Objective

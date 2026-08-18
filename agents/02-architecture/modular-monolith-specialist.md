@@ -11,7 +11,7 @@
 | **Alias** | Modular Monolith Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture panel) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium→high effort (the boundary design is the distinctive part); raise to **Top** in large products where a badly drawn boundary costs dearly (`core/model-routing.md`) |
 
 ## Objective

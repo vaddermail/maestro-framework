@@ -11,7 +11,7 @@
 | **Alias** | Infrastructure & Cloud Security Analyst |
 | **Category** | `09-security` |
 | **Phases** | F8 (as soon as there is IaC/infra) → F9 (continuous); security gate in F7 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Economy** for the IaC/posture scan (tool-driven); **Standard** to triage (real impact of a public exposure, misconfig chaining) — `core/model-routing.md` |
 
 ## Objective

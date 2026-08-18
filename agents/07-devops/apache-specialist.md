@@ -11,7 +11,7 @@
 | **Alias** | Apache httpd Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (configuration); operated in F9 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; **Economy** for boilerplate *vhosts*; raise to **Top** when touching `mod_security`/TLS on a critical flow (`core/model-routing.md`) |
 
 ## Objective

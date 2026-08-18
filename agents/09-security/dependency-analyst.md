@@ -11,7 +11,7 @@
 | **Alias** | Dependency Vulnerability Analyst |
 | **Category** | `09-security` |
 | **Phases** | F6 (as soon as there are dependencies) → F9 (continuous); security gate in F7 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Economy** for the SCA scan (tool-driven); **Standard** for triage (reachability, false positives, contextual severity) — `core/model-routing.md` |
 
 ## Objective

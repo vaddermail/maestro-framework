@@ -12,7 +12,7 @@
 | **Alias** | UX Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Standard** for most journeys; **Top, medium effort** when the flow is critical and hard to reverse (returns, offboarding, cancellation) and the judgment on "can the person really do this alone" is subtle (`core/model-routing.md`) |
 
 ## Objective
@@ -49,7 +49,7 @@ returns to the Orchestrator to trigger `agents/00-discovery/persona-builder.md` 
 | `product/00-discovery/use-cases/UC-nnn-*` | `agents/00-discovery/use-case-modeler.md` (F1) | Yes | The trigger, the steps and the observable outcome to confirm |
 | Navigable build of the slice (staging or equivalent) | F6 | Yes | The object of the review — never code read, always used |
 | `product/03-experience/responsiveness.md` / `.../accessibility.md` | `agents/03-experience/` (F4) | No | Device context/need of each persona |
-| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | Friction already known and accepted (not re-flagged) |
+| `CLAUDE.md` §Closed decisions · `STATE.md` §Debt | `core/project-memory.md` | No | Friction already known and accepted (not re-flagged) |
 
 Without personas and UCs, the reviewer does not proceed on assumptions — it returns the list of
 gaps (`core/question-engine.md`).

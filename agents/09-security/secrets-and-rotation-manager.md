@@ -12,7 +12,7 @@
 | **Alias** | Secrets & Rotation Policy Manager |
 | **Category** | `09-security` |
 | **Phases** | F5 (policy), F8 (enforcement at go-live), F9 (rotation on cadence); consulted always |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard; **Top** to design the emergency break-glass and rotation under compromise (`core/model-routing.md`) |
 
 ## Objective

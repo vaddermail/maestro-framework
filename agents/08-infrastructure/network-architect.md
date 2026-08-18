@@ -11,7 +11,7 @@
 | **Alias** | Network Architect |
 | **Category** | `08-infrastructure` |
 | **Phases** | F8 (materialization); consulted in F3 (topology as an architecture constraint) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top, medium effort** for the segmentation and firewall-rule design; **Standard** for routine configuration (`core/model-routing.md`) |
 
 ## Objective

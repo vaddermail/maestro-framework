@@ -11,7 +11,7 @@
 | **Alias** | Performance Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); consulted in F7 by `agents/12-reviewers/performance-reviewer.md` |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | **Standard** for continuous dashboard reading and routine triage; **Top, medium effort** to diagnose a subtle degradation crossing layers (frontend→DB→cache) (`core/model-routing.md`) |
 
 ## Objective

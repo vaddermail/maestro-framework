@@ -11,7 +11,7 @@
 | **Alias** | Backend Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch gate); reconvened per milestone and in `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Top, medium effort** — authorization vs scoping, transactions and business invariants are exactly the Top tier's distinctive reasoning (`core/model-routing.md`); **Standard** is enough for routine adherence to the API contract |
 
 ## Objective
@@ -51,7 +51,7 @@ returns to the Orchestrator to trigger `agents/05-backend/authorization-speciali
 | `product/04-specification/logical-data-model.md` (invariant catalog) | `agents/06-data/data-modeler.md` (F5) | Yes | What the DB must enforce, not just the app |
 | Server code of the slice under review | F6 | Yes | What is being reviewed |
 | `product/04-specification/backend/logging.md` | `agents/05-backend/logging-specialist.md` (F5) | Yes | Forbidden fields and the criterion for "silent failure" |
-| `STATE.md` §Decisions / §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
+| `CLAUDE.md` §Closed decisions · `STATE.md` §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
 
 Without the access contract and the invariant catalog, the reviewer does not proceed on
 assumptions — it returns the list of gaps (`core/question-engine.md`).

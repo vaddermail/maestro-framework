@@ -12,7 +12,7 @@
 | **Alias** | Backup Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation) |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | **Economy** for the automatable daily check; **Standard** to conduct a restore drill; **Top, medium effort** when a drill fails and the immediate response must be decided (`core/model-routing.md`) |
 
 ## Objective

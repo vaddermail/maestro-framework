@@ -11,7 +11,7 @@
 | **Alias** | Caching Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F6 (build); consulted in F5 when a latency NFR demands it |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; raise it for invalidation of data with scoping/authorization (`core/model-routing.md`) |
 
 ## Objective

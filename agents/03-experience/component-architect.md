@@ -10,7 +10,7 @@
 | **Alias** | Component Architect |
 | **Category** | `03-experience` |
 | **Phases** | F4 (defines); consulted in F6 (implementation) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (the inventory and the states are the contract F6 implements) — `core/model-routing.md` |
 
 ## Objective

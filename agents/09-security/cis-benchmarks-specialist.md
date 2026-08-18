@@ -10,7 +10,7 @@
 | **Alias** | CIS Benchmarks Specialist (Center for Internet Security) |
 | **Category** | `09-security` |
 | **Phases** | F8 (infrastructure and launch); revisited in F9 (configuration drift) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy to apply the benchmark checklist; **Standard** (effort low) for the exceptions that require judgment on the functional impact (`core/model-routing.md`) |
 
 ## Objective

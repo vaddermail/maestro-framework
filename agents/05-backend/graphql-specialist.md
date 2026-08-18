@@ -10,7 +10,7 @@
 | **Alias** | GraphQL Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F6 (build); consulted in F5 when the `api-designer` is considering GraphQL |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; raise to high effort on field-level authorization (`core/model-routing.md`) |
 
 ## Objective

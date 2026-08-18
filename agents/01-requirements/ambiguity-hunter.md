@@ -11,7 +11,7 @@
 | **Alias** | Ambiguity Hunter |
 | **Category** | `01-requirements` |
 | **Phases** | F2 (main); reconvened in F5 when the specification exposes new gaps |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Top**, medium effort (`core/model-routing.md` — adversarial verification/judgment); going lower is not justified, this is where a weak reading lets the expensive defect through |
 
 ## Objective

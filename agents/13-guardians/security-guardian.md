@@ -11,7 +11,7 @@
 | **Alias** | Security Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); consulted in F7 |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | Standard for triage; **Top** for impact analysis and patch plans for critical CVEs (`core/model-routing.md`) |
 
 ## Objective

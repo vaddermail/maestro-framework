@@ -11,7 +11,7 @@
 | **Alias** | User Help Writer |
 | **Category** | `11-documentation` |
 | **Phases** | F4 (starts the content-layer with the screens) → F6 (per slice) → F9 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy, medium effort (`core/model-routing.md`); raise to Standard for **grounding** — verifying the text describes the real behavior per profile, not the presumed one |
 
 ## Objective

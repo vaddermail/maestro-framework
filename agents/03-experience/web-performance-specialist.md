@@ -11,7 +11,7 @@
 | **Alias** | Web Performance Specialist |
 | **Category** | `03-experience` |
 | **Phases** | F4 (defines the performance budgets); consulted in F6; verified in F7 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard; **Top** for hard delivery-architecture trade-offs (e.g. SSR vs. CSR under a tight budget) — `core/model-routing.md` |
 
 ## Objective

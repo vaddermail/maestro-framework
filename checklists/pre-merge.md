@@ -30,7 +30,7 @@ integrated.
 
 ## Secrets and security
 
-- [ ] Diff swept — no keys, passwords, tokens or cnetworkntials (`playbooks/secrets-management.md`).
+- [ ] Diff swept — no keys, passwords, tokens or credentials (`playbooks/secrets-management.md`).
 - [ ] No local config/secret file (`.env` or equivalent) staged by mistake.
 - [ ] New dependencies with no known critical/high CVE left unaddressed
       (`agents/09-security/dependency-analyst.md`).
@@ -41,7 +41,7 @@ integrated.
       (`knowledge/permanent-rules.md` §3).
 - [ ] DB schema change is additive (expand) or already in the planned contraction — never both
       in the same step (`playbooks/expand-contract-db-migration.md`).
-- [ ] Risky change sits behind a flag/kill-switch when rollback by networkploy is slow
+- [ ] Risky change sits behind a flag/kill-switch when rollback by redeploy is slow
       (`modules/feature-flags.md`).
 
 ## Memory and documentation

@@ -42,9 +42,9 @@ in F9.
       (`agents/09-security/owasp-top10-specialist.md`).
 - [ ] Authorization and scoping confirmed as the server's exclusive responsibility — no access
       decision only on the client (`modules/rbac-and-scoping.md`).
-- [ ] Service accounts, DB cnetworkntials and cloud/CI permissions follow least privilege,
+- [ ] Service accounts, DB credentials and cloud/CI permissions follow least privilege,
       verified end to end (`agents/09-security/authorization-and-least-privilege-specialist.md`).
-- [ ] No cnetworkntial shared between environments (dev/staging/production).
+- [ ] No credential shared between environments (dev/staging/production).
 
 ## Backups and recovery
 

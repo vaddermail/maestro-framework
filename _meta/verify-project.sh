@@ -44,7 +44,7 @@ if [ -z "$fase" ]; then
 else
   ok "declared phase: $fase"
 fi
-grep -qiE 'versão da framework' STATE.md && ok "framework version recorded" \
+grep -qiE 'versão da framework|framework version' STATE.md && ok "framework version recorded" \
   || falha "STATE.md missing the copied framework version (precondition for syncing)"
 grep -qiE 'repositório da framework-mãe|framework-mãe|upstream framework repository' STATE.md \
   && ok "upstream repository recorded" \
@@ -113,13 +113,13 @@ fi
 # 7. Framework copy integrity (when it came from a release with a manifest)
 # ---------------------------------------------------------------------------
 if [ -f Maestro/_meta/SHA256SUMS ]; then
-  if bash Maestro/_meta/verify.sh --integridade >/dev/null 2>&1; then
+  if bash Maestro/_meta/verify.sh --integrity >/dev/null 2>&1; then
     ok "framework copy intact (identical to the origin release)"
   else
-    falha "framework copy DIVERGES from the release (bash Maestro/_meta/verify.sh --integridade)"
+    falha "framework copy DIVERGES from the release (bash Maestro/_meta/verify.sh --integrity)"
   fi
 else
-  aviso "copy without an integrity manifest (before 2.5.0, or an upstream clone)"
+  aviso "copy without an integrity manifest (a working clone, not a release ZIP)"
 fi
 
 # ---------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 | **Alias** | i18n/l10n Specialist |
 | **Category** | `03-experience` |
 | **Phases** | F4 (defines the i18n strategy); consulted in F6 during the build — **when applicable** |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Economy** for mechanical string extraction/migration (`core/model-routing.md`) |
 
 ## Objective

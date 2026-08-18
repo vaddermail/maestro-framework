@@ -13,7 +13,7 @@
 | **Alias** | DevOps Reviewer |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (pre-launch panel, P7→P8 gate); reconvened for every high-risk release and in `workflows/W12-global-review.md` |
-| **Type** | Reviewer |
+| **Type** | `reviewer` |
 | **Suggested model** | **Standard** for the pipelines' conformance check; **Top, medium effort** when judging whether a never-rehearsed deploy/rollback strategy is actually reversible (`core/model-routing.md`) |
 
 ## Objective

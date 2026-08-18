@@ -67,7 +67,7 @@ confined exception — and the isolation cuts both ways:
   a technology as given. An agnostic document that needs to speak of an accelerated kickoff
   defers to this folder — just as it defers to `adapters/` when the subject is a tool.
 - **Nothing in a starter may alter framework contracts.** A starter fulfills the contract above;
-  it does not networkfine gates, checklists, the artifact protocol or workflows. If fulfilling the
+  it does not redefine gates, checklists, the artifact protocol or workflows. If fulfilling the
   contract seems to require changing an agnostic document, the coupling escaped its place — the
   starter is what is wrong (the exact mirror of the rule in `adapters/README.md`).
 

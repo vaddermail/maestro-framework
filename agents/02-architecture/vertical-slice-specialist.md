@@ -11,7 +11,7 @@
 | **Alias** | Vertical Slice Architecture Specialist |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture); aligns with the slice-based build of F6 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective

@@ -11,7 +11,7 @@
 | **Alias** | nginx Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (proxy configuration); operated in F9 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; escalates to **Top** when the config touches availability/security (TLS termination, rate limiting on a critical flow) (`core/model-routing.md`) |
 
 ## Objective

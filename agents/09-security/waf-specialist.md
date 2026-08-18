@@ -12,7 +12,7 @@
 | **Alias** | WAF Specialist |
 | **Category** | `09-security` |
 | **Phases** | F7 (review), F8 (go-live with WAF), F9 (continuous tuning); consulted in F3 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard; **Top** for triaging a false negative during active exploitation (`core/model-routing.md`) |
 
 ## Objective

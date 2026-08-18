@@ -11,7 +11,7 @@
 | **Alias** | Storage Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F8 (materialization); consulted in F3/F5 (storage type as an architecture and data constraint) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; **Top, medium effort** for designing lifecycles and the at-rest encryption/key model (`core/model-routing.md`) |
 
 ## Objective

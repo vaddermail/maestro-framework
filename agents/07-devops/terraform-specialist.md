@@ -11,7 +11,7 @@
 | **Alias** | Terraform Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (provisioning); consulted in F3 when the architecture implies cloud resources |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** for the state strategy and reviewing a `plan` with destructions (irreversible operation); **Standard** for writing standardized modules (`core/model-routing.md`) |
 
 ## Objective
@@ -42,7 +42,7 @@ destructions** — then it stops and escalates to the user (`core/quality-gates.
 | --- | --- | --- | --- |
 | Hosting decision + topology | `agents/08-infrastructure/hosting-arbiter.md` and the cloud specialist | Yes | Provider, regions, target resources |
 | Network/storage/HA requirements | `agents/08-infrastructure/` | Yes | What to provision and with what redundancy |
-| Provider cnetworkntials (via runtime) | `agents/07-devops/secrets-manager.md` | Yes | Never in `.tf` nor in git |
+| Provider credentials (via runtime) | `agents/07-devops/secrets-manager.md` | Yes | Never in `.tf` nor in git |
 | Target environments (dev/staging/prod) | F8 | Yes | Per-environment parameterization |
 
 ## Outputs
@@ -150,7 +150,7 @@ without a reviewed `plan`.
 | `agents/07-devops/ansible-specialist.md` | downstream — configures the servers Terraform creates |
 | `agents/07-devops/kubernetes-specialist.md` | downstream — runs on the cluster Terraform provisions |
 | `agents/09-security/infrastructure-analyst.md` | downstream — scans the delivered IaC |
-| `agents/07-devops/secrets-manager.md` | supplies cnetworkntials at runtime |
+| `agents/07-devops/secrets-manager.md` | supplies credentials at runtime |
 | `agents/12-reviewers/devops-reviewer.md` | reviews the `plan` and the modules before the `apply` |
 
 ## Done criteria

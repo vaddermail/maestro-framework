@@ -10,7 +10,7 @@
 | **Alias** | Observability Architect |
 | **Category** | `05-backend` |
 | **Phases** | F5 (strategy design), F6 (integration of the three pillars); accompanies F9 |
-| **Type** | Coordinator |
+| **Type** | `coordinator` |
 | **Suggested model** | **Top**, medium effort to design the three-pillar correlation and the alerting policy; Standard for incremental reviews (`core/model-routing.md`) |
 
 ## Objective

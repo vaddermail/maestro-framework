@@ -12,7 +12,7 @@
 | **Alias** | Secure Authentication Specialist |
 | **Category** | `09-security` |
 | **Phases** | F5 (authn security requirements), F6/F7 (implementation review); consulted in F9 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard; **Top** to reason about account-recovery abuse and MFA bypass (`core/model-routing.md`) |
 
 ## Objective

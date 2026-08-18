@@ -11,7 +11,7 @@
 | **Alias** | Load Balancing Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (design and configuration); operated in F9 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** for the design (health checks and sessions are a classic source of availability bugs); **Standard** for routine config (`core/model-routing.md`) |
 
 ## Objective

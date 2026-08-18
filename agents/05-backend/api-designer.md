@@ -10,7 +10,7 @@
 | **Alias** | API Designer |
 | **Category** | `05-backend` |
 | **Phases** | F5 (specification); consulted in F6 when the contract evolves |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** when the contract encodes critical or multi-profile business rules (`core/model-routing.md`) |
 
 ## Objective

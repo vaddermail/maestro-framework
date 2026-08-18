@@ -27,7 +27,7 @@ to a human colleague). Structure (instantiated from `templates/project/STATE.md.
 2. **Done** — completed blocks (what, verification evidence).
 3. **In progress** — what is halfway, with enough for someone else to resume **without
    re-asking**.
-4. **Next** — ordered next steps.
+4. **Up next** — ordered next steps.
 5. **Pending decisions** — questions waiting on the user (`P-nnn`), with context and what they
    block.
 6. **Decisions made on behalf of the absent owner** — when moving forward was necessary, recorded
@@ -35,7 +35,9 @@ to a human colleague). Structure (instantiated from `templates/project/STATE.md.
 7. **Lessons** — the **non-obvious** things learned, each with the *why* and the *how to apply*.
    Bugs that repeated, tool pitfalls, course corrections. (Before adding: check for duplicates —
    update instead of duplicating; delete what proved wrong.)
-8. **Historical log** — previous sessions, collapsed/summarized (see §Memory hygiene).
+8. **Debt** — technical debt accepted knowingly, each with an owner and the trigger that pays it.
+   What is recorded here is not re-flagged by reviewers and guardians (`loops/L08-technical-debt.md`).
+9. **Historical log** — previous sessions, collapsed/summarized (see §Memory hygiene).
 
 Associated discipline:
 

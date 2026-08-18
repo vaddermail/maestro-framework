@@ -11,7 +11,7 @@
 | **Alias** | Kubernetes Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (workload orchestration); consulted in F3 for the "k8s yes/no" verdict |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** for topology design, cluster RBAC and the "use/don't use k8s" judgment (a hard operational-cost decision); **Standard** for writing standardized manifests (`core/model-routing.md`) |
 
 ## Objective

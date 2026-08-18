@@ -11,7 +11,7 @@
 | **Alias** | Hosting Arbiter |
 | **Category** | `08-infrastructure` |
 | **Phases** | F3 (structural decision, alongside architecture); execution followed in F8 |
-| **Type** | arbiter |
+| **Type** | `arbiter` |
 | **Suggested model** | **Top**, medium effort — arbitration with lock-in and multi-year cost is an expensive decision to reverse (`core/model-routing.md`) |
 
 ## Objective

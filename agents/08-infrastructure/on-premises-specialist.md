@@ -11,7 +11,7 @@
 | **Alias** | On-Premises Specialist |
 | **Category** | `08-infrastructure` |
 | **Phases** | F8 (infra materialization); consulted in F3 when the hosting decision points to on-prem/hybrid |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard** for routine provisioning; **Top, medium effort** for capacity sizing and failure-domain design (`core/model-routing.md`) |
 
 ## Objective

@@ -10,7 +10,7 @@
 | **Alias** | Cloudflare Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (edge configuration); operated in F9 |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**; raise to **Top** for WAF rules and Workers logic with a critical security/routing effect (`core/model-routing.md`) |
 
 ## Objective
@@ -125,7 +125,7 @@ In the format of the `core/question-engine.md`, grouped in a batch:
 
 ## Examples
 
-**Example (e-commerce in sales season):** The store suffers *cnetworkntial stuffing* on `/login` and
+**Example (e-commerce in sales season):** The store suffers *credential stuffing* on `/login` and
 price-scraping spikes. The WAF specialist defines a rate-limit rule (10 attempts/min per IP on
 `/login`) and a challenge for *bots* on the catalog; the Cloudflare Specialist applies them via
 Terraform, caches product images (7-day TTL, cookie-free key) but **excludes** `/cart` and

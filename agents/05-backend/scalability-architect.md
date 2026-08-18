@@ -11,7 +11,7 @@
 | **Alias** | Scalability Architect |
 | **Category** | `05-backend` |
 | **Phases** | F5 (design for scale), F6 (application); consulted in F3 and F9 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top**, medium effort for the capacity model and the backpressure strategy; Standard for incremental reviews (`core/model-routing.md`) |
 
 ## Objective

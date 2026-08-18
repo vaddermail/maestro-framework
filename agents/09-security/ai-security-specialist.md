@@ -12,7 +12,7 @@
 | **Alias** | AI/LLM Security Specialist |
 | **Category** | `09-security` |
 | **Phases** | F5 (specification of AI features); F6–F7 (review and adversarial testing); F9 (new vectors, per event) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** (effort medium→high): adversarial reasoning about prompt trust boundaries is the deliberate step up of `core/model-routing.md` |
 
 ## Objective

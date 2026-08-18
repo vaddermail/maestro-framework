@@ -11,7 +11,7 @@
 | **Alias** | Accessibility Specialist |
 | **Category** | `03-experience` |
 | **Phases** | F4 (defines the design's accessibility requirements); consulted in F6 and verified in F7 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective

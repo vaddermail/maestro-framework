@@ -10,7 +10,7 @@
 | **Alias** | Threat Modeler |
 | **Category** | `09-security` |
 | **Phases** | F5 (specification); revisited in F3 (per architecture decision) and F7 (against the built product) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top** (effort medium→high): threat modeling is distinctive adversarial reasoning, where getting it right early saves expensive rework (`core/model-routing.md`) |
 
 ## Objective

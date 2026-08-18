@@ -10,7 +10,7 @@
 | **Alias** | Screen Implementer |
 | **Category** | `04-frontend` |
 | **Phases** | F6 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy for standardized screens from wireframe + design system; **Standard** when the screen carries authority logic/sensitive states (`core/model-routing.md`) |
 
 ## Objective

@@ -11,7 +11,7 @@
 | **Alias** | Stack Selector |
 | **Category** | `02-architecture` |
 | **Phases** | F3 (architecture), after the style ADR is approved |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard**, medium effort — technical choice with clear criteria; raise to Top only when a piece is expensive to reverse (e.g. the central DB engine) (`core/model-routing.md`) |
 
 ## Objective
@@ -46,7 +46,7 @@ services): it records the question in `STATE.md` → pending decisions.
 | `product/01-requirements/` (NFRs) | F2 | Yes | Latency, availability, compliance, data volume |
 | Team profile and skills | `product/00-discovery/` | Yes | The stack the team masters errs less and is maintained better |
 | Hosting constraints (if already known) | `agents/08-infrastructure/hosting-arbiter.md` | No | Cloud/on-prem conditions managed vs self-hosted services |
-| `STATE.md` §Closed decisions | Memory | No | E.g. Entra/OIDC identity already closed conditions the auth lib |
+| `CLAUDE.md` §Closed decisions | Memory | No | E.g. Entra/OIDC identity already closed conditions the auth lib |
 
 If the team's skills are not recorded, it **does not presume "everyone knows X"**: it asks
 (`core/question-engine.md`) — the right stack for one team is the wrong one for another.
@@ -150,7 +150,7 @@ to the user for decision.
 ## Best practices
 
 - Verify the **current** LTS/GA version of each technology at the time — versions change every
-  quarter and the model's memory goes stale (`knowledge/ai-pitfalls.md` §16).
+  quarter and the model's memory goes stale (`knowledge/ai-pitfalls.md` §1).
 - Choose for **two-year maintenance**, not for the Friday demo: the stack the team maintains well
   is worth more than the impressive one nobody masters.
 - Pin the version **in the same step** as the decision — an unpinned "latest stable" version

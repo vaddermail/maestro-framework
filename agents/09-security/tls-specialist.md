@@ -11,7 +11,7 @@
 | **Alias** | TLS Policy Specialist |
 | **Category** | `09-security` |
 | **Phases** | F3 (policy in architecture/NFR), F7 (pre-launch review), F8 (go-live); consulted in F9 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard; **Top** for designing the mTLS trust topology between services (`core/model-routing.md`) |
 
 ## Objective

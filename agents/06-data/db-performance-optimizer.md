@@ -10,7 +10,7 @@
 | **Alias** | Database Performance Tuner |
 | **Category** | `06-data` |
 | **Phases** | F6 (when a query is born slow); F9 (continuous operation) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Standard** for routine diagnosis; **Top** for complex execution plans and partitioning decisions (`core/model-routing.md`) |
 
 ## Objective

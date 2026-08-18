@@ -11,7 +11,7 @@
 | **Alias** | Cost Guardian |
 | **Category** | `13-guardians` |
 | **Phases** | F9 (continuous operation); inherits the F1 baseline (`agents/00-discovery/cost-estimator.md`) |
-| **Type** | Guardian |
+| **Type** | `guardian` |
 | **Suggested model** | **Standard** for the routine monthly analysis; **Top, medium effort** to assess an anomaly with several crossed causes or an infrastructure trade-off decision (`core/model-routing.md`) |
 
 ## Objective
@@ -64,7 +64,7 @@ without a real number is an illusion of control.
 | Cycle report | `product/99-records/guardians/costs-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Optimization recommendations, with evidence | Report annex | User (decides), relevant technical specialist |
 | Flagged anomalies and their attributed cause | Report annex | Orchestrator, agent at the cause's origin |
-| Cost decisions accepted/declined | `STATE.md` §Pending decisions / §Registo | Future sessions |
+| Cost decisions accepted/declined | `STATE.md` §Pending decisions · §Historical log | Future sessions |
 | New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user

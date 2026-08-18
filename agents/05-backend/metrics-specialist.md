@@ -10,7 +10,7 @@
 | **Alias** | Metrics Specialist |
 | **Category** | `05-backend` |
 | **Phases** | F5 (metrics and SLI design), F6 (instrumentation); consulted in F9 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Economy** to instrument routine counters/histograms against an already defined catalog (`core/model-routing.md`) |
 
 ## Objective
@@ -118,7 +118,7 @@ Via the Orchestrator (`core/question-engine.md`):
 ## Examples
 
 **Example (video streaming, playback API):** the *playback* service exposes RED:
-`playback_requests_total{metodo, rota, codigo}` (rate + errors) and `playback_duration_seconds`
+`playback_requests_total{method, route, code}` (rate + errors) and `playback_duration_seconds`
 (histogram, p95/p99). The route uses the **pattern** `/streams/{id}/manifest`, **not** the URL with
 the real ID — otherwise every video would create a series. An SLI derived from the NFR "99.9% of
 manifests served in <300 ms" → alert (defined by the observability architect) when the p99 exceeds

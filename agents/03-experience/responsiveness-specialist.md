@@ -11,7 +11,7 @@
 | **Alias** | Responsive Design Specialist |
 | **Category** | `03-experience` |
 | **Phases** | F4 (defines the responsive strategy); consulted in F6 when the screens are implemented |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) |
 
 ## Objective

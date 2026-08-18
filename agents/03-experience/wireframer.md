@@ -10,7 +10,7 @@
 | **Alias** | — |
 | **Category** | `03-experience` |
 | **Phases** | F4 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy, medium effort (structured work from approved flows) — rises to Standard on dense screens with heavy conditional logic (`core/model-routing.md`) |
 
 ## Objective

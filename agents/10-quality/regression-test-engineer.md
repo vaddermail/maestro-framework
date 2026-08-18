@@ -11,7 +11,7 @@
 | **Alias** | Regression Test Engineer |
 | **Category** | `10-quality` |
 | **Phases** | F6–F7 (builds the harness); keeps it alive through F9 |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard for harness design and execution; **Economy/Mechanical** to regenerate snapshots and absorb already-written tests (`core/model-routing.md`) |
 
 ## Objective

@@ -11,7 +11,7 @@
 | **Alias** | Performance Test Engineer |
 | **Category** | `10-quality` |
 | **Phases** | F7 (before launch); re-run in F9 on demand |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** to design the load model of a system with tight guarantees (`core/model-routing.md`) |
 
 ## Objective

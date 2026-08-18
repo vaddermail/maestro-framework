@@ -11,8 +11,8 @@
 | **Alias** | Risk Analyst |
 | **Category** | `00-discovery` |
 | **Phases** | F1 (initial register); revisited at every phase gate and in F9 |
-| **Type** | specialist |
-| **Suggested model** | Default for the catalog; **Top** for adversarial analysis of irreversible, legal or personal-data risks (`core/model-routing.md`) |
+| **Type** | `specialist` |
+| **Suggested model** | Standard for the catalog; **Top** for adversarial analysis of irreversible, legal or personal-data risks (`core/model-routing.md`) |
 
 ## Objective
 

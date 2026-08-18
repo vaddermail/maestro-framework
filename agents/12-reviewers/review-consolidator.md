@@ -11,7 +11,7 @@
 | **Alias** | Review Consolidator |
 | **Category** | `12-reviewers` |
 | **Phases** | F7 (closes the pre-launch panel); reconvened in `workflows/W12-global-review.md` |
-| **Type** | Coordinator |
+| **Type** | `coordinator` |
 | **Suggested model** | **Standard** for merging and deduplicating findings; **Top, medium→high effort** to resolve contradictions between reviewers and for the real-risk judgment that orders the final plan (`core/model-routing.md`) |
 
 ## Objective

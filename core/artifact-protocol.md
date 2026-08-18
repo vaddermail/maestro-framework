@@ -151,16 +151,21 @@ Created in F0 (`workflows/W00-project-kickoff.md`) at the root of the new projec
 
 ## Handling rules
 
-1. **Never delete approved artifacts** — they are marked `obsolete` with a pointer to the
-   replacement. (Reversibility by default; history is part of the product.)
-2. **Updating belongs to the owner.** Another agent that needs a change in someone else's artifact
-   asks the Orchestrator for it — it does not edit over it.
-3. **IDs are eternal:** `FR-012` is never reused for another requirement, even if the original
-   dies.
-4. **Code↔spec divergence:** the spec wins. If the code is right and the spec wrong, update the
-   spec **first** (with approval) and then the reference code. Record it in `STATE.md`.
-5. **No secrets in artifacts** — secrets live outside version control
-   (`playbooks/secrets-management.md`); artifacts reference them by path, never by value.
+Numbered **H1–H5** (not plain §1–§5) precisely because `## Principles` above is also a numbered
+list of 5 — two independent lists sharing plain digits made `§4`, say, mean two different things
+depending on which list the citing document had in mind. `§N` always means Principles; `§HN`
+always means these.
+
+- **H1. Never delete approved artifacts** — they are marked `obsolete` with a pointer to the
+  replacement. (Reversibility by default; history is part of the product.)
+- **H2. Updating belongs to the owner.** Another agent that needs a change in someone else's
+  artifact asks the Orchestrator for it — it does not edit over it.
+- **H3. IDs are eternal:** `FR-012` is never reused for another requirement, even if the original
+  dies.
+- **H4. Code↔spec divergence:** the spec wins. If the code is right and the spec wrong, update the
+  spec **first** (with approval) and then the reference code. Record it in `STATE.md`.
+- **H5. No secrets in artifacts** — secrets live outside version control
+  (`playbooks/secrets-management.md`); artifacts reference them by path, never by value.
 
 ## Related
 

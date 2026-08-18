@@ -10,7 +10,7 @@
 | **Alias** | UX Researcher |
 | **Category** | `03-experience` |
 | **Phases** | F4 (first experience agent) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort; **Top** when the flows encode critical business rules (approvals, offboarding, state machines) — `core/model-routing.md` |
 
 ## Objective

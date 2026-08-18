@@ -11,7 +11,7 @@
 | **Alias** | Glossary Curator / Ubiquitous Language Keeper |
 | **Category** | `01-requirements` |
 | **Phases** | F2 (born here) and **cross-cutting** — stays alive until F9 whenever a new term appears |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Economy, low effort (`core/model-routing.md` — standardized curation); raise to Standard when there is a **term conflict** (two meanings disputing the same word) that requires judgment |
 
 ## Objective

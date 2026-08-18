@@ -10,7 +10,7 @@
 | **Alias** | Disaster Recovery Planner |
 | **Category** | `06-data` |
 | **Phases** | F8 (plan before go-live); F9 (drills and continuous review) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top**, medium-high effort — the RTO/RPO trade-offs, the recovery order and the reversibility are critical reasoning where a mistake costs the whole system (`core/model-routing.md`) |
 
 ## Objective

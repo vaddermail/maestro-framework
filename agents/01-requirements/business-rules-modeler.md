@@ -11,7 +11,7 @@
 | **Alias** | Business Rules Modeller |
 | **Category** | `01-requirements` |
 | **Phases** | F2 (main) and **F5** (deepens the specification: detailed state machines, final invariants) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | **Top**, medium-high effort (`core/model-routing.md` — business rules, invariants and state machines are distinctive reasoning; getting them right up front saves the most expensive class of defects) |
 
 ## Objective

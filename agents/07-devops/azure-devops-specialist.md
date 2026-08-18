@@ -11,7 +11,7 @@
 | **Alias** | Azure DevOps Specialist |
 | **Category** | `07-devops` |
 | **Phases** | F8 (pipelines/repos); consulted in F6 (early CI) |
-| **Type** | specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`) — pipeline YAML is standardized; raise only to design templates/stages and the production gate |
 
 ## Objective
@@ -44,15 +44,15 @@ is missing (refers to the `docker-specialist`).
 | `pipelines/ci-quality.md`, `ci-security.md`, `cd-delivery.md` | Framework | Yes | The agnostic contract to materialize |
 | Git flow + branch policies | `agents/07-devops/github-specialist.md` (principles) | Yes | The same principles applied to Azure Repos |
 | Build image/artifact | `agents/07-devops/docker-specialist.md` | Yes | What the pipeline packages |
-| Secrets and cloud cnetworkntials | `agents/07-devops/secrets-manager.md` | Yes | Via variable groups/service connections, never in the YAML |
+| Secrets and cloud credentials | `agents/07-devops/secrets-manager.md` | Yes | Via variable groups/service connections, never in the YAML |
 | Environments + promotion rules | `agents/07-devops/deployment-strategist.md` | Yes | Environments + approvals |
 
 ## Outputs
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| YAML pipelines (CI + CD) | `azure-pipelines*.yml` / `.azunetworkvops/` in the repository | Azure Pipelines, branch policies |
-| Reusable pipeline templates | `.azunetworkvops/templates/` in the product repository | The pipelines themselves |
+| YAML pipelines (CI + CD) | `azure-pipelines*.yml` / `.azuredevops/` in the repository | Azure Pipelines, branch policies |
+| Reusable pipeline templates | `.azuredevops/templates/` in the product repository | The pipelines themselves |
 | `product/07-operations/azure-pipelines.md` | Repository | Reviewers, operations, `13-guardians` |
 
 ## Questions to the user
@@ -71,7 +71,7 @@ Via the Orchestrator (`core/question-engine.md`):
 1. **Frontend and backend in separate jobs/stages,** both green before merge
    (`knowledge/permanent-rules.md` §7).
 2. **Secrets in variable groups / service connections,** never in the clear in YAML or logs; mark
-   variables as secret; prefer **federated cnetworkntials** to long-lived secrets
+   variables as secret; prefer **federated credentials** to long-lived secrets
    (`knowledge/permanent-rules.md` §5).
 3. **Branch policies on the integration branch:** required PR, independent review, **build
    validation** (the pipelines as checks) and comment resolution — the equivalent of branch
@@ -125,12 +125,12 @@ scan. The `CD` publishes the image to ACR and deploys to the `staging` Environme
 `production` Environment has an approval by two approvers and a change-window check. The service
 connection to the Azure subscription uses **workload identity federation** — zero long-lived
 secrets. Common steps live in a `steps/dotnet-build.yml` template. Proof: a PR with red tests
-fails build validation and cannot merge; the path to production and the rollback (networkploy of the
+fails build validation and cannot merge; the path to production and the rollback (redeploy of the
 previous release) are rehearsed.
 
 ## Best practices
 
-- Federated cnetworkntials on the service connection eliminate the service principal secret — the
+- Federated credentials on the service connection eliminate the service principal secret — the
   biggest source of long-lived secrets in Azure DevOps.
 - Build validation in branch policies is the equivalent of "required checks"; without it, the PR
   protects nothing.
@@ -140,7 +140,7 @@ previous release) are rehearsed.
 
 ## Anti-patterns
 
-- ❌ Secret pasted into YAML/a non-secret variable → ✅ secret variable group / federated cnetworkntial.
+- ❌ Secret pasted into YAML/a non-secret variable → ✅ secret variable group / federated credential.
 - ❌ Front and back in the same job → ✅ separate jobs, both green.
 - ❌ Deploying to production without an Environment approval → ✅ approvals & checks on the
   `production` Environment.

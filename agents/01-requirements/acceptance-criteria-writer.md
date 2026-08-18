@@ -11,7 +11,7 @@
 | **Alias** | Acceptance Criteria Author |
 | **Category** | `01-requirements` |
 | **Phases** | F2 (main) |
-| **Type** | Specialist |
+| **Type** | `specialist` |
 | **Suggested model** | Standard, medium effort (`core/model-routing.md`); drop to Economy when the `FR` is simple and the criterion pattern is mechanical |
 
 ## Objective
@@ -137,7 +137,7 @@ AC-018.3 (limit — minimum not reached)
   Then the system refuses and indicates the missing amount.  [verifies BR-010]
 
 AC-018.4 (concurrency — single-use code already used)
-  Given a single-use code already networkemed by this account
+  Given a single-use code already redeemed by this account
   When the customer applies it again
   Then the system refuses with "code already used".  [verifies BR-011]
 ```
