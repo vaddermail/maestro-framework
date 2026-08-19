@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.0.3** (2026-08-17)
+**Current version: 1.1.0** (2026-08-19)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -16,6 +16,39 @@ framework evolves in this repository through pull requests and curation
 never automatically.
 
 ## Changelog
+
+### 1.1.0 — 2026-08-19
+
+Synced from upstream 2.9.0, whose theme was closing the gates that printed green over things
+they had never evaluated. The traffic went both ways this time: the unknown-flag fix travelled
+**mirror → upstream** (it was 1.0.3's), and everything below travelled back down.
+
+- **The project gate is now exercised, not merely shipped.** New `_meta/test-project-gate.sh`
+  builds four synthetic projects — compliant, deviant, unreadable phase, unfilled genesis — and
+  demands the gate approve the first and fail the others *for the right reason*. It runs on every
+  PR and, in `release.yml`, **from inside the extracted ZIP**. Until now CI only ran the framework
+  gate: the gate that projects actually run had never been exercised before reaching them.
+- **`_meta/verify-project.sh` stops printing green over what it did not look at.** An unreadable
+  phase silently fell back to F0, so the gate reported "closed-phase artifacts left a trace" over
+  an empty `product/` — it now says **NOT VERIFIED**, which is the truth. The genesis dossier
+  counted the template's own `{{...}}` example rows as measured phases, meaning the instrument
+  that measures the framework's promise went green over placeholders. `verifica_fase` also now
+  covers `product/06-tests` (a hard precondition of W06) and `product/07-operations`.
+- **Check 14 — forbidden-terms sweep.** Reads `_meta/FORBIDDEN-TERMS` (shipped empty, on purpose:
+  the terms are yours) and fails if any listed name appears in a distributable file. `release.yml`
+  repeats the sweep **inside the extracted ZIP**, the last point where a real name can still be
+  stopped. Provenance is meant to travel by project codename (`knowledge/candidates.md`, rule 5);
+  that rule had no gate, and upstream found changelog lines resolving the codename↔project map in
+  full, already shipped into two copies. A rule without a gate is a wish.
+- **Check 15 — internal `§` citations by name, never by number.** 1.0.3 inserted `## 8. Debt` into
+  the STATE template and pushed the historical log to `## 9`, but the hygiene note kept sending
+  old sessions to "§8" — straight into technical debt. Seven self-referential `§N` citations
+  across the project templates are now `§Section name`, immune to renumbering, and the check
+  prevents the relapse.
+- **Checks 1 and 3 now know about `_meta/DO-NOT-DISTRIBUTE`.** A file that is legitimately cited
+  and legitimately absent from a copy is no longer a broken reference — which is what adding
+  `FORBIDDEN-TERMS` to the inventory would otherwise have caused. The `SHA256SUMS` exception,
+  previously hardcoded for the same reason, is now just a case of the general rule.
 
 ### 1.0.3 — 2026-08-17
 

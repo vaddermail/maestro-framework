@@ -36,12 +36,25 @@ falhas=0
 falha() { printf '✗ %s\n' "$*"; falhas=$((falhas + 1)); }
 ok() { printf '✓ %s\n' "$*"; }
 
+# A file that is legitimately cited but legitimately absent from a distributed copy:
+# it is listed in _meta/DO-NOT-DISTRIBUTE. Absent AND listed is not a break — it is
+# the confidentiality lever working. (The integrity manifest is one such case.)
+upstream_only() {
+  [ "$1" = "_meta/SHA256SUMS" ] && return 0
+  [ -f _meta/DO-NOT-DISTRIBUTE ] || return 1
+  while IFS= read -r l; do
+    case "$l" in '' | \#*) continue ;; esac
+    case "$1" in $l) return 0 ;; esac
+  done < _meta/DO-NOT-DISTRIBUTE
+  return 1
+}
+
 # ---------------------------------------------------------------------------
 # 1. Inventory → disk: every path listed in _meta/INVENTORY.md exists
 # ---------------------------------------------------------------------------
 em_falta=0
 while IFS= read -r p; do
-  [ -e "$p" ] || { falha "MISSING ON DISK (listed in the inventory): $p"; em_falta=1; }
+  [ -e "$p" ] || upstream_only "$p" || { falha "MISSING ON DISK (listed in the inventory): $p"; em_falta=1; }
 done < <(grep -oE '^- `[^`]+`' _meta/INVENTORY.md | sed 's/^- `//;s/`$//')
 [ "$em_falta" -eq 0 ] && ok "inventory → disk: all paths exist"
 
@@ -63,7 +76,7 @@ while IFS= read -r p; do
   case "$p" in
     *NN-* | *nome-do-agente* | *Wnn* | *Lnn* | *dimensao* | *AAAA* | *SHA256SUMS* | *'{{'*) continue ;;
   esac
-  [ -e "$p" ] || { falha "BROKEN REFERENCE: $p"; quebradas=1; }
+  [ -e "$p" ] || upstream_only "$p" || { falha "BROKEN REFERENCE: $p"; quebradas=1; }
 done < <(grep -rhoE '`(core|agents|workflows|loops|modules|templates|checklists|playbooks|pipelines|knowledge|adapters|starters|_meta)/[A-Za-z0-9._{}/-]+`' \
   --include='*.md' --include='*.template' . | sed 's/`//g' | sort -u)
 [ "$quebradas" -eq 0 ] && ok "cross-references: all resolve"
@@ -231,6 +244,58 @@ if [ -n "$decl" ] && [ "$decl" != "$real" ]; then
 else
   ok "counts: README ($decl) = disk ($real)"
 fi
+
+# ---------------------------------------------------------------------------
+# 14. Forbidden-terms sweep: no real name travels inside the copies.
+#     Provenance travels by project CODENAME (knowledge/candidates.md §Entry and
+#     exit rules, rule 5) — client names, product names and stacks never do.
+#     The list ships empty on purpose: add your own terms, and list the populated
+#     file in _meta/DO-NOT-DISTRIBUTE so the list itself does not travel either.
+# ---------------------------------------------------------------------------
+if [ ! -f _meta/FORBIDDEN-TERMS ]; then
+  printf -- '— forbidden-terms sweep: NOT APPLICABLE (no _meta/FORBIDDEN-TERMS)\n'
+else
+  if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
+    alvos=$(git ls-files)
+  else
+    alvos=$(find . -type f -not -path './.git/*' | sed 's|^\./||')
+  fi
+  alvos=$(printf '%s\n' "$alvos" | grep -v '^_meta/FORBIDDEN-TERMS$')
+  ter_ko=0
+  n_termos=0
+  while IFS= read -r termo; do
+    case "$termo" in '' | \#*) continue ;; esac
+    n_termos=$((n_termos + 1))
+    while IFS= read -r hit; do
+      [ -n "$hit" ] || continue
+      falha "FORBIDDEN TERM ($termo) in $hit"
+      ter_ko=1
+    done < <(printf '%s\n' "$alvos" | tr '\n' '\0' | xargs -0 grep -nE "$termo" 2>/dev/null | cut -d: -f1,2)
+  done < _meta/FORBIDDEN-TERMS
+  if [ "$n_termos" -eq 0 ]; then
+    printf -- '— forbidden-terms sweep: no terms configured (see _meta/FORBIDDEN-TERMS)\n'
+  elif [ "$ter_ko" -eq 0 ]; then
+    ok "forbidden-terms sweep: no real name in what gets distributed"
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 15. Internal § citations in templates: by NAME, never by number.
+#     A `§8` pointing inside its own file breaks silently the day a section is
+#     inserted — that is how 1.0.3 started sending old sessions into the
+#     technical-debt section. `§Name` is immune to renumbering.
+#     (A `§N` attached to a backticked path is an external reference to another
+#     file's numbered item — legitimate, and governed by check 8.)
+# ---------------------------------------------------------------------------
+sec_ko=0
+while IFS= read -r f; do
+  while IFS=: read -r n texto; do
+    printf '%s' "$texto" | grep -qE '`[^`]+\.md` *§[0-9]' && continue
+    falha "SELF-REFERENTIAL §N CITATION: $f:$n — use §Section name (immune to renumbering)"
+    sec_ko=1
+  done < <(grep -nE '§[0-9]' "$f")
+done < <(find templates -type f -name '*.template' | sort)
+[ "$sec_ko" -eq 0 ] && ok "§ citations in templates: by name, not by number"
 
 # ---------------------------------------------------------------------------
 printf '\n'

@@ -9,7 +9,7 @@
 
 *Instruction file for AI agents, loaded automatically at the start of each session. If what
 is here conflicts with what the user asks in the session, the user wins — but warn them if
-they are going against a closed decision (§7).*
+they are going against a closed decision (§Closed decisions).*
 
 ## 1. What the project is
 
@@ -50,7 +50,7 @@ Project information is layered (`Maestro/core/project-memory.md`). Consult
 3. Follow the current phase's workflow (`Maestro/workflows/`; phases in
    `Maestro/core/lifecycle.md`). Do not advance a phase without the corresponding gate
    (`Maestro/core/quality-gates.md`).
-4. **Verify** before calling a change done (§6).
+4. **Verify** before calling a change done (§Definition of "done").
 5. **Update** `STATE.md` and, if it is a milestone, `CHANGELOG.md`.
 6. **Commit + push** with a clear message, and tell the team.
 
@@ -97,7 +97,7 @@ Objective checklist: `Maestro/checklists/definition-of-done.md` and
 
 - [ ] Build/syntax valid, without breaking what already exists.
 - [ ] No errors in the affected flows (all relevant profiles/roles, if there is RBAC).
-- [ ] Business rules and relationship integrity preserved (§5).
+- [ ] Business rules and relationship integrity preserved (§Non-negotiable business rules).
 - [ ] Scoping/authorization preserved where applicable.
 - [ ] Tests green — frontend and backend run **separately**, both must pass.
 - [ ] `STATE.md` updated; `CHANGELOG.md` if it is a milestone.
@@ -146,6 +146,6 @@ recorded in `STATE.md`.
 - `STATE.md` — living day-to-day memory.
 - `CHANGELOG.md` — history per version.
 - `Maestro/core/project-memory.md` — the why behind this structure.
-- `Maestro/core/decision-engine.md` — how closed decisions (§7) are made and reopened.
+- `Maestro/core/decision-engine.md` — how closed decisions (§Closed decisions) are made and reopened.
 - `Maestro/knowledge/permanent-rules.md` — the working rules not repeated here.
-- `Maestro/checklists/definition-of-done.md` — the detail behind §6.
+- `Maestro/checklists/definition-of-done.md` — the detail behind §Definition of "done".

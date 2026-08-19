@@ -54,6 +54,28 @@ jobs:
           echo "✓ no DO-NOT-DISTRIBUTE entry present in the ZIP"
           ( cd /tmp/relcheck && bash _meta/verify.sh )
           ( cd /tmp/relcheck && bash _meta/verify.sh --integrity )
+          # The forbidden-terms sweep runs on the checkout (the "Framework gate" step), but
+          # _meta/FORBIDDEN-TERMS does not travel in the ZIP — so check 14 reports "not
+          # applicable" in there. Repeat it here, with the checkout's list, against the tree
+          # projects actually receive: the last point where a real name can still be stopped.
+          if [ -f _meta/FORBIDDEN-TERMS ]; then
+            fuga=0
+            while IFS= read -r termo; do
+              case "$termo" in ''|'#'*) continue ;; esac
+              if grep -rnE "$termo" /tmp/relcheck >/dev/null 2>&1; then
+                echo "✗ CONFIDENTIALITY: forbidden term ($termo) present in the distributed ZIP"
+                grep -rnE "$termo" /tmp/relcheck | head -5
+                fuga=1
+              fi
+            done < _meta/FORBIDDEN-TERMS
+            [ "$fuga" = 0 ] || exit 1
+            echo "✓ forbidden-terms sweep: no real name inside the ZIP"
+          fi
+      - name: Project gate, exercised from the extracted ZIP
+        run: |
+          # The gate projects will run is the one INSIDE the copy. Proving it on the checkout
+          # proves nothing about the artifact — the same lesson that created the step above.
+          bash /tmp/relcheck/_meta/test-project-gate.sh /tmp/relcheck
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}

@@ -8,3 +8,4 @@
 # excluding it made the copy's own `verify.sh` fail every time (self-referential listing).
 .glossario-pt-en.json
 .mapa-pt-en.json
+_meta/FORBIDDEN-TERMS

@@ -19,6 +19,8 @@ When adding/removing files (see `playbooks/add-an-agent.md`), update this invent
 - `_meta/verify.sh` — self-check of internal consistency (inventory↔disk, cross-references, agent spec sections, language); the framework's own gate.
 - `_meta/DO-NOT-DISTRIBUTE` — list of upstream-only files excluded from the release ZIP (the upstream→copies confidentiality lever).
 - `_meta/verify-project.sh` — the PROJECT's gate: foundation, trail of closed phases, fresh memory, genesis, copy integrity.
+- `_meta/test-project-gate.sh` — exercises the project gate against synthetic projects (compliant, deviant, unreadable phase, unfilled genesis); runs in CI and inside the release artifact.
+- `_meta/FORBIDDEN-TERMS` — names that must never travel in what you distribute; read by check 14 of `_meta/verify.sh`. Ships empty.
 
 ## core/ — the operating system
 

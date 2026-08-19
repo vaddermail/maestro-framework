@@ -7,4 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: bash _meta/verify.sh
+      - name: Framework gate
+        run: bash _meta/verify.sh
+      - name: Project gate, exercised against synthetic projects
+        # The framework gate says the framework is consistent. It says nothing about whether
+        # the gate projects will run actually works — that one has to be exercised.
+        run: bash _meta/test-project-gate.sh

@@ -1,0 +1,23 @@
+# _meta/FORBIDDEN-TERMS — names that must NEVER appear in what you distribute.
+#
+# One term per line (extended regular expression, no slashes). Blank lines and lines
+# starting with # are ignored. Check 14 of _meta/verify.sh fails if any of these terms
+# appears in any distributable file of the framework.
+#
+# WHY: `knowledge/candidates.md` §Entry and exit rules, rule 5 requires provenance to
+# travel by project CODENAME (P2, P3, …) and never by name or stack, because these files
+# go inside the framework copy of every following project — each project would otherwise
+# learn who the others are. The rule existed long before this gate did; upstream found
+# seven changelog lines resolving the codename↔project map in full, already shipped into
+# two copies. A rule without a gate is a wish.
+#
+# HOW TO USE IT
+#
+# 1. Add the names that must not leak from your context: clients, internal products,
+#    organizations, private repositories, distinctive stack combinations.
+# 2. Add `_meta/FORBIDDEN-TERMS` to `_meta/DO-NOT-DISTRIBUTE` — a list of secret names
+#    is itself a secret, so it must not travel inside the copies either.
+# 3. Keep writing examples in the docs with neutral, invented names. This gate is the
+#    net, not the discipline.
+#
+# This file ships EMPTY on purpose: the terms are yours, not the framework's.

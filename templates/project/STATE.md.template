@@ -8,7 +8,7 @@
 
 ---
 
-*Hygiene: the top stays hyper-detailed about the present; old sessions collapse into §8 by
+*Hygiene: the top stays hyper-detailed about the present; old sessions collapse into §Historical log by
 milestone (the detail lives in Git/CHANGELOG). A STATE.md where nobody can find anything has
 stopped being memory (`Maestro/core/project-memory.md` §Memory hygiene).*
 
@@ -91,5 +91,5 @@ from re-flagging, cycle after cycle, something already accepted (`loops/L08-tech
 - `CLAUDE.md` — stable rules.
 - `CHANGELOG.md` — history per version.
 - `Maestro/core/project-memory.md` — the why behind this structure.
-- `Maestro/core/question-engine.md` — format of the pending decisions (§5).
+- `Maestro/core/question-engine.md` — format of the pending decisions (§Pending decisions).
 - `product/99-records/pending-decisions.md` — mirror of the pending items, if the project keeps it.
