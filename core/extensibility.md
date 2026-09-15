@@ -12,8 +12,10 @@ Three structural properties make addition safe:
    artifacts (`core/artifact-protocol.md`). A new agent that produces/consumes existing
    artifacts fits in without any existing one knowing about it.
 2. **Discovery through indexes, not hardcoding.** The Orchestrator finds agents through the
-   indexes (`agents/README.md` + category README + `_meta/INVENTORY.md`), assembling the
-   dependency graph from the agent specs. To be registered is to exist.
+   indexes (`agents/README.md` + category README + the `CONTRACTS.md` derived from each
+   category), assembling the dependency graph from the contracts — without loading whole specs;
+   `_meta/INVENTORY.md` records existence for the gate, it does not route. To be registered is to
+   exist.
 3. **Self-contained agent specs.** Each spec declares everything (inputs, outputs, rules,
    interactions); there is no hidden behavior in some other file that would need editing.
 
@@ -28,7 +30,8 @@ Full process in `playbooks/add-an-agent.md`. The essentials:
 3. Declare inputs/outputs in terms of existing artifacts — or, if it creates new artifacts,
    add them to `core/artifact-protocol.md` (adding rows, not changing the existing
    ones).
-4. Register in the indexes: category README + `_meta/INVENTORY.md`.
+4. Register in the indexes: category README + `_meta/INVENTORY.md`; regenerate the derived
+   contracts (`bash _meta/generate-contracts.sh`) and commit the category's `CONTRACTS.md`.
 5. If the agent joins a workflow, add the step to that workflow — as a **new step**,
    without reordering the existing ones unless a reason is recorded.
 

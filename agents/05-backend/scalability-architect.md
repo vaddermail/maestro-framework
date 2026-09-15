@@ -46,7 +46,7 @@ gracefully beyond it. It can end **blocked** if the acceptable cost of scale is 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
 | `product/01-requirements/nfr.md` | F2 | Yes | Volumes, peaks, target latency, expected growth |
-| `product/02-architecture/estilo.md` | `agents/02-architecture/architecture-arbiter.md` | Yes | Shared state, boundaries, what is stateless |
+| `product/02-architecture/architecture-vision.md` | `agents/02-architecture/architecture-arbiter.md` | Yes | Shared state, boundaries, what is stateless |
 | Resource saturation metrics | `agents/05-backend/metrics-specialist.md` | Yes | Pool, queue, memory — where the bottlenecks are |
 | Load test results | `agents/10-quality/performance-test-engineer.md` | Yes, to validate | Where the system actually breaks |
 | Caching strategy | `agents/05-backend/caching-specialist.md` | No | Reduces load before scaling is needed |

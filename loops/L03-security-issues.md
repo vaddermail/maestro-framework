@@ -59,7 +59,7 @@ residual risk** — but only by an explicit user decision, recorded in
 L03 · security · metric 5→3→3 · iter 3 (cap 4) · last progress: iter 2 · status: AT RISK
 ```
 
-## Example (internal app — HR portal)
+## Example (internal app — vendor portal)
 
 The `pentester` reports a critical finding: an employee can see another employee's salary record by
 changing the `id` in the URL (IDOR). The `security-coordinator` classifies it as critical and

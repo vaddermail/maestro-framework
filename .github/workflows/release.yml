@@ -8,9 +8,21 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Framework gate
         run: bash _meta/verify.sh
+      - name: The tag is the declared version (the canonical number lives in _meta/VERSION.md)
+        run: |
+          v=$(grep -oE 'Current version: [0-9.]+' _meta/VERSION.md | grep -oE '[0-9.]+$')
+          [ "v$v" = "$GITHUB_REF_NAME" ] || { echo "✗ tag $GITHUB_REF_NAME ≠ Current version $v in _meta/VERSION.md"; exit 1; }
+          echo "✓ tag $GITHUB_REF_NAME = declared version"
+      - name: Record where the copy came from (_meta/ORIGIN — only exists in copies)
+        run: |
+          # This is where a project reads the upstream repository (W00 step 6, verify-project.sh
+          # check 8) instead of asking someone who "may not be technical" where a ZIP came from.
+          # It goes into the manifest and into the ZIP.
+          printf 'repository=%s\ntag=%s\nzip=Maestro-%s.zip\n' "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" "$GITHUB_REF_NAME" > _meta/ORIGIN
+          cat _meta/ORIGIN
       - name: Build the integrity manifest (_meta/SHA256SUMS)
         run: |
           : > _meta/SHA256SUMS
@@ -29,7 +41,7 @@ jobs:
             sha256sum "$f" >> _meta/SHA256SUMS
           done < <(find . -type f | sort)
           wc -l _meta/SHA256SUMS
-      - name: Build the sanitized ZIP
+      - name: Build the sanitized ZIP (excludes .git, .github and _meta/DO-NOT-DISTRIBUTE)
         run: |
           EX=(-x '.git/*' -x '.github/*')
           while IFS= read -r l; do
@@ -58,13 +70,19 @@ jobs:
           # _meta/FORBIDDEN-TERMS does not travel in the ZIP — so check 14 reports "not
           # applicable" in there. Repeat it here, with the checkout's list, against the tree
           # projects actually receive: the last point where a real name can still be stopped.
+          # Case-insensitive (the case-sensitive version let 15 occurrences of one term travel),
+          # sweeps file NAMES too, and never prints the term or the line — CI logs get read too.
           if [ -f _meta/FORBIDDEN-TERMS ]; then
-            fuga=0
+            fuga=0; i=0
             while IFS= read -r termo; do
-              case "$termo" in ''|'#'*) continue ;; esac
-              if grep -rnE "$termo" /tmp/relcheck >/dev/null 2>&1; then
-                echo "✗ CONFIDENTIALITY: forbidden term ($termo) present in the distributed ZIP"
-                grep -rnE "$termo" /tmp/relcheck | head -5
+              i=$((i + 1)); case "$termo" in ''|'#'*) continue ;; esac
+              if grep -rniE -e "$termo" /tmp/relcheck >/dev/null 2>&1; then
+                echo "✗ CONFIDENTIALITY: forbidden term no. $i in the list present in the distributed ZIP (folders):"
+                grep -rliE -e "$termo" /tmp/relcheck | xargs -n1 dirname | sort -u | head -5
+                fuga=1
+              fi
+              if find /tmp/relcheck -type f | grep -iE -e "$termo" >/dev/null 2>&1; then
+                echo "✗ CONFIDENTIALITY: forbidden term no. $i in the list in a FILE NAME in the ZIP"
                 fuga=1
               fi
             done < _meta/FORBIDDEN-TERMS
@@ -76,10 +94,16 @@ jobs:
           # The gate projects will run is the one INSIDE the copy. Proving it on the checkout
           # proves nothing about the artifact — the same lesson that created the step above.
           bash /tmp/relcheck/_meta/test-project-gate.sh /tmp/relcheck
-      - name: Publish the release
+      - name: Claude Code adapter hooks and scaffold, exercised from the extracted ZIP
+        run: bash /tmp/relcheck/adapters/claude-code/test-hooks.sh /tmp/relcheck
+      - name: Publish the release with the ZIP
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # The SHA-256 in the notes proves the downloaded ZIP is the published one (download
+          # integrity); the internal manifest proves the copy is self-consistent. Neither is
+          # signed provenance — that would require artifact attestation (START-HERE.md Part 1).
+          SHA=$(sha256sum "Maestro-${GITHUB_REF_NAME}.zip" | cut -d' ' -f1)
           gh release create "${GITHUB_REF_NAME}" "Maestro-${GITHUB_REF_NAME}.zip" \
             --title "Maestro ${GITHUB_REF_NAME}" \
-            --notes "Framework distribution ZIP — see _meta/VERSION.md for the changelog and START-HERE.md to bootstrap a project."
+            --notes "Sanitized framework copy for projects — see _meta/VERSION.md for the changelog. Bootstrap instructions: START-HERE.md. ZIP SHA-256: ${SHA}"

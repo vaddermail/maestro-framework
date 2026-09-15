@@ -11,8 +11,14 @@
 ## Phases
 
 *Fill in the line when closing the phase gate. "AI cost": tokens or €, whatever the tool
-gives — consistent within the project. "Rework": slices/artifacts redone because of a defect
-or a divergence from the spec. "1st?": did the gate pass on the first attempt?*
+gives — consistent within the project. Source: sum of the "AI cost" fields in `STATE.md` §Done
+since the previous phase closed (plus the milestone totals archived in §Historical log).
+"Rework": slices/artifacts redone because of a defect or a divergence from the spec — counted
+from artifacts marked `obsolete` and from reopened slices recorded in `STATE.md` §Done.
+"Questions to the user": count of the `## P-nnn` entries raised in the phase in
+`product/01-requirements/questions-and-answers.md`. "1st?": the "attempt #" of the gate record in
+`product/99-records/gates/` (1 with "passed" = yes). The example line below is deleted on
+instantiation; each phase close adds its own.*
 
 | Phase | Closed on | Days since F0 | AI cost | Questions to the user | Rework | 1st? | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -40,7 +46,7 @@ where it was worse, and the hypothesis of why — this is what curation wants to
 
 > **Sending:** the Close block goes in the improvement report at the F8 close
 > (`playbooks/report-framework-improvements.md`); curation updates the upstream curve with
-> the project's code (P-n) — never the name (`knowledge/candidates.md` §Entry and exit rules,
+> the project's code (P2, P3, …) — never the name (`knowledge/candidates.md` §Entry and exit rules,
 > rule 5).
 
 ## Related

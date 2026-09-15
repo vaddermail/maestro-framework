@@ -14,6 +14,7 @@ unvalidated here becomes an expensive defect down the road.
 | `agents/00-discovery/idea-analyst.md` | Structures the raw idea into a testable description (is/is-not, assumptions, anchor questions). |
 | `agents/00-discovery/problem-definer.md` | Isolates the real problem, the affected audience and the cost of not solving it. |
 | `agents/00-discovery/stakeholder-mapper.md` | Identifies stakeholders, roles, power/interest and contact channels. |
+| `agents/00-discovery/existing-system-analyst.md` | *(when applicable)* Inventories the system in use that the product replaces or extends: proven functionality, data to migrate, integrations, cutover and rollback constraints. |
 | `agents/00-discovery/persona-builder.md` | User personas with goals, pains and context of use. |
 | `agents/00-discovery/use-case-modeler.md` | Use cases (UC-nnn) and end-to-end journeys per actor. |
 | `agents/00-discovery/business-goals-analyst.md` | Measurable business goals and the constraints that bound them. |
@@ -36,6 +37,12 @@ Discovery is a chain with real dependencies between artifacts:
 6. **Business goals** (`business-goals-analyst`) — the outcome the organization wants.
 7. **KPIs** (`kpi-definer`) — how each goal is measured (baseline → target).
 8. **Roadmap · MVP · Risks · Costs · Priority** — close the scope and the viability.
+
+**Conditional step — existing system** (`existing-system-analyst`): when the product replaces or
+extends a system in use, it runs right after stakeholders (step 3) and before use cases (step 5) —
+the inventory of what is in use, the data to migrate and the cutover constraints feed the use
+cases, the risks, the costs and the MVP. In a from-scratch product the Orchestrator records "Not
+applicable" in `STATE.md` and moves on.
 
 Steps 3–4 and 6–7 can run in parallel within the same batch of questions to the user; step 5 needs
 the personas (step 4); the MVP (`mvp-scoper`) needs prioritized use cases. The Orchestrator builds

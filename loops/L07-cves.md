@@ -55,7 +55,7 @@ with residual risk signed off by the user, or not-applicable with the justificat
   candidate — it is never silenced without a decision; the user decides to accept (with a review
   deadline), mitigate some other way, or fund the larger migration that resolves it.
 
-## STATE.md ledger
+## STATE.md record
 
 ```
 L07 · CVEs · metric 4→2→2 · iter 3 (cap 4) · last progress: iter 2 · status: AT RISK

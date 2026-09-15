@@ -5,8 +5,8 @@
 > The "Acceptance criteria" section is filled in downstream by
 > `agents/01-requirements/acceptance-criteria-writer.md` — the Engineer leaves it ready, empty.
 > Lives at `product/01-requirements/functional-requirements.md` (one `FR-nnn` per block,
-> concatenated in the same file; large projects may split into
-> `product/01-requirements/requirements/FR-nnn.md`).
+> concatenated in the same file; large projects split it into level-2 sections, one per
+> `FR-nnn`, within that same canonical file — never a separate folder).
 
 > **Status:** draft
 > **Owner:** `agents/01-requirements/requirements-engineer.md`

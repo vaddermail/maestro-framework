@@ -192,7 +192,7 @@ are versioned with the why.
 
 **E7. Subagents die in long suites or when yielding to a monitor; the controller closes them
 explicitly.** Heavy suites (WASM/in-memory DB) in parallel blow up the machine via OOM.
-- *Apply:* `agents/10-quality/README.md`; `knowledge/ai-pitfalls.md` §14.
+- *Apply:* `agents/10-quality/README.md`; `knowledge/ai-pitfalls.md` §AR-14.
 
 **E8. Owner's mindset: flag risks BEFORE implementing; destructive/mass changes come with a plan
 + a list.**

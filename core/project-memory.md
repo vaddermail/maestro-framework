@@ -42,7 +42,7 @@ to a human colleague). Structure (instantiated from `templates/project/STATE.md.
 Associated discipline:
 
 - **Session start:** startup protocol — sync (pull), read `STATE.md`, confirm the environment,
-  only then work (`workflows/W00-project-kickoff.md`).
+  only then work (`playbooks/developer-onboarding.md` §Session-start protocol).
 - **Session end:** update `STATE.md` **always** (`START-HERE.md` §2.5). A session that does not
   update the state is half-lost work.
 

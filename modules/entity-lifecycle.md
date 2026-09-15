@@ -41,9 +41,9 @@ by multiple channels (`knowledge/proven-patterns.md` §8).
   It is not "skipped"; either the responsibility is reassigned, or the exit does not close
   (`modules/approval-engine.md` for the gate pattern).
 - **Exit operation (offboarding)** — the single transactional use case that executes **all** the
-  effects at once. It can be triggered through several channels (HR, backoffice, automatic on an
-  event from the source system — `modules/readonly-external-integrations.md`), all with
-  **identical effects** (`knowledge/proven-patterns.md` §8).
+  effects at once. It can be triggered through several channels (the responsible area, backoffice,
+  automatic on an event from the source system — `modules/readonly-external-integrations.md`), all
+  with **identical effects** (`knowledge/proven-patterns.md` §8).
 - **Auditable terminal state** — after the exit, **what** was released, **when** and **by whom**
   is recorded immutably (`modules/audit-and-provenance.md`). The terminal state does not reopen
   silently; reactivating is a new, recorded transition.
@@ -109,11 +109,11 @@ by multiple channels (`knowledge/proven-patterns.md` §8).
 
 ## Example (multi-domain)
 
-**HR — employee exit.** Triggering the offboarding (by HR, from the backoffice, or automatically
-when the directory marks the account inactive) runs a single transaction: it releases the
-equipment (→ in stock), revokes the accesses, drops all of the person's license seats, unassigns
-the car and sets the employee to `Departed`. **Gate:** if the person was the one responsible for
-returns still open, the exit **does not close** until that role is reassigned — nothing is
+**Employee exit.** Triggering the offboarding (by the team's manager, from the backoffice, or
+automatically when the directory marks the account inactive) runs a single transaction: it
+releases the equipment (→ in stock), revokes the accesses, drops all of the person's license seats,
+unassigns the car and sets the employee to `Departed`. **Gate:** if the person was the one
+responsible for returns still open, the exit **does not close** until that role is reassigned — nothing is
 released while the gate is unresolved. Everything lands in the audit trail; reactivating
 (rehiring) is a new transition.
 

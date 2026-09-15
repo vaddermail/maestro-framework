@@ -84,7 +84,7 @@ weigh (cost, risk, time):
    when it derives from a goal/KPI or a risk, cites it — upstream traceability.
 4. **Numbers that cut across modules have a single source.** A horizon (90 days), a TTL, an
    RTO/RPO that appears in several documents lives in a **constants table** and is referenced,
-   never copied — copies diverge (`knowledge/ai-pitfalls.md` §7).
+   never copied — copies diverge (`knowledge/ai-pitfalls.md` §AR-7).
 5. **Security and privacy as first-class NFRs.** Confidentiality of sensitive fields, least
    privilege, auditability, erasability of personal data — quantified here, materialized by
    `agents/09-security/`.

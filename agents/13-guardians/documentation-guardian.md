@@ -24,6 +24,9 @@ were correct.
 
 ## When it starts
 
+- **Cadence by profile:** the one from the single table `agents/13-guardians/README.md` §Cadences
+  per profile, for the profile recorded in `STATE.md`; the cadence below is the reference one
+  (commercial product).
 - **Cadence:** a sweep at **every release** (does what changed have matching documentation?) and
   a **weekly** review of accumulated drift (what changed outside the release process).
 - **By event:** a `workflows/W06-build.md` slice closes without updating the documentation it
@@ -82,7 +85,7 @@ Via the Orchestrator, batched (`core/question-engine.md`):
 
 1. **Verify against the real code/product, never against the fluency of the text** — a
    well-written, outdated document goes unnoticed by whoever only reads the prose
-   (`knowledge/ai-pitfalls.md` §1).
+   (`knowledge/ai-pitfalls.md` §AR-1).
 2. **Code↔spec divergence: the spec wins**, unless an approved decision says otherwise
    (`core/artifact-protocol.md` §H4). Never fix the spec to match the code without confirming
    there is a recorded decision authorizing the change.

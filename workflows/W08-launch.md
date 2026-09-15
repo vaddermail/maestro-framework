@@ -87,7 +87,7 @@ announced maintenance window and a simple deploy, as long as backup and rollback
       and alerts active, owners reachable, runbooks written.
 - [ ] Infra as code applied and reproducible; secrets injected at runtime, never in the
       repository.
-- [ ] **Real live smoke test** green in production (`knowledge/ai-pitfalls.md` §2 — tested ≠
+- [ ] **Real live smoke test** green in production (`knowledge/ai-pitfalls.md` §AR-2 — tested ≠
       "works"; attach the output).
 - [ ] `product/07-operations/` complete (runbooks, SLOs, observability, DR plan).
 - [ ] **Explicit human approval for production** recorded in `STATE.md`.

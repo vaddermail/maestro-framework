@@ -51,7 +51,7 @@ sync in an independent pass.
 - **Hard cap:** 4 iterations per document. Once exceeded, escalate to the user with a proposal to
   change how that document is maintained (generated vs. hand-written).
 
-## STATE.md ledger
+## STATE.md record
 
 ```
 L06 · documentation · metric 8→4→4 · iter 3 (cap 4) · last progress: iter 2 · status: AT RISK

@@ -61,7 +61,7 @@ owner does not rotate.
 | --- | --- | --- |
 | Secrets inventory (class, owner, cadence, location — **never the value**) | `product/05-security/secrets-inventory.md` | `agents/07-devops/secrets-manager.md`, reviewers |
 | Rotation policy per class | `product/05-security/secrets-inventory.md` §rotation | Devops, guardians |
-| Break-glass runbook | `product/05-security/runbooks/break-glass.md` (`templates/technical/runbook.md.template`) | Incident response, on-call |
+| Break-glass runbook | `product/07-operations/runbooks/break-glass.md` (`templates/technical/runbook.md.template`) | Incident response, on-call |
 | Leak/rotation lessons | `STATE.md` §Lessons | Future sessions |
 
 Every artifact refers to secrets **by path/identifier**, never by value
@@ -97,6 +97,11 @@ Batched, via the Orchestrator (`core/question-engine.md`):
    investigate afterwards.
 7. **Honesty:** it reports the secrets that do not yet rotate automatically and those living
    outside the vault — never a cosmetic "secrets under control".
+8. **Ephemeral before static.** The inventory classifies each secret as `federated` (no value, no
+   rotation — the credential stops existing: pipeline→cloud via OIDC, service→cloud/DB/registry via
+   workload identity), `ephemeral` (short-lived, renewed automatically) or `static` (requires an
+   owner, a cadence and a written justification for why it cannot be federated) — the last class is
+   the exception to justify, not the norm. A key that does not exist cannot be stolen or rotated.
 
 ## Limitations (what this agent does NOT do)
 
@@ -115,7 +120,9 @@ Batched, via the Orchestrator (`core/question-engine.md`):
 ## Workflow
 
 1. **Inventory** every secret per service/integration; for each: class, owner, location, use.
-2. **Classify** by criticality and by ease of rotation (with/without downtime).
+2. **Classify** by criticality and by ease of rotation (with/without downtime) — and by
+   `federated` / `ephemeral` / `static` (rule 8): what can be federated leaves the value inventory
+   before a cadence gets defined for it.
 3. **Define the rotation cadence** per class and the mechanism (automatic vs. on-demand).
 4. **Write the break-glass:** trigger, authority, revocation/replacement steps, communication.
 5. **Rehearse** the rotation and the break-glass in a safe environment (unrehearsed rotation is not
@@ -175,6 +182,8 @@ rehearsed beforehand.
       values).
 - [ ] Rotation policy per class defined; mechanism (automatic/on-demand) chosen.
 - [ ] Break-glass runbook written **and rehearsed**, with defined authority.
+- [ ] No long-lived static secret where the platform supports federated identity; exceptions
+      justified in the inventory.
 - [ ] Confirmed, at go-live, that no secret is in the code or in logs
       (`checklists/pre-production-security.md`).
 - [ ] Every secret with an owner; no orphan left open.

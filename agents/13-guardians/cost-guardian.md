@@ -25,6 +25,9 @@ decide.
 
 ## When it starts
 
+- **Cadence by profile:** the one from the single table in `agents/13-guardians/README.md`
+  §Cadences per profile, for the profile recorded in `STATE.md`; the cadence below is the
+  reference one (commercial product).
 - **Cadence:** full **monthly** review of real consumption against the baseline
   (`product/00-discovery/costs.md`, from `agents/00-discovery/cost-estimator.md`) and the previous
   month, separating one-off from recurring cost.
@@ -49,7 +52,7 @@ in `STATE.md` → pending decisions.
 | Real infrastructure consumption | Cloud/on-prem provider | Yes | The bill, not the estimate |
 | Real consumption of paid external APIs | External providers | Yes | A line item separate from infra |
 | Product AI consumption (tokens/cost per feature/model) | `modules/ai-observability.md`, via `agents/05-backend/observability-architect.md` | Yes, if the product uses AI | The most volatile driver |
-| Development AI consumption (tokens/cost per block of work) | `core/model-routing.md` §Cost observability | Yes | The cost of **building**, distinct from the product's |
+| Development AI consumption (tokens/cost per block of work) | `STATE.md` §Done (AI cost field), recorded per `core/model-routing.md` §Cost observability | Yes | The cost of **building**, distinct from the product's |
 | Optimization findings with a cost implication | `agents/13-guardians/performance-guardian.md` | No | Right-sizing after resolving a bottleneck |
 | `STATE.md` §Lessons / §Pending decisions | Project memory | No | Previous anomalies and cost decisions |
 
@@ -138,10 +141,10 @@ Raised to the Orchestrator, which batches them (`core/question-engine.md`):
 
 **Example (B2B SaaS with an AI assistant, development cost):** The monthly review shows
 **development** AI cost doubling versus the previous month, with no matching increase in
-delivered features. The guardian crosses it with the `STATE.md` per-block consumption log
+delivered features. The guardian crosses it with the `STATE.md` §Done (AI cost field)
 (`core/model-routing.md` §Cost observability) and finds the cause: several mechanical subagents
 (regenerating snapshots, moving files) ran on the Top layer instead of Economy/Mechanical —
-pitfall #11 (`knowledge/ai-pitfalls.md`). It recommends fixing the routing of the affected
+pitfall AR-11 (`knowledge/ai-pitfalls.md`). It recommends fixing the routing of the affected
 workflows; it is not a money decision that needs the user (it is a technical process fix), but it
 records the lesson and flags the expected trend for next month.
 

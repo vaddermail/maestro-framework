@@ -59,7 +59,7 @@ asks.
 | --- | --- | --- |
 | Clean Architecture proposal | `product/02-architecture/proposals/clean-architecture.md` | `architecture-arbiter` |
 | Layer and boundary map | Section of the proposal | `agents/05-backend/README.md`, `agents/12-reviewers/architecture-reviewer.md` |
-| Risks (over-abstraction) | `product/00-discovery/risks.md` | `agents/00-discovery/risk-analyst.md` |
+| Risks (over-abstraction) | Section of the proposal itself in `product/02-architecture/proposals/clean-architecture.md`; delivered via the Orchestrator to `agents/00-discovery/risk-analyst.md`, owner of `product/00-discovery/risks.md`, to receive an `R-nnn` | `agents/00-discovery/risk-analyst.md` |
 
 ## Questions to the user
 

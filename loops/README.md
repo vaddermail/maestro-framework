@@ -35,6 +35,8 @@ No loop runs indefinitely. The base safeguard, mandatory in **all** loops:
 > **3 consecutive iterations without progress → stop the loop, record the diagnosis and escalate to
 > the user with options.** "Without progress" = the loop's progress metric did not strictly
 > decrease between iterations.
+> A test that is disabled, weakened or mocked to pass counts as **non-progress** for the iteration
+> (the manipulated-gate pitfall, `knowledge/ai-pitfalls.md`).
 
 This operationalizes the line in `core/orchestrator.md` §Recovery and exceptions ("loop that does
 not converge → stop"). Each loop specializes the rule with three complementary defenses:
@@ -47,7 +49,7 @@ not converge → stop"). Each loop specializes the rule with three complementary
    regardless of whether there is progress, for the pathological case of infinitesimal "progress".
 
 When a safeguard fires, the Orchestrator **neither insists nor invents** (`knowledge/ai-pitfalls.md`
-#3, #20): it writes in `STATE.md` → "Pending decisions" what it tried, why it did not converge and
+§AR-3, §AR-20): it writes in `STATE.md` §Pending decisions what it tried, why it did not converge and
 what options exist (change approach, accept residual risk, cut scope), and returns the decision to
 whoever can make it. A run aborted by a safeguard **is not a loop failure** — it is the loop doing
 its job.
@@ -79,7 +81,7 @@ its job.
   model is chosen per task (`core/model-routing.md`): the **action** can be Economy; the **decision
   to accept risk or stop** demands judgment (Top).
 - **Closes:** the gate (`core/quality-gates.md`) or the guardian, with **independent verification**
-  — whoever produced the fix never declares the loop closed (`knowledge/ai-pitfalls.md` #20).
+  — whoever produced the fix never declares the loop closed (`knowledge/ai-pitfalls.md` §AR-20).
 
 ## Cross-cutting principles (do not repeat, reference)
 

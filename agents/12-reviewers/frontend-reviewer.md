@@ -29,7 +29,7 @@ a quick live proof.
 
 Invoked by the Orchestrator (`core/orchestrator.md`) when a client slice is ready for review in
 F7, **provided the reviewer is not the author of what it reviews**
-(`knowledge/ai-pitfalls.md` §20). It runs in parallel with the other reviewers on the panel,
+(`knowledge/ai-pitfalls.md` §AR-20). It runs in parallel with the other reviewers on the panel,
 blind — it does not read their reports (`agents/12-reviewers/README.md`).
 
 ## When it ends
@@ -49,7 +49,7 @@ returns to the Orchestrator to trigger `agents/04-frontend/frontend-architect.md
 | `product/03-experience/accessibility.md` and `.../responsiveness.md` | `agents/03-experience/` (F4) | Yes | The contract adherence is measured against |
 | Code of the client slice under review | F6 | Yes | What is being reviewed |
 | `product/04-specification/api-contract.md` and mock handlers | `agents/05-backend/api-designer.md`, `agents/04-frontend/api-integrator.md` | Yes | To verify error fidelity and shape |
-| `CLAUDE.md` §Closed decisions · `STATE.md` §Debt | `core/project-memory.md` | No | UI debt already known and accepted (not re-flagged) |
+| `STATE.md` §Debt | `core/project-memory.md` | No | UI debt already known and accepted (not re-flagged) |
 
 Without the conventions and the content layer, the reviewer does not proceed on assumptions — it
 returns the list of gaps (`core/question-engine.md`).
@@ -97,7 +97,7 @@ batches (`core/question-engine.md`):
 6. **Filter/sort in explicit state.** Rebuilding filters from the DOM is a finding
    (`knowledge/ai-pitfalls.md`); state lives in an application variable or the URL.
 7. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
-   and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §10).
+   and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §AR-10).
 8. **It does not validate its own work** nor read the other reviewers' reports while working.
 9. **Honesty:** what it could not verify (e.g. a real physical device, a screen reader) goes to
    "out of scope" — it is not disguised as "pass".

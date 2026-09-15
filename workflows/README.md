@@ -15,7 +15,7 @@ workflow never replaces the gates (`core/quality-gates.md`) or the question engi
 | Prefix | Meaning | Example |
 | --- | --- | --- |
 | `Wnn` | Phase workflow, numbered by lifecycle order | `W00`–`W09` |
-| `W10`–`W12` | Cross-cutting workflows, triggered on condition (not by phase order) | evolution, incident, global review |
+| `W10`–`W13` | Cross-cutting workflows, triggered on condition (not by phase order) | evolution, incident, global review, decommissioning |
 
 Workflow ↔ phase ↔ gate correspondence (the mandatory reading map):
 
@@ -34,6 +34,7 @@ Workflow ↔ phase ↔ gate correspondence (the mandatory reading map):
 | `workflows/W10-feature-evolution.md` | re-enters F2→F8 | gates of the phases touched | `agents/13-guardians/feature-evolution-agent.md` |
 | `workflows/W11-incident-response.md` | cross-cutting over F9 | `checklists/post-incident.md` | response + post-mortem |
 | `workflows/W12-global-review.md` | on request | consolidation | full panel of reviewers |
+| `workflows/W13-decommissioning.md` | end of life of a product or feature (on user decision) | close condition: nothing orphaned, nothing still paid for, nothing retained without legal basis | privacy, API versioning, secrets, costs, backups, data auditor |
 
 ## Structure of every workflow (fixed sections)
 
@@ -49,6 +50,13 @@ relearning the format:
 6. **Exit gate** — the verifiable criteria from `core/quality-gates.md` and who approves.
 7. **Effort profiles** — how the profile (`core/orchestrator.md` §Effort profiles) sizes the phase.
 8. **Related** — where the reader goes next.
+9. **Failure and blocker recovery** (recommended) — the situation→response table from
+   `core/orchestrator.md` §Recovery and exceptions applied to the phase.
+10. **Anti-patterns** (optional).
+
+The cross-cutting W10–W13 use "Trigger and preconditions" and "Close condition" in place of 2 and
+6 — the only deviations allowed; check 18 of `_meta/verify.sh` requires the anatomy from all of
+them.
 
 ## How a workflow is executed
 
@@ -62,7 +70,24 @@ relearning the format:
 4. **Group the questions into batches** per phase, never piecemeal (`core/question-engine.md`).
 5. **Close the open loops** before attempting the gate.
 6. **Pass the gate** — independent verification + human approval where mandatory — and record it
-   in `STATE.md`. Only then does the next workflow start.
+   in `product/99-records/gates/` (`templates/project/GATE.md.template`: items, evidence, who
+   verified, who approved, waivers) with a summary in `STATE.md`. Only then does the next
+   workflow start.
+
+## What each session reads (context diet)
+
+A citation in backticks says where the truth lives; it is read only when the step in progress
+requires it. An agent does not load 2.5 MB of framework — and a session that rereads the whole
+core by reflex leaves less room for the product specification, which is what matters.
+
+| Who | Reads | Does not read by default |
+| --- | --- | --- |
+| **Orchestrating session, any phase** | `CLAUDE.md` (automatic, with the permanent-rules import), `STATE.md`, the active `Wnn` and the checklists the phase gate cites — ≈45–50 KB fixed, measured — plus, per agent to invoke, the **entry** `## name` in `agents/NN-category/CONTRACTS.md` (2–4 KB; never the whole file, which in a large category is the size of three specs). | The core (`core/`) — the project's `CLAUDE.md` summarizes it; only the cited § is consulted when a step invokes it. Full specs — invoke, don't read (`core/orchestrator.md` §Invoking an agent). |
+| **Invoked agent** | The briefing (`templates/technical/agent-briefing.md.template` §Briefing), its own complete spec, the `product/` artifacts from its §Inputs, the templates from its §Outputs, the `modules/` cited in its §Rules. | Other specs (they are boundaries, not reading material); all of `knowledge/` — the cited § is read instead. |
+| **Never by default** | — | `_meta/INVENTORY.md` (existence record for the gate, not a router); the `_meta/VERSION.md` changelog (only the `Current version` line); all of `knowledge/origin-lessons.md`. |
+
+After a context compaction: `knowledge/ai-pitfalls.md` §AR-23 (in Claude Code, the start-of-session
+hook reinjects the essentials).
 
 ## Rules that cut across all workflows
 
@@ -75,6 +100,8 @@ relearning the format:
   (`core/model-routing.md`) — never the top model by reflex across the whole queue of agents.
 - **Security is cross-cutting.** `agents/09-security/security-coordinator.md` has a seat in
   every workflow; security is not a phase, it is a dimension (`core/lifecycle.md` §5).
+- **Invoke, don't play the part** — `core/orchestrator.md` §Invoking an agent is the single
+  source.
 
 ## Related
 
@@ -84,3 +111,5 @@ relearning the format:
 - `core/artifact-protocol.md` — the `product/` tree the workflows fill in.
 - `agents/README.md` — the specs of the agents each step invokes.
 - `loops/README.md` — the loops that run inside the phases.
+- `templates/technical/agent-briefing.md.template` — the briefing and return of every invocation.
+- `templates/project/GATE.md.template` — the record every passed gate leaves.

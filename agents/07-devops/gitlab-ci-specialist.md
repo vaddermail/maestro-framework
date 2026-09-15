@@ -84,6 +84,11 @@ Via the Orchestrator (`core/question-engine.md`):
    cache secrets.
 7. **Visible failures:** `allow_failure` only where deliberate and documented; do not mask red
    (`knowledge/proven-patterns.md` §10).
+8. **Includes, templates, components and images pinned by SHA/digest, never by a movable ref.**
+   `include:project` and `include:component` with `ref:`/version at a commit SHA or a protected
+   tag (never `main`/`latest`); `image:` by `@sha256:…`. Stage 9 of `pipelines/ci-security.md`
+   fails the pipeline on a movable pin — it mirrors rule 4 of
+   `agents/07-devops/github-actions-specialist.md`.
 
 ## Limitations (what this agent does NOT do)
 

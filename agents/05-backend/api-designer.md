@@ -72,6 +72,10 @@ All output is written to file (`core/project-memory.md`).
   richness of the error payload.
 - **Pagination:** "Do the large lists change a lot while being paginated?" — cursor (stable) vs
   offset (simple). Recommendation: **cursor** for data that grows/changes.
+- **Agent consumers:** "Are there consumers that are AI agents (the product's own or clients')?" —
+  why it matters: it changes the requirement for idempotency (the agent may repeat the call),
+  machine-readable errors and per-caller quotas
+  (`agents/05-backend/ai-features-specialist.md`).
 
 ## Rules
 

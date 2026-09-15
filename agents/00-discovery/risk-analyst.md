@@ -44,7 +44,7 @@ decisions.
 | --- | --- | --- | --- |
 | `product/00-discovery/idea.md` | `idea-analyst` (F1) | Yes | Assumptions to confirm = latent risks |
 | `product/00-discovery/problem.md` | `problem-definer` (F1) | Yes | Business risk: what if the problem is not real? |
-| `product/00-discovery/casos-de-utilizacao.md` | `use-case-modeler` (F1) | Yes | Flows where the risk materializes |
+| `product/00-discovery/use-cases/` | `use-case-modeler` (F1) | Yes | Flows where the risk materializes |
 | `product/00-discovery/goals-and-kpis.md` | `kpi-definer` (F1) | No | Risk = a KPI that may not be reached |
 | `STATE.md` §Lessons | Project memory | No | Risks that have already materialized before |
 

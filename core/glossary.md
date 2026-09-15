@@ -13,8 +13,11 @@ here prevails.
 | **Guardian** | Continuous-operation agent (F9) with its own cadence: monitors one dimension of the product in production and proposes/executes fixes (`agents/13-guardians/`). |
 | **Coordinator** | Cross-cutting agent that follows one dimension across several phases (e.g. `agents/09-security/security-coordinator.md`). |
 | **Artifact** | File with an owner, a state and consumers, produced by an agent in the `product/` tree (`core/artifact-protocol.md`). The unit of collaboration. |
+| **Owner** | With no qualifier, the **agent** that writes an artifact (`core/artifact-protocol.md` §Handling rules, H2). When the owner is the person who decides, it is written as **user** (or "product owner"); "framework owner" is whoever approves the PRs upstream. "Owner's mindset" is an attitude, not a role. |
 | **Phase (F0–F9)** | Stage of the product lifecycle (`core/lifecycle.md`). |
 | **Gate (quality gate)** | Binary, verifiable decision that guards a transition; with defined criteria, verifier and approver (`core/quality-gates.md`). |
+| **Gate** | Blocking, automatable criterion (pipeline, checklist, live proof) **inside** a quality gate or a pipeline: it returns pass/no-pass, with no approver or record of its own. A quality gate has several *gates*; a green *gate* never replaces the quality gate (`core/quality-gates.md` §Anatomy of a gate). |
+| **Minimum panel** | The smallest review-panel composition a profile allows; it varies by gate: **P5** architecture + security + UX (`workflows/W05-specification.md` §Effort profiles); **P7 in prototype** security + architecture (`workflows/W07-quality-and-security.md` §Effort profiles); **W12 in prototype** architecture + security + the reviewer of the dimension at hand (`workflows/W12-global-review.md` §Effort profiles). In prototype, P5 skips the panel: review by the Orchestrator + the user's OK. |
 | **Workflow (Wnn)** | Documented process that links agents and artifacts to fulfill a phase or a cross-cutting process (`workflows/`). |
 | **Loop (Lnn)** | "While condition → act" cycle, with an exit condition and an anti-infinite safeguard (`loops/`). |
 | **Module** | Reusable, decoupled product capability, documented stack-agnostically (`modules/`). |
@@ -49,6 +52,7 @@ here prevails.
 | **Curation (of the framework)** | The process that turns improvement reports into curated framework evolution — triage, candidates, promotions via PR with human merge (`playbooks/framework-curation.md`, `agents/14-meta/framework-curator.md`). |
 | **Genesis dossier** | The phase-by-phase record of a project's numbers (AI cost, days, findings, rework) that prove — or disprove — the framework's promise (`templates/project/GENESIS.md.template`). |
 | **Learning curve (of the ecosystem)** | The aggregation of the genesis dossiers, product by product and by code, maintained by curation (`knowledge/learning-curve.md`); where you read whether each product really came out cheaper and better. |
+| **Project codename (P2, P3, …)** | Anonymous identifier for an ecosystem project, used in curation and in the learning curve (`knowledge/candidates.md` §Entry and exit rules). Do not confuse it with gates **P0–P9** or with questions **`P-nnn`**: in prose it is always written "project P3". |
 
 ## Related
 

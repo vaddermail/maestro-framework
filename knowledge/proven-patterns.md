@@ -132,6 +132,28 @@ Every error/degradation path is **logged**; none is silently swallowed.
   → recorded with correlation. If a limit is hit (truncate, skip, sample), **say so** — silence
   reads as "covered everything" when it did not.
 
+## 11. Live proof — the minimum evidence format
+
+"Done", "tested" and "works" only count when they come with evidence in a format someone else can
+reproduce and verify.
+
+- **Problem it solves:** a paraphrased "works" is not reproducible — "tests ran" and "confirmed"
+  are claims, not proof; without a minimum format, live proof degrades into a feeling with another
+  name, and absolute honesty (`knowledge/permanent-rules.md` §2) is left without a criterion.
+- **How:** every piece of done/tested/works evidence has **five fields**:
+  1. **What** — the exact command, URL or action exercised.
+  2. **Where** — the environment and commit (or build) it ran on.
+  3. **Literal output** — a pasted excerpt, ≤20 lines, never paraphrased; for tests, the runner's
+     summary line with the counts (passed / failed / skipped).
+  4. **When** — date (yyyy-mm-dd).
+  5. **Who verified** — and it is **≠ who did the work** (`knowledge/ai-pitfalls.md` §AR-20,
+     self-validation).
+
+  Missing a field → it is not evidence: record it as "unverified", never as done. This is the
+  format of the `Evidence:` field in `STATE.md` §Done and what a gate requires before it passes.
+- **Detail:** `checklists/definition-of-done.md` §Per code change;
+  `core/quality-gates.md`.
+
 ## Related
 
 - `modules/README.md` — the reusable implementation of these patterns.

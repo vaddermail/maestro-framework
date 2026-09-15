@@ -43,7 +43,8 @@ and records the gap in `STATE.md`.
 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/04-specification/business-rules.md` | `business-rules-modeler` (F2) | Yes | The source of the hard invariants |
+| `product/00-discovery/existing-system.md` | `agents/00-discovery/existing-system-analyst.md` (F1) | No | Only when the product replaces a system in use: entities and data to migrate, volumes, quality — the logical model includes the old→new field-by-field mapping |
+| `product/01-requirements/business-rules.md` | `business-rules-modeler` (F2) | Yes | The source of the hard invariants |
 | `product/04-specification/state-machines.md` | `business-rules-modeler` (F2) | Yes | Lifecycles to represent as history with start/end |
 | `product/01-requirements/glossary.md` | `glossary-curator` (F2) | Yes | Canonical names for entities and attributes |
 | `product/02-architecture/stack.md` | `stack-selector` (F3) | F6 only | Concrete DB engine for the physical model |

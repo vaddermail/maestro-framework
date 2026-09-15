@@ -76,7 +76,7 @@ To the Orchestrator, in a batch (`core/question-engine.md`):
 
 1. **Measure under realistic conditions, not on the developer's laptop.** The budget is defined
    and verified on the audience's reference device/network, with a cold cache
-   (`knowledge/ai-pitfalls.md` §2/§18).
+   (`knowledge/ai-pitfalls.md` §AR-2/§AR-18).
 2. **Budget per route, not global.** The home, a list and a form have different profiles; the
    KB/requests/images budget is per route type and is a limit that **blocks** when exceeded.
 3. **Zero CLS by construction:** reserved dimensions for images/embeds/ads; fonts with

@@ -54,7 +54,7 @@ because it sizes the entire recovery investment.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| DR plan (RTO/RPO, scenarios, recovery order) | `product/07-operations/data/disaster-recovery.md` | User (approves), `deployment-strategist`, guardians |
+| DR plan (RTO/RPO, scenarios, recovery order) | `product/07-operations/dr-plan.md` | User (approves), `deployment-strategist`, guardians |
 | Recovery runbooks per scenario | `product/07-operations/runbooks/dr-*.md` (`templates/technical/runbook.md.template`) | Whoever executes the recovery in an incident |
 | DR drill log (real times) | `product/99-records/data/dr-drill-YYYY-MM-DD.md` | Orchestrator → user |
 | Gaps and improvement plans | `STATE.md` §Debt / `loops/L08-technical-debt.md` | Future sessions |

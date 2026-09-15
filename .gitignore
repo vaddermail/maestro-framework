@@ -1,0 +1,10 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+# Node (in case the framework ever gains dependencies)
+node_modules/
+# Logs and temporary files
+*.log
+tmp/

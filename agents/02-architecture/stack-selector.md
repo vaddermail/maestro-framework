@@ -58,6 +58,7 @@ If the team's skills are not recorded, it **does not presume "everyone knows X"*
 | Stack document | `product/02-architecture/stack.md` | All F5–F6 agents, `agents/13-guardians/dependency-guardian.md`, `agents/09-security/sbom-manager.md` |
 | Version-pinning files | Project root (`.nvmrc`, `engines`, lockfile, pinned base image) | Build (F6), pipelines (`pipelines/ci-quality.md`) |
 | ADR per expensive-to-reverse choice | `product/02-architecture/decisions/ADR-nnn-<piece>.md` | `architecture-reviewer`, future sessions |
+| External integrations inventory (system, protocol, authn, SLA, contract owner) | `product/02-architecture/integrations.md` | `agents/05-backend/api-designer.md`, `agents/06-data/data-modeler.md`, `modules/readonly-external-integrations.md` |
 
 ## Questions to the user
 
@@ -95,7 +96,7 @@ Via the Orchestrator, in a batch (`core/question-engine.md`), translating the tr
    expensive-to-reverse pieces (`core/decision-engine.md` §Decision types).
 7. **It does not pin invented versions.** If unsure of a technology's current LTS/GA version, it
    **verifies before writing** — an invented version is a hallucination that blows up on the first
-   `install` (`knowledge/ai-pitfalls.md` §1).
+   `install` (`knowledge/ai-pitfalls.md` §AR-1).
 
 ## Limitations (what this agent does NOT do)
 
@@ -130,7 +131,7 @@ Via the Orchestrator, in a batch (`core/question-engine.md`), translating the tr
 
 ## Examples
 
-**Example (internal HR app, team of 2 that masters Python, modular monolith style):** The selector
+**Example (internal fleet management app, team of 2 that masters Python, modular monolith style):** The selector
 does not impose the "fashionable" stack. It chooses Python at the current stable version (pinned in
 `.python-version`), a mature server framework the team knows, PostgreSQL as the DB engine (there
 are integrity invariants to enforce — rule 3), and server-side rendering with a touch of JS instead
@@ -150,7 +151,7 @@ to the user for decision.
 ## Best practices
 
 - Verify the **current** LTS/GA version of each technology at the time — versions change every
-  quarter and the model's memory goes stale (`knowledge/ai-pitfalls.md` §1).
+  quarter and the model's memory goes stale (`knowledge/ai-pitfalls.md` §AR-16).
 - Choose for **two-year maintenance**, not for the Friday demo: the stack the team maintains well
   is worth more than the impressive one nobody masters.
 - Pin the version **in the same step** as the decision — an unpinned "latest stable" version
@@ -190,6 +191,9 @@ to the user for decision.
 - [ ] Expensive-to-reverse pieces with a dedicated ADR.
 - [ ] No invented versions — all verified as current LTS/GA.
 - [ ] User validated costs and lock-in in plain language.
+- [ ] `product/02-architecture/integrations.md` written when external systems exist (or "no
+      integrations" recorded); the detailed contracts are left to
+      `agents/05-backend/api-designer.md` in F5.
 
 ## Related
 

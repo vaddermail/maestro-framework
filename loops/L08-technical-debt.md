@@ -22,10 +22,16 @@ interest, paid down deliberately — never in an end-of-quarter "big bang".
 (e.g. hours lost per month, avoidable incidents, slowness of change), not the count nor the size of
 the items. A small item with high interest is prioritized before a large item with low interest.
 
+The interest unit is **person-hours per month** of recurring friction attributable to the item
+(manual workaround time, re-interventions, avoidable incidents × duration), estimated per item
+**with the evidence behind it** (occurrences counted in the period, measured times). A downward
+re-estimate without new evidence is metric fraud (`loops/README.md` §Cross-cutting principles);
+only paying off the item or new data changes it.
+
 ## Entry condition
 
-There is ≥1 recorded technical-debt item (in `STATE.md` or the project's debt register) with
-estimated interest > 0, still unpaid.
+There is ≥1 item in `STATE.md` §Debt (the debt's only home — `core/project-memory.md` §STATE.md —
+the handover) with estimated interest > 0, still unpaid.
 
 ## Action (the body of the iteration)
 
@@ -40,11 +46,12 @@ estimated interest > 0, still unpaid.
 
 ## Exit condition (success)
 
-Total interest ≤ the threshold agreed with the user for the cycle. Defaults per profile (on this
-loop's interest scale): prototype — loop disarmed; internal product ≤10; commercial product ≤6;
-enterprise platform ≤3. The value agreed during F0 calibration is recorded in the project's
-`CLAUDE.md` (`workflows/W00-project-kickoff.md` §Decision points). An item counted as closed has
-proof that the interest stopped accruing, not just that the code changed.
+Total interest ≤ the threshold agreed with the user for the cycle. Defaults per profile (in
+person-hours per month, the unit of §Progress metric): prototype — loop disarmed; internal product
+≤10 h/month; commercial product ≤6 h/month; enterprise platform ≤3 h/month. The value agreed during
+F0 calibration is recorded in the project's `CLAUDE.md`, §F0 calibration
+(`workflows/W00-project-kickoff.md` §Decision points). An item counted as closed has proof that the
+interest stopped accruing, not just that the code changed.
 
 ## Anti-infinite-loop safeguard
 
@@ -56,7 +63,7 @@ proof that the interest stopped accruing, not just that the code changed.
   architecture decision), and escalate to the user to replan the next cycle — never stretch a cycle
   indefinitely to "finish the list".
 
-## STATE.md ledger
+## STATE.md record
 
 ```
 L08 · technical debt · metric interest 40h/mo→28h/mo→28h/mo · iter 3 (cap 5) · last progress: iter 2 · status: AT RISK
@@ -76,7 +83,7 @@ item stays on the list, untouched, because its interest did not justify the cycl
 ## Related
 
 - `core/orchestrator.md` — §Effort profiles; the threshold defaults live in this loop's
-  §Exit condition and the project's value in its `CLAUDE.md`.
+  §Exit condition and the project's value in its `CLAUDE.md` §F0 calibration.
 - `core/project-memory.md` — where technical debt is recorded and tracked across sessions.
 - `modules/feature-flags.md` — how to pay down risky debt behind a kill-switch.
 - `knowledge/proven-patterns.md` — the target patterns of many debt payments.

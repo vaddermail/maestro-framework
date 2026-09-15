@@ -25,6 +25,9 @@ verified one-off before the launch.
 
 ## When it starts
 
+- **Cadence by profile:** the one from the single table in `agents/13-guardians/README.md`
+  §Cadences per profile, for the profile recorded in `STATE.md`; the cadence below is the
+  reference one (commercial product).
 - **Cadence:** **weekly** sweep of code smells, duplication and complexity; **per-release**
   review that includes the risk-coverage audit and the mapping of architecture drift against the
   ADRs in force.
@@ -50,7 +53,7 @@ to the Orchestrator to engage `agents/02-architecture/architecture-arbiter.md`.
 | Risk→level map | `agents/10-quality/test-strategist.md` | Yes | The standard coverage is audited against (not the %) |
 | ADRs and module diagram | `agents/02-architecture/architecture-arbiter.md` | Yes | The decision drift is measured against |
 | The `architecture-reviewer`/`coverage-auditor` F7 report | `agents/12-reviewers/`, `agents/10-quality/coverage-auditor.md` | No | Known baseline; already accepted drift/holes are not re-flagged |
-| `STATE.md` §Debt / §Closed decisions | Project memory | No | What is already recorded, to avoid noise |
+| `STATE.md` §Debt / `CLAUDE.md` §Closed decisions | Project memory | No | What is already recorded, to avoid noise |
 
 If the risk→level map or the ADRs are missing, the guardian **does not audit blindly**: it flags
 the gap to the Orchestrator (engaging `test-strategist`/`architecture-arbiter`) and records it.

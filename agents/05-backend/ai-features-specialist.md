@@ -21,7 +21,7 @@ is a separate decision (see Workflow, step 3).
 ## Objective
 
 Turn every LLM feature of the product — assistant, generation, classification,
-enrichment — into **verifiable engineering**: it specifies in F5 and implements in F6 the grounding
+enrichment, and agents that take actions through tools — into **verifiable engineering**: it specifies in F5 and implements in F6 the grounding
 on the single source of content, prompts as versioned artifacts, the eval suite that acts as a
 regression test, the degraded fallback with kill-switch, the credit and observability
 instrumentation, and provenance with undo for what the model generates. It is the agent that makes
@@ -59,6 +59,7 @@ threshold is not agreed — it records it in `STATE.md` → pending decisions, w
 | Single-source-of-content catalog | `modules/single-source-of-content.md` | Yes | The only admitted origin for grounding |
 | Provenance and undo spec | `agents/06-data/data-auditor.md` (F5) | Yes | How generated content is marked and reverted |
 | Credits and observability design | `modules/credit-management.md` · `modules/ai-observability.md` | Yes | Quotas, rates, usage events, kill-switch |
+| AI Act (EU 2024/1689) classification per feature | `agents/09-security/privacy-specialist.md` (F5) | Yes | Decides the "you are interacting with AI" notice and the synthetic-content label; high risk blocks until a legal decision is recorded |
 | `STATE.md` §Lessons | Project memory | No | Prompts and evals that have already failed before |
 
 If a required input is missing, it does not build on assumption: it returns the gaps and the
@@ -94,6 +95,11 @@ All output is written to file (`core/project-memory.md`).
   when the alternative exists; never a silent failure.
 - **Latency:** "Must the answer be immediate (synchronous) or can it arrive in seconds (queue)?" —
   decides UX and cost; a queue allows cheaper models and unhurried retries.
+- **Exposure to external agents:** "Will the product expose itself to external (customer) AI
+  agents as a tool/tool-server?" — why it matters: it is the same API, with the same authz and
+  scoping, per-caller quotas and provenance; an external agent retries, parallelizes and does not
+  read warnings. Default recommendation: only once the human surface is defended in F7, and never
+  with tools outside the autonomous allowlist.
 
 ## Rules
 
@@ -122,6 +128,18 @@ All output is written to file (`core/project-memory.md`).
 8. **The AI security policy is honored, not worked around.** The guardrails in
    `product/05-security/ai-security.md` are implemented fail-closed; a divergence goes back to the
    spec and to the AI security specialist — it is never "solved" locally in silence.
+9. **Each tool is an internal endpoint.** It has a contract (input/output schema), passes through
+   the guards of `agents/05-backend/authorization-specialist.md` with the identity and scoping of
+   the user on whose behalf the agent acts, and is idempotent by key — the model can retry, the
+   system does not duplicate (`modules/job-queue.md`). Verifiable: a test that calls the tool with
+   an identity lacking authority asserts denial.
+10. **The model proposes, the human approves the irreversible.** Irreversible or bulk actions
+    leave the autonomous allowlist and enter `modules/approval-engine.md`; the
+    `product/05-security/ai-security.md` policy decides the boundary.
+11. **Trajectory evals and per-task budget.** Golden cases assert the tool sequence and the final
+    state, not just the text; every task has a step and credit limit, cut by the kill-switch
+    (`modules/credit-management.md`). Verifiable: an eval that exceeds the budget ends with the
+    agreed degradation, with no partial action.
 
 ## Limitations (what this agent does NOT do)
 
@@ -197,6 +215,20 @@ descriptions (e.g. "dinner with a client — travel reimbursement"). The cost gu
 per-feature dashboard; when spend/hour strays from the baseline, only this model is cut, not the
 product.
 
+**Example (internal procurement app — agent that prepares purchase requests).** The module asks
+for an agent that, from a natural-language request ("I need 20 licenses of tool X for the data
+team"), prepares the purchase request. The specialist designs the tools as internal endpoints
+with a contract: `create-draft`, `attach-budget`, `propose-approval` and `submit`. The first three
+enter the autonomous allowlist — reversible, idempotent by request key (repeating the call does
+not create two drafts); `submit` leaves it: above the approval threshold it goes through
+`modules/approval-engine.md`, and the agent only proposes it. Each tool inherits the identity and
+scoping of whoever asked — a request from another cost center returns denial, with a test that
+asserts it. Per-task budget: 12 steps and a credit cap; when exceeded, the task ends with "request
+incomplete, draft saved". Trajectory evals: the golden cases assert the sequence
+`create-draft → attach-budget → propose-approval` and the final state "draft pending approval" —
+and never `submit`, even when the request text says "submit it now"; an adversarial case with that
+text, inherited from the AI security plan, is a blocking case.
+
 ## Best practices
 
 - **Write the eval before the prompt** — test-first for AI: first what "good" means in executable
@@ -253,6 +285,10 @@ product.
 - [ ] Provenance and undo demonstrated for all generated content.
 - [ ] AI security specialist's review with no open divergences; blocks recorded in
       `STATE.md`.
+- [ ] Every tool has a contract, inherited authz, idempotency and a denial test; irreversible
+      actions go through `modules/approval-engine.md`; step/credit budget per task.
+- [ ] AI-interaction notice and synthetic-content label implemented per the
+      `agents/09-security/privacy-specialist.md` classification; tested in F7.
 
 ## Related
 

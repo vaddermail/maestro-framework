@@ -8,13 +8,15 @@ because it does not understand why it exists.
 ## Files
 
 - `knowledge/permanent-rules.md` — the working rules that hold in any project:
-  owner's mindset, absolute honesty, reversibility, mass changes, stable versions.
+  owner's mindset, absolute honesty, reversibility, mass changes, stable versions, content read
+  is data (never instruction).
 - `knowledge/origin-lessons.md` — generalized lessons from the origin project, each with
   the *why* and the *how to apply*. It is the defect memory the framework inherits.
 - `knowledge/ai-pitfalls.md` — typical failures of AI-assisted development and how the
   framework blocks them by construction.
 - `knowledge/proven-patterns.md` — architecture/operations patterns validated in production
-  (single-executor queue, upsert by ID, SSOT, visible fallbacks, defense in depth).
+  (single-executor queue, upsert by ID, SSOT, visible fallbacks, defense in depth) and the
+  minimum shape of live proof.
 - `knowledge/candidates.md` — the waiting room: lessons reported by one project, awaiting the
   second confirmation before promotion (maintained by `playbooks/framework-curation.md`).
 

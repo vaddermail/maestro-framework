@@ -38,6 +38,8 @@ The specification **consolidates** what F2–F4 produced — it does not reinven
 | 4 | `agents/06-data/data-modeler.md` | `logical-data-model.md` (entities, **coherent bidirectional** relations, invariants — database-agnostic) | 2 |
 | 5 | `agents/05-backend/api-designer.md` | `backend-contract.md` (authz/scoping/integrity/sensitive fields **100% on the server**) | 2, 4, ADRs (F3) |
 | 6 | `agents/09-security/threat-modeler.md` | `product/05-security/threat-model.md` (STRIDE per critical feature) | 2–5 |
+| 7 (conditional — only if any `FR` is marked `[AI]`) | `agents/09-security/ai-security-specialist.md` | `product/05-security/ai-security.md` (trust boundaries and guardrails per feature) | 2, 5, 6 |
+| 8 (conditional — only if a KPI in `product/00-discovery/goals-and-kpis.md` depends on product events: activation, flow completion, abandonment) | `agents/05-backend/product-analytics-specialist.md` | `product/04-specification/backend/product-analytics.md` (event plan tied to the KPIs, zero PII) | 2, 5 |
 
 **Templates:** `templates/specification/business-rules.md.template`,
 `state-machine.md.template`, `logical-data-model.md.template`,
@@ -93,6 +95,8 @@ F2 is confirmed here in the threat model.
 - [ ] **Logical data model** with invariants and coherent bidirectional relations.
 - [ ] **Backend contract** defines authz, scoping and sensitive-field hiding **on the server**.
 - [ ] Every MVP `FR` has a traceable spec; the threat model covers the critical features.
+- [ ] If there are LLM features: `product/05-security/ai-security.md` written and reviewed; if
+      there are none, recorded in `STATE.md` that there are none.
 - [ ] The user **approved** the specification.
 
 **Who verifies:** the reviewer panel (substance) + the consolidator (coherence) — never the
@@ -106,7 +110,7 @@ model) → the consolidator does not choose in silence: it exposes the conflict 
 reanalysis, or raises it to the user if it is a product decision. A missing requirement found
 while specifying → return it to F2, record it in `STATE.md`; **no advancing to F6** with an
 incomplete spec. User unavailable to approve → the spec stays `in-review`, the pending item in
-`STATE.md` → "Pending decisions"; **not one line of product code** is written before P5.
+`STATE.md` §Pending decisions; **not one line of product code** is written before P5.
 
 ## Effort profiles
 

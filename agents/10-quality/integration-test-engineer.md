@@ -26,7 +26,7 @@ own that no fake replicates with total fidelity.
 
 During F6 (`workflows/W06-build.md`), alongside the build of each slice, as soon as there is a
 persistence layer or an API contract to exercise. It is a reinforced gate when the slice touches
-data or migrations (`knowledge/ai-pitfalls.md` #15). Invoked by the Orchestrator
+data or migrations (`knowledge/ai-pitfalls.md` §AR-15). Invoked by the Orchestrator
 (`core/orchestrator.md`).
 
 ## When it ends
@@ -68,19 +68,19 @@ Puts them to the Orchestrator (`core/question-engine.md`), mostly about environm
 
 1. **Test locks, transactions and constraints against the real engine**, not just the dev one —
    the lightweight engine serializes races that production does not serialize and hides
-   concurrency bugs (`knowledge/ai-pitfalls.md` #15).
+   concurrency bugs (`knowledge/ai-pitfalls.md` §AR-15).
 2. **Assert the failures, not just the successes:** insert the illegal row and assert the
    rejection **by the constraint's name** (`knowledge/proven-patterns.md` §5); the out-of-scope
    query returns 404, not 403 (`knowledge/proven-patterns.md` §6).
 3. **Validate the real shape against the contract**, not the assumed shape — a client that passes
    against a mock with the wrong shape fails against the real server
-   (`knowledge/ai-pitfalls.md` #2).
+   (`knowledge/ai-pitfalls.md` §AR-2).
 4. **Rollback = zero effects:** test that a fact that rolls back leaves no email, event or job in
    the queue (transactional outbox — `knowledge/proven-patterns.md` §3).
 5. **Authorization and scoping exercised on the server** with each profile's real identity, never
    trusting the client (`modules/rbac-and-scoping.md`).
 6. **Heavy suites serially, focused, in the foreground** — real DB + WASM in parallel blow up the
-   machine (`agents/10-quality/README.md` §pitfall).
+   machine (`agents/10-quality/README.md` §This category's critical pitfall).
 
 ## Limitations (what this agent does NOT do)
 

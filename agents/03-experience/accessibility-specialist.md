@@ -67,9 +67,13 @@ To the Orchestrator, in a batch (`core/question-engine.md`):
   brand. **Default recommendation:** AA across the whole product; AAA only on critical flows, if
   justified.
 - **Context:** a product that may be used by a public entity or sold in the EU. **Question:** is
-  there a legal compliance obligation (EN 301 549, ADA, Section 508)? **Why it matters:** it turns
-  accessibility from "good practice" into a requirement with legal risk — it changes the priority
-  and the audit.
+  there a legal compliance obligation (EN 301 549, ADA, Section 508, the European Accessibility
+  Act — Directive (EU) 2019/882, transposed nationally, mandatory since 28 June 2025 for
+  e-commerce, banking, transport, communications and e-books sold in the EU)? **Why it matters:**
+  it turns accessibility from "good practice" into a requirement with legal risk — it changes the
+  priority and the audit. For a product sold in the EU in one of these sectors, the default
+  answer is "yes"; the exact scope and exemptions (microenterprises, disproportionate burden) are
+  confirmed with whoever advises legally.
 
 ## Rules
 
@@ -86,6 +90,11 @@ To the Orchestrator, in a batch (`core/question-engine.md`):
    ones; captions/transcripts for multimedia.
 6. **Verification = manual + assistive, not just automated.** Automated tools catch ~30–40%; the
    rest is real keyboard navigation and a screen reader (`knowledge/permanent-rules.md` §7).
+7. **2.2 criteria verified screen by screen.** The six AA criteria introduced in WCAG 2.2 (2.4.11
+   focus not obscured, 2.5.7 dragging with an alternative, 2.5.8 target size, 3.2.6 consistent
+   help, 3.3.7 redundant entry, 3.3.8 accessible authentication) are in
+   `checklists/accessibility.md` and are not waived for not showing up in automated scanners;
+   3.3.8 is coordinated with `agents/09-security/secure-authentication-specialist.md`.
 
 ## Limitations (what this agent does NOT do)
 

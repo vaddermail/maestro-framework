@@ -23,6 +23,9 @@ with no breaking changes swallowed in silence (`knowledge/permanent-rules.md` §
 
 ## When it starts
 
+- **Cadence per profile:** the one from the single table `agents/13-guardians/README.md`
+  §Cadences per profile for the profile recorded in `STATE.md`; the cadence below is the
+  reference (commercial product).
 - **Cadence:** **weekly** sweep of outdated dependencies (what shipped upstream, how far behind
   the product is); **monthly** review dedicated to **majors** and to those no longer supported.
 - **By event:** an announced end of support (EOL) for a runtime/framework; a dependency that
@@ -83,7 +86,7 @@ To the Orchestrator, which batches (`core/question-engine.md`):
    revert; a "general bump" that breaks something forces manual bisection.
 3. **Never update without testing.** Green regression + live proof on the paths the dependency
    touches, before calling it resolved (`knowledge/permanent-rules.md` §7,
-   `knowledge/ai-pitfalls.md` §16).
+   `knowledge/ai-pitfalls.md` §AR-16).
 4. **Stable versions, not bleeding edge.** Prefer the latest **stable/LTS**; avoid alpha/beta/RC
    unless justified in writing (`knowledge/permanent-rules.md` §6).
 5. **Reversibility:** every bump is revertible (revert the PR + previous lockfile); risky majors
@@ -147,7 +150,7 @@ left to point").
 - Keeping the **cadence low and regular** (weekly) avoids the annual "big bang" where everything
   is so far behind that nothing updates without breaking — version debt grows with interest.
 - **Always** read the changelog before the bump; the most expensive pitfall is the silent
-  breaking change the tests do not cover (`knowledge/ai-pitfalls.md` §16).
+  breaking change the tests do not cover (`knowledge/ai-pitfalls.md` §AR-16).
 - Group the trivial and isolate the risky: one PR per major, many patches per routine PR.
 - Write the justification for the **pinned** with the same care as for the updated — it is what
   prevents re-analyzing the same decision every week.
@@ -190,5 +193,5 @@ left to point").
 ## Related
 
 - `playbooks/dependency-updates.md` · `loops/L08-technical-debt.md` · `agents/13-guardians/README.md`
-- `knowledge/permanent-rules.md` §6 (stable versions) · `knowledge/ai-pitfalls.md` §16
+- `knowledge/permanent-rules.md` §6 (stable versions) · `knowledge/ai-pitfalls.md` §AR-16
 - `agents/13-guardians/security-guardian.md` — the upstream security partner.

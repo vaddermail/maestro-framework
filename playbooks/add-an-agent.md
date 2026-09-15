@@ -27,7 +27,7 @@ agent covers it.
 **If it fails:** if there is overlap with an existing agent, **stop** — either the need is a
 clarification in the existing spec (PATCH, not a new agent), or the boundary between the two must
 be redrawn before moving on. Never create an agent that duplicates responsibility (`MANIFESTO.md`
-§1, `knowledge/ai-pitfalls.md` §7).
+§1, `knowledge/ai-pitfalls.md` §AR-7).
 
 ### 2. Copy the template into the right category
 **Do:** copy `agents/_template/AGENT-TEMPLATE.md` to `agents/NN-category/agent-name.md`
@@ -58,9 +58,12 @@ remained intact.
 
 ### 5. Register in the indexes **in the same step**
 **Do:** add the agent's row to the category README (`agents/NN-category/README.md`) **and** to
-`_meta/INVENTORY.md`, with the same one-liner. If the agent joins a workflow, add the step in the
-respective workflow as a **new step**, without reordering the existing ones unless a reason is
-recorded.
+`_meta/INVENTORY.md`, with the same one-liner; regenerate the category's derived contracts
+(`bash _meta/generate-contracts.sh`) and commit the `CONTRACTS.md` — check 19 of `_meta/verify.sh`
+flags drift. The «Suggested model» field starts from the default tier (Top/Standard/Economy/
+Mechanical): it is what the adapter's scaffold reads to route the subagent. If the agent joins a
+workflow, add the step in the respective workflow as a **new step**, without reordering the
+existing ones unless a reason is recorded.
 **Verify:** the agent appears in **both** indexes with mutually consistent descriptions;
 registering = existing (`core/extensibility.md`). An agent outside the inventory is invisible to
 the Orchestrator.

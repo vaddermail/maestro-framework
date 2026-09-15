@@ -24,9 +24,12 @@ regularly in production, so that the first restore attempt does not happen durin
 
 ## When it starts
 
-- **Cadence:** **automatable daily** check that the backup jobs (data and infra) ran and that
-  failure alerts were seen; **periodic restore drill** (monthly for critical data, quarterly for
-  the rest) against an isolated environment.
+- **Cadence per profile:** the one from the single table `agents/13-guardians/README.md` §Cadences
+  per profile for the profile recorded in `STATE.md`; the cadence below is the reference one
+  (commercial product).
+- **Cadence (reference, commercial product):** **daily** check that the backup jobs (data and
+  infra) ran, and **monthly** restore drill — by profile, the single table's values apply
+  (internal: weekly check + quarterly drill; enterprise: + regular DR).
 - **By event:** before a contraction migration (`playbooks/expand-contract-db-migration.md`) or
   any irreversible operation that requires a confirmed rollback state; after a major infra or DB
   engine change; a request from the Orchestrator before a disaster recovery exercise.

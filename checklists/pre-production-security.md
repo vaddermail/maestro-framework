@@ -31,6 +31,9 @@ in F9.
 - [ ] Container/image scan with no critical vulnerabilities left to fix
       (`agents/09-security/container-analyst.md`).
 - [ ] Secrets scan of the CI pipeline clean (`pipelines/ci-security.md`).
+- [ ] Lockfile enforced as `frozen` in CI; CI actions/plugins and base images pinned by
+      SHA/digest; promoted artifact with signed and verified provenance
+      (`agents/09-security/supply-chain-specialist.md`, `pipelines/ci-security.md`).
 - [ ] Every unfixed finding has its risk explicitly accepted by the user, with a remediation
       deadline — never silently ignored.
 
@@ -38,7 +41,7 @@ in F9.
 
 - [ ] ASVS verification at the level decided for the product run and with no failures unresolved
       (`agents/09-security/asvs-specialist.md`).
-- [ ] OWASP Top 10 coverage confirmed in code review
+- [ ] OWASP Top 10 coverage confirmed in code review (2025 edition, recorded in the report)
       (`agents/09-security/owasp-top10-specialist.md`).
 - [ ] Authorization and scoping confirmed as the server's exclusive responsibility — no access
       decision only on the client (`modules/rbac-and-scoping.md`).
@@ -51,6 +54,15 @@ in F9.
 - [ ] Automatic backup configured **and** tested with a real restore, not just scheduled
       (`agents/06-data/backup-specialist.md`).
 - [ ] RTO/RPO defined and accepted by the user (`agents/06-data/disaster-recovery-planner.md`).
+
+## AI features *(not applicable if the product does not call models — record it in `STATE.md`)*
+
+- [ ] Direct and indirect prompt injection tested adversarially with evidence
+      (`agents/09-security/ai-security-specialist.md`).
+- [ ] Model output treated as untrusted input: escaping by sink, tool allowlist, scoping
+      inherited from the user.
+- [ ] Per-model kill switch and credit ceiling wired and tested (`modules/ai-observability.md`,
+      `modules/credit-management.md`).
 
 ## Residual risk
 

@@ -27,7 +27,7 @@ writing or fixing any test.
 
 Invoked by the Orchestrator (`core/orchestrator.md`) when a slice/release has test suites ready
 for review in F7, **provided the reviewer is not the author of any reviewed test**
-(`knowledge/ai-pitfalls.md` #20). It runs in parallel with the other reviewers on the panel,
+(`knowledge/ai-pitfalls.md` §AR-20). It runs in parallel with the other reviewers on the panel,
 blind (`agents/12-reviewers/README.md`) — never during the build of the slice.
 
 ## When it ends
@@ -93,7 +93,7 @@ batch (`core/question-engine.md`):
 5. **Disabled tests (`skip`/`todo`/`pending`) without an owner or deadline are hidden debt** —
    they are named; "it is handled" is never presumed.
 6. **It does not fix — it recommends.** Writing/rewriting belongs to whoever built the test;
-   whoever produces does not validate (`knowledge/ai-pitfalls.md` #20).
+   whoever produces does not validate (`knowledge/ai-pitfalls.md` §AR-20).
 7. **Scope honesty:** tests it could not run locally (e.g. they depend on unavailable external
    infra) go to "out of scope", never to "verified" without running.
 

@@ -27,6 +27,9 @@ maintenance starts on day 0 (`MANIFESTO.md` §10), and value is maintained too.
 
 ## When it starts
 
+- **Cadence by profile:** the one from the single table `agents/13-guardians/README.md` §Cadences
+  per profile, for the profile recorded in `STATE.md`; the cadence below is the reference one
+  (commercial product).
 - **Cadence:** **monthly** review of all the yardstick's KPIs against the real readings (a KPI's
   reading cadence may be finer — weekly —, but the trajectory judgment is monthly). Convened by
   `workflows/W09-continuous-operation.md`; like all guardians, it stays disabled in the
@@ -58,7 +61,7 @@ decisions.
 | Artifact | Origin | Required? | Notes |
 | --- | --- | --- | --- |
 | `product/00-discovery/goals-and-kpis.md` | `agents/00-discovery/kpi-definer.md` (F1) | Yes | The yardstick: metric, baseline, target (value + deadline), source and cadence per goal |
-| Instrumented product events and metrics | `agents/05-backend/metrics-specialist.md` (F6) | Yes | The real numbers, read from the source named in each KPI |
+| Instrumented product events and metrics | `agents/05-backend/product-analytics-specialist.md` (F6) | Yes | The real numbers, read from the source named in each KPI |
 | `product/07-operations/observability.md` | `agents/05-backend/observability-architect.md` (F8) | Yes | Where each number is seen (dashboards and sources) |
 | The cost cycle's report | `agents/13-guardians/cost-guardian.md` (F9) | No | Cost per unit of value — the other half of "is it worth what it costs?" |
 | `product/00-discovery/prioritization.md` | `agents/00-discovery/prioritizer.md` (F1) | No | The expected value that justified building — context for the escalation |
@@ -66,9 +69,9 @@ decisions.
 
 If the yardstick does not exist or lacks baselines and deadline-bound targets, the guardian
 **does not watch impressions**: it engages the `kpi-definer` (via the Orchestrator) and records
-the gap. If a KPI's source is not instrumented, it engages the `metrics-specialist` — a KPI with
-no real reading is not considered verified (`core/question-engine.md` for what requires an
-answer from the user).
+the gap. If a KPI's source is not instrumented, it engages
+`agents/05-backend/product-analytics-specialist.md` — a KPI with no real reading is not considered
+verified (`core/question-engine.md` for what requires an answer from the user).
 
 ## Outputs
 
@@ -77,7 +80,7 @@ answer from the user).
 | Cycle report, KPI by KPI (actual vs target vs baseline, trend) | `product/99-records/guardians/value-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Escalation per missed target (quantified options + recommendation) | Report annex; `STATE.md` §Pending decisions | User (decides) |
 | Evolution request (when the decision is to invest) | `agents/13-guardians/feature-evolution-agent.md`, via the Orchestrator | `workflows/W10-feature-evolution.md` |
-| Flagged measurement gaps | Orchestrator → `agents/05-backend/metrics-specialist.md` | Instrumentation in F9 |
+| Flagged measurement gaps | Orchestrator → `agents/05-backend/product-analytics-specialist.md` (product events) or `agents/05-backend/metrics-specialist.md` (RED/USE) | Instrumentation in F9 |
 | New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user
@@ -128,8 +131,9 @@ Raised to the Orchestrator, which batches them (`core/question-engine.md`). Typi
 - **It does not define or redefine KPIs, baselines or targets** — that is
   `agents/00-discovery/kpi-definer.md` (F1). This guardian verifies the yardstick; it does not
   design it.
-- **It does not instrument events or metrics** — that is
-  `agents/05-backend/metrics-specialist.md`; the guardian flags the gap and consumes the result.
+- **It does not instrument events or metrics** — product events and funnels are
+  `agents/05-backend/product-analytics-specialist.md`'s, RED/USE metrics are
+  `agents/05-backend/metrics-specialist.md`'s; the guardian flags the gap and consumes the result.
 - **It does not watch costs** — that is `agents/13-guardians/cost-guardian.md`. Cost ≠ value:
   one measures what is paid, this one measures what was received; **together** they answer "is
   it worth what it costs?".
@@ -212,7 +216,8 @@ launched and stable" would never have told this story.
 - ❌ Replacing a weak outcome KPI with an activity metric that looks good → ✅ only the
   yardstick's outcome metrics count; vanity metrics do not enter the report.
 - ❌ Estimating a missing reading "to close the cycle" → ✅ gap recorded + instrumentation
-  engaged with the `metrics-specialist`.
+  engaged with the `product-analytics-specialist` (product events) or the `metrics-specialist`
+  (RED/USE).
 - ❌ Revising the target alone to make the report green → ✅ escalate; the yardstick only changes
   at the `kpi-definer`, with the user.
 - ❌ Declaring success with the guard-rail degraded → ✅ report the target and the
@@ -227,6 +232,7 @@ launched and stable" would never have told this story.
 | `agents/00-discovery/kpi-definer.md` | upstream — provides the yardstick; receives baseline/target recalibration requests |
 | `agents/00-discovery/business-goals-analyst.md` | upstream — the goals the yardstick measures |
 | `agents/05-backend/metrics-specialist.md` | upstream — instruments the sources; engaged when a reading is missing |
+| `agents/05-backend/product-analytics-specialist.md` | upstream — instruments the product events and funnels that feed each KPI; engaged when a product reading is missing |
 | `agents/05-backend/observability-architect.md` | upstream — the dashboards where the readings are taken |
 | `agents/13-guardians/cost-guardian.md` | parallel — cost per unit of value; together they answer "is it worth what it costs?" |
 | `agents/13-guardians/performance-guardian.md` | parallel — explicit boundary: technical health ≠ delivered value |

@@ -37,7 +37,7 @@ in `product/02-architecture/`.
 | 3 | **Arbitrate** — compare against the criteria, merge ideas, write the decision | `agents/02-architecture/architecture-arbiter.md` | `decisions/ADR-nnn-title.md` + `architecture-vision.md` |
 | 4 | **Validate** in plain language and **pin the stack** (only after the style) | user → `agents/02-architecture/stack-selector.md` | ADR `approved` + `stack.md` (pinned versions) |
 | 5 | **Decide hosting** (cloud/on-prem/hybrid), when applicable | `agents/08-infrastructure/hosting-arbiter.md` | hosting `ADR-nnn` |
-| 6 | **Pin external contracts** (read-only systems, identity) | Orchestrator + specialists | `integrations.md` (`modules/readonly-external-integrations.md`) |
+| 6 | **Pin external contracts** (read-only systems, identity) | Orchestrator + specialists | `integrations.md` (`modules/readonly-external-integrations.md`) — per dependency: external owner, status (available / pending with date), fields managed elsewhere, stub plan |
 
 **Selective convening (`agents/02-architecture/README.md`):** the Orchestrator convenes **only the
 style specialists relevant** to the problem (`monolith-specialist`,
@@ -95,7 +95,7 @@ the user (ADRs + costs). With P3 closed, `workflows/W04-experience.md` starts.
 `core/orchestrator.md` §Recovery. Contradictory proposals between specialists → **no picking in
 silence**: confront them against the weighted criteria, or go up to the user if it is a product
 decision. User unavailable to validate costs → the ADR stays in `draft`, the pending item in
-`STATE.md` → "Pending decisions", and **no stack is pinned and no infra is contracted** by
+`STATE.md` §Pending decisions, and **no stack is pinned and no infra is contracted** by
 assumption. A closed decision the user wants to reopen → remind them of the original why before
 executing; if it is reopened, the old ADR is marked `superseded by ADR-nnn` (never deleted).
 

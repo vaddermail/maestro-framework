@@ -18,7 +18,8 @@ detail with no impact on the user's decision, the agent decides and records.
 
 ## The format of every question
 
-Every question put to the user carries **five elements**:
+Every question put to the user carries **six elements** — context, question, why it matters,
+options, recommendation and the "If you don't answer" clause:
 
 ```markdown
 ### P-014 · User authentication  [phase F3 · blocks: ADR-004]
@@ -48,6 +49,9 @@ Format rules:
 3. **Always a recommendation.** An agent that asks without recommending is exporting its own work
    to the user.
 4. **Unique ID (`P-nnn`)** for tracking: the answer links to the artifacts it unblocked.
+5. **"If you don't answer" clause, always.** States what the Orchestrator will do if the answer
+   doesn't arrive before the gate. It is condition 1 of §When to assume by default: a question
+   without this clause is not assumed — it blocks.
 
 ## When to assume by default (the single rule)
 
@@ -56,8 +60,9 @@ four conditions hold**:
 
 1. the question included the **"If you don't answer"** clause with that explicit consequence;
 2. the default is **reversible** at no material cost;
-3. the decision does **not** belong to mandatory human approval (`core/quality-gates.md` —
-   scope, money, production, personal data, residual risk);
+3. the decision does **not** belong to the mandatory human approval matrix
+   (`core/quality-gates.md` §Human approval matrix — the seven categories, including
+   destructive/bulk actions and reopening closed decisions);
 4. it is **not** a critical requirements ambiguity (`loops/L01-ambiguous-requirements.md`) — those
    stay pending, always.
 
@@ -92,7 +97,7 @@ All questions and answers live in `product/01-requirements/questions-and-answers
 - **Unblocked:** ADR-004, FR-031
 ```
 
-- **Pending** questions are mirrored in `STATE.md` → "Pending decisions" (that is where the next
+- **Pending** questions are mirrored in `STATE.md` §Pending decisions (that is where the next
   session finds them).
 - Answers **assumed by default** must be confirmed by the phase gate — the gate does not pass with
   critical provisionals.

@@ -24,6 +24,9 @@ reduces cost (e.g. fewer instances needed after resolving an N+1).
 
 ## When it starts
 
+- **Cadence by profile:** the one from the single table in
+  `agents/13-guardians/README.md` §Cadences per profile for the profile recorded in `STATE.md`; the
+  cadence below is the reference one (commercial product).
 - **Cadence:** **continuous** watch of the dashboards and alerts set up by
   `agents/05-backend/observability-architect.md` against the defined budgets; **weekly** trend
   review (not just the instant) — CPU/RAM, latency p95/p99, cache hit rate, Web Vitals per route.

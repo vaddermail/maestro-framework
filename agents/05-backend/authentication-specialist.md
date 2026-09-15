@@ -116,7 +116,7 @@ or the MFA/compliance requirements are unknown — it produces the question batc
 
 ## Examples
 
-**Example (internal HR application, company with Entra ID):** The NFRs require corporate SSO and MFA
+**Example (internal helpdesk application, company with Entra ID):** The NFRs require corporate SSO and MFA
 to
 access salary data. The specialist chooses **federated OIDC** with Entra ID (does not build its own
 login) and records the ADR. It implements the *authorization code + PKCE* flow, a server-side

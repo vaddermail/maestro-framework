@@ -12,6 +12,13 @@ Every agent spec follows the template: Identification · Objective · When it st
 practices · Anti-patterns · Interactions · Done criteria. If a section says "Not applicable", it
 says **why**.
 
+Two different reads. The **Orchestrator** reads the **contract** of each agent it is about to
+invoke — the `## name` entry in `agents/NN-category/CONTRACTS.md` (phases, type, model tier,
+inputs, outputs, rules, limitations, done criteria: ≈35% of the spec's bytes; derived by
+`_meta/generate-contracts.sh`, check 19 flags drift), never the whole file nor the whole spec — and
+invokes as `core/orchestrator.md` §Invoking an agent directs. The **invoked agent** reads the full
+spec.
+
 ## Agent types
 
 | Type | Role | Examples |
@@ -39,7 +46,7 @@ says **why**.
 | 10 | `10-quality/` | F6–F7 | Prove it works: test strategy and execution, risk-based coverage |
 | 11 | `11-documentation/` | F1–F9 | Living knowledge: technical docs, user help, API reference |
 | 12 | `12-reviewers/` | F7 | Independent eyes: review panel per dimension + consolidation |
-| 13 | `13-guardians/` | F9 | The permanent production team: security, deps, performance, costs, docs, backups, evolution |
+| 13 | `13-guardians/` | F9 | The permanent production team: security, deps, performance, costs, quality, docs, backups, value, evolution |
 | 14 | `14-meta/` | — | Outside the project cycle: the framework learning from those who use it — curation of improvement reports, in the upstream repository |
 
 > The "dominant phase" marks where the category works most — not where it works only. Security and
@@ -50,13 +57,15 @@ says **why**.
 ## How agents fit into the cycle
 
 Each category is summoned by the workflow of its phase (`workflows/`). The Orchestrator builds the
-dependency graph from the **Inputs**/**Interactions** sections of the agent specs — registering an
-agent in the indexes is what makes it discoverable (`core/extensibility.md`).
+dependency graph from the **Inputs**/**Outputs** sections of the agent specs, read in the
+category's `CONTRACTS.md` — registering an agent in the indexes and regenerating the contracts is
+what makes it discoverable (`core/extensibility.md`).
 
 ## Adding an agent
 
 `playbooks/add-an-agent.md`: copy the template → fill in everything → register in the category
-README and in `_meta/INVENTORY.md`. Without touching the existing agents.
+README and in `_meta/INVENTORY.md` → regenerate the category's `CONTRACTS.md`. Without touching
+the existing agents.
 
 ## Related
 

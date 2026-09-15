@@ -66,10 +66,10 @@ Orchestrator (`core/question-engine.md`), typically:
 ## Rules
 
 1. **Fake only external I/O; never the logic under test.** Faking what you want to prove is
-   writing a test that proves nothing (`knowledge/ai-pitfalls.md` #2).
+   writing a test that proves nothing (`knowledge/ai-pitfalls.md` §AR-2).
 2. **Deterministic tests:** clock, randomness and IDs faked; zero dependency on network, DB or
    execution order. A test that fails in a single process but passes in isolation is a
-   global-state leak, not flakiness to ignore (`knowledge/ai-pitfalls.md` #14).
+   global-state leak, not flakiness to ignore (`knowledge/ai-pitfalls.md` §AR-14).
 3. **Cover the edge cases, not just the happy path** — boundaries, empties, nulls, negatives,
    illegal transitions. That is where the bugs live.
 4. **Every invariant has a test that tries to violate it** and asserts that the violation is
@@ -101,7 +101,7 @@ Orchestrator (`core/question-engine.md`), typically:
 3. Build the external I/O fakes with the shape the `test-strategist` fixed (mirror of the real).
 4. Cover the happy path **and** the edge cases **and** the illegal transitions.
 5. Run **in the foreground, focused per file** (never the whole suite in the background — see
-   `agents/10-quality/README.md` §pitfall).
+   `agents/10-quality/README.md` §This category's critical pitfall).
 6. If a test cannot be formulated because the spec is ambiguous → open
    `loops/L01-ambiguous-requirements.md`.
 7. If a test fails because of a code bug → do not touch the test; flag it for a fix
@@ -137,7 +137,7 @@ for the rounding rule.
 - ❌ Changing the test until it passes → ✅ fix the cause; only change a test with proof it was
   wrong.
 - ❌ Running the whole suite in the background in a subagent → ✅ focused, in the foreground
-  (`README.md` §pitfall).
+  (`agents/10-quality/README.md` §This category's critical pitfall).
 
 ## Interactions
 

@@ -24,7 +24,7 @@ documentation, launch and evolution — **assuming nothing**: whatever is missin
 | Folder | What it holds |
 | --- | --- |
 | `core/` | The operating system: orchestrator, F0–F9 lifecycle, artifact protocol, question/decision engines, gates, memory, model routing, extensibility |
-| `agents/` | 152 specialists in 15 categories — each with objective, inputs, outputs, rules, limitations, workflow, examples and anti-patterns |
+| `agents/` | 154 specialists in 15 categories — each with objective, inputs, outputs, rules, limitations, workflow, examples and anti-patterns |
 | `workflows/` | The processes that connect agents, W00–W12 |
 | `loops/` | Intelligent persistence: "while X → act", with anti-infinite-loop safeguards |
 | `modules/` | Reusable product capabilities (RBAC, state machines, audit, job queues, feature flags…) |

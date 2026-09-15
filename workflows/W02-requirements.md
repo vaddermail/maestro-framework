@@ -36,6 +36,7 @@ The order follows `agents/01-requirements/README.md`. All artifacts live in
 | 4 | `agents/01-requirements/nfr-specifier.md` | `nfr.md` (`NFR-nnn` **quantified**) | 2, risks and goals (F1) |
 | 5 | `agents/01-requirements/acceptance-criteria-writer.md` | `acceptance-criteria.md` (verifiable ACs per `FR`) | 2 stabilized, 3 |
 | 6 | `agents/01-requirements/ambiguity-hunter.md` | `questions-and-answers.md` (question batch + ambiguity marks) | runs over 1–5 |
+| 7 | `agents/01-requirements/requirements-engineer.md` | marks `[AI]` on every `FR` where the product calls a language model (generate, classify, semantic search, act) — this is the trigger for the conditional step in `workflows/W05-specification.md` that invokes `agents/09-security/ai-security-specialist.md`; with no `FR` marked, it is recorded in `STATE.md` that the product does not call models | 2 |
 
 **Parallelism (`core/orchestrator.md` §Parallelism):** steps 3 (rules) and 4 (NFRs) run in
 parallel — the rules the `FR`s must respect and the quality attributes that cut across them do
@@ -97,7 +98,7 @@ traceability). **Who approves:** the user (requirements, rules, NFRs). With P2 c
 
 `core/orchestrator.md` §Recovery. Agent without input (e.g. NFRs without F1 risks) → schedule the
 upstream agent or add it to the next question batch. Ambiguity the user does not resolve →
-it stays in `STATE.md` → "Pending decisions"; it is only assumed by default when the **single
+it stays in `STATE.md` §Pending decisions; it is only assumed by default when the **single
 rule** allows it (`core/question-engine.md` §When to assume by default) — **critical** ambiguities
 are never assumed.
 A divergence discovered later (in F5) sends work back to this phase — the reason is recorded in

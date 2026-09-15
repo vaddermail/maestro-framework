@@ -51,7 +51,7 @@ it does **not cache** (`knowledge/permanent-rules.md` §2: in doubt, do not degr
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Cache layer (code: key, TTL, invalidation, anti-stampede) | Code repository | `rest-specialist`/`graphql`/`grpc` |
-| Documented cache policy (what, key, TTL, invalidation) | `product/04-specification/backend-contract.md` (cache section) | Reviewers, `performance-guardian.md` |
+| Documented cache policy (what, key, TTL, invalidation) | `product/04-specification/backend/caching.md` | Reviewers, `performance-guardian.md` |
 | Tests: hit/miss, invalidation after write, isolation by scope | Code repository | `agents/10-quality/`, CI |
 
 ## Questions to the user
@@ -181,7 +181,7 @@ it would leak one customer's discount to another; it stays in the distributed la
 - [ ] TTL defined on every entry; invalidation tied to the write (or a decision not to cache).
 - [ ] Anti-stampede on the hot items; visible fallback when the store fails.
 - [ ] Hit/miss, post-write invalidation and **isolation by scope** tests green.
-- [ ] Live proof confirms the latency improvement **and** post-write correctness; policy documented.
+- [ ] Live proof confirms the latency improvement **and** post-write correctness; policy documented in `product/04-specification/backend/caching.md`.
 
 ## Related
 

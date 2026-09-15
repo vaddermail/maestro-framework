@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.1.0** (2026-08-19)
+**Current version: 1.2.0** (2026-09-15)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -16,6 +16,64 @@ framework evolves in this repository through pull requests and curation
 never automatically.
 
 ## Changelog
+
+### 1.2.0 — 2026-09-15
+
+Synced from upstream 2.10.0, whose theme was **executable and verifiable**: the adapter stops
+promising what it never shipped, and the gates stop printing green over things they never
+evaluated. 170 documents translated, 15 contract indexes generated, and the whole
+`adapters/claude-code/` package ported. Traffic went both ways again: one fix travelled
+**mirror → upstream** before this sync (the unknown-flag guard), and one defect found *here*
+goes back up (see the last bullet).
+
+- **The Claude Code adapter now ships an executable scaffold.** `adapters/claude-code/` brings
+  `generate-scaffold.sh` (derives `.claude/agents/maestro-*` from the specs, with the model tier
+  and tools per spec, plus a lock file and `--check` for drift), three hooks (`SessionStart`,
+  `PreToolUse`, `Stop`), the `settings.json` template and five skills. Until now the adapter
+  described a scaffold nobody could run. `test-hooks.sh` exercises all of it in 38 cases, in CI
+  and from inside the release ZIP.
+- **Check 8 stops approving anchors that do not exist.** The match is now anchored at the START
+  of the heading (optional numbering stripped): the previous version degraded into "the first
+  word is a substring of any heading" and approved `§Gate P99` against "Anatomy of a gate". A
+  second, strict pass resolves anchors to the project's live files (`STATE.md`, `CLAUDE.md`,
+  `FRAMEWORK-IMPROVEMENTS.md`) against the matching template. Seven orphan anchors were found
+  and fixed by it here.
+- **Checks 16–19: loops, modules, workflows and derived contracts.** The mandatory skeletons the
+  folder READMEs have declared since 1.0 were never verified — a loop without an
+  anti-infinite-loop safeguard is the one addition that can set an agent iterating without a
+  ceiling. Four loops were carrying a `## STATE.md ledger` heading their own README calls
+  `## STATE.md record`. Check 19 keeps `agents/NN-category/CONTRACTS.md` — the short index the
+  Orchestrator reads instead of loading whole specs — in step with the specs.
+- **The forbidden-terms sweep is case-insensitive and reads file names too.** The
+  case-sensitive version let 15 occurrences of one term travel upstream. It also stops printing
+  the term itself: CI logs get read as well. `release.yml` repeats it inside the extracted ZIP.
+- **Stable pitfall IDs.** `knowledge/ai-pitfalls.md` items are `AR-1`…`AR-24` and cited as
+  `§AR-n`. Citing a pitfall by position broke silently every time one was inserted; check 8
+  now rejects a numeric citation to that file outright. 24 citations were converted.
+- **`--integrity` detects extra files, and says so when it cannot check.** `sha256sum -c` only
+  looks at what is listed, so a file *added* to a copy passed as "identical". It now also
+  falls back to `shasum` and exits 2 — NOT VERIFIABLE — when neither is on PATH: a red light
+  about something nobody looked at is as dishonest as a green one. A new `.gitattributes`
+  (`* -text`) stops Git line-ending conversion from failing every file on Windows.
+- **The project gate gained gate records, spec-before-code and Q&A.** `verify-project.sh` now
+  checks that every closed gate left its record in `product/99-records/gates/`, that
+  `product/04-specification/` has an approved artifact before F6, that the question history
+  exists, and that provisional assumptions are confirmed. Future dates (a deadline, a roadmap)
+  no longer count as a memory update. `test-project-gate.sh` grew to 12 exercised cases.
+- **New: `_meta/generate-contracts.sh`, `_meta/scan-report.sh`.** The first derives the 15
+  `CONTRACTS.md`; the second is the mechanical secrets/PII/forbidden-terms sweep required
+  before publishing any report upstream.
+- **New documents:** `workflows/W13-decommissioning.md`,
+  `playbooks/legacy-system-migration.md`, `playbooks/change-effort-profile.md`,
+  `agents/00-discovery/existing-system-analyst.md`,
+  `agents/05-backend/product-analytics-specialist.md` (154 specialists),
+  `templates/project/GATE.md.template`, `templates/project/FORBIDDEN-TERMS.template`,
+  `templates/technical/agent-briefing.md.template`.
+- **Found here, going back upstream (PATCH):** check 8's anchor trimming cut at *any* hyphen,
+  so the English `§Non-negotiable business rules` was truncated to `§Non` and reported orphan.
+  Portuguese headings carry no hyphens, so upstream never saw it. The fix — require a space
+  before the dash — is in this edition's `_meta/verify.sh` and belongs upstream too. Upstream
+  also documents `test-hooks.sh` as 37 cases; both suites run 38.
 
 ### 1.1.0 — 2026-08-19
 

@@ -58,7 +58,7 @@ incomplete proposal is not arbitrable.
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Architectural style ADR | `product/02-architecture/decisions/ADR-nnn-estilo.md` (`templates/project/ADR-DECISION.md.template`) | `stack-selector`, all F5–F6 agents, `agents/12-reviewers/architecture-reviewer.md` |
-| Architecture vision (block diagram + boundaries) | `product/02-architecture/visao-de-arquitetura.md` | Specification (F5), build (F6) |
+| Architecture vision (block diagram + boundaries) | `product/02-architecture/architecture-vision.md` | Specification (F5), build (F6) |
 | Closed decision recorded | project `CLAUDE.md` §Closed decisions | All future sessions |
 
 All output is written to file — a decision that only exists in the conversation does not survive

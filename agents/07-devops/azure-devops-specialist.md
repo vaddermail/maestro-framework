@@ -85,6 +85,12 @@ Via the Orchestrator (`core/question-engine.md`):
    `knowledge/proven-patterns.md` §4).
 7. **Visible failures:** no `continueOnError` masking red as green
    (`knowledge/proven-patterns.md` §10).
+8. **Templates, tasks and images pinned by immutable ref/digest, never by a floating ref.**
+   `resources.repositories` for templates with `ref:` to a protected tag (or a commit SHA where
+   the platform accepts it — confirm the edition in use), never to a branch; containers by
+   `@sha256:…`; marketplace tasks with an explicit major version and a verified publisher. Stage 9
+   of `pipelines/ci-security.md` fails the pipeline on a floating pin — mirrors rule 4 of
+   `agents/07-devops/github-actions-specialist.md`.
 
 ## Limitations (what this agent does NOT do)
 

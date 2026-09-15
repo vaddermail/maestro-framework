@@ -1,15 +1,20 @@
 name: verify
 on:
-  push: { branches: [main] }
+  push:
+    branches: [main]
   pull_request:
+permissions:
+  contents: read
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Framework gate
         run: bash _meta/verify.sh
       - name: Project gate, exercised against synthetic projects
         # The framework gate says the framework is consistent. It says nothing about whether
         # the gate projects will run actually works — that one has to be exercised.
         run: bash _meta/test-project-gate.sh
+      - name: Claude Code adapter hooks and scaffold, exercised against a synthetic project
+        run: bash adapters/claude-code/test-hooks.sh

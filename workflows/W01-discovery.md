@@ -1,7 +1,7 @@
 # W01 — Discovery (F1)
 
-> **Phase:** F1 · **Exit gate:** P1 · **Core agents:** `agents/00-discovery/` (12
-> specialists), conducted by `core/orchestrator.md`.
+> **Phase:** F1 · **Exit gate:** P1 · **Core agents:** `agents/00-discovery/` (13
+> specialists, one of them conditional), conducted by `core/orchestrator.md`.
 
 ## Objective
 
@@ -10,7 +10,7 @@ who lives with it, what is to be achieved, how success is measured, what it cost
 and what goes into the MVP. **Without deciding anything about the solution** — technology, screens
 and architecture wait for F3+. It is the phase where "never assume — ask" (`MANIFESTO.md` §2)
 weighs the most: every assumption not validated here becomes an expensive defect later
-(`knowledge/ai-pitfalls.md` §3).
+(`knowledge/ai-pitfalls.md` §AR-3).
 
 ## Preconditions (entry gate)
 
@@ -28,19 +28,25 @@ order). All artifacts live in `product/00-discovery/`.
 | 2 | `agents/00-discovery/problem-definer.md` | `problem.md` (real problem, audience, cost of not solving) | 1 |
 | 3 | `agents/00-discovery/stakeholder-mapper.md` | `stakeholders.md` (roles, power/interest, channels) | 2 |
 | 4 | `agents/00-discovery/persona-builder.md` | `personas/` (one per persona) | 3 |
-| 5 | `agents/00-discovery/use-case-modeler.md` | `use-cases/` (`UC-nnn`, end-to-end journeys) | 4 |
+| 5 | `agents/00-discovery/use-case-modeler.md` | `use-cases/` (`UC-nnn`, end-to-end journeys) | 4, 13 (if applicable) |
 | 6 | `agents/00-discovery/business-goals-analyst.md` | `goals-and-kpis.md` (goals + constraints) | 2 |
 | 7 | `agents/00-discovery/kpi-definer.md` | `goals-and-kpis.md` (KPIs per goal, baseline→target) | 6 |
-| 8 | `agents/00-discovery/roadmap-planner.md` | `roadmap.md` (horizons, incl. future) | 5,7 |
+| 8 | `agents/00-discovery/roadmap-planner.md` | `roadmap.md` (horizons, incl. future) | 7, 11, 12 |
 | 9 | `agents/00-discovery/risk-analyst.md` | `risks.md` (`R-nnn`, mitigation and owner) | 2,5 |
-| 10 | `agents/00-discovery/cost-estimator.md` | `costs.md` (build, infra, AI, operation — order of magnitude) | 8 |
-| 11 | `agents/00-discovery/mvp-scoper.md` | `mvp.md` (minimum demonstrable + explicit cuts) | 5,12 |
-| 12 | `agents/00-discovery/prioritizer.md` | `prioritization.md` (value × effort × risk) | 5,9 |
+| 10 | `agents/00-discovery/cost-estimator.md` | `costs.md` (build, infra, AI, operation — order of magnitude) | 7, 11 (8 if it exists) |
+| 11 | `agents/00-discovery/mvp-scoper.md` | `mvp.md` (minimum demonstrable + explicit cuts) | 5, 7, 12 |
+| 12 | `agents/00-discovery/prioritizer.md` | `prioritization.md` (value × effort × risk) | 5, 9 |
+| 13 | `agents/00-discovery/existing-system-analyst.md` | `existing-system.md` (functional inventory in use, data to migrate with volume/quality/owner, integrations to preserve, cutover constraints) — **conditional: only when the product replaces or extends a system in use** | 1, 3 |
 
 **Parallelism (`core/orchestrator.md` §Parallelism):** steps 3–4 (stakeholders/personas) and 6–7
 (goals/KPIs) can run in the same question batch; risks (9) runs in parallel with goals.
-The MVP (11) needs prioritized use cases (12). The Orchestrator builds the graph from the
-**Inputs**/**Interactions** sections of the specs, not from blind numbering.
+The tail of the phase is sequential: prioritization (12) → MVP (11) → roadmap (8) → costs (10). The
+Orchestrator builds the graph from the **Inputs**/**Interactions** sections of the specs, not from
+blind numbering.
+The step numbering stays stable (it is cited from outside); the real execution order is that of the
+«Depends on» column. Step 13 is conditional — it only exists when there is a system in use to
+replace or extend: it runs in parallel with 3–5 and feeds the risks (9) and the F2 requirements
+(`playbooks/legacy-system-migration.md`).
 
 > **Scales with the profile:** in a prototype, all these artifacts collapse into a single
 > `product/00-discovery/dossier.md` — the **section titles and IDs** (`UC-nnn`, `R-nnn`)
@@ -78,6 +84,8 @@ is flagged here already, even if its processing is decided in later phases.
 - [ ] MVP and priorities **approved by the user**.
 - [ ] No critical gap open (critical provisional answers confirmed).
 - [ ] Zero solution decisions made (no technology/screen choices — that is F3/F4).
+- [ ] When the product replaces or extends a system in use: `product/00-discovery/existing-system.md`
+      approved, with the data to migrate inventoried and the cutover reversible.
 
 **Who approves:** the user (scope, MVP, priorities). **Who verifies:** the Orchestrator
 (completeness of the dossier). With P1 closed, `workflows/W02-requirements.md` starts.

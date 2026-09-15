@@ -10,7 +10,11 @@ into the project and filled in there.
    `.template` suffix** — e.g. `templates/project/STATE.md.template` → `STATE.md` at the
    project root.
 2. **Fill in the placeholders** `{{like-this}}` — see the convention below. No `{{...}}` may
-   remain in the final file.
+   remain in the final file. Exception — **progressive templates**
+   (`templates/project/CLAUDE.md.template`): sections marked "Fill in at Fn" keep the reminder
+   line the template indicates until that phase closes (an item of
+   `checklists/definition-of-done.md`); never with `{{}}` — `_meta/verify-project.sh` warns if any
+   remain.
 3. **Remove the guidance**: the initial "**How to use**" block and the italic comments inside
    the sections exist only to guide the filling-in — they leave the instantiated document.
 4. **Commit** the instantiated file in the project (never inside `Maestro/`, which stays
@@ -36,6 +40,8 @@ make it up — `MANIFESTO.md` §2).
 | `CHANGELOG.md.template` | `CHANGELOG.md` | History of what changed and why, per version. |
 | `FRAMEWORK-IMPROVEMENTS.md.template` | `FRAMEWORK-IMPROVEMENTS.md` | Accumulated record, since day 0, of what the project teaches the framework; sent upstream at phase closes (`playbooks/report-framework-improvements.md`). |
 | `GENESIS.md.template` | `product/99-records/genesis.md` | Genesis dossier: the numbers behind the promise (cost, days, findings, rework), phase by phase; the Close feeds `knowledge/learning-curve.md`. |
+| `GATE.md.template` | `product/99-records/gates/Pn-YYYY-MM-DD.md` (P6 per slice: `P6-<slice>-YYYY-MM-DD.md`; P6b mandatory) | Record of a gate's passage — or failure — written in the moment: criteria with status and evidence, verified by, approved by (human), waivers. |
+| `FORBIDDEN-TERMS.template` | `FORBIDDEN-TERMS` (project root; a text file, not markdown) | Local list of forbidden terms (clients, products, people, domain) that `_meta/scan-report.sh` reads before any report upstream; never submitted. |
 
 ### `templates/discovery/` — F1, `product/00-discovery/`
 
@@ -72,6 +78,7 @@ make it up — `MANIFESTO.md` §2).
 | `post-mortem.md.template` | Blameless post-mortem, with actions and owners. |
 | `review-report.md.template` | Report from one reviewer (format shared across the panel). |
 | `guardian-report.md.template` | Periodic report from a guardian. |
+| `agent-briefing.md.template` | Orchestrator ↔ agent contract: briefing (≤ 40 lines) on the way in, return (≤ 12 lines, never with the artifact pasted in) on the way out. |
 
 > All templates in the index above are written and ready to instantiate; the index reflects the
 > full `_meta/INVENTORY.md`.

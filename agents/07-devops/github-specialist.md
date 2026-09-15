@@ -72,7 +72,7 @@ Via the Orchestrator (`core/question-engine.md`):
    review (`knowledge/permanent-rules.md` §8). This is the materialization of Git discipline —
    not an optional.
 2. **Independent review is mandatory.** Whoever produces does not approve their own PR
-   (`knowledge/ai-pitfalls.md` §20 — self-validation). `CODEOWNERS` guarantees the right
+   (`knowledge/ai-pitfalls.md` §AR-20 — self-validation). `CODEOWNERS` guarantees the right
    reviewer.
 3. **`CODEOWNERS` maps real responsibility,** not default names; sensitive areas (security,
    migrations, pipelines) with an explicit owner.

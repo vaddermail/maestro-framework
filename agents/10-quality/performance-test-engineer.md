@@ -131,7 +131,7 @@ and a condition.
 - Distinguish "slow by design" from "slow by bug" — handing the optimizer the bottleneck already
   located saves half the work.
 - Skepticism toward presumed optimizations (caching, batch): verify the saving is real before
-  counting it (`knowledge/ai-pitfalls.md` #12).
+  counting it (`knowledge/ai-pitfalls.md` §AR-12).
 
 ## Anti-patterns
 

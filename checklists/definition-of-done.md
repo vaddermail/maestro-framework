@@ -4,9 +4,12 @@ What closes each phase of the lifecycle (`core/lifecycle.md`, F1–F9) and what 
 change within F6. It is the factual basis of each phase's gate (`core/quality-gates.md`) — the
 checklist does not decide the passage on its own, but without it the gate has no evidence to
 decide with. **Cross-cutting to every phase close:** the phase's line in the genesis dossier
-(`product/99-records/genesis.md` — `templates/project/GENESIS.md.template`) is part of the gate;
-and a green `bash Maestro/_meta/verify-project.sh` confirms the process is being followed, not
-just declared.
+(`product/99-records/genesis.md` — `templates/project/GENESIS.md.template`) is part of the gate; the
+**gate record** is written in `product/99-records/gates/` (`templates/project/GATE.md.template`:
+item by item, evidence in the format of `knowledge/proven-patterns.md` §Live proof, whoever verified
+≠ whoever produced, who approved, waivers; the P6 record **per slice** is *(waivable in: prototype)*
+— `core/quality-gates.md` §Gates and effort profiles); and a green
+`bash Maestro/_meta/verify-project.sh` confirms the process is being followed, not just declared.
 
 ## F1 — Discovery
 
@@ -15,6 +18,8 @@ just declared.
 - [ ] MVP scoped and explicitly approved by the user (recorded in `STATE.md`).
 - [ ] Every risk has a named owner and a described mitigation.
 - [ ] Zero critical gaps left open — the phase's questions answered or recorded as pending.
+- [ ] `CLAUDE.md` §What the project is filled in from `product/00-discovery/` (the reminder line
+      comes out).
 
 ## F2 — Requirements
 
@@ -24,6 +29,8 @@ just declared.
       "fast").
 - [ ] Business rules numbered and approved by the user.
 - [ ] Every functional requirement has an associated verifiable acceptance criterion.
+- [ ] `CLAUDE.md` §Non-negotiable business rules filled in (only the BR-nnn whose violation is
+      serious).
 
 ## F3 — Architecture
 
@@ -33,6 +40,7 @@ just declared.
       (`knowledge/permanent-rules.md` §6).
 - [ ] User validated costs and trade-offs in plain language, with the decision recorded in
       `STATE.md`.
+- [ ] `CLAUDE.md` §Product architecture and §Closed decisions filled in from the ADRs.
 
 ## F4 — Experience
 
@@ -79,8 +87,9 @@ bypassed throughout the entire build.
 ## P6b — F6 close (MVP acceptance)
 
 - [ ] Every MVP FR with traceable code and test; regression harness green in the target
-      environment (`workflows/W06-build.md` §The per-slice gate (P6) and the phase gate (P6b)).
-- [ ] Unresolved technical debt **recorded** (`loops/L08-technical-debt.md`), not hidden.
+      environment (`workflows/W06-build.md` §Exit gate).
+- [ ] Unresolved technical debt **recorded** in `STATE.md` §Debt (owner + payoff trigger —
+      `loops/L08-technical-debt.md`), not hidden.
 - [ ] `FRAMEWORK-IMPROVEMENTS.md` consolidated and report sent to the upstream framework
       (`playbooks/report-framework-improvements.md`) — in long builds, the lessons go upstream at
       MVP acceptance, not months later.
@@ -105,12 +114,14 @@ bypassed throughout the entire build.
 
 ## F9 — Continuous operation
 
-- [ ] Guardian cadences met at the defined periodicity (`agents/13-guardians/README.md`).
+- [ ] Guardian cadences met at the defined periodicity (`agents/13-guardians/README.md`
+      §Cadences per profile) — guardian ledger in `STATE.md` §In progress with no unresolved
+      "overdue" entries (`workflows/W09-continuous-operation.md` step 0).
 - [ ] No loop with a critical pending item open beyond the defined ceiling (`loops/README.md`).
 - [ ] Post-mortems of closed incidents have verified actions, not just planned ones
       (`checklists/post-incident.md`).
-- [ ] Improvement report sent at the profile's cadence
-      (`playbooks/report-framework-improvements.md`).
+- [ ] Improvement report sent at the profile's cadence (`agents/13-guardians/README.md`
+      §Cadences per profile; `playbooks/report-framework-improvements.md`).
 
 ## Per code change
 
@@ -122,7 +133,8 @@ Applies to any slice, PR or hotfix, from the first commit of F6 onward:
 - [ ] Relationship integrity and business invariants preserved (rules in
       `product/04-specification/`).
 - [ ] Scoping and authorization preserved on the touched lists/endpoints.
-- [ ] `STATE.md` updated; `CHANGELOG.md` too if it is a milestone.
+- [ ] `STATE.md` updated (with the block's "AI cost" field — `core/model-routing.md`
+      §Cost observability); `CHANGELOG.md` too if it is a milestone.
 
 ## Related
 
@@ -132,3 +144,4 @@ Applies to any slice, PR or hotfix, from the first commit of F6 onward:
 - `checklists/README.md` — how it is used and who runs it.
 - `core/project-memory.md` — where the outcome is recorded.
 - `knowledge/permanent-rules.md` — the principles the items operationalize.
+- `templates/project/GATE.md.template` — the record each gate leaves behind.

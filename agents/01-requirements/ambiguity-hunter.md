@@ -163,7 +163,7 @@ architecture decisions**.
 ## Anti-patterns
 
 - ❌ Resolving the ambiguity by picking the "obvious" reading → ✅ ask; the reading obvious to the
-  author is not the implementer's (`knowledge/ai-pitfalls.md` §3).
+  author is not the implementer's (`knowledge/ai-pitfalls.md` §AR-3).
 - ❌ Reading each artifact in isolation → ✅ read crossed; contradictions live between documents.
 - ❌ Letting "fast/secure/scalable" through → ✅ demand a number or refer it to NFR.
 - ❌ Approving the gate "because little is missing" → ✅ fail-closed; open critical ambiguity blocks
@@ -196,4 +196,4 @@ architecture decisions**.
 
 - `loops/L01-ambiguous-requirements.md` · `core/question-engine.md`
 - `agents/01-requirements/README.md` · `core/quality-gates.md`
-- `knowledge/ai-pitfalls.md` §3 (assuming vs asking), §7 (diverging sources).
+- `knowledge/ai-pitfalls.md` §AR-3 (assuming vs asking), §AR-7 (diverging sources).

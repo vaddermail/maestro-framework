@@ -5,7 +5,7 @@ built, each reviewer along **one dimension**, and returns a **report of verifiab
 dominant phase is **F7** (`workflows/W07-quality-and-security.md`), the pre-launch gate; the same
 reviewers are reconvened at every milestone and in the global review on request
 (`workflows/W12-global-review.md`). The principle that justifies them is a concrete AI pitfall:
-**whoever produces never validates their own work** (`knowledge/ai-pitfalls.md` §20) and **a
+**whoever produces never validates their own work** (`knowledge/ai-pitfalls.md` §AR-20) and **a
 single perspective is not enough** (§21).
 
 ## What a review panel is

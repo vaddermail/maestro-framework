@@ -8,7 +8,9 @@ document to any other without switching "dialect".
 1. **English**, engineering register, direct voice — no marketing prose. Punctuation follows the
    repo's conventions: spaced em-dashes (` — `) for asides and straight double quotes. The
    Portuguese upstream edition is the source of record; this guide governs contributions to the
-   English edition.
+   English edition. Zero Portuguese residue (user, file, scope, password, connection, deploy, gate
+   — never utilizador/ficheiro/âmbito/palavra-passe/ligação/implantar/portão); check 5 of
+   `_meta/verify.sh` catches these.
 2. Direct, practical tone, addressed to whoever will **execute**: full sentences, no filler.
    Explain trade-offs in plain language — the reader may have no technical background (owner's
    mindset: warn about risks before moving on).

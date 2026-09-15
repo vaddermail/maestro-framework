@@ -30,7 +30,7 @@ the two find it from different angles.
 
 Invoked by the Orchestrator (`core/orchestrator.md`) when server code of a slice is ready for
 review in F7, **provided the reviewer is not the author of what it reviews**
-(`knowledge/ai-pitfalls.md` §20). It runs in parallel with the other reviewers on the panel,
+(`knowledge/ai-pitfalls.md` §AR-20). It runs in parallel with the other reviewers on the panel,
 blind — it does not read their reports (`agents/12-reviewers/README.md`).
 
 ## When it ends
@@ -51,7 +51,7 @@ returns to the Orchestrator to trigger `agents/05-backend/authorization-speciali
 | `product/04-specification/logical-data-model.md` (invariant catalog) | `agents/06-data/data-modeler.md` (F5) | Yes | What the DB must enforce, not just the app |
 | Server code of the slice under review | F6 | Yes | What is being reviewed |
 | `product/04-specification/backend/logging.md` | `agents/05-backend/logging-specialist.md` (F5) | Yes | Forbidden fields and the criterion for "silent failure" |
-| `CLAUDE.md` §Closed decisions · `STATE.md` §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
+| `STATE.md` §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
 
 Without the access contract and the invariant catalog, the reviewer does not proceed on
 assumptions — it returns the list of gaps (`core/question-engine.md`).

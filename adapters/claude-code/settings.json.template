@@ -1,0 +1,77 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(/Maestro/**)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/id_rsa*)",
+      "Read(**/.netrc)",
+      "Read(**/.npmrc)",
+      "Read(**/secrets/**)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git push * -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git checkout -- *)",
+      "Bash(git checkout .*)",
+      "Bash(git restore .*)",
+      "Bash(git clean -f*)",
+      "Bash(git clean *)",
+      "Bash(git branch -D *)",
+      "Bash(git branch --delete --force*)",
+      "Bash(git stash drop*)",
+      "Bash(git stash clear*)",
+      "Bash(git diff --no-index*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(rm -Rf *)",
+      "Bash(rm -r -f *)",
+      "Bash(rm --recursive*)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(rm -r*)",
+      "Bash(rm -f*)"
+    ],
+    "allow": [
+      "Bash(bash Maestro/_meta/verify-project.sh*)",
+      "Bash(bash Maestro/_meta/verify.sh*)",
+      "Bash(git status*)",
+      "Bash(git diff)",
+      "Bash(git diff --stat*)",
+      "Bash(git diff HEAD*)",
+      "Bash(git diff main*)",
+      "Bash(git log*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh\"" }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/artifact-guard.sh\"" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-end.sh\"" }
+        ]
+      }
+    ]
+  }
+}

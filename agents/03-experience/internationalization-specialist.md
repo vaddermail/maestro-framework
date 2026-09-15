@@ -81,7 +81,7 @@ To the Orchestrator, in a batch (`core/question-engine.md`):
 
 1. **Zero hardcoded strings in the code.** All visible copy comes from the catalog by key; the
    catalog extends the single source of content (`modules/single-source-of-content.md`) — never a
-   second, parallel source (`knowledge/ai-pitfalls.md` §7).
+   second, parallel source (`knowledge/ai-pitfalls.md` §AR-7).
 2. **Never concatenate translated sentences.** Word order changes per language; use strings with
    named parameters, not `"total: " + n + " items"`.
 3. **Pluralization and gender by the language's rules**, not by the English "singular/plural" —

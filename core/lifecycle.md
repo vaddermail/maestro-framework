@@ -46,7 +46,7 @@ F0 Kickoff
 - **Goal:** understand the problem before the solution: stakeholders, personas, use cases,
   goals, KPIs, risks, costs, roadmap, MVP.
 - **Workflow:** `workflows/W01-discovery.md`
-- **Agents:** `agents/00-discovery/` (12 specialists).
+- **Agents:** `agents/00-discovery/` (13 specialists).
 - **Artifacts:** `product/00-discovery/` (complete dossier).
 - **Gate:** discovery dossier validated by the user; MVP and priorities approved;
   no critical gap left open.
@@ -133,7 +133,8 @@ F0 Kickoff
 - **Goal:** keep the product healthy forever: guardians on cadence, maintenance loops,
   incident response, feature evolution.
 - **Workflow:** `workflows/W09-continuous-operation.md` (+ W10 evolution, W11 incidents)
-- **Agents:** `agents/13-guardians/` (permanent team of 8).
+- **Agents:** `agents/13-guardians/` (8 guardians + the evolution agent — see
+  `agents/13-guardians/README.md`).
 - **Artifacts:** guardian reports in `product/99-records/guardians/`, post-mortems,
   `STATE.md` always alive.
 - **Gate:** none — there are **cadences** (daily/weekly/monthly, defined in

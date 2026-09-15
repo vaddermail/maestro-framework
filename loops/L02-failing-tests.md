@@ -21,6 +21,10 @@ so that the only accepted exit is the system behaving correctly, never a silence
 Number of tests in `failing` state reported by the harness (unit + integration + E2E + regression,
 summed), in the last complete run.
 
+A test that is disabled, weakened, marked `skip`/`only`, or mocked to pass **does not lower the
+metric**: it counts as no progress for the iteration (`knowledge/ai-pitfalls.md` §AR-22,
+manipulated gate) and feeds the safeguard's stagnation count.
+
 ## Entry condition
 
 The test harness reports ≥1 failing test in a run (local, CI, or regression).
@@ -32,7 +36,9 @@ The test harness reports ≥1 failing test in a run (local, CI, or regression).
 2. Decide: bug in the code (the general rule) or test proven wrong (the exception — attach the
    proof: which requirement/spec/acceptance criterion the test contradicts).
 3. Apply the minimal, reversible fix to the cause (never to the symptom or the detector —
-   `loops/README.md` §Cross-cutting principles).
+   `loops/README.md` §Cross-cutting principles). Changing the test, the threshold, a `skip`/`only`
+   or a mock to go green counts as no progress for the iteration; a diff that touches tests, CI, or
+   thresholds is reviewed by someone who did not write it (`checklists/pre-merge.md`).
 4. Run the full suite locally, frontend and backend separately, **both** green before declaring
    the iteration done.
 

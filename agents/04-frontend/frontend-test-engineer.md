@@ -119,7 +119,7 @@ the Orchestrator, when a criterion is ambiguous (`core/question-engine.md`):
 
 ## Examples
 
-**Example (internal HR app, expense-approval screen):** the acceptance criteria say only the
+**Example (internal procurement app, expense-approval screen):** the acceptance criteria say only the
 Manager profile sees the "approve" action and that approving above a threshold requires a second
 approver. The Engineer writes screen tests against the mocks: with the Employee profile, the
 "approve" action does **not** appear; with the Manager profile, it appears and, when approving an

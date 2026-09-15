@@ -11,17 +11,24 @@ wired before the first slice, not on the eve of go-live (1.3.0 promotion, 2 conf
 
 - Each lifecycle gate (`core/lifecycle.md`) references one or more checklists in its criteria
   (`core/quality-gates.md`).
-- Items are confirmed **one by one**, flipping `- [ ]` → `- [x]` only with real evidence. An item
-  without evidence stays unchecked — it is never checked "on trust" (`knowledge/permanent-rules.md`
-  §2).
+- Items are confirmed **one by one**, instantiating the gate record
+  (`templates/project/GATE.md.template`) in `product/99-records/gates/` — the checklists in
+  `Maestro/` are not edited — with real evidence in the format of
+  `knowledge/proven-patterns.md` §Live proof (what, where, literal output, when, who verified). An
+  item without evidence stays unchecked — it is never checked "on trust"
+  (`knowledge/permanent-rules.md` §2).
 - **The verifier is never whoever produced** the work: an independent reviewer, a test harness, or
   the Orchestrator for formal criteria. It is the same anti-self-validation rule as in
-  `core/quality-gates.md`.
+  `core/quality-gates.md`. In Claude Code, the verifier is a fresh subagent that receives only the
+  artifacts and the checklist — never the conversation history (`adapters/claude-code.md`
+  §Independent verification → subagent without the production context); in other tools, a new
+  session with only the files.
 - **A failed checklist blocks the gate.** There is no partial pass: either every item passes, or
   the gate stays shut. The only way out is an **explicit waiver from the user**, recorded with the
   why and the risk assumed — never a silent shortcut by the agent.
-- The outcome (passed / failed + failed items) is recorded in `STATE.md` and, when it produces a
-  formal report, in `product/99-records/`.
+- The outcome (passed / failed + failed items + waivers with the risk assumed) lives in the gate
+  record in `product/99-records/gates/`, with a summary in `STATE.md`; `_meta/verify-project.sh`
+  looks for those records for each closed phase.
 
 ## Who runs each checklist
 
@@ -44,3 +51,4 @@ wired before the first slice, not on the eve of go-live (1.3.0 promotion, 2 conf
 - `core/project-memory.md` — where the outcome of each verification is recorded.
 - `agents/12-reviewers/README.md` — who typically runs the review checklists.
 - `_meta/STYLE-GUIDE.md` — the `- [ ]` convention and the format of all documents.
+- `templates/project/GATE.md.template` — the gate record that each checklist instantiates.

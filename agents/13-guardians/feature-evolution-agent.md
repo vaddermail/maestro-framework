@@ -59,11 +59,11 @@ blindly**: it qualifies with `core/question-engine.md` before any impact estimat
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Impact analysis + scope decision | `product/99-records/guardians/evolution-<slug>-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`, adapted) | Orchestrator → user |
-| New/changed requirement (FR-nnn) | `product/01-requirements/functional-requirements.md` | Specification, build, reviewers |
+| New/changed requirement (FR-nnn) | Requested to `agents/01-requirements/requirements-engineer.md` via the Orchestrator — owner of `product/01-requirements/functional-requirements.md` (`core/artifact-protocol.md`, rule H2) | Specification, build, reviewers |
 | Updated specification of the touched module | `product/04-specification/modules/<module>.md` | Everything downstream |
 | New ADR (only if the architecture changes) | `product/02-architecture/decisions/ADR-nnn-title.md` | Build, guardians |
 | The slice's code + tests | Repository, via re-entered `workflows/W06-build.md` | Reviewers, pipelines, guardians |
-| Final decision record | `CLAUDE.md` §Closed decisions | Future sessions |
+| Final decision record | `product/99-records/evolutions/EV-nnn.md` + `STATE.md` §Done | Future sessions |
 | New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user

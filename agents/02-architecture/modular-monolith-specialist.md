@@ -128,7 +128,7 @@ useless complexity.
 - Draw boundaries along the **business seams** (glossary contexts), where change tends to stay
   contained — not along technical layers, which cut across every context.
 - Always specify the **enforcement mechanism**; a boundary "by convention" inevitably erodes over
-  dozens of AI sessions (`knowledge/ai-pitfalls.md` §7).
+  dozens of AI sessions (`knowledge/ai-pitfalls.md` §AR-7).
 - Sell the **migration path** as the differentiator: it is what gives "simplicity now without a
   dead end later".
 - Keep one DB, but with **one schema per module** — that is what makes future extraction cheap

@@ -68,19 +68,19 @@ Rarely asks directly — it works from the strategy and the CI. It escalates to 
 ## Rules
 
 1. **Every fixed bug gains a test that would fail without the fix** — otherwise it comes back
-   (`knowledge/ai-pitfalls.md` #10; `loops/L02-failing-tests.md`).
+   (`knowledge/ai-pitfalls.md` §AR-10; `loops/L02-failing-tests.md`).
 2. **Every new flow enters the harness before the slice closes** — the harness grows with the
    product, not behind it.
 3. **Zero tolerance for flaky tests:** a flaky test gets fixed (isolate the global-state leak) or
    removed with a record — never ignored, because it erodes trust in every green
-   (`knowledge/ai-pitfalls.md` #14).
+   (`knowledge/ai-pitfalls.md` §AR-14).
 4. **Heavy suites serially, focused, foreground**; the subagent that runs the full suite is closed
    by the controller, which validates the green WIP by comparing the repository state with the
-   report (`agents/10-quality/README.md` §pitfall).
+   report (`agents/10-quality/README.md` §This category's critical pitfall).
 5. **The harness is a merge gate** — nothing integrates with the harness red
    (`checklists/pre-merge.md`).
 6. **When changing shared behavior, sweep all layers** — the E2E specs live outside the unit suite
-   and keep asserting the old behavior (`knowledge/ai-pitfalls.md` #17).
+   and keep asserting the old behavior (`knowledge/ai-pitfalls.md` §AR-17).
 
 ## Limitations (what this agent does NOT do)
 
@@ -131,7 +131,7 @@ report. The harness is green again and is the merge gate.
 - Keep the harness fast: a slow suite stops being run, and a safety net that is not run does not
   protect. Split early (fast vs full) rather than late.
 - Annotate each regression test's provenance (the bug/incident that originated it) — so nobody
-  "simplifies" it without understanding what it protects (`knowledge/ai-pitfalls.md` #10).
+  "simplifies" it without understanding what it protects (`knowledge/ai-pitfalls.md` §AR-10).
 - A flaky test is a silent emergency: deal with it before it contaminates trust in the rest.
 
 ## Anti-patterns

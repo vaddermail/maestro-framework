@@ -58,7 +58,7 @@ it asks (`core/question-engine.md`).
 | --- | --- | --- |
 | CQRS proposal | `product/02-architecture/proposals/cqrs.md` | `architecture-arbiter` (compares), `stack-selector` |
 | Eventual consistency and reprojection notes | Section of the proposal | `agents/05-backend/events-specialist.md`, `agents/06-data/data-modeler.md` |
-| Risks and assumptions | Proposal annex → `product/00-discovery/risks.md` | `agents/00-discovery/risk-analyst.md` |
+| Risks and assumptions | Annex of the proposal itself in `product/02-architecture/proposals/cqrs.md`; delivered via the Orchestrator to `agents/00-discovery/risk-analyst.md`, owner of `product/00-discovery/risks.md`, to receive `R-nnn` | `agents/00-discovery/risk-analyst.md` |
 
 All output is **written to file** (`core/project-memory.md`); the proposal is never left merely
 spoken in the conversation.

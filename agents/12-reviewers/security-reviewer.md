@@ -117,7 +117,10 @@ Via the Orchestrator, batched (`core/question-engine.md`):
 2. **Confront threat by threat** — for each modeled threat, verify in the code the control that
    should mitigate it; a threat without a control → finding.
 3. **Sweep the OWASP Top 10** — injection, broken authn, data exposure, IDOR/broken access
-   control, misconfiguration, SSRF, etc., mapping each category to the real code.
+   control (includes SSRF), security misconfiguration, software supply chain failures,
+   exceptional condition handling (2025 edition — the same one
+   `agents/09-security/owasp-top10-specialist.md` records in its report), mapping each category to
+   the real code.
 4. **Audit least privilege** — authz (actions) and scoping (data) in the app; DB, cloud and CI
    permissions; service accounts with the minimum necessary (`modules/rbac-and-scoping.md`).
 5. **Verify sensitive data** — not emitted by the query **and** redacted on output (defense in

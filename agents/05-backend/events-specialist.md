@@ -42,7 +42,7 @@ with the internal contract — it records the pending decision and returns to th
 | Artifact | Source (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
 | `product/04-specification/state-machines.md` | F5 | Yes | Every relevant transition is an event candidate |
-| `product/02-architecture/estilo.md` (event-driven?) | `agents/02-architecture/architecture-arbiter.md` | Yes | Defines whether there is an event bus and which guarantees |
+| `product/02-architecture/architecture-vision.md` (event-driven?) | `agents/02-architecture/architecture-arbiter.md` | Yes | Defines whether there is an event bus and which guarantees |
 | `product/01-requirements/glossary.md` | `agents/01-requirements/glossary-curator.md` | Yes | Event names use the ubiquitous language |
 | External systems' contracts | `modules/readonly-external-integrations.md` | As needed | Format expected by outside consumers |
 

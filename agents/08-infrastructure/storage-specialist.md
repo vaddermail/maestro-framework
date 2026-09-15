@@ -123,13 +123,13 @@ To the Orchestrator (`core/question-engine.md`):
 
 ## Examples
 
-**Example (internal HR app with employee documents + photos + generated reports):** the
+**Example (vendor portal with scanned contracts + photos + generated reports):** the
 specialist classifies three workloads. The **uploaded photographs and documents** (contract PDFs)
 are immutable blobs with occasional access → high-durability object storage, encrypted, with a
 lifecycle that transitions to a cold class at 180 days but **no expiration** (contracts carry a
 legal retention of years — confirmed with the user and the `data-auditor.md`). The **monthly
 generated PDF reports** are regenerable → standard object storage expiring at 90 days (they are
-regenerated if needed). The HR **database disk** is fast encrypted block with provisioned IOPS.
+regenerated if needed). The portal's **database disk** is fast encrypted block with provisioned IOPS.
 It writes it all in Terraform, enables encryption at rest with keys managed by the
 `secrets-and-rotation-manager.md`, and in the live proof confirms that an object read from the
 bucket is encrypted in the underlying storage. It marks clearly that object-storage durability

@@ -58,7 +58,7 @@ top model across the whole queue.
 - **Step 1 — the scope and the depth** belong to the user (they set the cost of the review).
 - **Step 5 — the core of W12:** for **each** finding, the user decides **fix now** or **send to
   the backlog**. The agent does not decide that alone — the technical prioritization
-  (`consolidator`) informs; the business decision belongs to the owner (`core/orchestrator.md`
+  (`consolidator`) informs; the business decision belongs to the user (`core/orchestrator.md`
   §Human approval). Findings involving personal data, money or irreversible flows get an explicit
   "fix now" recommendation (`MANIFESTO.md` §9), but the final word is the user's.
 

@@ -61,6 +61,7 @@ explicitly marks that the runtime/OS inventory stays unfilled until there is an 
 | Readable SBOM index | `product/05-security/sbom.md` (summary: component count, licenses, the cycle's deltas) | Orchestrator → user |
 | Inventory diff | Appendix to the index | `security-guardian` (what changed since the last analysis) |
 | Identification gaps | `STATE.md` §Pending decisions | User (components left to identify) |
+| VEX document per artifact (status per CVE: `affected` / `not_affected` + justification / `fixed`) | `product/05-security/sbom/` (same format as the SBOM: CycloneDX VEX or OpenVEX) | Scanner in `pipelines/ci-security.md`, `dependency-analyst`, `security-guardian` |
 
 Every SBOM is **written to a versioned file** — it is what allows answering, months later, "was this
 vulnerable version ever in production?" (`core/project-memory.md`).
@@ -92,6 +93,10 @@ In the `core/question-engine.md` format, batched by the Orchestrator:
    "looks clean" (`knowledge/permanent-rules.md` §2).
 6. **Keep history:** each SBOM stays versioned; the previous one is never overwritten without
    keeping the trail (allows answering "was this ever in production?").
+7. **The VEX travels with the SBOM.** A triage verdict that is not in the VEX does not exist for
+   the scanner; verdicts come from `agents/09-security/dependency-analyst.md` and from
+   `playbooks/cve-response.md`, the VEX is updated in the same pipeline that regenerates the SBOM
+   and is versioned alongside it (one per artifact, next to its corresponding SBOM).
 
 ## Limitations (what this agent does NOT do)
 

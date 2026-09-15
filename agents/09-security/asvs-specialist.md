@@ -15,8 +15,10 @@
 
 ## Objective
 
-Verify the product against the **OWASP ASVS** at the **level appropriate to the risk** (L1 basic,
-L2 for most applications with sensitive data, L3 for high-risk ones), turning security
+Verify the product against **OWASP ASVS 5.0** (the edition in force — the verified version is
+written in `product/05-security/asvs-level.md`) at the **level appropriate to the risk** (L1
+minimum — the first layer of requirements, not "what gets black-box tested"; L2 for most
+applications with sensitive data; L3 for high-risk ones), turning security
 from an opinion into a list of requirements **verifiable one by one**. Where the Top 10 is the net
 for the common failure classes, ASVS is the exhaustive catalog of requirements ("the application
 verifies X"). It produces a verdict per requirement of the target level: pass / fail /
@@ -24,8 +26,9 @@ not-applicable.
 
 ## When it starts
 
-- **In F2**, with the NFRs: fixes the **target level** (L1/L2/L3) from the risk profile of the
-  `security-coordinator` — the decision that calibrates all the remaining security work.
+- **In F2**, with the NFRs: fixes the **target level** (L1/L2/L3) and the **ASVS version** from
+  the risk profile of the `security-coordinator` — the decision that calibrates all the remaining
+  security work.
 - **In F7**, runs the formal verification against the target level, before go-live, on the built
   product (not on the design).
 - Convened by the coordinator; uses the threat model and the OWASP specialist's reports as input.
@@ -52,7 +55,7 @@ if the target level is not decided (returns the decision to the coordinator → 
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| Decided target level | `product/05-security/asvs-level.md` | `security-coordinator`, all specialists (calibrates effort) |
+| Decided target level (level + ASVS version) | `product/05-security/asvs-level.md` | `security-coordinator`, all specialists (calibrates effort) |
 | ASVS verification report (verdict per requirement) | `product/05-security/asvs-verification.md` (`templates/technical/review-report.md.template`) | `security-coordinator`, go-live gate |
 | Gaps (fail) | `loops/L03-security-issues.md` | Whoever fixes |
 
@@ -100,10 +103,14 @@ Via coordinator → Orchestrator (`core/question-engine.md`):
 ## Workflow
 
 1. **F2 — Fix the target level** from the risk profile and the NFRs; if ambiguous, ask. Write
-   `asvs-level.md`.
-2. **F7 — Select the requirements** of the target level (a level includes the lower ones) and group
-   them by chapter (authentication, session management, access control, validation, cryptography,
-   error handling/logging, data, communications, configuration…).
+   `asvs-level.md` with the level and the ASVS **version** (5.0, unless a later edition is
+   confirmed) — two sessions never verify against different editions.
+2. **F7 — Select the requirements** of the target level (a level includes the lower ones) and
+   group them by ASVS 5.0 chapter (V1 encoding/sanitization, V2 validation and business logic, V3
+   web frontend, V4 API, V5 files, V6 authentication, V7 session, V8 authorization, V9
+   self-contained tokens, V10 OAuth/OIDC, V11 cryptography, V12 communication, V13 configuration,
+   V14 data protection, V15 secure coding, V16 logging and errors, V17 WebRTC — V9/V10 mandatory
+   when the product issues JWTs or uses OAuth/OIDC; V17 only when there is WebRTC).
 3. **Verify each requirement** with the appropriate evidence: automated test, configuration
    inspection, code review, or citation of an OWASP/pentester report already done.
 4. **Record the verdict** — pass (proof) / fail (gap + severity) / not-applicable (why).
@@ -114,22 +121,26 @@ Via coordinator → Orchestrator (`core/question-engine.md`):
 
 ## Examples
 
-**Example (internal HR app — L2 verification, F7).** The risk profile (employees' personal data,
-no payments) fixed **L2**. The specialist runs the chapters:
+**Example (internal claims-management app — L2 verification, F7).** The risk profile (employees'
+personal data, no payments) fixed **L2** on **ASVS 5.0** (recorded in `asvs-level.md`). The
+specialist runs the chapters:
 
-- **V2 Authentication:** does the policy require MFA for management roles? Yes, verified with an
+- **V6 Authentication:** does the policy require MFA for management roles? Yes, verified with an
   e2e test — **pass**. Passwords checked against common-password lists? No — **fail**, medium;
   routed.
-- **V3 Session management:** is the session token invalidated on logout server-side? Verified —
+- **V7 Session management:** is the session token invalidated on logout server-side? Verified —
   **pass**. Expiration time configured? Yes — **pass**.
-- **V4 Access control:** does every sensitive function verify authorization on the server? Reuses
+- **V8 Authorization:** does every sensitive function verify authorization on the server? Reuses
   the OWASP specialist's report (which already examined A01 endpoint by endpoint) as evidence —
   **pass**, with citation.
-- **V6 Cryptography:** is the personal data encrypted at rest? No — **fail**, high;
+- **V11 Cryptography:** is the personal data encrypted at rest? No — **fail**, high;
   routed (ties to a gap the Top 10 also flagged).
-- **V7 Error handling and logging:** are denied accesses logged without exposing sensitive data
+- **V16 Logging and error handling:** are denied accesses logged without exposing sensitive data
   in the logs? Verified — **pass**.
-- **V9 Communications:** modern TLS everywhere? Cites the report of the `tls-specialist.md` —
+- **V12 Secure communication:** modern TLS everywhere? Cites the report of the `tls-specialist.md`
+  — **pass**.
+- **V9 Self-contained tokens:** the product issues JWTs for the internal API — the chapter is
+  mandatory: algorithm pinned server-side (never accepted from the header), `aud`/`exp` verified —
   **pass**.
 
 Result: of the L2 requirements, most pass with evidence; two gaps (common passwords, encryption at
@@ -169,7 +180,8 @@ security gate.
 
 ## Done criteria
 
-- [ ] Target level (L1/L2/L3) decided in F2 and written in `asvs-level.md`, validated by the user.
+- [ ] Target level (L1/L2/L3) **and ASVS version** decided in F2 and written in `asvs-level.md`,
+      validated by the user.
 - [ ] Verdict written for **every** requirement of the target level (pass/fail/not-applicable).
 - [ ] Every "pass" with concrete evidence (test, config, code or citation).
 - [ ] Gaps routed to `loops/L03-security-issues.md` by severity.

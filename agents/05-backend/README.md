@@ -54,6 +54,7 @@ verify this separation in `agents/12-reviewers/backend-reviewer.md`.
 **Observability**
 - `agents/05-backend/logging-specialist.md` — structured logging, levels, correlation, no secrets in the logs.
 - `agents/05-backend/metrics-specialist.md` — RED/USE metrics, SLIs, cardinality under control.
+- `agents/05-backend/product-analytics-specialist.md` — product events (funnels, activation, drop-off) tied to the yardstick's KPIs; zero PII, pseudonymization, consent, versioning, live proof.
 - `agents/05-backend/observability-architect.md` — traces + logs + metrics correlated; actionable alerts; AI costs visible.
 - `agents/05-backend/ai-features-specialist.md` — LLM features: grounding on the single source, versioned prompts, executable evals, guardrails/fallback, credits and AI observability applied.
 
@@ -66,7 +67,8 @@ verify this separation in `agents/12-reviewers/backend-reviewer.md`.
 3. **Implementation of the chosen style** (one of `rest`/`graphql`/`grpc`) on top of the three-layer
    anatomy, slice by slice.
 4. **Performance and async** as the slice demands — caching, queues, events.
-5. **Observability** from the first slice — logging and metrics are not a final touch-up.
+5. **Observability** from the first slice — logging and metrics are not a final touch-up; product
+   events (`product-analytics-specialist`) come in with the slice whose flow feeds a KPI.
 
 ## How the Orchestrator summons it
 

@@ -57,8 +57,8 @@ consumes it).
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | TLS policy (versions, ciphers, mTLS, PFS, OCSP) | `product/05-security/tls-policy.md` | `agents/08-infrastructure/tls-ssl-specialist.md`, `agents/07-devops/nginx-specialist.md`, reviewers |
-| Configuration conformance test | `product/05-security/tests/tls.md` | `pipelines/ci-security.md`, `agents/10-quality/e2e-test-engineer.md` |
-| Approved exceptions (legacy client) | `product/05-security/residual-risk.md` | `agents/09-security/security-coordinator.md`, user |
+| Configuration conformance test | `product/06-tests/test-plans/tls.md` | `pipelines/ci-security.md`, `agents/10-quality/e2e-test-engineer.md` |
+| Residual risk candidates (legacy client exceptions) | Escalated to `agents/09-security/security-coordinator.md` via the Orchestrator — only it writes `product/05-security/residual-risk.md` | User (signs off) |
 
 All output lives in files (`core/project-memory.md`) — the policy does not live in a server's
 config; it lives in the artifact the config must comply with.
@@ -118,8 +118,8 @@ It never invents the baseline for convenience; a minimum chosen "just because" i
 4. **Ask** the user what cannot be assumed (legacy, mTLS, standard) — batched.
 5. **Write** `tls-policy.md` with the baseline, the dated exceptions and the mTLS justification.
 6. **Specify the conformance test** and hand it to `pipelines/ci-security.md`.
-7. **Validate** against the real config in F7/F8; record exceptions in `residual-risk.md`,
-   signed.
+7. **Validate** against the real config in F7/F8; escalate exceptions to the coordinator, who
+   records them in `residual-risk.md` for sign-off.
 8. **Return control** to the Orchestrator with the summary and each channel's status.
 
 ## Examples

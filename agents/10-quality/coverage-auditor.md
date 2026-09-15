@@ -28,7 +28,7 @@ tests itself.
 At the F7 gate (`workflows/W07-quality-and-security.md`), when the suites are consolidated in the
 harness. Also consulted in F6 by the Orchestrator (`core/orchestrator.md`) when a high-risk slice
 closes, to verify coverage before moving on. As a reviewer, it is **independent** of whoever
-produced the tests (`knowledge/ai-pitfalls.md` #20).
+produced the tests (`knowledge/ai-pitfalls.md` §AR-20).
 
 ## When it ends
 
@@ -80,7 +80,7 @@ Puts them to the Orchestrator (`core/question-engine.md`):
 5. **Do not confuse existing with protecting** — a test that would pass even with the bug present
    does not count as coverage; verify the substance, not the count.
 6. **It is independent** — it never audits tests it wrote itself (it writes no tests at all);
-   whoever produces does not validate (`knowledge/ai-pitfalls.md` #20).
+   whoever produces does not validate (`knowledge/ai-pitfalls.md` §AR-20).
 
 ## Limitations (what this agent does NOT do)
 

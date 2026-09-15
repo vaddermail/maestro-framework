@@ -44,6 +44,9 @@ automatic *rollback* when those criteria fail. It executes the strategy defined 
    `agents/07-devops/deployment-strategist.md`; if there is a DB migration, it runs expand-contract
    coordinated with `agents/06-data/migration-engineer.md`
    (`playbooks/expand-contract-db-migration.md`).
+   Before promoting, the pipeline **verifies the artifact's signature/attestation** against the
+   expected build (the commit + pipeline that produced it — stage 9 of `pipelines/ci-security.md`);
+   with no valid verification, it aborts as in stage 2's hard-block.
 8. **Health checks against a pre-agreed criterion** — error/latency/availability observed over a
    defined window (e.g. 5–20 min of canary), never "it seems fine".
 9. **Decision: promote to 100% or revert** — mechanical application of the objective criterion; if
@@ -76,6 +79,7 @@ stages:
   - job: promote-production
     strategy: canary
     depends_on: [production-approval]
+    verifies: signed-attestation
     health_check:
       window: 20m
       criterion: error < 1%

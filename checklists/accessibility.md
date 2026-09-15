@@ -23,10 +23,11 @@ in F7, before gate P7 (`core/quality-gates.md`). Feeds the review by
 
 ## Contrast and color
 
-- [ ] Normal text with a contrast ratio ≥ 4.5:1, large text ≥ 3:1 (WCAG AA), computed on the design
-      system's real tokens, not estimated.
+- [ ] Normal text with a contrast ratio ≥ 4.5:1, large text ≥ 3:1 (WCAG 2.2 AA), computed on the
+      design system's real tokens, not estimated.
 - [ ] No information conveyed by color alone (error/success/selection also carry an icon or text).
-- [ ] Touch targets ≥ 44×44px on interactive elements.
+- [ ] Touch targets ≥ 44×44px on interactive elements (stricter than WCAG 2.2 criterion 2.5.8's
+      24×24 minimum — this covers it).
 
 ## Forms
 
@@ -44,9 +45,28 @@ in F7, before gate P7 (`core/quality-gates.md`). Feeds the review by
 - [ ] Dynamic content (toasts, counters, async validations) announced via the appropriate
       `aria-live`.
 
+## WCAG 2.2 criteria
+
+The six AA criteria introduced in 2.2 (October 2023); automated scanners do not catch them, so
+they are checked by hand, screen by screen.
+
+- [ ] Focused element never fully obscured by fixed content (sticky headers/footers, cookie
+      banner, floating chat) — 2.4.11.
+- [ ] Every drag action (reordering, sliders, maps) has a click/keyboard alternative — 2.5.7.
+- [ ] Interactive targets ≥ 24×24px (already guaranteed by the 44×44 in the contrast and color
+      section) — 2.5.8.
+- [ ] Help (contact, chat, FAQ) in the same relative position across all screens — 3.2.6.
+- [ ] Information already entered in the same flow is pre-filled or selectable, never asked for
+      again — 3.3.7.
+- [ ] Authentication without a cognitive test: pasting allowed in credential fields, password
+      managers and passkeys work, CAPTCHA (if any) has a non-cognitive alternative — 3.3.8
+      (coordinate with `agents/09-security/secure-authentication-specialist.md`).
+
 ## Verification
 
-- [ ] Target WCAG level confirmed with the user (AA by default) —
+- [ ] Target WCAG level confirmed with the user (WCAG 2.2 AA by default) and legal obligation
+      identified (European Accessibility Act — Directive (EU) 2019/882, transposed nationally
+      where applicable — when the product is sold in the EU in the covered sectors) —
       `agents/03-experience/accessibility-specialist.md`.
 - [ ] Automated scan run (catches ~30–40% of the issues) **and** manual verification by keyboard
       **and** screen reader (`knowledge/permanent-rules.md` §7).

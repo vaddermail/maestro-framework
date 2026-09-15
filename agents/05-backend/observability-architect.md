@@ -9,7 +9,7 @@
 | **Name** | Observability Architect |
 | **Alias** | Observability Architect |
 | **Category** | `05-backend` |
-| **Phases** | F5 (strategy design), F6 (integration of the three pillars); accompanies F9 |
+| **Phases** | F5 (strategy design), F6 (integration of the three pillars), F8 (SLOs and dashboards materialized in `product/07-operations/`); accompanies F9 |
 | **Type** | `coordinator` |
 | **Suggested model** | **Top**, medium effort to design the three-pillar correlation and the alerting policy; Standard for incremental reviews (`core/model-routing.md`) |
 
@@ -58,6 +58,8 @@ Orchestrator for `core/decision-engine.md`.
 | Correlation pattern (`traceId`/`correlationId`) | Section of `observability.md` | `logging-specialist`, `metrics-specialist` |
 | Alerting policy (symptom→severity→owner→runbook) | `observability.md` | `agents/13-guardians/`, operations |
 | AI cost panel (if applicable) | `observability.md` | `agents/13-guardians/cost-guardian.md` |
+| SLOs + materialized alerting policy (F8) | `product/07-operations/slos.md` | `workflows/W09-continuous-operation.md`, `workflows/W11-incident-response.md`, `agents/13-guardians/` |
+| What is measured and where it is seen — dashboards and sources (F8) | `product/07-operations/observability.md` | `agents/13-guardians/value-guardian.md`, `agents/13-guardians/cost-guardian.md`, `agents/13-guardians/performance-guardian.md` |
 
 ## Questions to the user
 
@@ -176,6 +178,8 @@ or metric carries the conversation content (PII).
 - [ ] Trace sampling declared (with 100% of those that fail).
 - [ ] If the product uses AI: cost panel per feature/model with alerts and kill-switch.
 - [ ] Live proof: alert → trace → correlated logs navigable, with output recorded.
+- [ ] (F8) `product/07-operations/slos.md` and `product/07-operations/observability.md` written —
+      SLOs, alerts and dashboards pointing to the real sources, not to the F5 strategy.
 
 ## Related
 

@@ -47,7 +47,7 @@ declared. It returns on every cadence.
 | --- | --- | --- | --- |
 | IaC code | `agents/07-devops/terraform-specialist.md` / `ansible-specialist.md` (F8) | Yes (if there is IaC) | The declared, analyzable before applying |
 | Read access to the live cloud/infra | User / service account | Yes (for CSPM) | Without read access there is no real posture; read-only role |
-| `product/02-architecture/infra.md` / hosting decision | `agents/08-infrastructure/hosting-arbiter.md` (F3/F8) | Yes | The expected design, to detect drift |
+| `product/07-operations/infra/` (hosting design and proposals) + hosting decision (ADR) | `agents/08-infrastructure/hosting-arbiter.md` (F3/F8) | Yes | The expected design, to detect drift |
 | Cloud/OS benchmark | `agents/09-security/cis-benchmarks-specialist.md` | No | The CIS standard verified against |
 | Gate policy | User (via Orchestrator) | No | Which misconfig blocks the `apply`/go-live |
 

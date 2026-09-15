@@ -58,8 +58,8 @@ requirements and returns to the Orchestrator for the backend to design (`core/qu
 | --- | --- | --- |
 | authn security requirements | `product/05-security/secure-authn.md` | `agents/05-backend/authentication-specialist.md`, reviewers |
 | authn review report | `product/99-records/security/authn-YYYY-MM-DD.md` (`templates/technical/review-report.md.template`) | Orchestrator → user |
-| Abuse test cases | `product/05-security/tests/authn.md` | `agents/10-quality/e2e-test-engineer.md`, `agents/09-security/pentester.md` |
-| Residual risk (friction vs. security) | `product/05-security/residual-risk.md` | `security-coordinator`, user |
+| Abuse test cases | `product/06-tests/test-plans/authn.md` | `agents/10-quality/e2e-test-engineer.md`, `agents/09-security/pentester.md` |
+| Residual risk candidates (friction vs. security) | Escalated to `agents/09-security/security-coordinator.md` via the Orchestrator — only they write `product/05-security/residual-risk.md` | User (signs off) |
 
 ## Questions to the user
 
@@ -93,6 +93,10 @@ Batched, via the Orchestrator:
    (`knowledge/proven-patterns.md` §6, untrusted client).
 7. **Honesty:** it reports the real open vectors ("SMS recovery accepts SIM swap"), never a generic
    "secure login".
+8. **Accessible authentication (WCAG 2.2, criterion 3.3.8).** Never block pasting into credential
+   fields nor require memorization/transcription; passkeys and password managers supported; CAPTCHA
+   only with a non-cognitive alternative. Security that excludes users is not security —
+   `agents/03-experience/accessibility-specialist.md` verifies it in `checklists/accessibility.md`.
 
 ## Limitations (what this agent does NOT do)
 

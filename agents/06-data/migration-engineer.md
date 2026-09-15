@@ -43,6 +43,7 @@ user (`core/quality-gates.md`).
 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
+| `product/00-discovery/existing-system.md` | `agents/00-discovery/existing-system-analyst.md` (F1) | No | Only when there is a system to replace: source, volumes, quality, external ID per entity |
 | Physical model of the slice | `data-modeler` (F6) | Yes | The target schema to materialize |
 | Current migration sequence | `schema-versioning-manager` | Yes | Where the new migration fits and what state it assumes |
 | `playbooks/expand-contract-db-migration.md` | Framework | Yes | The canonical procedure to follow |
@@ -56,6 +57,7 @@ engineer does **not assume**: it returns the question to the `data-modeler` via 
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
+| Idempotent importer by external ID, with raw payload and provenance (only when there is a system to replace) | code + rehearsal records in `product/99-records/data/` | `playbooks/legacy-system-migration.md`, `agents/06-data/data-auditor.md` |
 | Up + down migration (or reversal plan) | Project migrations directory | `schema-versioning-manager`, `deployment-strategist` |
 | Migration plan for the slice | `product/07-operations/data/migrations/<slice>.md` (`templates/technical/migration-plan.md.template`) | Reviewers, Orchestrator |
 | Backfill/validation runbook (when there is data) | `product/07-operations/runbooks/` (`templates/technical/runbook.md.template`) | `deployment-strategist`, guardians |

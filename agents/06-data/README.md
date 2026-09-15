@@ -65,7 +65,7 @@ Dominant phase **F5–F6** (`core/lifecycle.md`), with a foot in F8–F9:
 of each agent spec. In F5 it calls only the `data-modeler`; in F6 it calls the rest per vertical
 slice, coordinating **upstream** with `agents/01-requirements/` (rules and invariants) and
 **downstream** with `agents/05-backend/` (which orchestrates writes in transactions —
-`knowledge/origin-lessons.md` §C3–C4). Transactional integrity and authorization live in the
+`knowledge/origin-lessons.md` §C3/§C4). Transactional integrity and authorization live in the
 backend; **structural integrity (constraints, keys, uniqueness) lives here** and is enforced by
 the DB itself.
 

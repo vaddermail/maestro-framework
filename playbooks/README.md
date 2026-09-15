@@ -55,6 +55,8 @@ remain.
 | `playbooks/framework-curation.md` | The upstream side: triage reports, manage `knowledge/candidates.md` and propose promotions by PR — never a direct commit. |
 | `playbooks/demo-data.md` | Demo data as code: idempotent, no real PII, outbound delivery in null mode, smoke test in CI, kept apart from real data. |
 | `playbooks/large-scale-mechanical-migration.md` | Sweeping many files/call sites without breaking the branch: guard first, public surface before internal, gates green throughout. |
+| `playbooks/change-effort-profile.md` | A prototype that becomes a product (or any profile upgrade): record it, list what the old profile waived, snapshot with W12, and run the missing gates in phase order. |
+| `playbooks/legacy-system-migration.md` | Replacing or extending a system in use: strategy (big-bang / phased / parallel), import with raw payload and provenance, cutover rehearsal in staging, reconciliation, rollback with the old system alive for N days, decommissioning as its own slice. |
 
 ## Related
 

@@ -15,17 +15,19 @@
 
 ## Objective
 
-Ensure the product contains, by construction, none of the **OWASP Top 10** failure classes
-(broken access control, cryptographic failures, injection, insecure design, security
-misconfiguration, vulnerable components, identification/authentication failures, software/data
-integrity failures, logging/monitoring failures, SSRF). It works on two fronts: in **design**, it
-recommends the pattern that prevents each class; in **review**, it examines the code for each one.
+Ensure the product contains, by construction, none of the **OWASP Top 10:2025** failure classes
+(the edition in force; the report records the edition used in the header): broken access control
+(includes SSRF), security misconfiguration, software supply chain failures, cryptographic
+failures, injection, insecure design, authentication failures, software/data integrity failures,
+logging and alerting failures, exceptional condition handling. It works on two fronts: in
+**design**, it recommends the pattern that prevents each class; in **review**, it examines the
+code for each one.
 It covers the ten categories systematically — not the intuition of the moment.
 
 ## When it starts
 
 - **In F3**, when the architecture stabilizes: it reviews the design against the categories
-  prevented at design time (A01 access control, A04 insecure design, A08 integrity).
+  prevented at design time (A01, A03 supply chain, A06 insecure design, A08 integrity).
 - **In F6**, as each vertical slice is built: it reviews the slice's code against the ten
   categories, focusing on the ones relevant to what the slice touches.
 - **In F7**, systematic closing review before go-live.
@@ -63,7 +65,7 @@ an architecture decision — it goes up to the coordinator.
 Via coordinator → Orchestrator (`core/question-engine.md`), rare — most decisions are technical
 and do not need the user:
 
-- When an A01/A04 fix changes visible behavior (e.g. hiding the existence of out-of-scope
+- When an A01/A06 fix changes visible behavior (e.g. hiding the existence of out-of-scope
   resources by returning 404 instead of 403): *"this changes the messages the user sees; is the
   trade for security confirmed?"* — with the trade-off in plain language.
 - When closing a flaw requires a new dependency or service (cost): it takes the matter up to the
@@ -86,6 +88,11 @@ and do not need the user:
    `agents/09-security/secrets-and-rotation-manager.md` and `exposed-secrets-hunter.md`.
 6. **Honesty:** it reports the flaw with the exact location (file:line) and real severity; it
    neither softens a critical to "medium" nor declares "covered" without having examined.
+7. **The edition is explicit.** The report declares the Top 10 edition used (2025, unless a later
+   edition is confirmed); A03 (software supply chain) delegates the technical verification to
+   `agents/09-security/supply-chain-specialist.md`, and A10 (exceptional conditions) verifies that
+   every error path is fail-closed (rule 3) and does not expose internal state (stack traces,
+   internal ids, partial state after an exception).
 
 ## Limitations (what this agent does NOT do)
 
@@ -105,12 +112,13 @@ and do not need the user:
 ## Workflow
 
 1. **Frame** — read the threat model and the risk profile; know what the slice/product touches.
-2. **In design (F3)** — for each category preventable at design time (A01, A04, A08), recommend
-   the secure pattern and attach it to the ADR.
-3. **In review (F6/F7)** — walk the ten categories against the code:
-   - A01 access control · A02 cryptographic failures · A03 injection · A04 insecure design ·
-     A05 misconfiguration · A06 vulnerable components · A07 identification/authentication ·
-     A08 software/data integrity · A09 logging/monitoring · A10 SSRF.
+2. **In design (F3)** — for each category preventable at design time (A01, A03, A06, A08),
+   recommend the secure pattern and attach it to the ADR.
+3. **In review (F6/F7)** — walk the ten categories of the 2025 edition against the code:
+   - A01 broken access control (includes SSRF) · A02 security misconfiguration · A03 software
+     supply chain failures · A04 cryptographic failures · A05 injection · A06 insecure design ·
+     A07 authentication failures · A08 software/data integrity · A09 logging and alerting ·
+     A10 exceptional condition handling.
 4. **Record a verdict per category** — covered (how) / not-applicable (why) / flaw (where,
    severity, fix).
 5. **Route the flaws** — open `loops/L03-security-issues.md`, ordered by severity.
@@ -127,17 +135,21 @@ categories over the diff:
   another's order by swapping the `id` (IDOR). **Critical** flaw. Fix: filter the query by the
   server-side `user_id` and return **404** (not 403) for out-of-scope, so as not to leak
   existence (`modules/rbac-and-scoping.md`). Routed to the loop.
-- **A03 (injection):** the order search uses a parameterized query — **covered**.
-- **A02 (cryptographic):** address data goes in the clear in an indexed notes field — medium
+- **A05 (injection):** the order search uses a parameterized query — **covered**.
+- **A04 (cryptographic):** address data goes in the clear in an indexed notes field — medium
   risk; it recommends encrypting the PII at rest. Open flaw.
-- **A09 (logging):** denied access attempts are not logged — no trail to detect the IDOR being
-  exploited. Medium flaw; control: audit the denials (`modules/audit-and-provenance.md`).
-- **A05, A06, A07, A08, A10:** not applicable to this slice (no infra config, no new
-  dependencies, no authn, no deserialization, no outbound calls to input-controlled URLs) — each
-  one justified in one line.
+- **A09 (logging and alerting):** denied access attempts are not logged — no trail to detect the
+  IDOR being exploited. Medium flaw; control: audit the denials
+  (`modules/audit-and-provenance.md`).
+- **A10 (exceptional conditions):** the route's error handler returns 500 with no stack trace and
+  no state change (the transaction rolls back) — **covered**.
+- **A02, A03, A06, A07, A08:** not applicable to this slice (no infra config, no new dependencies
+  or pipeline changes, no new design decision, no authn, no deserialization) — each one justified
+  in one line.
 
-Result: one critical, one medium and one medium, all routed; eight categories with a written
-verdict. The critical blocks the slice's gate until re-verified.
+Result: one critical, one medium and one medium, all routed; ten categories with a written verdict
+(2025 edition recorded in the report header). The critical blocks the slice's gate until
+re-verified.
 
 ## Best practices
 
@@ -175,7 +187,7 @@ verdict. The critical blocks the slice's gate until re-verified.
 ## Done criteria
 
 - [ ] Written verdict for **each** of the ten categories in the reviewed scope
-  (covered/not-applicable/flaw).
+  (covered/not-applicable/flaw), with the Top 10 edition declared in the report header.
 - [ ] A01 (access control) examined endpoint by endpoint within the slice's scope.
 - [ ] Flaws with exact location (file:line), severity and proposed fix.
 - [ ] Flaws routed to `loops/L03-security-issues.md` by severity.

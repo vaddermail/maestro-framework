@@ -24,7 +24,7 @@ needs a newer version. Majors with breaking changes always go up to the user.
 
 3. **Read the changelog of every relevant dependency — mandatory before any bump.** Look for
    breaking changes, removed/deprecated functions, silent behavior changes (e.g.:
-   error mapping that changes without warning — `knowledge/ai-pitfalls.md` §16). *Verified* with
+   error mapping that changes without warning — `knowledge/ai-pitfalls.md` §AR-16). *Verified* with
    a written summary of the changelog, not an impression. *If no changelog is accessible*: treat it
    as a risky major (goes up to the user) until proven otherwise.
 
@@ -76,4 +76,4 @@ a recorded decision with a review deadline, not an oversight.
 - `playbooks/cve-response.md` — when the update is an urgent security fix, not routine.
 - `loops/L08-technical-debt.md` — where deferred/pinned version debt is reduced in a planned way.
 - `checklists/pre-merge.md` — the gate common to every PR before integrating.
-- `knowledge/permanent-rules.md` §6 · `knowledge/ai-pitfalls.md` §16.
+- `knowledge/permanent-rules.md` §6 · `knowledge/ai-pitfalls.md` §AR-16.

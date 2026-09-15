@@ -1,0 +1,57 @@
+# Gate {{Pn}} — {{transition, e.g. F5 → F6}} — {{yyyy-mm-dd}}
+
+> **How to use:** instantiated in `product/99-records/gates/{{Pn}}-{{yyyy-mm-dd}}.md` **at the
+> moment** the gate passes **or fails** (a failed gate is also recorded — it is the attempt that
+> the genesis counts; the next one is another file with the "attempt #" incremented). P6 is per
+> slice (`P6-{{slice}}-…`); the cross-cutting ones with their own closing condition use the
+> workflow's prefix (`W13-…`). Rules, profiles and waivers: `Maestro/core/quality-gates.md`
+> §Anatomy of a gate and §Gates and effort profiles; evidence format:
+> `Maestro/knowledge/proven-patterns.md` §Live proof.
+
+## Header
+
+| Field | Value |
+| --- | --- |
+| Gate | {{P0 … P9, P6b — or W13}} |
+| Transition | {{e.g. F5 → F6 · slice → merge · release → production}} |
+| Effort profile | {{prototype \| internal product \| commercial product \| enterprise platform}} |
+| Date | {{yyyy-mm-dd}} |
+| Attempt # | {{1, 2, …}} |
+| Workflow | `{{Maestro/workflows/Wnn-name.md}}` |
+| Checklist(s) | `{{Maestro/checklists/name.md}}` §{{section}} — at P0, `Maestro/workflows/W00-project-kickoff.md` §Exit gate (P0); a checklist executed by another agent (e.g. `Maestro/checklists/pre-production-security.md` by the security coordinator) enters as ONE line in the table, with evidence = their report's path |
+
+> **Result:** {{passed | failed}}
+> **Verified by:** {{agent, subagent or reviewer ≠ whoever produced it — spec or person}}
+> **Approved by (human):** {{name, yyyy-mm-dd, short quote — e.g. "I approve the MVP"}} | not required for this gate
+
+## Criteria
+
+*One line per checklist item for the gate, in the checklist's order. States: `pass` · `fail` ·
+`waived` (only the user — the line is repeated in Waivers) · `exempt-by-profile` (only what the
+checklist marks as waivable in the project's profile). A `fail` with no waiver = Result "failed".
+"Tested" with no output is not evidence (`Maestro/core/quality-gates.md` §Anti-patterns).*
+
+| Criterion (checklist section) | State (pass / fail / waived / exempt-by-profile) | Evidence (§Live proof format from Maestro/knowledge/proven-patterns.md: what · where · literal output · when · who) |
+| --- | --- | --- |
+| {{e.g. definition-of-done §F5 — state machines for the critical flows}} | {{pass}} | {{what: 3 state machines · where: `product/04-specification/state-machines.md` · literal output: "order: 6 states, 9 transitions, 0 guardless transitions" · when: yyyy-mm-dd hh:mm · who: architecture-reviewer}} |
+| {{e.g. pre-merge §Tests — green suite on frontend and backend}} | {{pass}} | {{what: test command · where: apps/api, apps/web · literal output: "142 passed, 0 failed, exit 0" and "88 passed, exit 0" · when: yyyy-mm-dd hh:mm · who: harness in CI, run #…}} |
+| {{e.g. definition-of-done §F4 — performance budgets per route}} | {{exempt-by-profile}} | {{marking *(waivable in: prototype)* in the checklist; project profile: prototype}} |
+
+## Waivers
+
+*Only the user waives; the agent never does (`Maestro/core/quality-gates.md` §Anatomy of a gate).
+Empty = "none". A waiver is their decision, recorded with the why and the risk assumed — not a
+shortcut.*
+
+| Criterion | Why | Risk assumed | Decided by |
+| --- | --- | --- | --- |
+| {{waived criterion}} | {{the reason, in full}} | {{what can go wrong and what happens if it does}} | {{name, yyyy-mm-dd}} |
+
+## Related
+
+- `Maestro/core/quality-gates.md` — the anatomy, the human approval matrix and gates P0–P9.
+- `Maestro/checklists/definition-of-done.md` · `Maestro/checklists/pre-merge.md` · `Maestro/checklists/pre-production-security.md` · `Maestro/checklists/go-live.md` — the criteria each line cites.
+- `Maestro/knowledge/proven-patterns.md` §Live proof — the minimum evidence format.
+- `Maestro/templates/project/GENESIS.md.template` — the genesis that reads the "1st?" column from here.
+- `Maestro/_meta/verify-project.sh` — the mechanical gate that checks records against the phase.
+- `STATE.md` §Done — the summary of each gate passed.

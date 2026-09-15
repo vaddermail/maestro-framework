@@ -2,7 +2,7 @@
 
 An **extensive, adversarial, multidisciplinary** review of the product, with **independent
 verification of every finding** before accepting it. It operationalizes
-`knowledge/permanent-rules.md` §7 and the pitfalls `knowledge/ai-pitfalls.md` §20
+`knowledge/permanent-rules.md` §7 and the pitfalls `knowledge/ai-pitfalls.md` §AR-20
 (self-validation) and §21 (a single perspective is not enough). It is the escalation of the normal
 review panel (`agents/12-reviewers/README.md`): more lenses, a mandate to **refute**, and a
 verification filter that only lets into the report what has been reproduced.
@@ -26,7 +26,7 @@ author of what it audits**.
 
 - [ ] Scope frozen: which slice/release/commits are audited, with the artifacts available
       (`core/artifact-protocol.md`).
-- [ ] A real live-proof environment available (not just tests — `knowledge/ai-pitfalls.md` §2,
+- [ ] A real live-proof environment available (not just tests — `knowledge/ai-pitfalls.md` §AR-2,
       §18).
 - [ ] Model tier chosen per lens (`core/model-routing.md`); the hardest adversarial
       verification/judgment justifies the top tier.
@@ -40,7 +40,7 @@ according to risk). One lens per auditor.
 **Verify:** each lens has an assigned auditor and the artifacts it needs; no lens critical to this
 milestone was left without an owner.
 **If it fails:** if an artifact is missing for a lens, record it as "not verifiable" (absolute
-honesty), do not let the auditor **assume** (`knowledge/ai-pitfalls.md` §3).
+honesty), do not let the auditor **assume** (`knowledge/ai-pitfalls.md` §AR-3).
 
 ### 2. Launch independent auditors, blind, one per lens
 **Do:** launch the auditors **in parallel**, each with the same scope but **without reading the
@@ -50,7 +50,7 @@ confirm that it is right.**
 **Verify:** no auditor is an author of what it audits; none received another's report while
 working.
 **If it fails:** if only one perspective is available, that is **not** an adversarial audit — it is
-a simple review; call it that (`knowledge/ai-pitfalls.md` §21).
+a simple review; call it that (`knowledge/ai-pitfalls.md` §AR-21).
 
 ### 3. Every finding with a concrete failure scenario
 **Do:** each auditor writes in the common mold (`templates/technical/review-report.md.template`):

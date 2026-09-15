@@ -42,7 +42,7 @@ critical ties remain undecided: it records them in `STATE.md` → pending decisi
 
 | Artifact | Origin | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/00-discovery/casos-de-utilizacao.md` | `use-case-modeler` (F1) | Yes | Where the candidate features are extracted from |
+| `product/00-discovery/use-cases/` | `use-case-modeler` (F1) | Yes | Where the candidate features are extracted from |
 | `product/00-discovery/goals-and-kpis.md` | `business-goals-analyst`, `kpi-definer` (F1) | Yes | The **value** axis: how much each feature moves a KPI |
 | `product/00-discovery/risks.md` | `risk-analyst` (F1) | Yes | The **risk** axis: uncertainty and what can fail |
 | `product/00-discovery/costs.md` | `cost-estimator` (F1) | No | Helps estimate the relative **effort** axis |

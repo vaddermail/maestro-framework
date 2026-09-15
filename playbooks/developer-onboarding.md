@@ -38,7 +38,7 @@ adapter for its tool (`adapters/claude-code.md` or `adapters/other-assistants.md
 **Check:** you can say in two sentences where the project stands and what the next task is —
 without asking anyone.
 **If it fails:** if `STATE.md` is not enough to resume, that is a memory gap — record it and ask
-for context, **never guess** (`knowledge/ai-pitfalls.md` §3, §8).
+for context, **never guess** (`knowledge/ai-pitfalls.md` §AR-3, §AR-8).
 
 ### 3. Sync the environment with one command
 **Do:** run the idempotent setup script (`./setup.sh`): it installs the runtime at the pinned
@@ -63,11 +63,14 @@ even if it costs minutes.
 cycle: dedicated branch → change → verification → green PR → heads-up to the colleague
 (`knowledge/permanent-rules.md` §8, `checklists/pre-merge.md`).
 **Check:** the PR passes lint+tests (front and back run separately — run both); it is reviewed by
-someone who is **not** the author (`knowledge/ai-pitfalls.md` §20).
+someone who is **not** the author (`knowledge/ai-pitfalls.md` §AR-20).
 **If it fails:** if the first PR does not go green, it signals a badly synced environment (back to
 step 3) or an unread rule (back to step 2) — fix the cause, do not force the merge.
 
-**Session-start protocol (every time):**
+### Session-start protocol (every time)
+
+Steps 6–8 run in **every** session, human or AI, not only the first — this is the protocol
+`core/project-memory.md` and the adapters cite.
 
 ### 6. Sync the code
 **Do:** `git fetch` + `git pull --rebase` on the integration branch. Never assume local is the most

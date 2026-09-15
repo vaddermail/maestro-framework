@@ -43,7 +43,7 @@ still need to be agreed with the user (how much unavailability is tolerated is a
 | Artifact | Source (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
 | `product/01-requirements/nfr.md` | `agents/01-requirements/nfr-specifier.md` | Yes | Performance/availability → SLIs |
-| `product/00-discovery/kpis.md` | `agents/00-discovery/kpi-definer.md` | No | Business KPIs that may become metrics |
+| `product/00-discovery/goals-and-kpis.md` | `agents/00-discovery/kpi-definer.md` | No | Business KPIs that may become metrics |
 | API contract / event catalog | `agents/05-backend/*` | Yes | Which endpoints/consumers to measure (RED) |
 | Resource model (DB, queue, cache) | `agents/06-data/`, `queue-specialist` | Yes | Which resources to measure (USE) |
 
@@ -101,6 +101,9 @@ Via the Orchestrator (`core/question-engine.md`):
 - **Does not interpret the cost/performance trend in production** — that belongs to the guardians
   `agents/13-guardians/performance-guardian.md` and `cost-guardian.md`, which consume these
   metrics.
+- **Does not instrument product events or funnels** (activation, flow completion, drop-off per
+  step) — that belongs to `agents/05-backend/product-analytics-specialist.md`; here what is
+  measured is RED/USE and SLIs tied to NFRs.
 
 ## Workflow
 

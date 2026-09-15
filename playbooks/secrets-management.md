@@ -22,18 +22,27 @@ approves the choice of store and is warned before any rotation that could cut se
 ### 1. Inventory what counts as a secret
 **Do:** list everything that, if leaked, grants access or identity — passwords, tokens, API keys,
 SSH/private keys, connection strings, signing secrets, certificates. Record the inventory (name,
-where it is used, who issues it, rotation cadence) **without values**.
-**Verify:** every credential used in code/config appears in the inventory; no entry holds the value.
+where it is used, who issues it, rotation cadence) **without values**. For each credential, note
+whether it is **replaceable by federated identity** (pipeline→cloud via OIDC; service→cloud, DB or
+registry via workload identity/IAM authentication with an ephemeral token). If so, the goal is to
+**eliminate it**, not store it: it stays in the inventory as `federated`, with no value and no
+rotation.
+**Verify:** every credential used in code/config appears in the inventory; no entry holds the value;
+every entry has the `federated` / `ephemeral` / `static` annotation.
 **If it fails:** if a value shows up in the inventory, delete it and replace it with a path/name; if
 a credential is used but not inventoried, that is a gap — do not proceed without closing it.
 
 ### 2. Decide where they live (gitignored folder or vault)
-**Do:** choose with the user (`core/question-engine.md` format): **managed vault** (cloud
-KMS/Secrets Manager) if cloud is already in play; **self-hosted vault** for on-prem with a team; or
-**gitignored files with `chmod 600`** as an honest simple on-prem start — always with a written
-migration path to a vault, never as a final destination.
+**Do:** first take out of the inventory whatever was federated in step 1 — configure the federation
+instead of storing the key (`agents/07-devops/github-actions-specialist.md`,
+`agents/07-devops/gitlab-ci-specialist.md` and `agents/07-devops/azure-devops-specialist.md` already
+recommend it by default); only what remains chooses a *store*, with the user (`core/question-engine.md`
+format): **managed vault** (cloud KMS/Secrets Manager) if cloud is already in play; **self-hosted
+vault** for on-prem with a team; or **gitignored files with `chmod 600`** as an honest simple
+on-prem start — always with a written migration path to a vault, never as a final destination.
 **Verify:** the decision is in `STATE.md`; the local secrets folder (if any) is outside the repo or
-covered by `.gitignore` (step 3).
+covered by `.gitignore` (step 3); no static cloud/registry key lives in the *store* if the platform
+supports federation — exception recorded in `STATE.md` with a deadline.
 **If it fails:** without a decision, the agent finishes **blocked** and records it in `STATE.md` →
 pending decisions.
 

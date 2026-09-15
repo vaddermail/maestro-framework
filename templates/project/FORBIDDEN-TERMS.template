@@ -1,0 +1,13 @@
+# FORBIDDEN-TERMS — the project's local list: customer names, products, people, and confidential
+# domain terms that must NEVER leave in a report to the upstream framework. One extended regex per
+# line (no slashes); empty lines and lines starting with # are ignored. Instantiate it from
+# `Maestro/templates/project/FORBIDDEN-TERMS.template` to the project root, named
+# FORBIDDEN-TERMS (`Maestro/workflows/W00-project-kickoff.md`, step 4). NEVER send it or paste it
+# into an issue: it is read by `bash Maestro/_meta/scan-report.sh <file> FORBIDDEN-TERMS` before
+# any report (`Maestro/playbooks/report-framework-improvements.md`) — with hits it exits 1 and
+# nothing is sent. Common words get a boundary (\b) so they do not catch substrings; case does not
+# matter.
+#
+# Examples — delete and replace with the project's own:
+# \bCustomerName\b
+# \bproduct-code-name\b

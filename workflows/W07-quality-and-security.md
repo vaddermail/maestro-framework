@@ -5,7 +5,7 @@ that looks at the product across several dimensions at once, an **adversarial au
 to break it on purpose, and a **pre-production security gate** with an authorized pentest.
 Nothing here builds — everything here **verifies**, and the principle behind the phase is a
 concrete AI pitfall: **whoever produces never validates their own work** and **a single
-perspective is not enough** (`knowledge/ai-pitfalls.md` §20–21).
+perspective is not enough** (`knowledge/ai-pitfalls.md` §AR-20/§AR-21).
 
 > **Phase:** F7 · **Entry gate:** P6b (MVP accepted vs spec; regression harness green)
 > · **Exit gate:** P7 (zero open critical/high findings; residual risk signed)
@@ -39,8 +39,8 @@ base; consolidation merges everything. All reports live in `product/99-records/`
 | # | Agent | Artifact | Depends on |
 | --- | --- | --- | --- |
 | 1 | Panel `agents/12-reviewers/` (architecture, backend, frontend, ux, devops, performance, security, documentation, tests) | one report per reviewer in `product/99-records/reviews/<dimension>-YYYY-MM-DD.md` (mold `templates/technical/review-report.md.template`) | MVP + specs |
-| 2 | `agents/09-security/security-coordinator.md` (coordinates OWASP, ASVS, least-privilege, headers, TLS, exposed secrets, dependencies, containers, infra) | `checklists/pre-production-security.md` filled in + findings in `product/05-security/` | threat-model |
-| 3 | `agents/09-security/pentester.md` | authorized intrusion report (scope + exploitation proofs) in `product/99-records/audits/pentest-YYYY-MM-DD.md` | production-like build |
+| 2 | `agents/09-security/security-coordinator.md` (coordinates OWASP, ASVS, least-privilege, headers, TLS, exposed secrets, dependencies, containers, infra, AI security) | `checklists/pre-production-security.md` filled in + findings in `product/05-security/` | threat-model |
+| 3 | `agents/09-security/pentester.md` + `agents/09-security/ai-security-specialist.md` (runs the adversarial LLM plan — direct and indirect prompt injection, excessive agency — when `product/05-security/ai-security.md` exists) | authorized intrusion report (scope + exploitation proofs) in `product/99-records/audits/pentest-YYYY-MM-DD.md` | production-like build |
 | 4 | `playbooks/adversarial-audit.md` (multidisciplinary, independent verification of every conclusion) | `product/99-records/audits/adversarial-YYYY-MM-DD.md` | 1–3 |
 | 5 | `agents/12-reviewers/review-consolidator.md` | prioritized **consolidated plan**, without duplicates or contradictions, in `product/99-records/reviews/consolidated-plan-YYYY-MM-DD.md` | 1–4 |
 

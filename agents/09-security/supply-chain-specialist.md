@@ -60,7 +60,7 @@ they are trusted**: it flags them and asks for the origin (`core/question-engine
 | Supply chain policy (pinning, registries, provenance) | `product/05-security/supply-chain.md` | Devops, reviewers, guardians |
 | Integrity checks in CI (hash, signature, frozen lockfile) | `pipelines/ci-security.md` | `agents/07-devops/github-actions-specialist.md` |
 | Trusted/vetoed dependency list + confusion defenses | `product/05-security/supply-chain.md` §deps | Dependency guardian, build |
-| Residual risk (dependency without an alternative) | `product/05-security/residual-risk.md` | `security-coordinator`, user |
+| Residual-risk candidates (dependency without a trusted alternative) | Escalated to `agents/09-security/security-coordinator.md` via the Orchestrator — only it writes `product/05-security/residual-risk.md` | User (signs off) |
 
 ## Questions to the user
 
@@ -95,6 +95,10 @@ Batched, via the Orchestrator (`core/question-engine.md`):
    a hash does not match (`knowledge/proven-patterns.md` §7).
 7. **Honesty:** it reports the dependencies it cannot verify and the sources outside its control —
    never a cosmetic "trusted chain".
+8. **AI artifacts are supply chain too.** Models/weights, embeddings, plugins and tool servers are
+   pinned by version/hash and trusted registry like any other dependency; they enter the SBOM from
+   `agents/09-security/sbom-manager.md` and the allowlist that
+   `agents/09-security/ai-security-specialist.md` requires (rule 9 of that spec).
 
 ## Limitations (what this agent does NOT do)
 

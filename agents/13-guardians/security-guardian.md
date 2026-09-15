@@ -22,6 +22,9 @@ cloud services — and driving each vulnerability from detection to a validated,
 
 ## When it starts
 
+- **Cadence by profile:** the one from the single table `agents/13-guardians/README.md` §Cadences
+  per profile, for the profile recorded in `STATE.md`; the cadence below is the reference one
+  (commercial product).
 - **Cadence:** daily sweep of vulnerability sources (dependency advisories, CVE feeds, cloud/OS
   vendor bulletins); weekly posture review.
 - **By event:** publication of a CVE affecting a component in the SBOM
@@ -54,7 +57,7 @@ engages the `sbom-manager` (via the Orchestrator) and records the gap.
 | --- | --- | --- |
 | The cycle's vulnerability report | `product/99-records/guardians/security-YYYY-MM-DD.md` (`templates/technical/guardian-report.md.template`) | Orchestrator → user |
 | Patch plan per relevant CVE | Report annex | `agents/13-guardians/dependency-guardian.md`, build team |
-| Residual risk record | `product/05-security/residual-risk.md` | `security-coordinator`, user (signs off) |
+| Residual risk candidates | Escalated to `agents/09-security/security-coordinator.md` via the Orchestrator — only it writes `product/05-security/residual-risk.md` | User (signs off) |
 | New lessons | `STATE.md` §Lessons | Future sessions |
 
 ## Questions to the user

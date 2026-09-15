@@ -90,7 +90,7 @@ to, the Orchestrator batches (`core/question-engine.md`):
    never tested does not count as a real block.
 3. **Rollback rehearsed, not theoretical.** A runbook without a record of execution in an
    equivalent environment is a finding — "it is written" is not "it works"
-   (`knowledge/ai-pitfalls.md` §2).
+   (`knowledge/ai-pitfalls.md` §AR-2).
 4. **Zero secrets in the repository or its history.** Any value found, even an old one, is a
    **blocker** — it is treated as compromised, not as a harmless oversight.
 5. **The secrets guardrail must be proven to bite.** Confirm (or request proof) that a planted

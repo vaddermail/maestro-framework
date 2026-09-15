@@ -88,7 +88,7 @@ Asked through the Orchestrator, which batches them (`core/question-engine.md`):
    (`knowledge/permanent-rules.md` §2).
 4. **It does not fix — it recommends.** The reviewer points and suggests; the change belongs to
    whoever built it or to the specialist, and goes through their own verification (avoids
-   self-validation, `knowledge/ai-pitfalls.md` §20).
+   self-validation, `knowledge/ai-pitfalls.md` §AR-20).
 5. **Skepticism toward presumed optimizations.** A declared cache is not a cache that hits: check
    hit rate, key and invalidation before calling it effective (`core/model-routing.md` §Cost
    observability; `knowledge/proven-patterns.md` §10 — nothing silent).

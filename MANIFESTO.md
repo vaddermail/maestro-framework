@@ -71,8 +71,8 @@ work gets what is proportional. The same goes for AI costs: the model is chosen 
 
 A product is not "finished" when it reaches production — that is where it starts to live. The
 **guardians** (`agents/13-guardians/`) are designed from discovery onward: security, dependencies,
-performance, costs, quality, documentation, backups, and evolution. Software without a permanent
-maintenance team is debt accruing interest.
+performance, costs, quality, documentation, backups, value, and evolution. Software without a
+permanent maintenance team is debt accruing interest.
 
 ## 11. Extensible without modification
 

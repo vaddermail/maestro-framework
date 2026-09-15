@@ -43,10 +43,10 @@ concentrate at the phase gate.
   pass on any generic product is not worth the cost of maintaining it.
 - **Fakes/mocks only for external I/O**; domain logic is tested for real (`test-strategist`).
 - **The mock mirrors the real server** — same shapes, same write rules; a mock that lies gives a
-  false green (`knowledge/proven-patterns.md` §7, `knowledge/ai-pitfalls.md` #2).
+  false green (`knowledge/proven-patterns.md` §7, `knowledge/ai-pitfalls.md` §AR-2).
 - **The real live proof is an irreplaceable gate** — green tests prove the code does not break,
   not that it solves the problem (`checklists/definition-of-done.md`;
-  `knowledge/ai-pitfalls.md` #2).
+  `knowledge/ai-pitfalls.md` §AR-2).
 - **Whoever produces does not validate** — reviewing the substance of the tests belongs to an
   independent agent, `agents/12-reviewers/test-reviewer.md` (`core/quality-gates.md`).
 
@@ -54,7 +54,7 @@ concentrate at the phase gate.
 
 Test suites with in-memory DBs, WASM or many processes **blow up the dev machine with OOM**
 when run in parallel — it happened often enough in the origin project to become law
-(`knowledge/ai-pitfalls.md` #14). Rules that **every** agent in this category follows:
+(`knowledge/ai-pitfalls.md` §AR-14). Rules that **every** agent in this category follows:
 
 - **Heavy suites run serially** (no file-level parallelism), focused per file, in the foreground.
 - **A subagent never runs the full suite in the background.** The "package-manager filter +

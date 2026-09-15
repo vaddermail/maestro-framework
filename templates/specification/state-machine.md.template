@@ -3,8 +3,8 @@
 > **How to use:** one file (or section) per critical flow with its own lifecycle (order,
 > subscription, ticket, return…), instantiated by `agents/01-requirements/business-rules-modeler.md`
 > in F5, with `modules/state-machines.md` as the method. Lives at
-> `product/04-specification/state-machines.md` (one section per flow; large projects use one file
-> per flow at `product/04-specification/state-machines/{{flow-name}}.md`).
+> `product/04-specification/state-machines.md` (one level-2 section per flow, in large projects
+> too — the canonical file does not split into its own folder).
 
 > **Status:** draft
 > **Owner:** `agents/01-requirements/business-rules-modeler.md`

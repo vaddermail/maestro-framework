@@ -76,6 +76,7 @@ Orchestrator (`core/question-engine.md`).
 | Specification of the data-subject rights flows | `product/05-security/data-subject-rights.md` | Build agents (F6), `agents/06-data/data-auditor.md`, tests (F7) |
 | Proposed privacy requirements (F2) | Delivered via the Orchestrator to the owner of `product/01-requirements/nfr.md` | `agents/01-requirements/nfr-specifier.md` |
 | F7 verdicts + divergences | Map verification section; escalated findings | `agents/09-security/security-coordinator.md` (consolidates into `product/05-security/residual-risk.md`) |
+| AI Act (EU 2024/1689) classification per AI feature (minimal / transparency / high risk) | Own section of `product/05-security/personal-data-map.md`, alongside the processing entries | `agents/05-backend/ai-features-specialist.md`, `agents/09-security/ai-security-specialist.md`, `agents/09-security/security-coordinator.md` |
 
 All output is **written to a file** (`core/project-memory.md`) — a processing that exists only in the
 conversation does not exist.
@@ -96,6 +97,14 @@ Raised via the coordinator → Orchestrator, always batched (`core/question-engi
   terms on its own.
 - **Transfers:** *"The email provider is outside the EU/EEA. Keeping it requires a documented
   contractual safeguard; the alternative is a European provider. Which do you prefer?"*
+- **AI Act (EU 2024/1689):** *"For each AI feature: (a) does it interact directly with people
+  (assistant/chat)? (b) does it generate text, image or audio that leaves the product? (c) does it
+  make or support decisions about employment, credit, education, health or access to essential
+  services (Annex III — high risk)?"* — (a) and (b) trigger transparency obligations (Art. 50:
+  disclose that it is AI, label synthetic content); (c) is a block pending a human legal decision.
+  The applicable timeline (the general rules and Art. 50 apply from 2 August 2026; the high-risk
+  timeline was under legislative revision) is confirmed with whoever advises legally, never
+  assumed.
 
 ## Rules
 
@@ -123,6 +132,13 @@ Raised via the coordinator → Orchestrator, always batched (`core/question-engi
    consequences in plain language.
 8. **Honest posture:** it reports the real state ("2 processings without a legal basis, 1 transfer
    without a safeguard") — never a cosmetic "GDPR compliant".
+9. **AI transparency by design.** A feature that interacts with people discloses that it is AI on
+   the first interaction; synthetic content leaving the product carries a machine-readable label;
+   the classification (minimal / transparency / high risk) is written in
+   `product/05-security/personal-data-map.md` alongside the processing entries and is input to
+   `agents/05-backend/ai-features-specialist.md`. High risk without a recorded legal decision
+   blocks the F5 gate like the DPIA (rule 4); the legal timeline is confirmed with whoever advises
+   legally (rule 7).
 
 ## Limitations (what this agent does NOT do)
 
@@ -188,8 +204,8 @@ exercises an erasure request on staging and finds the customer's email in cleart
 service's logs — a divergence delivered to the coordinator, who triggers
 `agents/05-backend/logging-specialist.md`.
 
-**Example (internal HR app).** Employee data (appraisals, absences, IBAN): the dominant legal basis
-is contract execution/legal obligation — **not** consent, because in an employment context consent is
+**Example (internal training-management app).** Trainee data (assessments, attendance, IBAN for
+reimbursements): the dominant legal basis is contract execution/legal obligation — **not** consent, because in an employment context consent is
 rarely freely given. Appraisals with a semi-automated decision trigger the DPIA assessment. Being
 internal exempts nothing: the employee is also a rights-holding data subject.
 

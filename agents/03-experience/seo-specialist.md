@@ -82,7 +82,7 @@ To the Orchestrator, in a batch (`core/question-engine.md`):
    are resolved with `rel=canonical` — duplicate content dilutes ranking.
 3. **Metadata from the single source, without duplication.** `title`/`description`/OG come from
    `modules/single-source-of-content.md`, not hand-written per page — avoids divergence
-   (`knowledge/ai-pitfalls.md` §7).
+   (`knowledge/ai-pitfalls.md` §AR-7).
 4. **Never invent structured data.** Schema.org only describes what the page **actually** shows;
    misleading markup is penalized and violates honesty (`knowledge/permanent-rules.md` §2).
 5. **Non-production environments do not get indexed** — `noindex`/blocking `robots` in

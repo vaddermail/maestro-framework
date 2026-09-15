@@ -43,7 +43,7 @@ decisions.
 | --- | --- | --- | --- |
 | `product/00-discovery/prioritization.md` | `prioritizer` (F1) | Yes | The ranking whose top gets taken |
 | `product/00-discovery/goals-and-kpis.md` | `business-goals-analyst`, `kpi-definer` (F1) | Yes | The MVP must move at least one KPI |
-| `product/00-discovery/casos-de-utilizacao.md` | `use-case-modeler` (F1) | Yes | The central use case the MVP must close end to end |
+| `product/00-discovery/use-cases/` | `use-case-modeler` (F1) | Yes | The central use case the MVP must close end to end |
 | `product/00-discovery/risks.md` | `risk-analyst` (F1) | No | Risks that force something in (e.g. legal) or out |
 | `product/00-discovery/idea.md` | `idea-analyst` (F1) | Yes | The core/peripheral distinction the idea already sketched |
 

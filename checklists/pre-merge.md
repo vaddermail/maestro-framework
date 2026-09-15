@@ -20,7 +20,9 @@ integrated.
 - [ ] Tests cover the risk logic touched (business rules, authorization, reversibility) — not
       just the happy path.
 - [ ] No test was disabled, deleted or weakened to "make it pass"; the cause was fixed,
-      never the detector (`loops/L02-failing-tests.md`).
+      never the detector (`loops/L02-failing-tests.md`) — a diff that touches tests, CI or
+      thresholds is reviewed by someone who did not write it (`knowledge/ai-pitfalls.md` §AR-22,
+      manipulated gate).
 
 ## Review
 

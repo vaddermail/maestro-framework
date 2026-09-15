@@ -1,0 +1,3 @@
+# The framework copy is compared byte for byte against _meta/SHA256SUMS (verify.sh --integrity):
+# never convert line endings, on any platform. Nested under Maestro/, this applies to the copy only.
+* -text

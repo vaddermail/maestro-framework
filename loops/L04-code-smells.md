@@ -23,7 +23,8 @@ cyclomatic complexity, function/module size, coupling) — total count reported 
 comparable cycle to cycle.
 
 Default thresholds (in the F0 calibration the user accepts them or sets others — the agreed value
-is recorded in the project's `CLAUDE.md`; `workflows/W00-project-kickoff.md` §Decision points):
+is recorded in the project's `CLAUDE.md`, §F0 Calibration; `workflows/W00-project-kickoff.md`
+§Decision points):
 
 | Profile | Duplication | Complexity per function | Function size |
 | --- | --- | --- | --- |

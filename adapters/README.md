@@ -45,6 +45,7 @@ Every adapter answers the same questions, for its tool:
 | --- | --- | --- |
 | `adapters/claude-code.md` | **Claude Code** — CLI/IDE with subagents, skills, plugins, MCP and hooks | Complete, tested mapping (it is the origin project's tool) |
 | `adapters/other-assistants.md` | **Other assistants** — Cursor, Copilot, Codex CLI, aider and the like | Adaptation principles and the viable minimum |
+| `adapters/claude-code/` | **Executable scaffold for Claude Code** — `adapters/claude-code/generate-scaffold.sh` (specs → `.claude/agents/`, per phase, with a verifiable lock), `adapters/claude-code/settings.json.template` (permissions + hooks), three hooks (session start, artifact guard, session end), five `/maestro-…` skills and `adapters/claude-code/test-hooks.sh` | Shipped with the copy; generated to the project root in W00 step 9, at every phase transition and after syncing (`adapters/claude-code.md` §Executable scaffold) |
 
 Adding a new adapter follows `core/extensibility.md`: create the file here, register it in
 `_meta/INVENTORY.md` in the same step, and **touch no** agnostic document — if the mapping seems

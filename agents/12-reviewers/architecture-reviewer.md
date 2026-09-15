@@ -25,7 +25,7 @@ whether the code **respects** it and whether dependencies flow in the prescribed
 
 Invoked by the Orchestrator (`core/orchestrator.md`) when code/spec of a slice or release is ready
 for review in F7, **provided the reviewer is not the author of what it reviews**
-(`knowledge/ai-pitfalls.md` §20). It runs in parallel with the other reviewers on the panel,
+(`knowledge/ai-pitfalls.md` §AR-20). It runs in parallel with the other reviewers on the panel,
 blind (it does not read their reports — `agents/12-reviewers/README.md`).
 
 ## When it ends
@@ -44,7 +44,7 @@ trigger `agents/02-architecture/architecture-arbiter.md`.
 | `product/02-architecture/stack.md` and module diagram | `agents/02-architecture/architecture-arbiter.md` (F3) | Yes | Prescribed boundaries and dependencies |
 | Code/spec of the slice under review | F5–F6 | Yes | What is being reviewed |
 | `product/04-specification/backend-contract.md` | F5 | No | Where the app↔server boundary is defined |
-| `CLAUDE.md` §Closed decisions · `STATE.md` §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
+| `STATE.md` §Debt | `core/project-memory.md` | No | Drift already known and accepted (not re-flagged) |
 
 Without ADRs and a module diagram, the reviewer does not proceed on assumptions — it returns the
 list of gaps (`core/question-engine.md`).
@@ -69,7 +69,7 @@ batches (`core/question-engine.md`):
   directly, against ADR-007 (communication only via events). Was that a conscious decision
   (then an ADR is missing) or a regression to fix?"* — options with the cost of each path.
 - When the decided architecture no longer fits reality: it recommends reopening the decision
-  **in the open** (`knowledge/ai-pitfalls.md` §6), never rewrites on its own.
+  **in the open** (`knowledge/ai-pitfalls.md` §AR-6), never rewrites on its own.
 
 ## Rules
 
@@ -82,7 +82,7 @@ batches (`core/question-engine.md`):
 3. **Every finding carries a concrete failure scenario**, not "smells bad": *"module A imports
    B's repository → a test of A needs B's database → the boundary is fictitious"*.
 4. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
-   and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §10).
+   and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §AR-10).
 5. **It does not validate its own work** nor read the other reviewers' reports while working.
 6. **Honesty:** what it could not verify (e.g. boundaries only visible at runtime) goes to
    "out of scope" — it is not disguised as "pass".

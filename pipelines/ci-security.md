@@ -20,8 +20,10 @@ come from `agents/09-security/`.
 - **The SBOM is a living artifact**, generated on every build — not a document produced once and
   forgotten; it is the basis for responding to a CVE announced the next day
   (`agents/09-security/sbom-manager.md`).
-- **DAST does not run on every PR.** It is slow and needs a deployed environment; it runs on a
+- **DAST does not run on every PR.** It is slow and needs a provisioned environment; it runs on a
   schedule against a stable test environment, not on every one-line change.
+- **The build proves its origin.** An artifact without verifiable provenance is not promotable —
+  `pipelines/cd-delivery.md` verifies the attestation before promoting.
 
 ## Stages
 
@@ -40,7 +42,9 @@ come from `agents/09-security/`.
    never fixed on its own.
 5. **Dependency scan (SCA)** — known CVEs in direct and transitive dependencies
    (`agents/09-security/dependency-analyst.md`); blocks by severity, feeds
-   `loops/L07-cves.md` with the rest.
+   `loops/L07-cves.md` with the rest. The scanner reads the previous artifact's **VEX**
+   (`agents/09-security/sbom-manager.md`) — justified verdicts (`not_affected`) do not block again;
+   a CVE present in the KEV catalog blocks as critical regardless of CVSS.
 6. **Container scan** — built image, before the *push* to the registry
    (`agents/09-security/container-analyst.md`); blocks on critical/high.
 7. **SBOM generation** — on every build, attached to the artifact and versioned
@@ -48,6 +52,12 @@ come from `agents/09-security/`.
    (`playbooks/cve-response.md`).
 8. **Scheduled DAST** — against the test environment, regular cadence (e.g. daily/weekly)
    (`agents/09-security/dast-specialist.md`); findings enter the same severity triage.
+9. **Supply chain integrity** — on every `push`/PR: install in `frozen`/`ci` mode (a lockfile
+   resolution mismatch fails the build); dependency hash verification; CI actions/plugins and base
+   images pinned by SHA/digest (a floating tag fails). When the artifact is built, generate
+   **signed provenance** (an SLSA-type attestation, at a level agreed with the user via the
+   question from `agents/09-security/supply-chain-specialist.md`) with the SBOM and the VEX from
+   stage 7 attached. Always blocks — there is no "medium integrity".
 
 ## Findings triage (what blocks)
 
@@ -81,7 +91,11 @@ stages:
     blocks_if: severity >= critical
   - job: generate-sbom
     runs_on: [image_build]
-    produces: versioned-sbom
+    produces: [versioned-sbom, vex]
+  - job: supply-chain-integrity
+    runs_on: [push, pull_request, image_build]
+    blocks_if: lockfile_mismatch | floating_pin | missing_provenance
+    produces: signed-attestation
   - job: secrets-scan-history
     runs_on: [scheduled(weekly)]
     otherwise: open_item(loops/L03-security-issues.md)

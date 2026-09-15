@@ -54,7 +54,7 @@ or the Orchestrator).
   that an automated guardrail is missing (a test that sweeps and fails), not that the next manual
   fix will stick.
 
-## STATE.md ledger
+## STATE.md record
 
 ```
 L05 · inconsistencies · metric 6→3→1 · iter 3 (cap 4) · last progress: iter 3 · status: in progress

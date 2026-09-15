@@ -22,7 +22,7 @@ What it is **not**:
 - **It is not mandatory.** A project without a starter for its stack builds slice 0 by hand, as
   always — the gate is exactly the same; the starter only changes who pays for the build.
 - **It is not a product template.** Zero domain decisions: the same starter serves an online
-  store, a B2B invoicing SaaS or an internal HR app. It brings base engineering — never screens,
+  store, a B2B invoicing SaaS or an internal logistics app. It brings base engineering — never screens,
   business rules or the product's data model.
 - **It does not waive the process.** The test strategy is written before slice 0
   (`workflows/W06-build.md` §Preconditions) and the skeleton checklist is still confirmed item

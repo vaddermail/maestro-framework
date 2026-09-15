@@ -5,9 +5,9 @@
 > work reveals a new pitfall, a pattern with a measured gain, a framework friction point or a
 > reusable block, the agent who lived it records it here **in the moment** — never "at the end
 > of the project" (late retrospectives only recover what the commits tell; the rest is lost).
-> Consolidated at the close of F6/F7/F8 and, in F9, at the profile's cadence; sent to the
-> upstream framework via `Maestro/playbooks/report-framework-improvements.md`. Lives at the
-> **project root**.
+> Consolidated at the close of F6/F7/F8 and, in F9, at the profile's cadence
+> (`Maestro/agents/13-guardians/README.md` §Cadences per profile); sent to the upstream framework
+> via `Maestro/playbooks/report-framework-improvements.md`. Lives at the **project root**.
 
 > **Sanitization (mandatory):** this file leaves the project. No entry contains personal
 > data, customer names, secrets or confidential domain detail — the lesson is written in
@@ -26,9 +26,9 @@ raises the pattern's confidence).*
 
 | | |
 | --- | --- |
-| **Project** | {{product-name}} |
+| **Project** | {{product-name}} — stays in this file; **does not go in the issue title or body** (the curator assigns the project code in the first comment) |
 | **Domain (1 line, sanitized)** | {{e.g.: B2B scheduling SaaS}} |
-| **Framework version copied** | {{see `Maestro/_meta/VERSION.md`}} |
+| **Framework version copied** | {{the `Current version` line at the top of `Maestro/_meta/VERSION.md`}} |
 | **Project kickoff** | {{yyyy-mm-dd}} |
 | **Last report to the upstream framework** | {{yyyy-mm-dd / never}} — issue {{#nnn / —}} |
 
@@ -81,16 +81,35 @@ starter for future projects — decoupled from the domain.*
 
 ## 6. Candidate confirmation
 
-*At the close of each phase, re-read the copy's `Maestro/knowledge/candidates.md` (the
-upstream framework's waiting room) and record here, by **stable ID (C-nnn)**, each candidate
-this project **confirmed** (lived the same problem/pattern — with evidence) or **refuted**
-(tried it and it did not apply/went wrong — equally valuable). This step is what gives
-candidates the 2nd confirmation promotion requires; without it, they depend on coincidences.*
+*At the close of each phase, re-read `Maestro/knowledge/candidates.md` from the **upstream
+framework's most recent release** (the waiting room; or from the copy, if it is already that
+version — confirming does not require syncing:
+`Maestro/playbooks/report-framework-improvements.md` step 1) and record here, by **stable ID
+(C-nnn)**, each candidate this project **confirmed** (lived the same problem/pattern — with
+evidence) or **refuted** (tried it and it did not apply/went wrong — equally valuable). This step
+is what gives candidates the 2nd confirmation promotion requires; without it, they depend on
+coincidences.*
 
 - **{{C-nnn}} — {{confirmed / refuted}}.** *Evidence:* {{path/commit in the project + 1 line
   of context}}.
 
-## 7. Report log
+## 7. Framework usage this phase
+
+*Filled in only at the reports that close a milestone (P6b, P7, P8 and the F9 cadence) — not
+every session.*
+
+*Filled in at the close of each phase — it is the only signal that tells the upstream framework
+that agent specs weigh without earning their keep and that engine questions are poorly designed.
+Spec paths and question IDs do not identify the project; it goes in the issue body as the
+"Framework usage" section.*
+
+| Signal | This phase's record |
+| --- | --- |
+| **Agent specs summoned** (paths) | {{`Maestro/agents/…`, …}} |
+| **Agent specs opened and set aside** (path + why, 1 line) | {{path — why it did not serve}} |
+| **Engine questions answered by default** (P-nnn + what the user was missing) | {{P-nnn — what was missing}} |
+
+## 8. Report log
 
 *Filled in by `Maestro/playbooks/report-framework-improvements.md` at each report. Sent
 entries are marked in the sections above with `(sent #nnn)` — they are never deleted from

@@ -60,7 +60,7 @@ convenience**: it flags the gap and asks what operations each service really nee
 | Minimal DB grants per service | `product/05-security/least-privilege.md` §db | `agents/06-data/data-modeler.md`, migrations |
 | Minimal IAM policies | `product/05-security/least-privilege.md` §cloud | `agents/07-devops/terraform-specialist.md`, cloud specialists |
 | CI/CD token scopes | `product/05-security/least-privilege.md` §ci | `agents/07-devops/github-actions-specialist.md` |
-| Residual risk (accepted excesses) | `product/05-security/residual-risk.md` | `security-coordinator`, user |
+| Residual risk candidates (accepted excesses) | Escalated to `agents/09-security/security-coordinator.md` via the Orchestrator — only it writes `product/05-security/residual-risk.md` | User (signs off) |
 
 ## Questions to the user
 

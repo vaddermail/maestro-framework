@@ -51,7 +51,7 @@ vanity metric. It returns the questions to the Orchestrator.
 
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
-| KPIs per goal (metric, baseline, target, source, cadence) | `product/00-discovery/goals-and-kpis.md` (KPIs section; `templates/discovery/goals-and-kpis.md.template`) | `prioritizer`, `mvp-scoper`, `agents/13-guardians/cost-guardian.md`, `agents/05-backend/metrics-specialist.md`, F2 |
+| KPIs per goal (metric, baseline, target, source, cadence) | `product/00-discovery/goals-and-kpis.md` (KPIs section; `templates/discovery/goals-and-kpis.md.template`) | `prioritizer`, `mvp-scoper`, `agents/13-guardians/cost-guardian.md`, `agents/05-backend/product-analytics-specialist.md`, `agents/05-backend/metrics-specialist.md`, F2 |
 | Baselines yet to measure (measurement plan) | `STATE.md` → pending decisions | User, future sessions |
 | Question batch | `product/01-requirements/questions-and-answers.md` | User (via Orchestrator) |
 
@@ -94,8 +94,9 @@ KPI "to be measured" (`knowledge/permanent-rules.md` §2).
   is `agents/05-backend/metrics-specialist.md` and `agents/05-backend/observability-architect.md`
   in F5/F6. Business KPI ≠ operations metric. One may cite the other, but they are not the same
   agent.
-- **Does not instrument the product to collect the metrics** — that belongs to the
-  backend/observability agents.
+- **Does not instrument the product to collect the metrics** — product events (funnels,
+  activation, drop-off) belong to `agents/05-backend/product-analytics-specialist.md`; technical
+  SLIs belong to `agents/05-backend/metrics-specialist.md`.
 - **Does not write requirement acceptance criteria** — that is
   `agents/01-requirements/acceptance-criteria-writer.md` in F2 (they verify a requirement; the KPI
   measures a business goal over time).
@@ -138,7 +139,8 @@ KPI "to be measured" (`knowledge/permanent-rules.md` §2).
   in a perverse way (e.g. speeding up onboarding by cutting security steps → also watch the
   incidents).
 - Leave the hook ready for production: naming the source of each KPI helps the
-  `agents/05-backend/metrics-specialist.md` know what to instrument.
+  `agents/05-backend/product-analytics-specialist.md` (product events) and the
+  `agents/05-backend/metrics-specialist.md` (SLIs) know what to instrument.
 
 ## Anti-patterns
 
@@ -158,7 +160,8 @@ KPI "to be measured" (`knowledge/permanent-rules.md` §2).
 | `agents/00-discovery/problem-definer.md` | upstream — the cost of the problem feeds the baseline |
 | `agents/00-discovery/prioritizer.md` | downstream — uses the expected impact on the KPIs as value |
 | `agents/13-guardians/value-guardian.md` | downstream (F9) — verifies in production, KPI by KPI, that the promised value happened |
-| `agents/05-backend/metrics-specialist.md` | downstream — instruments the product to collect the KPIs |
+| `agents/05-backend/product-analytics-specialist.md` | downstream (F5/F6) — instruments the product events that collect the KPIs whose source is "product events" |
+| `agents/05-backend/metrics-specialist.md` | downstream — collects the KPIs that are technical metrics (SLI), not behavior ones |
 | `agents/13-guardians/cost-guardian.md` | downstream — watches the cost KPIs in production |
 | `core/orchestrator.md` | receives the question batches and the confirmation of baselines/targets |
 
@@ -177,3 +180,5 @@ KPI "to be measured" (`knowledge/permanent-rules.md` §2).
 - `templates/discovery/goals-and-kpis.md.template` · `core/question-engine.md`
 - `agents/05-backend/metrics-specialist.md` — the technical boundary (SLIs) this agent does not
   cross.
+- `agents/05-backend/product-analytics-specialist.md` — who instruments the KPIs whose source is
+  "product events".

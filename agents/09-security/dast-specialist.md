@@ -111,7 +111,7 @@ In the format of `core/question-engine.md`:
 
 ## Examples
 
-**Example (internal HR app, SPA + REST API, staging environment):** the pipeline triggers DAST in
+**Example (internal logistics app, SPA + REST API, staging environment):** the pipeline triggers DAST in
 F7. The specialist configures login for two profiles (employee and manager) — without this, 80% of
 the app would stay invisible. The crawl discovers 140 routes; the active scan confirms three real
 findings: [1] persisted XSS in the "notes" field of a vacation request (a stored payload renders

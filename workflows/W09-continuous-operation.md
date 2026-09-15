@@ -17,7 +17,8 @@ Keep the product secure, fast, cheap, documented and recoverable over the years 
 never "looks fine". Each guardian cycle ends in an **auditable terminal state** (resolved /
 mitigated / not-applicable), and the non-obvious goes back into project memory
 (`core/project-memory.md`); what is general and framework-level goes up to the upstream framework
-at the profile's cadence (`playbooks/report-framework-improvements.md`).
+at the profile's cadence (`agents/13-guardians/README.md` §Cadences per profile;
+`playbooks/report-framework-improvements.md`).
 
 ## Preconditions (entry gate)
 
@@ -32,6 +33,15 @@ at the profile's cadence (`playbooks/report-framework-improvements.md`).
 F9 is not a single sequence: it is a **set of scheduled cycles** that the Orchestrator runs in
 parallel. Each guardian runs its fixed cycle — **analyze → plan → apply → validate → document** —
 and writes to `product/99-records/guardians/<dimension>-YYYY-MM-DD.md`.
+
+**Step 0 — on opening a session in F9 (which guardian is due?):** (a) read the cadences from the
+project's `CLAUDE.md` §F0 calibration; (b) for each active guardian, the last cycle's date is that
+of the most recent report in `product/99-records/guardians/<dimension>-YYYY-MM-DD.md` (or "never");
+(c) it is **due** if today − last cycle ≥ cadence, or if there is a pending event (CVE, anomaly,
+request); (d) the due ones run in this order: security, backups, dependencies, performance, costs,
+quality, documentation, value; (e) record in `STATE.md` §In progress one line per active guardian
+in the format `G · security · weekly cadence · last cycle YYYY-MM-DD · next YYYY-MM-DD · state: on
+track / due / running`. Without this calculation, "cadence met" (P9) is a feeling, not a gate.
 
 | # | Guardian | Watches | Cadence | Chains / escalates to |
 | --- | --- | --- | --- | --- |
@@ -86,6 +96,10 @@ monthly restore drill and finds a corrupted dump — which **becomes an incident
   `workflows/W10-feature-evolution.md` — the mini-cycle that re-runs F2→F8 in miniature, with the
   gates of the phases it touches (`core/lifecycle.md` rule 4). Features are not "pushed straight
   to production" skipping the gates.
+- **End of life → decommissioning.** When the user decides to retire the product or a feature with
+  data from production, it follows `workflows/W13-decommissioning.md` — reversible up to the last
+  step, with no orphaned data and no phantom costs; never "delete everything" nor "leave it
+  running".
 
 ## Loops it opens
 
@@ -108,7 +122,8 @@ F9 never closes — **it is met by cadence** (`core/quality-gates.md` P9). Each 
       (`modules/feature-flags.md` when applicable).
 - [ ] Non-obvious lessons went to `STATE.md` (`core/project-memory.md`); the ones that belong to
       the **framework** went to `FRAMEWORK-IMPROVEMENTS.md`, and the report went out at the
-      profile's cadence (`playbooks/report-framework-improvements.md`).
+      profile's cadence (`agents/13-guardians/README.md` §Cadences per profile;
+      `playbooks/report-framework-improvements.md`).
 
 **Who verifies:** the Orchestrator, per cadence. **Who approves:** the user, **by exception**
 (only when residual risk, money, data or production is at stake).
@@ -118,9 +133,9 @@ F9 never closes — **it is met by cadence** (`core/quality-gates.md` P9). Each 
 | Profile | How F9 changes |
 | --- | --- |
 | **Prototype** | Guardians disabled until the decision to evolve into a product; no cadences. |
-| **Internal product** | Guardians on a monthly cadence; loops armed; DR verified periodically. |
-| **Commercial product** | Weekly cadence + alerts; cost guardian with anomaly detection; on-call for incidents (W11). |
-| **Enterprise platform** | Tight cadences, regular DR drills, periodic global review (`workflows/W12-global-review.md`), AI costs with a per-model kill-switch. |
+| **Internal product** | Guardians on the cadences of the single table (`agents/13-guardians/README.md` §Cadences per profile); loops armed; DR verified periodically. |
+| **Commercial product** | Same, on the commercial-profile column of the single table + anomaly alerts; cost guardian with anomaly detection; on-call for incidents (W11). |
+| **Enterprise platform** | Same, on the enterprise-profile column of the single table + regular DR drills, periodic global review (`workflows/W12-global-review.md`), AI costs with a per-model kill-switch. |
 
 ## Anti-patterns
 
@@ -134,7 +149,8 @@ F9 never closes — **it is met by cadence** (`core/quality-gates.md` P9). Each 
 
 - `agents/13-guardians/README.md` — cadences, shared duties and report format.
 - `workflows/W10-feature-evolution.md` — new requests; `workflows/W11-incident-response.md` —
-  when a finding becomes an incident.
+  when a finding becomes an incident; `workflows/W13-decommissioning.md` — when the product or a
+  feature reaches end of life.
 - `core/lifecycle.md` (F9) · `core/quality-gates.md` (P9) · `core/project-memory.md`.
 - `loops/README.md` — loops L02–L08 armed in production.
 - `templates/technical/guardian-report.md.template` · `checklists/post-incident.md`.

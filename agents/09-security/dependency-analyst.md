@@ -56,9 +56,9 @@ the real one**: it triggers the `sbom-manager` (via the Orchestrator) and record
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Prioritized vulnerability queue | `product/05-security/dependencies.md` | `security-guardian`, `dependency-guardian` |
-| Baseline of justified suppressions | `product/05-security/dependencies.md` §Suppressions | Future cycles (avoids re-triage) |
+| Baseline of justified suppressions | `product/05-security/dependencies.md` §Suppressions **and** the VEX in `product/05-security/sbom/` (the scanner consumes the VEX; the `.md` is for human reading) | Future cycles (avoids re-triage), the `pipelines/ci-security.md` scanner, `sbom-manager` |
 | CI gate result | `pipelines/ci-security.md` (pass/fail) | Pipeline, PR author |
-| Findings accepted with deadline | `product/05-security/residual-risk.md` | `security-coordinator`, user (signs off) |
+| Residual risk candidates (findings with no patch, accepted with deadline) | Escalated to `agents/09-security/security-coordinator.md` via the Orchestrator — only it writes `product/05-security/residual-risk.md` | User (signs off) |
 
 ## Questions to the user
 
@@ -78,7 +78,10 @@ In the `core/question-engine.md` format:
    medium in the authentication flow is urgent — always cross-check with the threat model.
 2. **False positives are justified and persisted in the baseline.** A suppression without a
    written reason is forbidden; with a reason, it enters the baseline so it does not become noise
-   again in the next cycle.
+   again in the next cycle — and the suppression is issued as VEX (`not_affected` + justification,
+   alongside the SBOM in `product/05-security/sbom/`) for the scanner to honor; a suppression
+   living only in a tool's ignore file is forbidden (it is not auditable and does not travel with
+   the artifact).
 3. **Never silently suppresses a real finding** to make the build pass — if it blocks, either it
    gets fixed or it is explicitly accepted as risk (`knowledge/permanent-rules.md` §2).
 4. **Does not fix or update** — it delivers the queue; remediation belongs to others (see
@@ -110,7 +113,9 @@ In the `core/question-engine.md` format:
    feeds.
 3. **Discard noise** — apply the baseline of already-justified suppressions.
 4. **Triage** — for each new finding: is it real? is the vulnerable path reachable in the product
-   (threat model)? contextual severity? is there a patch?
+   (threat model)? contextual severity? is there a patch? Cross-check against the KEV catalog and
+   EPSS: KEV present = exploitable, critical deadline regardless of CVSS; high EPSS raises priority
+   even without a confirmed path (fail-closed).
 5. **Classify** — confirmed / false positive / not-reachable / accepted-with-deadline, **each with
    a written justification**.
 6. **Prioritize** — order the confirmed by contextual risk (severity × exposure × reach).

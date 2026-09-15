@@ -116,8 +116,8 @@ In the format of the `core/question-engine.md`:
 
 ## Examples
 
-**Example (legacy internal PHP app + intranet):** An HR application in classic PHP requires
-`mod_php` and per-module `.htaccess` — a concrete reason for Apache. The specialist picks the
+**Example (legacy internal PHP app + intranet):** A training-management application in classic
+PHP requires `mod_php` and per-module `.htaccess` — a concrete reason for Apache. The specialist picks the
 `prefork` MPM (required by `mod_php`), serves the app in a *vhost* with internal TLS, enables
 `mod_security` with the OWASP CRS in blocking mode (internal surface, low false-positive risk),
 disables directory listing and `mod_status`, and uses `mod_remoteip` restricted to the edge proxy.

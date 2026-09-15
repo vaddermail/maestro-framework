@@ -68,7 +68,7 @@ Puts them to the Orchestrator (`core/question-engine.md`):
 
 1. **The real live proof is an irreplaceable gate.** The real UI against the real backend, real
    seed, **no mocks**: it catches what hundreds of green tests do not see
-   (`knowledge/ai-pitfalls.md` #2, #18).
+   (`knowledge/ai-pitfalls.md` §AR-2, §AR-18).
 2. **Each profile walks exactly the pages it is allowed** — and is denied on the ones it is not;
    out of scope returns 404, not 403 (`knowledge/proven-patterns.md` §6).
 3. **Flows with multiple entry paths are tested through every path**, asserting identical
@@ -76,9 +76,9 @@ Puts them to the Orchestrator (`core/question-engine.md`):
 4. **Real layout in small (~390px) and large viewports** — not isolated components; grids break
    without `min-width:0` (`knowledge/permanent-rules.md` §7... via the web performance checklist).
 5. **When changing a shared component/behavior, also sweep the E2E specs** — they live outside the
-   unit suite and keep asserting the old behavior (`knowledge/ai-pitfalls.md` #17).
+   unit suite and keep asserting the old behavior (`knowledge/ai-pitfalls.md` §AR-17).
 6. **The E2E suite runs focused, without aggressive parallelism, in the foreground**; the subagent
-   that runs it is closed explicitly by the controller (`agents/10-quality/README.md` §pitfall).
+   that runs it is closed explicitly by the controller (`agents/10-quality/README.md` §This category's critical pitfall).
 
 ## Limitations (what this agent does NOT do)
 
@@ -136,7 +136,7 @@ server did not have. Recorded, fixed, re-verified live.
 ## Anti-patterns
 
 - ❌ Closing the slice on a green suite alone → ✅ real live proof without mocks is a gate
-  (`#2`, `#18`).
+  (`knowledge/ai-pitfalls.md` §AR-2, §AR-18).
 - ❌ Testing authz only by disabling buttons in the UI → ✅ assert 404 on direct access by the
   wrong profile.
 - ❌ Testing one path and assuming the others are equal → ✅ walk every path, assert identical

@@ -4,8 +4,9 @@ The project's side of the learning circuit (`knowledge/README.md` §How knowledg
 consolidate the project's `FRAMEWORK-IMPROVEMENTS.md` and deliver it to the upstream repository
 as an **issue** — signals go up, releases come down; a project never writes directly to the
 framework. The project's Orchestrator (`core/orchestrator.md`) runs it at the close of F6/F7/F8
-(an item of `checklists/definition-of-done.md`) and, in F9, at the effort profile's cadence.
-Several people and projects can report simultaneously without conflict — issues are independent;
+(an item of `checklists/definition-of-done.md`) and, in F9, at the effort profile's cadence
+(`agents/13-guardians/README.md` §Cadences per profile). Several people and projects can report
+simultaneously without conflict — issues are independent;
 serialization happens later, during curation (`playbooks/framework-curation.md`).
 
 ## Preconditions
@@ -24,37 +25,61 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
 1. **Consolidate.** Reread the new entries (without the `(sent #nnn)` mark) across the five
    sections. Does each have the what, the why, evidence and a suggested destination? Incomplete
    ones are completed now or wait for the next submission — entries without a why and evidence are
-   never sent. **Recovery sweep:** before closing consolidation, cross-check `STATE.md` (§Lessons
-   and §Done since the last submission) and, if cheap, the period's `git log` against the file's
+   never sent. **Recovery sweep:** before closing consolidation, cross-check `STATE.md` (§Lessons,
+   §Done, §Debt and §Decisions made on behalf of the absent owner, since the last submission — debt
+   accepted "because of the framework" or a decision made because the framework did not say what
+   to do is reportable friction) and, if cheap, the period's `git log` against the file's
    entries — any framework lesson that escaped in-the-moment capture goes in now, marked
    `(recovered)`. This does not replace capture in the moment; it catches what slipped past it.
-   **Candidate confirmation:** reread the copy's `knowledge/candidates.md` and fill in the
-   artifact's confirmations section (by `C-nnn` ID, with evidence) — confirming or refuting what
-   other projects reported is as valuable as reporting anew, and it is what unblocks promotions.
-   **At the close of F8**, also include the "Close" block of the genesis dossier
+   **Framework usage:** include the file's §Framework usage this phase section (specs convened,
+   specs opened and set aside, engine questions assumed by default) — it goes in the issue body as
+   the "Framework usage" section; it is the only signal that tells upstream which specs carry
+   weight without earning it and which questions are poorly designed. **Candidate confirmation:**
+   reread `knowledge/candidates.md` from the **upstream's most recent release** —
+   `gh release download --repo {{upstream-repo}} --pattern 'Maestro-*.zip'` and read the
+   `knowledge/candidates.md` inside it; if the project's copy is already that version, the copy is
+   enough — and fill in the artifact's confirmations section (by `C-nnn` ID, with evidence):
+   confirming or refuting what other projects reported is as valuable as reporting anew, and it is
+   what unblocks promotions. **Confirming candidates does not require syncing the copy**
+   (`playbooks/sync-framework.md` is deliberate and may involve a MAJOR; confirmation does not
+   wait for that). **At the close of F8**, also include the "Close" block of the genesis dossier
    (`product/99-records/genesis.md`) — it is what curation uses to update the ecosystem's curve
    (`knowledge/learning-curve.md`).
-2. **Sanitize.** An explicit check, entry by entry: no personal data, no client names, no secrets,
-   no confidential domain detail. The lesson in its general form; the evidence by path/commit,
-   without pasting sensitive content. When in doubt about an entry, ask the user before including
-   it (`core/question-engine.md`). Close with a **mechanical sweep** of the consolidated body
-   ("Gates, not gut feelings" — it is the circuit's only irreversible step): secret and PII
-   patterns (keys, tokens, personal e-mails, IBAN/tax-ID numbers) plus the project's local list of
-   forbidden terms (client names, confidential domain terms — kept in a project file, **never
-   submitted**). Only proceed with a clean sweep; the result is noted in the §Report log.
+2. **Sanitize.** An explicit check, entry by entry: no personal data, no client or project names,
+   no secrets, no confidential domain detail. The lesson in its general form; the evidence by
+   path/commit, without pasting sensitive content. When in doubt about an entry, ask the user
+   before including it (`core/question-engine.md`). Close with the **mechanical sweep** of the
+   consolidated body ("Gates, not gut feelings" — it is the circuit's only irreversible step):
+
+   ```
+   bash Maestro/_meta/scan-report.sh {{consolidated-file}} FORBIDDEN-TERMS
+   ```
+
+   The script scans for secret and PII patterns (keys, tokens, e-mails, IBAN/tax-ID numbers,
+   credentials in URLs) and the project root's local `FORBIDDEN-TERMS` list — the project's name,
+   its clients' and people's names, and confidential domain terms, one regex per line;
+   instantiated in F0 from `templates/project/FORBIDDEN-TERMS.template` and **never submitted**.
+   It prints file:line and the pattern's name, never the value. **The issue opens only on exit
+   0**; the result is noted in the §Report log.
 3. **Open the issue** on the upstream repository, with the `improvements` label:
 
    ```
-   gh issue create --repo {{upstream-framework-repo, e.g. vaddermail/maestro-framework}} \
+   gh issue create --repo {{upstream framework org/repo — read from Maestro/_meta/ORIGIN or from STATE.md}} \
      --label improvements \
-     --title "[improvements] {{project-name}} — {{milestone, e.g. close of F7}}" \
+     --title "[improvements] {{sanitized domain, 1 line — e.g. B2B scheduling SaaS}} — {{milestone, e.g. close of F7}}" \
      --body-file {{consolidated-file}}
    ```
+
+   **The project's or client's real name never enters the issue** (title, body, attachments): the
+   upstream issue list is read by every project that reports. The curator identifies the project by
+   the issue's author and assigns it a project code (P2, P3, …) in the first comment; the
+   code↔project map is kept by the owner outside any repository projects have access to
+   (`knowledge/candidates.md` §Entry and exit rules, rule 5).
 
    The body is self-contained (the curator may not be able to read the project's repository):
 
    ```
-   Project: {{name}} · Domain (1 line, sanitized): {{…}}
+   Domain (1 line, sanitized): {{…}}
    Copied framework version: {{X.Y.Z}} · Milestone: {{phase closed / cadence}}
 
    ## New pitfalls
@@ -64,7 +89,9 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
    ## Cross-validation of existing patterns
    ## Friction and omissions
    ## Reusable blocks
-   {{same — sections with no new entries are omitted}}
+   ## Candidate confirmation
+   ## Framework usage
+   {{same — sections with no new entries are omitted; "Framework usage" always goes in}}
    ```
 
 4. **Record the submission.** In `FRAMEWORK-IMPROVEMENTS.md`: mark the submitted entries with

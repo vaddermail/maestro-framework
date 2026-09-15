@@ -20,22 +20,31 @@ stopped being memory (`Maestro/core/project-memory.md` §Memory hygiene).*
 | **Current phase** | {{F0–F9, see `Maestro/core/lifecycle.md`}} |
 | **Active workflow** | {{e.g. `Maestro/workflows/W05-specification.md`}} |
 | **Effort profile** | {{prototype / internal product / commercial product / enterprise platform}} |
-| **Framework version** | {{see `Maestro/_meta/VERSION.md`}} |
-| **Upstream framework repository** | {{org/repo or URL — where the copy came from; improvement reports go there and re-syncs come from there}} |
+| **Framework version** | {{the `Current version` line at the top of `Maestro/_meta/VERSION.md` — the same number as in `CLAUDE.md` and `FRAMEWORK-IMPROVEMENTS.md`}} |
+| **Upstream framework repository** | {{org/repo — read from `Maestro/_meta/ORIGIN` when the copy came from a release; improvement reports go there and re-syncs come from there}} |
 | **AI tool in use** | {{Claude Code / Cowork / other}} |
+| **Raw idea (F0, unedited)** | {{the idea exactly as the user gave it — never rewritten; F1 refines it in `product/00-discovery/idea.md`}} |
+| **F0 → F1 inputs** | {{from scratch or replacing an existing system · hard constraints (budget, deadlines, compliance, integrations) — from the calibration batch}} |
 
 ## 2. Done
 
 *Completed blocks, most recent first. Each with verification evidence — "tested" without
-proof does not count (`Maestro/knowledge/permanent-rules.md` §2 Absolute honesty).*
+proof does not count (`Maestro/knowledge/permanent-rules.md` §2 Absolute honesty) — in the minimal
+format from `Maestro/knowledge/proven-patterns.md` §Live proof, and with the block's AI cost
+(`Maestro/core/model-routing.md` §Cost observability): this is where the genesis sums the phase's
+"AI cost" from.*
 
-- **{{yyyy-mm-dd}} — {{what got done}}.** Evidence: {{tests ran / real output / link}}.
+- **{{yyyy-mm-dd}} — {{what got done}}.** Evidence: {{what · where · literal output (≤20 lines) · when · who verified}}. AI cost: {{approximate tokens or €, in the genesis's unit; "n/a" if the tool doesn't report it}}.
 
 ## 3. In progress
 
-*What is half-done, with enough for another session to pick up without re-asking.*
+*What is half-done, with enough for another session to pick up without re-asking. Open loops and
+active guardians keep their ledger here (`Maestro/loops/README.md`;
+`Maestro/workflows/W09-continuous-operation.md` step 0).*
 
 - **{{item in progress}}** — {{where it stands, concrete next step, files touched}}.
+- L{{nn}} · {{loop}} · metric {{a→b→c}} · iter {{n}} (cap {{t}}) · last progress: iter {{k}} · state: {{in progress / at risk / stalled}}
+- G · {{guardian}} · cadence {{x}} · last cycle {{yyyy-mm-dd}} · next {{yyyy-mm-dd}} · state: {{on track / overdue / running}}
 
 ## 4. Up next
 
@@ -84,7 +93,7 @@ from re-flagging, cycle after cycle, something already accepted (`loops/L08-tech
 
 ### {{previous milestone/version}} — {{yyyy-mm-dd}}
 
-{{2–4-line summary}}
+{{2–4-line summary}} Milestone AI cost: {{sum of the archived blocks — this is what the genesis reads}}.
 
 ## Related
 
@@ -92,4 +101,5 @@ from re-flagging, cycle after cycle, something already accepted (`loops/L08-tech
 - `CHANGELOG.md` — history per version.
 - `Maestro/core/project-memory.md` — the why behind this structure.
 - `Maestro/core/question-engine.md` — format of the pending decisions (§Pending decisions).
-- `product/99-records/pending-decisions.md` — mirror of the pending items, if the project keeps it.
+- `product/99-records/gates/` — the gate records that §Done summarizes.
+- `product/99-records/pending-decisions.md` — optional mirror of the pending items; the single source is §Pending decisions.

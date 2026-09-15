@@ -17,7 +17,11 @@ agent that talks to everyone; specialists talk through artifacts.
    for the gate.
 2. **Schedule agents:** for each step of the active workflow, invoke the right agent with the
    right inputs — first verifying that the inputs exist and are approved
-   (`core/artifact-protocol.md`).
+   (`core/artifact-protocol.md`) — handing it the context package (spec + concrete inputs +
+   output destination + model tier), not the whole framework. The short form of each agent's
+   contract lives in `agents/NN-category/CONTRACTS.md`, derived from the specs — the Orchestrator
+   plans with it and never loads full specs into its own context; the invoked agent reads the
+   complete spec.
 3. **Manage dependencies:** an agent only starts when the artifacts it depends on exist.
    Independent work may run in parallel (see §Parallelism).
 4. **Enforce the gates** (`core/quality-gates.md`): no phase advances, no merge happens, nothing
@@ -39,11 +43,31 @@ agent that talks to everyone; specialists talk through artifacts.
 | --- | --- |
 | **Who calls?** | The Orchestrator calls specialists; specialists never call each other — they ask the Orchestrator (via an "I need X" output). Guardians (F9) have their own cadence but report to the Orchestrator. |
 | **When does it call?** | When the active workflow dictates it **and** the agent's mandatory inputs exist and are `approved` (see artifact states). |
-| **Who waits?** | Downstream agents wait for upstream artifacts. The user never waits in the dark: blockers stay visible in `STATE.md` → "Pending decisions". |
+| **Who waits?** | Downstream agents wait for upstream artifacts. The user never waits in the dark: blockers stay visible in `STATE.md` §Pending decisions. |
 | **Who depends?** | Declared in each agent's spec (§Inputs/§Interactions). The Orchestrator builds the dependency graph from the specs — there is no hidden graph. |
 | **Who validates?** | Reviewers (`agents/12-reviewers/`) validate substance; checklists validate form; the phase gate combines both. Whoever produces never validates. |
 | **Who approves?** | The user — whenever the decision concerns scope, money, personal data, residual risk, destructive action or production (§Human approval). |
 | **Who executes?** | The specialist that owns the artifact. An artifact has **one** owner at a time. |
+
+## Invoking an agent
+
+Every invocation follows `templates/technical/agent-briefing.md.template` — two fixed formats at
+the boundary between contexts, so the spec never has to travel:
+
+- **Briefing** (`templates/technical/agent-briefing.md.template` §Briefing, ≤40 lines, filled in by
+  the Orchestrator): role (path to the spec), objective of this invocation, inputs by path and
+  state, expected output (canonical path + template), the 3–5 rules from the spec that weigh on
+  this step, out of scope, effort profile and model tier. The agent reads the complete spec — the
+  briefing highlights, it does not replace.
+- **Return** (`templates/technical/agent-briefing.md.template` §Return, ≤12 lines, filled in by the
+  agent): path and state of the artifact, ready criteria N/N with the failed ones named, gaps
+  already filed as `P-nnn`, "I need", approximate cost, lesson for the framework. **Never the
+  artifact pasted in** — a return with the artifact pasted in gets sent back to the agent.
+- The Orchestrator reads **only the return**; the artifact is read by whoever consumes it
+  downstream, or by the reviewer. The return is a trail, not proof: the gate is still owned by
+  someone who did not produce.
+- Blind panels = N identical briefings, N returns; no agent sees another's return, and only the
+  consolidator reads the artifacts (§Parallelism).
 
 ## Effort profiles
 
@@ -52,14 +76,14 @@ removes — phases and gates:
 
 | Profile | When | Effect |
 | --- | --- | --- |
-| **Prototype** | validate an idea, assumed disposable | F1–F5 condensed into short dossiers; minimal review panel (security + architecture); guardians disabled until a decision to continue. |
+| **Prototype** | validate an idea, assumed disposable | F1–F5 condensed into short dossiers; P5 review by the Orchestrator itself + user OK (`workflows/W05-specification.md` §Effort profiles); at P7, minimal panel of security + architecture (`workflows/W07-quality-and-security.md` §Effort profiles); guardians disabled until a decision to continue. |
 | **Internal product** | known users, contained risk | Full process; panel review on critical flows; guardians per the single cadence table (`agents/13-guardians/README.md` §Cadences per profile). |
 | **Commercial product** | paying customers, reputation at stake | Full process; adversarial audit before go-live; guardians per the single cadence table (`agents/13-guardians/README.md` §Cadences per profile); pentest mandatory. |
 | **Enterprise platform** | multi-team, compliance, years of life | Everything above + ASVS level 2+, DR exercised, ADRs for every structural decision, periodic global review (W12). |
 
 Switching profiles midway is legitimate (e.g. an approved prototype becomes a product) — it is
 recorded in `STATE.md` and **the gates the new profile requires and the old one waived are run**
-(process debt is not inherited silently).
+(process debt is not inherited silently) — procedure in `playbooks/change-effort-profile.md`.
 
 ## Parallelism
 
@@ -92,9 +116,11 @@ The Orchestrator **stops and asks** before:
 | Agent blocked by a missing input | Check whether the input can be produced (schedule the upstream agent) or is a user gap (add it to the next question batch). If the question meets the single assumption rule (`core/question-engine.md` §When to assume by default), proceed with the provisional default instead of blocking. Record in `STATE.md`. |
 | Contradictory outputs between agents | Do not pick silently: confront the specs (who owns what), request reanalysis with the conflict made explicit, or escalate to the user if it is a product decision. |
 | Loop that does not converge (3 iterations without progress) | Stop the loop (safeguard from `loops/README.md`), record a diagnosis and escalate to the user with options. |
-| User unavailable | Continue only work that does not depend on the answers; never "unblock" by assuming. The questions stay in `STATE.md` → "Pending decisions". |
+| User unavailable | Continue only work that does not depend on the answers; never "unblock" by assuming. The questions stay in `STATE.md` §Pending decisions. |
 | Session ends midway | No drama: memory (`core/project-memory.md`) guarantees the next session resumes. The end-of-session protocol (`START-HERE.md` §2.5) is the safety net. |
 | Mistake made (wrong artifact, broken code) | Absolute honesty: record the mistake, revert (reversibility by default), fix the cause. Never hide it or "patch over it". |
+| Context compacted mid-slice | Reread `CLAUDE.md` + `STATE.md` §In progress before continuing; if the summary contradicts the file, the file wins. |
+| Blocking external dependency (third-party credentials/API/contract, pentest authorization, purchase pending approval) | Record in `STATE.md` §Pending decisions with an **external owner and expected date**. Build against the contract in `product/02-architecture/integrations.md` with a swappable adapter behind a flag (`modules/feature-flags.md`), marked `stub` in the code and recorded in `STATE.md` §Debt with the trigger "dependency arrives". The slice **does not pass P6** with live proof against a stub — it stays `in-review`. If the dependency gates a phase gate (pentest at P7, hosting at P8), the gate holds: never waived for waiting; only the user waives it, recorded. |
 
 ## Orchestrator anti-patterns
 
@@ -107,6 +133,9 @@ The Orchestrator **stops and asks** before:
 - ❌ **State in the head** (knowing "from memory" where the project is) → ✅ `STATE.md` is the only
   source; every session starts by reading it.
 - ❌ **Top model for everything** → ✅ routing per task (`core/model-routing.md`).
+- ❌ **Return with the artifact pasted in** → ✅ path + N/N + gaps as `P-nnn` (§Invoking an agent).
+- ❌ **Reading the spec and playing the part inline** → ✅ invoke: the agent reads the spec, the
+  Orchestrator reads the return.
 
 ## Related
 
@@ -116,3 +145,4 @@ The Orchestrator **stops and asks** before:
 - `core/quality-gates.md` — what it guards.
 - `workflows/README.md` — the processes it runs.
 - `agents/README.md` — the team it directs.
+- `templates/technical/agent-briefing.md.template` — the briefing and return of every invocation.

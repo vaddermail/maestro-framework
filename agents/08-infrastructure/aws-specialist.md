@@ -118,7 +118,7 @@ processed, easy to forget. **Lock-in:** SQS and Fargate are proprietary but have
 (queue in Postgres/RabbitMQ; containers anywhere) — a medium-cost exit. **Recommendation:** AWS
 suitable for the peak elasticity; if traffic were flat, a large VPS would be far cheaper.
 
-**Example (internal HR tool, ~200 users, flat load).** Honest proposal: "AWS here is **excessive**.
+**Example (internal room and equipment booking tool, ~200 users, flat load).** Honest proposal: "AWS here is **excessive**.
 An app in containers on a simple service and a managed Postgres DB are enough; AWS's elasticity
 and catalog bring no value at this scale, and the operational cost/complexity are not justified.
 If there is a corporate AWS mandate, the minimal option is App Runner + RDS single-AZ,

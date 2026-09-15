@@ -64,7 +64,7 @@ The Orchestrator **stops and asks** (`core/orchestrator.md` §Human approval):
 
 - **Stage 2 — is it worth it?** The proceed/defer/refuse decision belongs to the user: it is scope
   and it is money (effort). An agent's "while we're at it" does not become a feature
-  (`knowledge/ai-pitfalls.md` §5).
+  (`knowledge/ai-pitfalls.md` §AR-5).
 - **Stage 2 — does it reopen a closed decision?** If the request contradicts a closed decision
   (`core/decision-engine.md` §Closed decisions), state **why it is closed** before reopening.
 - **Stage 4 — touches personal/sensitive data** in a new way, or requires a destructive
@@ -88,7 +88,7 @@ The evolution **closes** when:
 - [ ] The slice passed the gates of the phases it touched (P2/P5 if there was a spec delta; **P6**
       per slice — `checklists/definition-of-done.md` + `checklists/pre-merge.md`; P8 on release).
 - [ ] Real **live proof** in production: the original request was exercised and observed working
-      (`knowledge/ai-pitfalls.md` §2 — "green tests" is not proof).
+      (`knowledge/ai-pitfalls.md` §AR-2 — "green tests" is not proof).
 - [ ] Rollback rehearsed and available (`playbooks/release-and-rollback.md`); risky change behind
       a switchable flag (`modules/feature-flags.md`).
 - [ ] `EV-nnn.md` closed (what was done, what was left behind and why) and `STATE.md` updated.
@@ -101,7 +101,7 @@ the release:** the user.
 | Situation | Response |
 | --- | --- |
 | Stage 1 reveals a much bigger impact than the request suggested (structural) | Reclassify as **large**; if it touches architecture, return to F3 (`workflows/W03-architecture.md`) with an ADR — going back is normal (`core/lifecycle.md` §rule 2). |
-| While building (stage 4) the slice's spec turns out to be wrong | Stop, fix the spec first (stage 3), **then** the code — never fix against the spec in silence (`knowledge/ai-pitfalls.md` §7). |
+| While building (stage 4) the slice's spec turns out to be wrong | Stop, fix the spec first (stage 3), **then** the code — never fix against the spec in silence (`knowledge/ai-pitfalls.md` §AR-7). |
 | Release (stage 6) degrades production | Revert first (flag/rollback), diagnose later: open `workflows/W11-incident-response.md`. |
 | Requests piling up faster than they ship | Do not parallelize slices that share the central entity; prioritize with the user (value × effort × risk). |
 

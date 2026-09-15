@@ -46,7 +46,7 @@ marked "unstable" and records the block.
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
 | Contract snapshot (OpenAPI/schema/IDL) | `api-designer` / `rest-specialist` / `graphql-specialist` (F5–F6) | Yes | The reference's **single source** — it is generated from it, not handwritten |
-| `product/04-specification/backend-contract.md` | `api-designer` (F5) | Yes | Authz, scoping and sensitive fields the reference must reflect (what each profile sees) |
+| `product/04-specification/backend-contract.md` | `authorization-specialist` (F5; sensitive fields flagged by `api-designer`) | Yes | Authz, scoping and sensitive fields the reference must reflect (what each profile sees) |
 | `product/08-documentation/documentation-map.md` | `documentation-architect` | Yes | Where the reference is published and for which audience |
 | Error conventions (e.g. RFC 7807) | `api-designer` | No | For the cross-cutting errors section |
 | `product/01-requirements/glossary.md` | `glossary-curator` | No | Domain terms in the descriptions |

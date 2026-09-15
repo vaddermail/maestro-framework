@@ -42,7 +42,7 @@ launch?", a guardian asks "is it still good, today?".
 This table is the **single source** of cadences — `core/orchestrator.md` §Effort profiles and
 `workflows/W09-continuous-operation.md` point here. In the **prototype**, all guardians stay
 **disabled** until the decision to continue. A project may **tighten** a cadence (never loosen it
-without user-accepted risk), recording it in its `CLAUDE.md`.
+without user-accepted risk), recording it in the project's `CLAUDE.md`, §F0 calibration.
 
 | Guardian | Internal product | Commercial product | Enterprise platform |
 | --- | --- | --- | --- |
@@ -55,8 +55,11 @@ without user-accepted risk), recording it in its `CLAUDE.md`.
 | Backups | weekly check + quarterly drill | daily check + monthly drill | daily check + monthly drill + regular DR |
 | Value (KPIs) | monthly | monthly + per target near its deadline | monthly + per target near its deadline |
 | Feature evolution | per event | per event | per event |
+| Improvement report (`playbooks/report-framework-improvements.md`) | semiannual | quarterly | quarterly + at the close of each W12 |
 
 On the enterprise platform, the periodic global review is added (`workflows/W12-global-review.md`).
+The "Improvement report" row is a **maximum interval** — with no new entries, nothing is sent; with
+≥5 entries pending, it is sent without waiting.
 
 ## Duties shared by all
 

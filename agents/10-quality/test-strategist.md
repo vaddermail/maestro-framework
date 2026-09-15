@@ -54,7 +54,7 @@ is possible): in that case it returns the gap to the Orchestrator for
 | Artifact | Destination | Consumers |
 | --- | --- | --- |
 | Test strategy | `product/06-tests/test-strategy.md` (`templates/technical/test-plan.md.template`) | All the category's test engineers |
-| Risk→level map | Section of the strategy | `coverage-auditor`, `agents/12-reviewers/test-reviewer.md` |
+| Risk→level map | Section of the strategy, or `product/06-tests/test-plan.md` when the volume justifies it | `coverage-auditor`, `agents/12-reviewers/test-reviewer.md` |
 | Regression harness definition | Section of the strategy | `regression-test-engineer` |
 
 ## Questions to the user

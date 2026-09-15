@@ -10,7 +10,7 @@ the Contract phase only runs after an explicit **point of no return**.
 
 - Logical data model approved for the target state (`agents/06-data/data-modeler.md`).
 - Working regression harness against the **real** DB engine (not a lightweight engine that
-  serializes races production does not serialize — `knowledge/ai-pitfalls.md` §15).
+  serializes races production does not serialize — `knowledge/ai-pitfalls.md` §AR-15).
 - `templates/technical/migration-plan.md.template` available to instantiate.
 
 ## Steps

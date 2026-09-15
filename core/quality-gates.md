@@ -9,12 +9,17 @@ guarantee that the decisions that belong to the human actually reach the human.
 Every gate declares:
 
 1. **What it guards** — the transition (phase→phase, slice→merge, release→production).
-2. **Criteria** — a verifiable checklist (lives in `checklists/`), no subjective items.
+2. **Criteria** — a verifiable checklist (lives in `checklists/`), no subjective items. The
+   automatable criteria are called *gates* (`core/glossary.md`); none of them, alone, passes the
+   gate.
 3. **Who verifies** — never whoever produced (reviewers, the test harness, or the Orchestrator
    for formal criteria).
 4. **Who approves** — the user, when the decision is theirs (see matrix below); otherwise the
    Orchestrator declares the pass.
-5. **Record** — result in `STATE.md` (and in `product/99-records/` when a report is produced).
+5. **Record** — result in `product/99-records/gates/Pn-YYYY-MM-DD.md`
+   The record is the source; `STATE.md` summarizes it in §Done; the genesis reads the "1st?"
+   column from it. (`templates/project/GATE.md.template`: items, evidence, verified by, approved
+   by, waivers) and a summary in `STATE.md`.
 
 **There is no partial pass.** A gate with one failed criterion does not pass; what exists is the
 user being able to **explicitly waive** a criterion — and the waiver is recorded with the why and
@@ -52,13 +57,18 @@ The profile (`core/orchestrator.md` §Effort profiles) scales the **depth of the
 the existence of the gate: in a prototype, P5 can be "a 3-page spec reviewed by the Orchestrator
 itself + the user's OK"; on an enterprise platform it is a full panel. Each checklist's table
 states what is waivable per profile — whatever is not marked as waivable, is not.
+**Gate records** (`templates/project/GATE.md.template`): mandatory in every profile for P0–P5,
+P6b, P7 and P8; the P6 record **per slice** is waivable in a prototype —
+`_meta/verify-project.sh` reads the profile from `STATE.md` and does not require it in that case.
+This is the single rule; the template, W06 and the checklists all point back here.
 
 ## Anti-patterns
 
 - ❌ Rubber gate ("almost there, let it pass") → ✅ it either passes or it stays; a waiver is the
   user's, recorded.
 - ❌ Self-validation (whoever built it declares it done) → ✅ independent verification, always.
-- ❌ "Tested" without output → ✅ evidence attached (actual test results) — absolute honesty.
+- ❌ "Tested" without output → ✅ evidence attached (actual test results, in the format of
+  `knowledge/proven-patterns.md` §Live proof) — absolute honesty.
 - ❌ Surprise gate (criteria revealed on the spot) → ✅ criteria known from the start of the phase.
 - ❌ Piling everything into one final mega-gate → ✅ small, frequent gates (P6 per slice).
 
