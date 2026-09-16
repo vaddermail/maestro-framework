@@ -92,6 +92,11 @@ visible trade-off:
 7. **A single point of truth** for the headers — avoid defining them in the app **and** in the
    proxy with different values; pick the layer and document it (SSOT,
    `modules/single-source-of-content.md` as the general principle).
+8. **Trust only the forwarded headers the proxy actually writes.** "Trust all X-Forwarded" behind
+   a proxy that only sets origin and protocol lets the client forge the host and port — and the
+   application then generates absolute URLs pointing at the attacker's host (reproduced with a
+   single request: the password-reset link). Keep an explicit list of trusted headers, and test
+   with the rest forged.
 
 ## Limitations (what this agent does NOT do)
 

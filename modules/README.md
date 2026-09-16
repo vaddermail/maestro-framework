@@ -87,6 +87,7 @@ can jump from one module to another without relearning the format:
 | `modules/single-source-of-content.md` | SSOT for labels/descriptions/help: one source file serves UI, tooltips and AI grounding. |
 | `modules/ai-observability.md` | Accounted AI consumption (tokens, cost, per feature/model/user), alerts, per-model kill-switch. |
 | `modules/readonly-external-integrations.md` | External systems as an assumed contract: read-only, synchronization, externally managed fields. |
+| `modules/multi-repository-product.md` | Product split across several repositories: truth in files in the repository that owns the matter (precedence table), conversation in typed items with a closing criterion, mesh not star, whoever closes a blocker notifies whoever is waiting, code twins adopted by the clause. |
 | `modules/entity-lifecycle.md` | Onboarding/offboarding of entities with transactional release of all associated resources. |
 
 ## Related

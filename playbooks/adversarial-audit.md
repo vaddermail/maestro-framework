@@ -72,6 +72,11 @@ utmost scrutiny (`MANIFESTO.md` §9).
 central rule. Reporting suspicions as facts is the same failure as the self-validation the audit
 exists to prevent.
 
+"Not the finding's author" is not "independent of the code": verification done by the code's
+author over another party's finding works, but does not count as independent — the verifier must
+be unrelated to the finding **and** to the code it touches; when nobody like that is available,
+record the limitation in the report.
+
 ### 5. Consolidate into a single prioritized plan
 **Do:** the `agents/12-reviewers/review-consolidator.md` merges the reports into a single plan,
 without duplicates or contradictions, ordered by **real risk** (one `confirmed` is worth more than

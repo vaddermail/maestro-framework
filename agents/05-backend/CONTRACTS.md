@@ -42,31 +42,31 @@ Full spec: `agents/05-backend/ai-features-specialist.md`
 
 ### Rules
 
-1. **Grounding only from the single source.** Factual context comes from the catalog
-2. **A prompt is an artifact, not a string.** It lives in the repository, versioned, with a
-3. **No evals, no feature.** Golden cases (expected behavior) and adversarial ones (bypass
-4. **Visible degraded fallback.** Model failing or cut by the kill-switch
-5. **Output validated before touching data.** Output that feeds data is structured and validated
-6. **Every call is measured and debited.** Usage event and credit debit per call, attributed
-7. **Generated content has provenance and undo.** Every field the model writes is marked with
-8. **The AI security policy is honored, not worked around.** The guardrails in
-9. **Each tool is an internal endpoint.** It has a contract (input/output schema), passes through
-10. **The model proposes, the human approves the irreversible.** Irreversible or bulk actions
-11. **Trajectory evals and per-task budget.** Golden cases assert the tool sequence and the final
+1. **Grounding only from the single source.** Factual context comes from the catalog (`modules/single-source-of-content.md`), with provenance state (`Planeado` included); the model's internal knowledge is never product fact (`knowledge/permanent-rules.md`). Verifiable: an adversarial eval outside the catalog gets the agreed honest answer.
+2. **A prompt is an artifact, not a string.** It lives in the repository, versioned, with a changelog of why each change was made; changing a prompt is a PR that runs the evals. Verifiable: no prompt string embedded in the code outside the artifacts.
+3. **No evals, no feature.** Golden cases (expected behavior) and adversarial ones (bypass attempts) executable in CI (`pipelines/ci-quality.md`); a prompt regression is treated as a failing test — it opens `loops/L02-failing-tests.md`.
+4. **Visible degraded fallback.** Model failing or cut by the kill-switch (`modules/feature-flags.md`) → the product says what is going on and stays usable without the feature (`knowledge/proven-patterns.md` §10). Verifiable: turning the model off in a test shows the agreed degradation, not a generic error.
+5. **Output validated before touching data.** Output that feeds data is structured and validated against a schema on the server; a validation failure is a failed call, never a partial write.
+6. **Every call is measured and debited.** Usage event and credit debit per call, attributed to feature/model/account (`modules/ai-observability.md`, `modules/credit-management.md`); a call without instrumentation does not pass the slice's gate.
+7. **Generated content has provenance and undo.** Every field the model writes is marked with origin, model and moment, and reverts to the previous value (`modules/audit-and-provenance.md`), per the data auditor's spec.
+8. **The AI security policy is honored, not worked around.** The guardrails in `product/05-security/ai-security.md` are implemented fail-closed; a divergence goes back to the spec and to the AI security specialist — it is never "solved" locally in silence.
+9. **Each tool is an internal endpoint.** It has a contract (input/output schema), passes through the guards of `agents/05-backend/authorization-specialist.md` with the identity and scoping of the user on whose behalf the agent acts, and is idempotent by key — the model can retry, the system does not duplicate (`modules/job-queue.md`). Verifiable: a test that calls the tool with an identity lacking authority asserts denial.
+10. **The model proposes, the human approves the irreversible.** Irreversible or bulk actions leave the autonomous allowlist and enter `modules/approval-engine.md`; the `product/05-security/ai-security.md` policy decides the boundary.
+11. **Trajectory evals and per-task budget.** Golden cases assert the tool sequence and the final state, not just the text; every task has a step and credit limit, cut by the kill-switch (`modules/credit-management.md`). Verifiable: an eval that exceeds the budget ends with the agreed degradation, with no partial action.
 
 ### Limitations
 
-- **Does not attack or certify the defenses** — that belongs to
-- **Does not define the module's business rules** — that belongs to
-- **Does not design the API contract** that exposes the feature — that belongs to
-- **Does not design the audit trail or the retention policy** — that belongs to
-- **Does not design the credit ledger or the dashboards** — they follow
-- **Does not watch costs in production** — that belongs to `agents/13-guardians/cost-guardian.md`
-- **Does not choose the development process's models** — that belongs to `core/model-routing.md`;
+- **Does not attack or certify the defenses** — that belongs to `agents/09-security/ai-security-specialist.md`: that one defines the policy, reviews the implementation and tests adversarially in F7; this one builds with the defenses in place. The pair is deliberate: whoever builds does not self-approve.
+- **Does not define the module's business rules** — that belongs to `agents/01-requirements/business-rules-modeler.md`; this agent consumes the spec.
+- **Does not design the API contract** that exposes the feature — that belongs to `agents/05-backend/api-designer.md`.
+- **Does not design the audit trail or the retention policy** — that belongs to `agents/06-data/data-auditor.md`; this one implements provenance and undo in the feature.
+- **Does not design the credit ledger or the dashboards** — they follow `modules/credit-management.md` and `modules/ai-observability.md`; this one applies them per feature/model.
+- **Does not watch costs in production** — that belongs to `agents/13-guardians/cost-guardian.md` (F9), which consumes the observability this agent installs.
+- **Does not choose the development process's models** — that belongs to `core/model-routing.md`; here the model the **product** calls is decided, in an ADR with the user.
 
 ### Done criteria
 
-- [ ] Every LLM feature has its spec in the AI section of
+- [ ] Every LLM feature has its spec in the AI section of `product/04-specification/modules/<module>.md`: boundaries, prompts, output, failure, evals.
 - [ ] ADR for the product's model written and decided with the user.
 - [ ] Prompts in the repository with changelog; no loose prompt string in the code.
 - [ ] Golden + adversarial evals in CI, green, with the agreed threshold; blocking cases marked.
@@ -74,9 +74,9 @@ Full spec: `agents/05-backend/ai-features-specialist.md`
 - [ ] Degraded fallback and kill-switch proven: model off, product usable.
 - [ ] Usage event and credit debit per call, attributed to feature/model/account.
 - [ ] Provenance and undo demonstrated for all generated content.
-- [ ] AI security specialist's review with no open divergences; blocks recorded in
-- [ ] Every tool has a contract, inherited authz, idempotency and a denial test; irreversible
-- [ ] AI-interaction notice and synthetic-content label implemented per the
+- [ ] AI security specialist's review with no open divergences; blocks recorded in `STATE.md`.
+- [ ] Every tool has a contract, inherited authz, idempotency and a denial test; irreversible actions go through `modules/approval-engine.md`; step/credit budget per task.
+- [ ] AI-interaction notice and synthetic-content label implemented per the `agents/09-security/privacy-specialist.md` classification; tested in F7.
 
 ## api-designer
 
@@ -108,21 +108,21 @@ Full spec: `agents/05-backend/api-designer.md`
 
 ### Rules
 
-1. **One contract, one source.** There are never server and client types hand-written in parallel
-2. **A single, structured error format** across the whole API (e.g. `application/problem+json`),
-3. **Implementation-agnostic contract.** It describes the *what* (resources, shapes, errors), not
-4. **The contract does not decide authorization**, but **reserves its place**: it documents which
-5. **Additive by default.** Evolve without breaking clients: add optional fields, never rename/
+1. **One contract, one source.** There are never server and client types hand-written in parallel — the snapshot is the same for all consumers and **regenerates by command** (`knowledge/origin-lessons.md` §E4).
+2. **A single, structured error format** across the whole API (e.g. `application/problem+json`), with extension members so the UI reacts without fragile parsing (`knowledge/origin-lessons.md` §C6). Never just a message string.
+3. **Implementation-agnostic contract.** It describes the *what* (resources, shapes, errors), not the *how* (ORM, framework). The stack choice belongs to the `stack-selector`.
+4. **The contract does not decide authorization**, but **reserves its place**: it documents which fields are sensitive and which operations require which authority — the decision stays with the `authorization-specialist`.
+5. **Additive by default.** Evolve without breaking clients: add optional fields, never rename/ remove in a single step (delegates deprecation to `api-versioning-specialist.md`).
 6. **Pagination, filtering and sorting planned for every collection** — not a retroactive extra.
 
 ### Limitations
 
-- **Does not implement the style** — REST belongs to `agents/05-backend/rest-specialist.md`,
-- **Does not design authn/authz** — that belongs to `authentication-specialist.md` and
-- **Does not model persistence** — that belongs to `agents/06-data/data-modeler.md`; it consumes
-- **Does not write the client** — that belongs to `agents/04-frontend/api-integrator.md`, which
-- **Does not generate the reference doc** — that belongs to
-- **Does not do versioning/deprecation** — that belongs to
+- **Does not implement the style** — REST belongs to `agents/05-backend/rest-specialist.md`, GraphQL to `graphql-specialist.md`, gRPC to `grpc-specialist.md`.
+- **Does not design authn/authz** — that belongs to `authentication-specialist.md` and `authorization-specialist.md`; the contract only marks where they come in.
+- **Does not model persistence** — that belongs to `agents/06-data/data-modeler.md`; it consumes the logical model.
+- **Does not write the client** — that belongs to `agents/04-frontend/api-integrator.md`, which consumes the snapshot.
+- **Does not generate the reference doc** — that belongs to `agents/11-documentation/api-documenter.md`, from the snapshot.
+- **Does not do versioning/deprecation** — that belongs to `api-versioning-specialist.md`.
 
 ### Done criteria
 
@@ -163,25 +163,25 @@ Full spec: `agents/05-backend/api-versioning-specialist.md`
 
 ### Rules
 
-1. **Additive never breaks; *breaking* requires a new version.** Adding an optional field, an
-2. **Expand-contract on the contract** (`knowledge/permanent-rules.md` §3): introduce the new
-3. **Deprecation is an announced process, not an event.** Mark it (`Deprecation`/`Sunset` headers,
-4. **Consumer tolerance:** the client ignores fields it does not know; the server does not break on
-5. **One version per contract change, not per release.** The API version is not bumped on every
-6. **Compatibility test in CI** (`knowledge/proven-patterns.md` §7): compare the new schema with the previous one and
+1. **Additive never breaks; *breaking* requires a new version.** Adding an optional field, an endpoint or a tolerated enum value = safe. Removing/renaming a field, tightening validation, changing semantics or a type = *breaking* → new version. This is the operational boundary, written and testable.
+2. **Expand-contract on the contract** (`knowledge/permanent-rules.md` §3): introduce the new alongside the old, migrate consumers, and **only then** remove the old — never break what is in use in the same step.
+3. **Deprecation is an announced process, not an event.** Mark it (`Deprecation`/`Sunset` headers, docs) → coexist for the agreed period → remove **only** with telemetry at zero. Never remove by calendar without confirming usage.
+4. **Consumer tolerance:** the client ignores fields it does not know; the server does not break on receiving an extra field. Robustness on both sides reduces perceived *breaking*.
+5. **One version per contract change, not per release.** The API version is not bumped on every deploy — only when the contract breaks compatibility.
+6. **Compatibility test in CI** (`knowledge/proven-patterns.md` §7): compare the new schema with the previous one and **fail the build** if it introduces *breaking* within the same version.
 7. **Document the versions matrix** and keep it in sync (`documentation-guardian`).
 
 ### Limitations
 
-- **Does not design the initial contract** — that belongs to `agents/05-backend/api-designer.md`
-- **Does not version the database schema** — that belongs to
-- **Does not version the events** — that belongs to `agents/05-backend/events-specialist.md`, with
-- **Does not write the API reference** — that belongs to
-- **Does not measure per-version usage** — it consumes the telemetry from the
+- **Does not design the initial contract** — that belongs to `agents/05-backend/api-designer.md` and the style specialist (`rest-specialist.md`/`graphql-specialist.md`/`grpc-specialist.md`); here the **evolution** is governed.
+- **Does not version the database schema** — that belongs to `agents/06-data/schema-versioning-manager.md` and `agents/06-data/migration-engineer.md`; API contract ≠ DB schema (although both use expand-contract).
+- **Does not version the events** — that belongs to `agents/05-backend/events-specialist.md`, with whom it **aligns** the deprecation calendar.
+- **Does not write the API reference** — that belongs to `agents/11-documentation/api-documenter.md`; here the versions matrix and the notices are provided.
+- **Does not measure per-version usage** — it consumes the telemetry from the `observability-architect`.
 
 ### Done criteria
 
-- [ ] `product/04-specification/backend/api-versioning.md` with the scheme, the definition of
+- [ ] `product/04-specification/backend/api-versioning.md` with the scheme, the definition of "breaking" and the deprecation process.
 - [ ] Supported-versions matrix with deadlines, in sync with the documentation.
 - [ ] Contract compatibility test in CI, failing the build on *breaking* within the same version.
 - [ ] Removals done only with usage telemetry at zero (or a block recorded for a critical client).
@@ -218,21 +218,21 @@ Full spec: `agents/05-backend/authentication-specialist.md`
 
 ### Rules
 
-1. **Federate before building.** If there is a corporate IdP, use OIDC/OAuth2 — do not reimplement
-2. **Fail-closed:** a request without a valid credential → **not authenticated**, never a default
-3. **Short-lived sessions/tokens with renewal:** short access token + revocable refresh; revocation
-4. **Secrets and signing keys outside Git** (`knowledge/permanent-rules.md` §5), injected
-5. **Distinguish authentication from authorization.** This spec proves **who**; it never decides
-6. **Never log credentials or tokens** (`agents/05-backend/logging-specialist.md`); login error
-7. **Session cookies** with `HttpOnly`, `Secure`, `SameSite`; CSRF protection when there is a cookie
+1. **Federate before building.** If there is a corporate IdP, use OIDC/OAuth2 — do not reimplement login/password reset/session management (`knowledge/permanent-rules.md` §6: boring infra).
+2. **Fail-closed:** a request without a valid credential → **not authenticated**, never a default user (`knowledge/origin-lessons.md` §C1). Authentication is a precondition, not a suggestion.
+3. **Short-lived sessions/tokens with renewal:** short access token + revocable refresh; revocation takes effect **immediately** (revocation list or server-side session), not "when it expires".
+4. **Secrets and signing keys outside Git** (`knowledge/permanent-rules.md` §5), injected at runtime, with rotation planned (`agents/07-devops/secrets-manager.md`).
+5. **Distinguish authentication from authorization.** This spec proves **who**; it never decides **what** — that belongs to `authorization-specialist.md` (`knowledge/origin-lessons.md` §B2).
+6. **Never log credentials or tokens** (`agents/05-backend/logging-specialist.md`); login error messages do not reveal whether the user exists.
+7. **Session cookies** with `HttpOnly`, `Secure`, `SameSite`; CSRF protection when there is a cookie session.
 
 ### Limitations
 
-- **Does not decide authority or scoping** — that belongs to
-- **Does not do the authn security review** (credential strength, account recovery) — that belongs
-- **Does not manage operational secret rotation** — `agents/07-devops/secrets-manager.md` and
+- **Does not decide authority or scoping** — that belongs to `agents/05-backend/authorization-specialist.md`.
+- **Does not do the authn security review** (credential strength, account recovery) — that belongs to `agents/09-security/secure-authentication-specialist.md`; this spec **builds**, that one **audits**.
+- **Does not manage operational secret rotation** — `agents/07-devops/secrets-manager.md` and `agents/09-security/secrets-and-rotation-manager.md`.
 - **Does not issue TLS/mTLS certificates** — `agents/08-infrastructure/tls-ssl-specialist.md`.
-- **Does not manage session state on the client** —
+- **Does not manage session state on the client** — `agents/04-frontend/state-and-cache-specialist.md`.
 
 ### Done criteria
 
@@ -274,22 +274,22 @@ Full spec: `agents/05-backend/authorization-specialist.md`
 
 ### Rules
 
-1. **Authority ≠ scoping — distinct axes** (`knowledge/origin-lessons.md` §B2). *Authority* =
-2. **Everything on the server; the client is untrusted.** The client declares the active profile
-3. **Fail-closed, always.** No profile/no match → **deny**, never assume a superuser. A
+1. **Authority ≠ scoping — distinct axes** (`knowledge/origin-lessons.md` §B2). *Authority* = which actions; *scoping* = which subset of data. **Both** are checked, always; collapsing them creates bugs in both directions.
+2. **Everything on the server; the client is untrusted.** The client declares the active profile (e.g. via a header); the server **confirms** it against the granted roles. Any client-only check is bypassable (`knowledge/proven-patterns.md` §6).
+3. **Fail-closed, always.** No profile/no match → **deny**, never assume a superuser. A fail-open `?? "ADMIN"` turns "no profile" into "full access" — it was a real defect (`knowledge/origin-lessons.md` §C1).
 4. **Out-of-scope → 404, not 403.** Do not leak the existence of resources the requester cannot see.
-5. **Scoping in the query, not in a post-filter.** Filter by the server-side identity **inside** the
-6. **Defense in depth on sensitive fields:** do not emit them in the query **and** redact them on
-7. **Data-driven policy, not hardcoded per profile** where the business asks for it (e.g. the
-8. **Convention guardrail:** a test that sweeps all the endpoints and fails if any exposes data
+5. **Scoping in the query, not in a post-filter.** Filter by the server-side identity **inside** the query — never load everything and hide at the end (leaks via pagination/counts/timing).
+6. **Defense in depth on sensitive fields:** do not emit them in the query **and** redact them on output by authorization — both layers (`knowledge/proven-patterns.md` §6).
+7. **Data-driven policy, not hardcoded per profile** where the business asks for it (e.g. the value tier is configurable — `modules/approval-engine.md`), separating the eligibility *gate* from the access decision (`knowledge/origin-lessons.md` §B1).
+8. **Convention guardrail:** a test that sweeps all the endpoints and fails if any exposes data without going through authorization (`knowledge/proven-patterns.md` §7).
 
 ### Limitations
 
-- **Does not authenticate** (does not prove *who*) — that belongs to
-- **Does not do the end-to-end least-privilege review** (DB, cloud, CI) — that belongs to
+- **Does not authenticate** (does not prove *who*) — that belongs to `agents/05-backend/authentication-specialist.md`.
+- **Does not do the end-to-end least-privilege review** (DB, cloud, CI) — that belongs to `agents/09-security/authorization-and-least-privilege-specialist.md`; this spec enforces the **application's** authz, that one audits privilege across all layers.
 - **Does not design the tiered approval engine** — it uses the `modules/approval-engine.md` module.
 - **Does not model the data** — it consumes the logical model from `agents/06-data/data-modeler.md`.
-- **Does not manage the "hide buttons" UI** — the frontend may hide for convenience, but the real
+- **Does not manage the "hide buttons" UI** — the frontend may hide for convenience, but the real decision is here; `agents/04-frontend/` is never the authority.
 
 ### Done criteria
 
@@ -329,21 +329,21 @@ Full spec: `agents/05-backend/caching-specialist.md`
 
 ### Rules
 
-1. **The cache is never a source of truth.** It is rebuildable from the origin; losing the cache
-2. **The key includes the scope dimension.** Data under authorization/scoping **never** shares a
-3. **Every entry has a TTL** — nothing lives forever; the TTL is the staleness ceiling even when
-4. **Invalidation tied to the write.** Mutating the data invalidates (or rewrites) the entry,
-5. **Anti-stampede:** on a cache miss for a hot item, keep N requests from recomputing in parallel —
-6. **A cache failure is visible degradation, not silent** (`knowledge/proven-patterns.md`
-7. **The right layer for the right data:** per-request (memoization) < in-process < distributed
+1. **The cache is never a source of truth.** It is rebuildable from the origin; losing the cache degrades performance, never correctness (`knowledge/proven-patterns.md` §4).
+2. **The key includes the scope dimension.** Data under authorization/scoping **never** shares a cache entry between identities — the key carries tenant/user/profile when the result depends on them. A badly keyed cache is a data leak (`knowledge/origin-lessons.md` §C1).
+3. **Every entry has a TTL** — nothing lives forever; the TTL is the staleness ceiling even when invalidation fails.
+4. **Invalidation tied to the write.** Mutating the data invalidates (or rewrites) the entry, ideally via an event in the write's transaction (`knowledge/proven-patterns.md` §3). Without a reliable way to invalidate → do not cache.
+5. **Anti-stampede:** on a cache miss for a hot item, keep N requests from recomputing in parallel — *single-flight*/per-key lock, or early refresh. A miss on a popular item cannot become an avalanche on the origin.
+6. **A cache failure is visible degradation, not silent** (`knowledge/proven-patterns.md` §10): store down → serve from the origin and **log**, never fail the request nor hide it.
+7. **The right layer for the right data:** per-request (memoization) < in-process < distributed (Redis) < HTTP/CDN. Do not cache at the edge what depends on identity (`agents/07-devops/cdn-specialist.md`).
 
 ### Limitations
 
-- **Does not do client-side caching** (state, SWR/react-query) — that belongs to
-- **Does not configure CDN/edge** — that belongs to `agents/07-devops/cdn-specialist.md`; here what
-- **Does not optimize the query itself** (indexes, plan) — that belongs to
-- **Does not define authorization** — it consumes the scoping from `authorization-specialist.md`
-- **Does not manage queues/events** — it uses the events from `events-specialist.md` to
+- **Does not do client-side caching** (state, SWR/react-query) — that belongs to `agents/04-frontend/state-and-cache-specialist.md`.
+- **Does not configure CDN/edge** — that belongs to `agents/07-devops/cdn-specialist.md`; here what is cacheable at the edge and the headers are decided, the configuration lives there.
+- **Does not optimize the query itself** (indexes, plan) — that belongs to `agents/06-data/indexing-specialist.md` and `agents/06-data/db-performance-optimizer.md`; caching is the step **after** the query is sane.
+- **Does not define authorization** — it consumes the scoping from `authorization-specialist.md` for keying.
+- **Does not manage queues/events** — it uses the events from `events-specialist.md` to invalidate.
 
 ### Done criteria
 
@@ -383,25 +383,25 @@ Full spec: `agents/05-backend/events-specialist.md`
 
 ### Rules
 
-1. **Events are facts in the past, immutable.** Name in the past tense (`OrderConfirmed`,
-2. **Publish to the transactional outbox**, inside the fact's transaction (`knowledge/proven-patterns.md` §3): the event
-3. **Every consumer is idempotent.** It processes by event key with an "already processed" record;
-4. **Ordering is explicit, not presumed.** Whether a consumer requires per-aggregate order is
-5. **Contract versioned from v1.** Every event has a version; changes are additive by default
-6. **Separate domain from integration** when there are external consumers: the internal event may
-7. **No unnecessary PII in the payload.** The event carries the minimum; sensitive data is
+1. **Events are facts in the past, immutable.** Name in the past tense (`OrderConfirmed`, `PaymentDeclined`), never commands. A published event is not rewritten — it evolves by version.
+2. **Publish to the transactional outbox**, inside the fact's transaction (`knowledge/proven-patterns.md` §3): the event only exists if the fact committed. Transport/delivery belongs to the `queue-specialist`.
+3. **Every consumer is idempotent.** It processes by event key with an "already processed" record; redelivery (inevitable in *at-least-once*) does not duplicate the effect (`knowledge/proven-patterns.md` §1).
+4. **Ordering is explicit, not presumed.** Whether a consumer requires per-aggregate order is declared; global order is never assumed. Out-of-order is tolerated by design (the consumer reconciles).
+5. **Contract versioned from v1.** Every event has a version; changes are additive by default (`knowledge/permanent-rules.md` §3, expand-contract).
+6. **Separate domain from integration** when there are external consumers: the internal event may change; the integration one is a stable public commitment.
+7. **No unnecessary PII in the payload.** The event carries the minimum; sensitive data is referenced by ID (the authorized consumer fetches it) — avoids spreading personal data across logs and brokers.
 
 ### Limitations
 
-- **Does not implement the worker, retries or the DLQ** — that is
-- **Does not decide whether the architecture is event-driven** — that is
-- **Does not version the public HTTP API** — that is
+- **Does not implement the worker, retries or the DLQ** — that is `agents/05-backend/queue-specialist.md`; the events specialist defines **what** gets delivered and with which guarantees, not the delivery mechanics.
+- **Does not decide whether the architecture is event-driven** — that is `agents/02-architecture/architecture-arbiter.md` with the `agents/02-architecture/event-driven-specialist.md`; here that decision is a given.
+- **Does not version the public HTTP API** — that is `agents/05-backend/api-versioning-specialist.md`, with whom it **aligns** the deprecation policy.
 - **Does not model the consumers' persistence schema** — that belongs to `06-data/`.
-- **Does not define the alerts** on consumer lag — it hands the signals to the
+- **Does not define the alerts** on consumer lag — it hands the signals to the `observability-architect`.
 
 ### Done criteria
 
-- [ ] `product/04-specification/backend/events.md` with each event's versioned contract
+- [ ] `product/04-specification/backend/events.md` with each event's versioned contract (name, payload, key, v).
 - [ ] Consumers mapped, each with a written idempotency strategy.
 - [ ] Ordering declared where required; out-of-order tolerance documented.
 - [ ] Domain/integration separation decided where there are external consumers.
@@ -436,19 +436,19 @@ Full spec: `agents/05-backend/graphql-specialist.md`
 
 ### Rules
 
-1. **Field-level authorization on the server.** Every sensitive field is filtered in the resolver
-2. **N+1 solved by batching** (dataloader pattern): aggregate loads by key within the tick; measure
-3. **Cost limited:** maximum depth, maximum complexity and/or **persisted queries** — a public
-4. **Thin edge:** the resolver orchestrates (authz + load) and calls the pure domain; the business
-5. **Structured domain errors** — use GraphQL's error mechanism with a stable code in the
-6. **Additive evolution:** add fields/types; deprecate with `@deprecated` and remove only later
+1. **Field-level authorization on the server.** Every sensitive field is filtered in the resolver by the server's identity; an unauthorized field returns an authorized `null` or an error, **never** the value (`knowledge/proven-patterns.md` §6). The client asking is not the client being allowed.
+2. **N+1 solved by batching** (dataloader pattern): aggregate loads by key within the tick; measure the number of queries in a live proof, do not presume.
+3. **Cost limited:** maximum depth, maximum complexity and/or **persisted queries** — a public GraphQL API without a cost limit is a DoS waiting to happen.
+4. **Thin edge:** the resolver orchestrates (authz + load) and calls the pure domain; the business rule does not live inside the resolver (`agents/05-backend/README.md`).
+5. **Structured domain errors** — use GraphQL's error mechanism with a stable code in the extension, consistent with the `application/problem+json` of the other channels (`knowledge/origin-lessons.md` §C6).
+6. **Additive evolution:** add fields/types; deprecate with `@deprecated` and remove only later (delegates to the `api-versioning-specialist.md`).
 
 ### Limitations
 
 - **Does not design the contract** — `agents/05-backend/api-designer.md`.
-- **Does not define the access policy** — `authorization-specialist.md`; the resolver
+- **Does not define the access policy** — `authorization-specialist.md`; the resolver **enforces** it.
 - **Does not implement REST or gRPC** — `rest-specialist.md`, `grpc-specialist.md`.
-- **Does not do response caching** — coordinates with `caching-specialist.md`
+- **Does not do response caching** — coordinates with `caching-specialist.md` (per-field/per-entity).
 - **Does not write the client** — `agents/04-frontend/api-integrator.md`.
 
 ### Done criteria
@@ -488,20 +488,20 @@ Full spec: `agents/05-backend/grpc-specialist.md`
 
 ### Rules
 
-1. **`.proto` is the single source.** Server and client are generated from the same `.proto`;
-2. **Backward compatibility by numbering:** never reuse or renumber a field number; removed fields
-3. **Correct gRPC status codes:** `NOT_FOUND` for out-of-scope (not `PERMISSION_DENIED`, to avoid
-4. **Streaming with cancellation and backpressure:** honor context cancellation; do not fill
-5. **Authn/authz in interceptors**, not scattered across methods; the stub is a thin edge, the rule
-6. **Idempotency in mutating operations** with external effect (key in the message), as in the
+1. **`.proto` is the single source.** Server and client are generated from the same `.proto`; types are never written by hand in parallel (`knowledge/origin-lessons.md` §E4).
+2. **Backward compatibility by numbering:** never reuse or renumber a field number; removed fields become `reserved`; only **add** a new field with a new number (`knowledge/permanent-rules.md` §3 — reversibility/additive).
+3. **Correct gRPC status codes:** `NOT_FOUND` for out-of-scope (not `PERMISSION_DENIED`, to avoid leaking existence — an echo of `knowledge/proven-patterns.md` §6), `FAILED_PRECONDITION` for state conflicts, `INVALID_ARGUMENT` for validation, `ALREADY_EXISTS` for idempotency.
+4. **Streaming with cancellation and backpressure:** honor context cancellation; do not fill buffers without limit; close resources when the stream ends (`agents/05-backend/scalability-architect.md`).
+5. **Authn/authz in interceptors**, not scattered across methods; the stub is a thin edge, the rule goes down to the pure domain (`agents/05-backend/README.md`).
+6. **Idempotency in mutating operations** with external effect (key in the message), as in the other channels.
 
 ### Limitations
 
 - **Does not design the contract** — `agents/05-backend/api-designer.md`.
-- **Does not decide authn/authz** — `authentication-specialist.md` (incl. mTLS),
+- **Does not decide authn/authz** — `authentication-specialist.md` (incl. mTLS), `authorization-specialist.md`.
 - **Does not implement REST or GraphQL** — `rest-specialist.md`, `graphql-specialist.md`.
-- **Does not configure infrastructure mTLS** — the certificate policy belongs to the
-- **Does not version the service publicly** — the deprecation strategy belongs to the
+- **Does not configure infrastructure mTLS** — the certificate policy belongs to the `agents/08-infrastructure/tls-ssl-specialist.md`; here they are only consumed.
+- **Does not version the service publicly** — the deprecation strategy belongs to the `api-versioning-specialist.md`.
 
 ### Done criteria
 
@@ -541,25 +541,26 @@ Full spec: `agents/05-backend/logging-specialist.md`
 
 ### Rules
 
-1. **Structured logs, not free text.** Every entry is an object with stable fields (`level`, `msg`,
-2. **Never secrets or PII in logs.** Keys, tokens, passwords, PIN/PUK, card numbers, health data:
-3. **Every log of a request carries the `correlationId`** propagated by tracing, to reconstruct
-4. **Levels with verifiable criteria:** `error` = requires action; `warn` = anomalous but
+1. **Structured logs, not free text.** Every entry is an object with stable fields (`level`, `msg`, `correlationId`, `context`) — machine-searchable and aggregatable, not just human-readable.
+2. **Never secrets or PII in logs.** Keys, tokens, passwords, PIN/PUK, card numbers, health data: **redacted at the source**, never "just this once". Defense in depth — do not emit **and** filter on the way out (`knowledge/proven-patterns.md` §6).
+3. **Every log of a request carries the `correlationId`** propagated by tracing, to reconstruct the story end to end.
+4. **Levels with verifiable criteria:** `error` = requires action; `warn` = anomalous but recovered; `info` = business milestone; `debug` = diagnosis, off by default in production. No `error` for what is routine.
 5. **Fallbacks and degradations are logged** (`knowledge/proven-patterns.md` §10) — silence reads as "it went fine".
-6. **No logging on the hot path without weighing the cost** — logging per request at high volume
-7. **The guardrail is mandatory:** a test that injects a known secret and fails if it shows up in
+6. **No logging on the hot path without weighing the cost** — logging per request at high volume is storage cost and noise; sample when it makes sense, and **say** that you sampled.
+7. **The guardrail is mandatory:** a test that injects a known secret and fails if it shows up in a log (`knowledge/proven-patterns.md` §7).
+8. **Whatever reads logs reads by streaming.** A diagnostic probe that loads an entire log file into memory can bring down the very server it is diagnosing (a log of hundreds of MB did exactly that); daily rotation configured at deploy, reading with `tail`/streaming, never the whole file.
 
 ### Limitations
 
-- **Does not define metrics** (counters, histograms, SLIs) — that is
-- **Does not design distributed tracing** nor manage `traceId` propagation — that is
-- **Does not build the business audit trail** (who did what, immutable) — that is
-- **Does not operate the collection/storage stack** (aggregator, physical retention) — that
-- **Does not sweep the Git history for secrets** — that is
+- **Does not define metrics** (counters, histograms, SLIs) — that is `agents/05-backend/metrics-specialist.md`; logs and metrics are distinct pillars.
+- **Does not design distributed tracing** nor manage `traceId` propagation — that is `agents/05-backend/observability-architect.md`; logging **consumes** the ID it defines.
+- **Does not build the business audit trail** (who did what, immutable) — that is `agents/06-data/data-auditor.md` and `modules/audit-and-provenance.md`; log ≠ audit trail.
+- **Does not operate the collection/storage stack** (aggregator, physical retention) — that belongs to `07-devops/` and `08-infrastructure/`.
+- **Does not sweep the Git history for secrets** — that is `agents/09-security/exposed-secrets-hunter.md`, to whom it hands the forbidden-field list.
 
 ### Done criteria
 
-- [ ] `product/04-specification/backend/logging.md` with format, levels, mandatory and forbidden
+- [ ] `product/04-specification/backend/logging.md` with format, levels, mandatory and forbidden fields.
 - [ ] Secret/PII redaction mechanism at the source implemented.
 - [ ] Guardrail that fails the build if a secret shows up in a log, in `pipelines/ci-quality.md`.
 - [ ] Tracing `correlationId` present in every request log.
@@ -595,26 +596,26 @@ Full spec: `agents/05-backend/metrics-specialist.md`
 
 ### Rules
 
-1. **RED for services, USE for resources.** Every service that answers requests exposes *rate*,
-2. **Cardinality under control — a non-negotiable rule.** *Labels* only with values from a
-3. **Every SLI ties to an NFR/SLO.** Measure what is promised; do not instrument for
-4. **Metrics are cheap to emit, expensive to store badly.** Prefer histograms over pre-computed
-5. **Name by convention** (`http_requests_total`, `db_pool_saturation`) — predictable names for
-6. **No PII in metrics or labels** — the same principle as logs (`logging-specialist`); a
-7. **Resource errors are counted** (queue `saturation`, DB `pool exhausted`) — they are the first
+1. **RED for services, USE for resources.** Every service that answers requests exposes *rate*, *errors* and *duration* (histogram); every finite resource (DB, queue, cache, CPU) exposes *utilization*, *saturation* and *errors*.
+2. **Cardinality under control — a non-negotiable rule.** *Labels* only with values from a **limited, known set** (HTTP method, route pattern, status code). **Never** IDs, emails, URLs with parameters, free text — every new value creates a new series and the observability bill/latency explodes.
+3. **Every SLI ties to an NFR/SLO.** Measure what is promised; do not instrument for instrumenting's sake.
+4. **Metrics are cheap to emit, expensive to store badly.** Prefer histograms over pre-computed percentiles; aggregate at the collection point, do not store everything raw.
+5. **Name by convention** (`http_requests_total`, `db_pool_saturation`) — predictable names for consistent dashboards and alerts.
+6. **No PII in metrics or labels** — the same principle as logs (`logging-specialist`); a metric with an email in a label is a leak *and* a cardinality bomb.
+7. **Resource errors are counted** (queue `saturation`, DB `pool exhausted`) — they are the first bottleneck signals the `scalability-architect` needs.
 
 ### Limitations
 
-- **Does not define final alerts or SLOs** (when to fire, for whom) — it hands the SLIs to
-- **Does not do structured logging** — that is `agents/05-backend/logging-specialist.md`; a metric
+- **Does not define final alerts or SLOs** (when to fire, for whom) — it hands the SLIs to `agents/05-backend/observability-architect.md`, which turns them into actionable alerts.
+- **Does not do structured logging** — that is `agents/05-backend/logging-specialist.md`; a metric aggregates (how many, how fast), a log tells one case's story.
 - **Does not design distributed tracing** — that is the `observability-architect`.
-- **Does not operate the metrics backend** (Prometheus/OTel Collector/hosted) on the infra — that
-- **Does not interpret the cost/performance trend in production** — that belongs to the guardians
-- **Does not instrument product events or funnels** (activation, flow completion, drop-off per
+- **Does not operate the metrics backend** (Prometheus/OTel Collector/hosted) on the infra — that belongs to `agents/07-devops/` and `agents/08-infrastructure/`.
+- **Does not interpret the cost/performance trend in production** — that belongs to the guardians `agents/13-guardians/performance-guardian.md` and `cost-guardian.md`, which consume these metrics.
+- **Does not instrument product events or funnels** (activation, flow completion, drop-off per step) — that belongs to `agents/05-backend/product-analytics-specialist.md`; here what is measured is RED/USE and SLIs tied to NFRs.
 
 ### Done criteria
 
-- [ ] `product/04-specification/backend/metrics.md` with the RED/USE catalog, types and allowed
+- [ ] `product/04-specification/backend/metrics.md` with the RED/USE catalog, types and allowed labels.
 - [ ] Explicit cardinality limit per metric; no unbounded-set label.
 - [ ] Every SLI tied to an NFR; SLO targets agreed with the user (or the block recorded).
 - [ ] Resource saturation metrics (pool, queue, memory) present.
@@ -654,21 +655,21 @@ Full spec: `agents/05-backend/observability-architect.md`
 
 ### Rules
 
-1. **One correlation identifier crosses everything.** The `traceId` propagates from the first
-2. **Alerts on symptoms, not on internal causes.** Alert on what the affected user feels (latency
-3. **The error budget governs alerting.** It derives from the SLO; burning the budget escalates,
-4. **Declared sampling.** Traces sampled by explicit policy (and 100% of those that fail); the
-5. **AI cost is a first-class signal** when the product uses AI: tokens and cost per feature/model,
-6. **Zero PII/secrets in any pillar** — reinforces and verifies the logging and metrics rule across
-7. **Dashboards tied to decisions.** Every panel answers an operational question; a decorative panel
+1. **One correlation identifier crosses everything.** The `traceId` propagates from the first request to the last queue job; logs and context metrics carry it. Without correlation, three pillars are three silos.
+2. **Alerts on symptoms, not on internal causes.** Alert on what the affected user feels (latency above the SLO, error rate), not on every CPU oscillation. Every alert is **actionable** — it has an owner and a runbook; an alert without an action is noise that trains the team to ignore.
+3. **The error budget governs alerting.** It derives from the SLO; burning the budget escalates, within it nobody is bothered.
+4. **Declared sampling.** Traces sampled by explicit policy (and 100% of those that fail); the sampling **is recorded** — silence reads as "I saw everything" (`knowledge/proven-patterns.md` §10).
+5. **AI cost is a first-class signal** when the product uses AI: tokens and cost per feature/model, with alerts and a per-model kill-switch (`modules/ai-observability.md`) — the same principle of accounting per unit of work.
+6. **Zero PII/secrets in any pillar** — reinforces and verifies the logging and metrics rule across the board (`knowledge/proven-patterns.md` §6).
+7. **Dashboards tied to decisions.** Every panel answers an operational question; a decorative panel is debt.
 
 ### Limitations
 
-- **Does not define each metric** (names, types, cardinality) — that belongs to
-- **Does not define the log format** or the wording — that belongs to
-- **Does not operate the stack** (collector, storage, physical retention) — that is for
-- **Does not analyze cost/performance trends in production** or propose optimizations — that is for
-- **Does not define the AI credit ledger** (quotas, per-user rates) — that belongs to the product,
+- **Does not define each metric** (names, types, cardinality) — that belongs to `agents/05-backend/metrics-specialist.md`; here the SLIs are **composed** into SLOs and alerts.
+- **Does not define the log format** or the wording — that belongs to `agents/05-backend/logging-specialist.md`; here it is only **required** that the log carry the `correlationId`.
+- **Does not operate the stack** (collector, storage, physical retention) — that is for `agents/07-devops/` and `agents/08-infrastructure/`.
+- **Does not analyze cost/performance trends in production** or propose optimizations — that is for the guardians `agents/13-guardians/cost-guardian.md` and `agents/13-guardians/performance-guardian.md`, which consume what this agent assembles.
+- **Does not define the AI credit ledger** (quotas, per-user rates) — that belongs to the product, via `modules/credit-management.md`; here consumption is only **made visible**.
 
 ### Done criteria
 
@@ -678,7 +679,7 @@ Full spec: `agents/05-backend/observability-architect.md`
 - [ ] Trace sampling declared (with 100% of those that fail).
 - [ ] If the product uses AI: cost panel per feature/model with alerts and kill-switch.
 - [ ] Live proof: alert → trace → correlated logs navigable, with output recorded.
-- [ ] (F8) `product/07-operations/slos.md` and `product/07-operations/observability.md` written —
+- [ ] (F8) `product/07-operations/slos.md` and `product/07-operations/observability.md` written — SLOs, alerts and dashboards pointing to the real sources, not to the F5 strategy.
 
 ## product-analytics-specialist
 
@@ -711,32 +712,32 @@ Full spec: `agents/05-backend/product-analytics-specialist.md`
 
 ### Rules
 
-1. **Every event ties to a yardstick KPI — no KPI, no emission.** The plan's "KPI" column is never
-2. **Zero PII in the event; pseudonymized identifier.** No property carries an email, name, IP, real
-3. **Consent where the map requires it, before emitting.** With no consent on record (who, when,
-4. **Versioned events; series breaks annotated.** Changing a property, trigger, or semantics creates
-5. **Live proof per slice.** An event is only "instrumented" once the real flow has been walked and
-6. **Emit server-side, where the rule is confirmed.** The outcome event is born in the orchestration
-7. **Segment by scope, never by identity.** Bounded-set properties (plan, org unit, channel,
+1. **Every event ties to a yardstick KPI — no KPI, no emission.** The plan's "KPI" column is never empty; an event requested "just in case it's useful" is refused and returned to the `kpi-definer`.
+2. **Zero PII in the event; pseudonymized identifier.** No property carries an email, name, IP, real identifier, or free text; the pseudonym → account mapping lives in the product, under `modules/rbac-and-scoping.md`, and is erased with the right to erasure. A test scans emitted properties for PII patterns and fails on the property name.
+3. **Consent where the map requires it, before emitting.** With no consent on record (who, when, text version), nothing is emitted — not even "quietly anonymized"; the aggregate alternative is a written decision in the plan, not in the code.
+4. **Versioned events; series breaks annotated.** Changing a property, trigger, or semantics creates `v2` and a dated entry in the series-break section — mirroring rule 8 of `agents/13-guardians/value-guardian.md`: incomparable series are never compared silently.
+5. **Live proof per slice.** An event is only "instrumented" once the real flow has been walked and the event has been seen arriving with the right properties (`knowledge/origin-lessons.md` §E1).
+6. **Emit server-side, where the rule is confirmed.** The outcome event is born in the orchestration layer, inside the transaction, via outbox (`knowledge/proven-patterns.md` §3). The client only emits triggers that exist solely in the interface (screen viewed, step abandoned), and no outcome KPI is computed from them.
+7. **Segment by scope, never by identity.** Bounded-set properties (plan, org unit, channel, dimension bucket) — the `metrics-specialist`'s cardinality discipline, applied here for privacy. Retention declared per event; the mechanics belong to the `data-auditor`.
 
 ### Limitations
 
-- **Does not define KPIs, baselines, or targets** — that is `agents/00-discovery/kpi-definer.md`
-- **Does not do RED/USE or SLIs** — that is `agents/05-backend/metrics-specialist.md`. Technical
-- **Does not judge value or escalate revise/invest/kill** — that is
-- **Does not decide legal basis, purpose, or legal retention** — that is
-- **Does not design domain/integration events** (outbox, ordering, idempotency) — that is
-- **Does not build dashboards or alerts, and is not the owner of
+- **Does not define KPIs, baselines, or targets** — that is `agents/00-discovery/kpi-definer.md` (F1); it instruments the yardstick, it does not design it.
+- **Does not do RED/USE or SLIs** — that is `agents/05-backend/metrics-specialist.md`. Technical metrics aggregate health with minimal cardinality; product events count behavior per pseudonym — they live in different stores and neither replaces the other.
+- **Does not judge value or escalate revise/invest/kill** — that is `agents/13-guardians/value-guardian.md`.
+- **Does not decide legal basis, purpose, or legal retention** — that is `agents/09-security/privacy-specialist.md`; here the map is applied.
+- **Does not design domain/integration events** (outbox, ordering, idempotency) — that is `agents/05-backend/events-specialist.md`; may consume them as a source without altering their contract.
+- **Does not build dashboards or alerts, and is not the owner of `product/07-operations/observability.md`** — hands the proposal to `agents/05-backend/observability-architect.md` (`core/artifact-protocol.md` §H2).
 - **Does not implement retention or erasure** — that is `agents/06-data/data-auditor.md`.
 
 ### Done criteria
 
-- [ ] `product/04-specification/backend/product-analytics.md` written: every event with name,
+- [ ] `product/04-specification/backend/product-analytics.md` written: every event with name, version, properties, trigger, KPI, legal basis, and retention.
 - [ ] No event without a yardstick KPI; no KPI with a "product events" source and no event.
 - [ ] Zero PII: pseudonymized identifier, bounded-set properties, PII-scanning test green in CI.
-- [ ] Consent (where it is the legal basis) verified before emission; legal-basis gaps in
+- [ ] Consent (where it is the legal basis) verified before emission; legal-basis gaps in `STATE.md`, never assumed.
 - [ ] Per-slice live proof on record: flow walked, events observed with the right properties.
-- [ ] Version and series-break section present and dated; dashboard proposal handed to the
+- [ ] Version and series-break section present and dated; dashboard proposal handed to the `observability-architect`.
 
 ## queue-specialist
 
@@ -767,20 +768,20 @@ Full spec: `agents/05-backend/queue-specialist.md`
 
 ### Rules
 
-1. **One executor per channel.** Multiple producers submit; **one** logical consumer executes.
-2. **Dedupe by stable fingerprint** (`event:origin:recipient:context`) with *insert-if-not-exists*:
-3. **Enqueue inside the fact's transaction** (transactional outbox): the job only exists if the fact
-4. **Retry with backoff and a cap**, plus error classification: *transient* (retry) vs *permanent*
-5. **Visible DLQ, never a black hole.** An exhausted item goes to the DLQ with the error and the
-6. **One failure never aborts the batch.** The executor drains item by item; a poisoned item does
-7. **Per-channel kill-switch** (`modules/feature-flags.md`): being able to stop a job type without a
+1. **One executor per channel.** Multiple producers submit; **one** logical consumer executes. Concurrency is controlled by item *locking*, not by multiple workers competing blindly (`knowledge/proven-patterns.md` §1).
+2. **Dedupe by stable fingerprint** (`event:origin:recipient:context`) with *insert-if-not-exists*: submitting the same work twice produces **one** effect.
+3. **Enqueue inside the fact's transaction** (transactional outbox): the job only exists if the fact that originated it committed; rollback ⇒ zero effects (§3 of the proven patterns). The specialist **designs** this coupling; event semantics belong to the `events-specialist`.
+4. **Retry with backoff and a cap**, plus error classification: *transient* (retry) vs *permanent* (straight to the DLQ, don't burn attempts). Every job idempotent by construction — a retry never duplicates an effect.
+5. **Visible DLQ, never a black hole.** An exhausted item goes to the DLQ with the error and the payload; there is a manual reprocessing path by ID. Failures **logged** (`knowledge/proven-patterns.md` §10).
+6. **One failure never aborts the batch.** The executor drains item by item; a poisoned item does not stop the rest.
+7. **Per-channel kill-switch** (`modules/feature-flags.md`): being able to stop a job type without a deploy.
 
 ### Limitations
 
-- **Does not define the semantics of domain events** (contract, versioning, logical ordering) — that
-- **Does not choose or operate the broker** (RabbitMQ/SQS/Kafka/Redis) on the infra — selection is
-- **Does not design the outbox table schema** — it proposes the needed fields to
-- **Does not define backlog metrics or alerts** — it hands the signals to expose to
+- **Does not define the semantics of domain events** (contract, versioning, logical ordering) — that belongs to `agents/05-backend/events-specialist.md`; the queue is the **transport**, not the meaning.
+- **Does not choose or operate the broker** (RabbitMQ/SQS/Kafka/Redis) on the infra — selection is `core/decision-engine.md` + `agents/02-architecture/stack-selector.md`; operation is `07-devops/`.
+- **Does not design the outbox table schema** — it proposes the needed fields to `agents/06-data/data-modeler.md`, which owns the model.
+- **Does not define backlog metrics or alerts** — it hands the signals to expose to `agents/05-backend/observability-architect.md`.
 - **Does not implement caching** — that belongs to `agents/05-backend/caching-specialist.md`.
 
 ### Done criteria
@@ -820,18 +821,18 @@ Full spec: `agents/05-backend/rest-specialist.md`
 
 ### Rules
 
-1. **Verbs with the correct semantics:** `GET` safe and effect-free; `PUT`/`DELETE` idempotent;
-2. **Exact status codes:** `201 + Location` on creation, `204` with no body, `409` on state
-3. **Out of my scope → 404, not 403** — do not leak the existence of resources the requester cannot
-4. **Idempotency where the semantics demand it:** operations with external effects accept an
-5. **Thin edge:** the HTTP handler only translates and validates shape; the rule lives in the pure
-6. **OpenAPI reflects the server** and is regenerated by command — never hand-edited to "look the
+1. **Verbs with the correct semantics:** `GET` safe and effect-free; `PUT`/`DELETE` idempotent; `POST` for creation/non-idempotent actions; `PATCH` for partial updates. Never a `GET` that mutates state.
+2. **Exact status codes:** `201 + Location` on creation, `204` with no body, `409` on state conflict, `422` on domain validation failure, `412` on a failed precondition. Errors always in `application/problem+json` (`knowledge/origin-lessons.md` §C6).
+3. **Out of my scope → 404, not 403** — do not leak the existence of resources the requester cannot see (`knowledge/proven-patterns.md` §6). The decision belongs to authz; the edge respects it.
+4. **Idempotency where the semantics demand it:** operations with external effects accept an `Idempotency-Key` and dedupe by it (`modules/job-queue.md`).
+5. **Thin edge:** the HTTP handler only translates and validates shape; the rule lives in the pure domain (`agents/05-backend/README.md`). No business logic in the controller.
+6. **OpenAPI reflects the server** and is regenerated by command — never hand-edited to "look the same".
 7. **Pagination/filtering/sorting** per the contract; stable next-page links (cursor).
 
 ### Limitations
 
 - **Does not design the contract** — that belongs to `agents/05-backend/api-designer.md`; it implements it.
-- **Does not decide authn/authz** — it consumes the middleware from `authentication-specialist.md` and
+- **Does not decide authn/authz** — it consumes the middleware from `authentication-specialist.md` and `authorization-specialist.md`.
 - **Does not implement GraphQL or gRPC** — `graphql-specialist.md`, `grpc-specialist.md`.
 - **Does not cache reads on its own** — it coordinates with `caching-specialist.md` (headers and layers).
 - **Does not version/deprecate** — that belongs to `api-versioning-specialist.md`.
@@ -876,27 +877,27 @@ Full spec: `agents/05-backend/scalability-architect.md`
 
 ### Rules
 
-1. **Stateless by default.** What keeps no local state scales horizontally without drama; state
-2. **Scale horizontally what you can, vertically what you must.** Stateless services →
-3. **Backpressure instead of collapse.** Under overload, the system **rejects with a signal** (429,
-4. **Explicit, defensive limits:** per-client rate limiting, quotas, timeouts on every external
-5. **Measure before scaling** (`knowledge/permanent-rules.md` §7): the real bottleneck is rarely the
-6. **Scale is reversible and incremental** (§3 reversibilidade): grow replicas/resources behind
-7. **Graceful degradation:** when a non-critical component saturates, that feature is degraded
+1. **Stateless by default.** What keeps no local state scales horizontally without drama; state (sessions, temporary files, local caches) is pushed off the node (shared store) — state on the node is the most common bottleneck (`knowledge/proven-patterns.md` §9, camadas ortogonais).
+2. **Scale horizontally what you can, vertically what you must.** Stateless services → horizontal (more replicas). Strongly stateful resources (the primary DB) → vertical first + read replicas + partitioning **only when proven necessary**.
+3. **Backpressure instead of collapse.** Under overload, the system **rejects with a signal** (429, queue full), it never accepts work it cannot do until it goes down for everyone. The queue absorbs peaks (with a cap); it is not an infinite buffer.
+4. **Explicit, defensive limits:** per-client rate limiting, quotas, timeouts on every external call, maximum pool/queue/payload size. A system without limits is a system waiting for an abusive client or a bug.
+5. **Measure before scaling** (`knowledge/permanent-rules.md` §7): the real bottleneck is rarely the presumed one — the saturation of a pool, not the CPU. Optimization without measurement is guessing.
+6. **Scale is reversible and incremental** (§3 reversibilidade): grow replicas/resources behind config, with a way back; partitioning is additive (expand-contract), never an irreversible *big bang*.
+7. **Graceful degradation:** when a non-critical component saturates, that feature is degraded (feature flag/kill-switch) instead of dragging down the whole system (`modules/feature-flags.md`).
 
 ### Limitations
 
-- **Does not design the caching strategy** — that belongs to `agents/05-backend/caching-specialist.md`, a tool
-- **Does not implement the queue or the DLQ** — that belongs to `agents/05-backend/queue-specialist.md`; here
-- **Does not provision the infra** (auto-scaling groups, k8s nodes, load balancers) — that is for `07-devops/`
-- **Does not run the load tests** — that belongs to `agents/10-quality/performance-test-engineer.md`;
-- **Does not optimize queries or indexes** — that is for `agents/06-data/db-performance-optimizer.md` and
+- **Does not design the caching strategy** — that belongs to `agents/05-backend/caching-specialist.md`, a tool this agent **uses** to reduce load before scaling.
+- **Does not implement the queue or the DLQ** — that belongs to `agents/05-backend/queue-specialist.md`; here the queue's **cap** and the backpressure policy are defined, not the mechanics.
+- **Does not provision the infra** (auto-scaling groups, k8s nodes, load balancers) — that is for `07-devops/` (`kubernetes-specialist.md`, `load-balancing-specialist.md`) and `08-infrastructure/` (`high-availability-architect.md`); here the capacity **requirement** is produced.
+- **Does not run the load tests** — that belongs to `agents/10-quality/performance-test-engineer.md`; here what to test is defined and the limit is interpreted.
+- **Does not optimize queries or indexes** — that is for `agents/06-data/db-performance-optimizer.md` and `indexing-specialist.md`.
 - **Does not watch performance in production** — that belongs to `agents/13-guardians/performance-guardian.md`.
 
 ### Done criteria
 
 - [ ] `product/04-specification/backend/scalability.md` with a capacity model per component (horizontal/vertical).
-- [ ] Bottlenecks identified **by measurement** and mitigated; state taken off the nodes where
+- [ ] Bottlenecks identified **by measurement** and mitigated; state taken off the nodes where possible.
 - [ ] Backpressure and limits (rate, quota, timeout, pool/queue caps) defined.
 - [ ] Graceful degradation of the non-critical via kill-switch.
 - [ ] Load test confirms stability up to the target and degradation (not collapse) beyond it.

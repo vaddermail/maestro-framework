@@ -49,6 +49,10 @@ concentrate at the phase gate.
   `knowledge/ai-pitfalls.md` §AR-2).
 - **Whoever produces does not validate** — reviewing the substance of the tests belongs to an
   independent agent, `agents/12-reviewers/test-reviewer.md` (`core/quality-gates.md`).
+- **One DB per purpose.** The suite never runs against the development DB, and a migration is
+  never rehearsed on a DB shared by live services: each purpose has its own disposable DB. On one
+  project, the suite wiped the development DB; on another, migrating the shared DB desynced the
+  services using it.
 
 ## This category's critical pitfall: heavy suites in parallel
 

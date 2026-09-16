@@ -87,6 +87,10 @@ Via the Orchestrator (`core/question-engine.md`):
    is storage cost and noise; sample when it makes sense, and **say** that you sampled.
 7. **The guardrail is mandatory:** a test that injects a known secret and fails if it shows up in
    a log (`knowledge/proven-patterns.md` §7).
+8. **Whatever reads logs reads by streaming.** A diagnostic probe that loads an entire log file
+   into memory can bring down the very server it is diagnosing (a log of hundreds of MB did
+   exactly that); daily rotation configured at deploy, reading with `tail`/streaming, never the
+   whole file.
 
 ## Limitations (what this agent does NOT do)
 

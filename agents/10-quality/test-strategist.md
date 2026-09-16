@@ -27,7 +27,8 @@ blind coverage and gaps in the parts that matter — without writing the tests i
 At the start of F6 (`workflows/W06-build.md`), as soon as the F5 specification is approved and
 before the first vertical slice is built. Reconvened in F7
 (`workflows/W07-quality-and-security.md`) to review whether the strategy held and where to
-reinforce. Invoked by the Orchestrator (`core/orchestrator.md`).
+reinforce. On an existing system, before anything else: right after adoption (existing-system
+mode, §Workflow). Invoked by the Orchestrator (`core/orchestrator.md`).
 
 ## When it ends
 
@@ -100,6 +101,15 @@ Puts them to the Orchestrator, batched (`core/question-engine.md`):
 ## Workflow
 
 1. Read business rules, invariants, state machines, the authz contract and the NFRs.
+   **Existing-system mode** (adoption over legacy code — `workflows/W00-project-kickoff.md`
+   §Adopting in a product that already exists): when the strategy has to come before F2/F5, the
+   required inputs do not exist yet. They are replaced by the inventory
+   (`product/00-discovery/existing-system.md`) and by an "Invariants observed in code" section,
+   each one with its origin (file:method), marked *provisional* and flagged ⚠ where it looks like
+   a defect; the strategy hands these back to the specification for numbering — F2, or the first
+   evolution via `workflows/W10-feature-evolution.md` on an in-production adoption — before that
+   phase's gate, and missing NFRs are declared *blocked* by name, instead of blocking the whole
+   strategy (step 7).
 2. **Inventory the risk:** classify each rule/flow as (a) money/personal data/irreversible →
    maximum; (b) core domain logic → high; (c) trivial/derived → minimum.
 3. **Map risk→level:** decide for each item whether it is best proven in unit (pure logic),
@@ -109,7 +119,9 @@ Puts them to the Orchestrator, batched (`core/question-engine.md`):
 5. **Define the E2E matrix:** profiles × pages × critical flows to exercise, including illegal
    transitions.
 6. **Define the regression harness:** what goes in, how it runs (serial vs parallel, see §pitfall
-   in `agents/10-quality/README.md`), what is a merge gate.
+   in `agents/10-quality/README.md`), what is a merge gate. The risk→level map becomes
+   **executable**: every mapped FR/BR is cited by name in the test that proves it, and CI scans
+   for the correspondence (`pipelines/ci-quality.md` §Principles).
 7. If the NFRs are not quantified → block and return to the Orchestrator.
 8. Write the strategy; ask `agents/12-reviewers/test-reviewer.md` for a review before F6 starts.
 
@@ -167,7 +179,9 @@ map of who tests what came out sharp.
 - [ ] E2E matrix with profiles × scopes × critical flows.
 - [ ] Regression harness defined (what goes in, how it runs, what is a gate).
 - [ ] Live proof declared as an irreplaceable gate.
-- [ ] Strategy reviewed by `agents/12-reviewers/test-reviewer.md`.
+- [ ] Strategy reviewed by `agents/12-reviewers/test-reviewer.md`; with no test code yet, approved
+  by the user at the gate and the review logged in `STATE.md` §Debt with the trigger "first panel
+  with tests".
 
 ## Related
 

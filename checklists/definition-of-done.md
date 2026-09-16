@@ -9,7 +9,8 @@ decide with. **Cross-cutting to every phase close:** the phase's line in the gen
 item by item, evidence in the format of `knowledge/proven-patterns.md` §Live proof, whoever verified
 ≠ whoever produced, who approved, waivers; the P6 record **per slice** is *(waivable in: prototype)*
 — `core/quality-gates.md` §Gates and effort profiles); and a green
-`bash Maestro/_meta/verify-project.sh` confirms the process is being followed, not just declared.
+`bash Maestro/_meta/verify-project.sh` confirms the process is being followed, not just declared;
+and, at the close of each phase, `STATE.md` compacted (`core/project-memory.md` §Memory hygiene).
 
 ## F1 — Discovery
 

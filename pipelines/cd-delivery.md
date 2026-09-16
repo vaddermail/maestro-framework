@@ -35,6 +35,11 @@ automatic *rollback* when those criteria fail. It executes the strategy defined 
    for whoever developed the change.
 4. **Deploy to staging** — automatic after dev is healthy (or fired by a tag); mirrors production
    as closely as possible (data, configuration, topology) so the release holds no surprises later.
+   Before this deploy, the suite also runs on a **production profile** against the exact commit
+   (`knowledge/proven-patterns.md` §Production configuration) — the environment difference is
+   proven there and against real staging, never by running the suite inside the server — in there
+   it does not exercise the proxy or the secure transport, it writes errors to the real log the
+   team reads, and it touches real external services.
 5. **Production backup** — mandatory and **verified** before the first step that touches production
    (`agents/06-data/backup-specialist.md`, `agents/08-infrastructure/infra-backup-specialist.md`);
    without a confirmed backup, the pipeline does not advance.
@@ -47,7 +52,11 @@ automatic *rollback* when those criteria fail. It executes the strategy defined 
    Before promoting, the pipeline **verifies the artifact's signature/attestation** against the
    expected build (the commit + pipeline that produced it — stage 9 of `pipelines/ci-security.md`);
    with no valid verification, it aborts as in stage 2's hard-block.
-8. **Health checks against a pre-agreed criterion** — error/latency/availability observed over a
+8. **Health checks against a pre-agreed criterion** — preceded by **warm-up** (a few disposable
+   requests: freshly spawned processes, cold pools and caches read as a regression without it);
+   the health script compares full SHAs (a short one is 7 characters on one side and 8 on the
+   other), computes time windows in the application's timezone, and reads the day's log file by
+   streaming, never a whole file into memory. Error/latency/availability observed over a
    defined window (e.g. 5–20 min of canary), never "it seems fine".
 9. **Decision: promote to 100% or revert** — mechanical application of the objective criterion; if
    the health checks fail within the window, **automatic rollback** to the previous version,

@@ -68,10 +68,30 @@ agent from "simplifying" it for not understanding why it exists.
 - **Detailed top, collapsed history.** `STATE.md` grows; the top stays hyper-detailed about the
   present and the history is summarized by milestones (old detail stays in Git/CHANGELOG).
   A 200KB `STATE.md` where nobody finds anything has stopped being memory.
+- **Compaction has a trigger, not goodwill.** The principle above existed and no project followed
+  it: measured across four projects, live memory reached hundreds of thousands of tokens in one,
+  tens of thousands within two weeks in another, a table cell with thousands of characters in a
+  third — and every session pays for all of it up front. Compact **at the close of each phase or
+  milestone** and whenever `_meta/verify-project.sh` warns (a file above 60 KB, or a line above
+  3,000 characters). The procedure has three steps: (1) each closed §Done and §Historical log
+  block collapses into 2–4 lines per milestone, with the "AI cost" total (it is what the genesis
+  reads); (2) whatever would have been lost but still matters — a lesson, a decision — moves up
+  to its own section before the collapse; (3) the detail is not copied to another file, it stays
+  in Git — `git log -p STATE.md` returns it. The "Last updated" cell describes **the last
+  session**, never a chain of "Before, …".
+- **Lessons do not stay in the middle of prose.** A "Lesson:" written in the middle of a §Done
+  block moves up to §Lessons at session close — and, if it teaches the framework, to
+  `FRAMEWORK-IMPROVEMENTS.md`. On one project, the lessons section said "none yet" a month after
+  the file had several, scattered through the text.
 - **No secrets.** Never in any versioned file — references by path
   (`playbooks/secrets-management.md`).
 - **Failed experiments are recorded with the exact reason** — so nobody repeats the attempt three
   sessions later.
+- **An operational fact lives in one place; the rest point to it.** A permissions recipe written
+  in two files went stale in one of them and broke the same service again. And a fact about the
+  state of a volatile external system (another repository, a service) is recorded as the
+  **command that re-derives it** with its controls, never as the value — a value about another
+  repository rotted in under an hour, and it was the fix for one that had rotted in four days.
 - **Tool memories ≠ project memory.** Tool session state (an MCP's active project, a plugin's
   cache) is neither persisted nor assumed — whatever matters moves into the project files.
 

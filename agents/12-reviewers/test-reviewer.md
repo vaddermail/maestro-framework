@@ -45,7 +45,7 @@ Orchestrator to trigger `agents/10-quality/test-strategist.md`.
 | `product/06-tests/test-strategy.md` | `agents/10-quality/test-strategist.md` | Yes | The declared fakes boundary and risk→level map |
 | Test code of the slice/release | F6 (test engineers of category `10-quality`) | Yes | What is being reviewed |
 | Corresponding production code | F6 | Yes | For the mutation judgment — without seeing the implementation you cannot know whether the test bites |
-| Business rules and invariants | `agents/01-requirements/business-rules-modeler.md` | Yes | What the risk tests must actually prove |
+| Business rules and invariants | `agents/01-requirements/business-rules-modeler.md` — on an existing system, the strategy's provisional observed invariants | Yes | What the risk tests must actually prove |
 | `STATE.md` §Debt | Project memory | No | Phantom tests already accepted as known debt are not re-flagged |
 
 Without the test strategy, the reviewer does not proceed on assumptions — it returns the list of

@@ -87,7 +87,9 @@ changelog.
 Following `workflows/W00-project-kickoff.md`:
 
 0. Confirm the copy is intact: `bash Maestro/_meta/verify.sh` green (and `--integrity` green, if
-   it came from a release) — precondition of W00.
+   it came from a release) — precondition of W00. If the repository already has code or the product
+   is already in use, read `workflows/W00-project-kickoff.md` §Adopting in a product that already
+   exists first: the inventory comes before calibration, and the entry phase may not be `F0`.
 1. Create at the **project root** (not inside `Maestro/`):
    - `STATE.md` from `templates/project/STATE.md.template` — the living memory.
    - `CLAUDE.md` (or your tool's equivalent instructions file — see `adapters/`)
@@ -124,8 +126,9 @@ Ask the user (a single batch — format from `core/question-engine.md`):
 - Team: just the user + AI / small team / multiple teams.
 - Hard constraints already known: budget, deadlines, compliance (GDPR, regulated sector),
   mandatory integrations, strong technology preferences.
-- From scratch, or replacing/extending a system already in use? (If it replaces one, F1 invokes
-  `agents/00-discovery/existing-system-analyst.md` before inventing requirements "from zero".)
+- From scratch, or replacing/extending an external system already in use? (If it replaces one, F1
+  invokes `agents/00-discovery/existing-system-analyst.md` before inventing requirements "from
+  zero". Code already in this repository is not a question: the inventory ran before this batch.)
 - Quality thresholds: accept the profile's defaults (`loops/L04-code-smells.md`,
   `loops/L08-technical-debt.md`) or fix your own values.
 - Client, product, and people names, and domain terms that must never appear in a report to the
@@ -162,7 +165,9 @@ Before ending any work session:
       the end-of-session hook from `adapters/claude-code/` refuses to end the session without
       this.)
 - [ ] If anything got blocked waiting on the user, list it under "Pending decisions" with enough
-      context for the next session to resume without re-asking.
+      context for the next session to resume without re-asking, with "opened on".
+- [ ] "Lesson:" entries written mid-block moved to §Lessons; at phase or milestone close, or when
+      the gate warns about size, `STATE.md` compacted (`core/project-memory.md` §Memory hygiene).
 - [ ] Debt accepted in this session in `STATE.md` §Debt (owner + trigger); decisions made on
       behalf of the absent owner in §Decisions made on behalf of the absent owner (with "Revisit
       if").

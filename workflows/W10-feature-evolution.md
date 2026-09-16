@@ -19,7 +19,11 @@ to the risk it carries.
       opens `product/99-records/evolutions/EV-nnn.md` with the raw request.
 - [ ] Parent specification (`product/04-specification/`) and `STATE.md` up to date — impact is
       measured against them. If the spec lags behind the code, reconcile first
-      (`loops/L05-inconsistencies.md`).
+      (`loops/L05-inconsistencies.md`). On a product adopted in production with no parent
+      specification, the baseline to measure against is `product/00-discovery/existing-system.md`
+      with the test strategy in existing-system mode, and the specification is born **from the
+      evolution inward** — only what each `EV-nnn` touches gets written, never the whole product
+      at once.
 
 ## The principle: proportionality (it is not always all 6 stages)
 

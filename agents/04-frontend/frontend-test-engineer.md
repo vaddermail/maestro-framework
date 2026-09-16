@@ -87,6 +87,9 @@ the Orchestrator, when a criterion is ambiguous (`core/question-engine.md`):
    seed, controlled clock — a test that fails "sometimes" is a test that is worthless.
 7. **Honesty of results.** Report the tests' real output; never declare green without the evidence
    (`knowledge/permanent-rules.md` §2).
+8. **Visibility is asserted from what renders, never from the attribute.** The HTML `hidden`
+   attribute loses to any author display rule; the test that asserted "has the attribute" passed
+   over a block that was visible on screen (`checklists/accessibility.md` §Verification).
 
 ## Limitations (what this agent does NOT do)
 

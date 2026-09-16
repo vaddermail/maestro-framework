@@ -313,6 +313,7 @@ When adding/removing files (see `playbooks/add-an-agent.md`), update this invent
 - `modules/ai-observability.md` — AI consumption accounted for (tokens, cost, per feature/model/user), alerts, per-model kill-switch.
 - `modules/readonly-external-integrations.md` — external systems as an assumed contract: read-only, synchronization, externally managed fields.
 - `modules/entity-lifecycle.md` — entity onboarding/offboarding with transactional release of all associated resources.
+- `modules/multi-repository-product.md` — coordinating a product split across several repositories: truth in files in the repository that owns the matter, conversation as typed items with a closing criterion, mesh not star, whoever closes a blocker tells whoever is waiting, twin code adopted by the clause.
 
 ## templates/ — documents ready to instantiate
 

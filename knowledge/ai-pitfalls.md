@@ -4,7 +4,7 @@ Typical failures of people building software with AI agents — and how Maestro 
 construction**, not by reminder. Each pitfall names the framework mechanism that neutralizes it. For
 the Orchestrator and the reviewers, this is a list of *smells* to hunt.
 
-> **Stable IDs:** pitfalls are identified by `AR-1`…`AR-24` and cited as `§AR-n`, immune to
+> **Stable IDs:** pitfalls are identified by `AR-1`…`AR-28` and cited as `§AR-n`, immune to
 > renumbering — for the same reason as H1–H5 in `core/artifact-protocol.md` §Handling rules. A
 > new pitfall gets the next number; none is ever renumbered.
 
@@ -76,7 +76,11 @@ closes them explicitly instead of leaving them hanging on a monitor (`agents/10-
 
 **AR-15. The dev engine hides concurrency bugs.** A lightweight DB engine that serializes races
 production does not serialize. → Block: test locks/transactions against the real engine too; real
-parity is a gate whenever the slice touches data (`agents/06-data/migration-engineer.md`).
+parity is a gate whenever the slice touches data (`agents/06-data/migration-engineer.md`). Engine
+parity is not enough: the suite is sequential by design and never produces the race — flows that
+write shared state get played out with genuinely parallel actors (`checklists/go-live.md`
+§Preparation) — in two projects, minutes of parallel actors found production defects that hundreds
+of green sequential tests had never seen.
 
 **AR-16. A dependency upgrade that silently breaks something.** E.g. error mapping changes without
 warning. → Block: deliberate updates with changelog + tests (`playbooks/dependency-updates.md`);
@@ -94,6 +98,15 @@ environment.
 the right one. → Block: operate by exact identifier (echoing `knowledge/permanent-rules.md`
 §4 — by ID, never by substring), including when managing processes.
 
+**AR-26. The shell lies to the agent.** Backticks inside double quotes execute instead of quoting:
+in one project, commit and log messages came out mangled time after time, silently and with `rc=0`.
+A `;` before `git commit`/`git push` pushes a red commit; a chained merge commits conflict markers;
+commits "pending push" counted against a tracking ref that was days stale came up as zero. →
+Block: messages generated via heredoc with a quoted delimiter, or `git commit -F <file>`; commit
+and push chained only with `&&` so the exit code decides; merge with `--no-commit` and an empty
+`git grep -n '^<<<<<<< '` before the commit; `git fetch` before any claim about what is pending to
+push or pull (`knowledge/permanent-rules.md` §8).
+
 ## Verification
 
 **AR-20. Self-validation.** The AI that produced the work declares it done. → Block: independent
@@ -110,6 +123,20 @@ CI configuration or thresholds is reviewed by someone who did not write it
 (`agents/12-reviewers/README.md`) and appears as its own item in the review report;
 `loops/L02-failing-tests.md` counts "test changed to pass" as non-progress for the iteration.
 
+**AR-25. Instrument never proven to catch what it looks for.** A scan, guard, probe, or
+gate script returns "0 findings" or `rc=0` — which is also what an instrument that could never
+return anything else returns. Measured in three places: a `grep` for a word that version of the
+tool did not write left the pending-migrations check green deploy after deploy; `gate | tail`
+returns `tail`'s `rc`, not the gate's; `command 2>/dev/null | grep -c` reads a failed command as
+zero; the framework itself had green gates over what they were not measuring (2.9.0, 2.10.0). →
+Block: every new instrument is proven, before it enters a gate, with a **positive control** —
+ideally the real artifact that motivated the fix, exactly as it stood before the fix — and a
+negative one, at the same scope it will run at; it states how many items it visited and by what
+criterion, never just the verdict; the failure of any step in a pipeline propagates (in bash,
+`set -o pipefail`, or `PIPESTATUS` for a middle element); a failed command is a failure, never
+zero; a diagnostic's stderr is captured. For refusal guards, a deliberate mutation (the inverted
+condition) has to make it fail (`knowledge/proven-patterns.md` §Live proof).
+
 ## Context and delegation
 
 **AR-23. Compacted context mistaken for complete context.** After compaction or in a long
@@ -124,6 +151,23 @@ the state of the repository. → Block: the controller validates the report agai
 the real output before accepting it (`agents/10-quality/README.md` §This category's critical
 pitfall, generalized to all fan-out); no gate passes on the basis of a report with no evidence in
 the format of `knowledge/proven-patterns.md` §Live proof.
+
+**AR-27. Concurrent sessions in the same repository.** Several agent sessions alive on the same
+tree: a mutation left on the shared tree got swept into another session's `commit -a`; a pointer
+in `STATE.md`, correct when read, was already false by the time it was published; an "owner's
+authorization" quoted from one session to another was taken as a mandate. → Block:
+`core/orchestrator.md` §Parallelism — a dedicated `git worktree` for whoever mutates, a re-read
+immediately before writing, territory reserved and logged before the work, a lock for simultaneous
+contention, and only the user authorizes.
+
+
+**AR-28. A loading state that masks the reproduction.** In a client with deferred loading, the
+skeleton or the "loading…" screen collapses the page's height and the browser pins scroll by
+accident; three attempts to reproduce a scroll bug failed for that reason, and "could not
+reproduce" was taken as "there is no bug". → Block: an attempt to reproduce during a loading state
+is not proof of absence — reproduce also in the "loaded immediately, with cached data" state and
+with the page taller than the viewport; "could not reproduce" gets logged with the exact
+conditions under which it was tried (`playbooks/adversarial-audit.md` step 4).
 
 ## Related
 

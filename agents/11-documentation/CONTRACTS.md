@@ -37,29 +37,29 @@ Full spec: `agents/11-documentation/api-documenter.md`
 
 ### Rules
 
-1. **Generated, never handwritten.** The reference derives from the contract snapshot; documenting
-2. **Enrich at the source, not the output.** Descriptions and examples the generator lacks are
-3. **Parity across consumers.** If several frontends share the API, the snapshot is
-4. **Reflect the real authorization.** The reference states which operations/fields each profile
-5. **Regenerating closes the slice.** A slice that changes the contract is not done without the
-6. **No invention.** A response example is consistent with the real schema; never a plausible
+1. **Generated, never handwritten.** The reference derives from the contract snapshot; documenting endpoints by hand creates the second source that diverges on the first deploy (`knowledge/origin-lessons.md`).
+2. **Enrich at the source, not the output.** Descriptions and examples the generator lacks are written **in the contract** (`description`/`example` fields), so they survive the next regeneration — never in the generated file, which is disposable.
+3. **Parity across consumers.** If several frontends share the API, the snapshot is **byte-identical** across them; divergence is a symptom of desynchronization and fails the check.
+4. **Reflect the real authorization.** The reference states which operations/fields each profile sees; fields hidden at the origin appear documented as such, not exposed (`product/04-specification/backend-contract.md`).
+5. **Regenerating closes the slice.** A slice that changes the contract is not done without the reference regenerated and verified — the regeneration command is documented and run, not presumed.
+6. **No invention.** A response example is consistent with the real schema; never a plausible invented payload (`knowledge/permanent-rules.md` §2).
 
 ### Limitations
 
-- **Does not design the API** (resources, verbs, errors, pagination) — that belongs to
-- **Does not write narrative guides/tutorials** ("how to build your first integration") — that
-- **Does not generate the typed client or the mocks** — that belongs to
-- **Does not define the documentation structure** nor the publishing destination — that belongs to
-- **Does not write end-user help** — that belongs to
+- **Does not design the API** (resources, verbs, errors, pagination) — that belongs to `agents/05-backend/api-designer.md` and the specialists `agents/05-backend/rest-specialist.md` / `agents/05-backend/graphql-specialist.md`; this one documents the contract they close.
+- **Does not write narrative guides/tutorials** ("how to build your first integration") — that belongs to `agents/11-documentation/technical-writer.md`; this one produces the **reference**, not the tutorial.
+- **Does not generate the typed client or the mocks** — that belongs to `agents/04-frontend/api-integrator.md`; both derive from the same contract, but the client is code, the reference is doc.
+- **Does not define the documentation structure** nor the publishing destination — that belongs to `agents/11-documentation/documentation-architect.md`.
+- **Does not write end-user help** — that belongs to `agents/11-documentation/user-help-writer.md`.
 
 ### Done criteria
 
-- [ ] Reference generated from the **current** contract snapshot, published at the map's
+- [ ] Reference generated from the **current** contract snapshot, published at the map's destination.
 - [ ] Completeness verified in both directions (nothing undocumented, nothing ghost).
 - [ ] Enrichment (descriptions/examples) written **at the source**, not in the generated output.
 - [ ] Snapshot identical across consumers sharing the API.
 - [ ] Cross-cutting guide (auth, errors, pagination, versioning) present.
-- [ ] Per-profile visibility reflected; sensitive fields not exposed; regeneration command
+- [ ] Per-profile visibility reflected; sensitive fields not exposed; regeneration command documented.
 
 ## documentation-architect
 
@@ -92,21 +92,21 @@ Full spec: `agents/11-documentation/documentation-architect.md`
 
 ### Rules
 
-1. **One source per fact.** Every document in the map declares what it derives from; if a fact
-2. **Precedence always written.** The map declares the tie-break order between sources that may
-3. **Does not write content.** It defines the frame; the text belongs to the writers
-4. **Extends, does not reinvent.** It starts from the `product/` tree in
-5. **Scales with effort.** In a prototype, it collapses documents into one page per phase; in a
-6. **Every document has an owner.** A document without a responsible agent/role is a document that
+1. **One source per fact.** Every document in the map declares what it derives from; if a fact appears in two documents, one is the source and the other **references**, never copies (`modules/single-source-of-content.md`).
+2. **Precedence always written.** The map declares the tie-break order between sources that may contradict each other (e.g. specification > code > changelog) — it never leaves the resolution to the reader's luck.
+3. **Does not write content.** It defines the frame; the text belongs to the writers (§Limitations). The temptation to "write the README while I'm at it" mixes two responsibilities.
+4. **Extends, does not reinvent.** It starts from the `product/` tree in `core/artifact-protocol.md`; it only adds what is missing, keeping names and IDs so traceability does not break.
+5. **Scales with effort.** In a prototype, it collapses documents into one page per phase; in a platform, it expands — but the canonical names stay so growth does not lose the trail.
+6. **Every document has an owner.** A document without a responsible agent/role is a document that ages — the map allows no orphans.
 
 ### Limitations
 
-- **Does not write technical documentation** (README, architecture guides, onboarding) — that
-- **Does not write user help** nor the content-layer — that belongs to
-- **Does not generate the API reference** — that belongs to
-- **Does not define the domain's ubiquitous language** (glossary) — that belongs to
-- **Does not write ADRs** — each ADR's content belongs to `core/decision-engine.md` and the
-- **Does not watch drift** on cadence — that belongs to
+- **Does not write technical documentation** (README, architecture guides, onboarding) — that belongs to `agents/11-documentation/technical-writer.md`.
+- **Does not write user help** nor the content-layer — that belongs to `agents/11-documentation/user-help-writer.md`.
+- **Does not generate the API reference** — that belongs to `agents/11-documentation/api-documenter.md`.
+- **Does not define the domain's ubiquitous language** (glossary) — that belongs to `agents/01-requirements/glossary-curator.md`; the architect only hosts the glossary in the map.
+- **Does not write ADRs** — each ADR's content belongs to `core/decision-engine.md` and the arbiters; the architect defines **where** ADRs live and the template (`templates/project/ADR-DECISION.md.template`).
+- **Does not watch drift** on cadence — that belongs to `agents/13-guardians/documentation-guardian.md`.
 
 ### Done criteria
 
@@ -149,20 +149,20 @@ Full spec: `agents/11-documentation/technical-writer.md`
 
 ### Rules
 
-1. **Document what runs, not what should run.** Every written command is executed before it lands
-2. **Derive from the single source.** What the source already says (spec, ADR, glossary) is
-3. **Never invent to fill.** A section with no information is marked "to document" with the open
-4. **Secrets never enter.** Environment variables are listed with an **example** value; the real
-5. **Closes with the slice.** The slice is not done while the documentation it made false is not
-6. **Uses the ubiquitous language.** Domain terms are those of
+1. **Document what runs, not what should run.** Every written command is executed before it lands in the document; a failing command is a defect, not a typo.
+2. **Derive from the single source.** What the source already says (spec, ADR, glossary) is **referenced**, not re-copied — it avoids the second copy that diverges (`modules/single-source-of-content.md`).
+3. **Never invent to fill.** A section with no information is marked "to document" with the open question — an admitted gap beats a plausible invention (§2 of the permanent rules).
+4. **Secrets never enter.** Environment variables are listed with an **example** value; the real value lives outside Git (`knowledge/permanent-rules.md` §5).
+5. **Closes with the slice.** The slice is not done while the documentation it made false is not fixed — outdated documentation is debt that accrues interest with every new session.
+6. **Uses the ubiquitous language.** Domain terms are those of `product/01-requirements/glossary.md`, without creative synonyms.
 
 ### Limitations
 
-- **Does not design the documentation structure** nor decide where documents live — that belongs to
-- **Does not write end-user help** (in-app, tooltips, Help menu) — that belongs to
-- **Does not generate the API reference** — that belongs to
-- **Does not decide the correct behavior** when code and spec disagree — it escalates to
-- **Does not define the operational procedures** of runbooks (*what* to do in a recovery) — that
+- **Does not design the documentation structure** nor decide where documents live — that belongs to `agents/11-documentation/documentation-architect.md`.
+- **Does not write end-user help** (in-app, tooltips, Help menu) — that belongs to `agents/11-documentation/user-help-writer.md`. Boundary: developer/operator → this one; end user → the other.
+- **Does not generate the API reference** — that belongs to `agents/11-documentation/api-documenter.md`; the writer produces narrative API **guides/tutorials**, not the endpoint-by-endpoint reference.
+- **Does not decide the correct behavior** when code and spec disagree — it escalates to `agents/12-reviewers/documentation-reviewer.md`.
+- **Does not define the operational procedures** of runbooks (*what* to do in a recovery) — that belongs to the `07-devops`/`08-infrastructure` agents; the writer makes them **readable and executable**.
 - **Does not write the glossary** — that belongs to `agents/01-requirements/glossary-curator.md`.
 
 ### Done criteria
@@ -205,21 +205,21 @@ Full spec: `agents/11-documentation/user-help-writer.md`
 
 ### Rules
 
-1. **One concrete example per action — no exceptions.** Every action-type entry has `summary`
-2. **Grounded, never invented.** The example describes the **real behavior per profile**, confirmed
-3. **A single source serves screen and AI.** The same text feeds the tooltip, the Help page and the
-4. **No copy in the code.** No domain string lives in JSX/markup; all of it goes through the
-5. **Stubs marked "(Planned)".** Future modules enter with a summary grounded in the spec and the
+1. **One concrete example per action — no exceptions.** Every action-type entry has `summary` **and** `example`; every filter has a tooltip. The guardrail fails the build if one is missing — the rule is **enforced by test**, not by goodwill (`knowledge/origin-lessons.md`).
+2. **Grounded, never invented.** The example describes the **real behavior per profile**, confirmed against the specification. In doubt about what the action does, it **does not write** (`knowledge/permanent-rules.md` §2).
+3. **A single source serves screen and AI.** The same text feeds the tooltip, the Help page and the AI assistant's grounding — a "for the AI" version separate from what the user sees is never written; that reintroduces the divergence the single source exists to kill.
+4. **No copy in the code.** No domain string lives in JSX/markup; all of it goes through the content-layer, under the key convention (`action.*`, `filter.*`) so nothing escapes the guardrail.
+5. **Stubs marked "(Planned)".** Future modules enter with a summary grounded in the spec and the Planned seal — exempt from action coverage but not from grounding.
 6. **Glossary language.** Help uses exactly the terms of the screen and the domain, no synonyms.
 
 ### Limitations
 
-- **Does not write technical documentation** (README, architecture, onboarding) — that belongs to
-- **Does not define the ubiquitous language** — that belongs to
-- **Does not design the screens or the tokens** — that belongs to `03-experience` (`ui-designer`,
-- **Does not build the tooltip component or the Help page** — that belongs to the frontend
-- **Does not implement the help AI assistant** — it provides it the grounding; the RAG/assistant is
-- **Does not generate the API reference** — that belongs to
+- **Does not write technical documentation** (README, architecture, onboarding) — that belongs to `agents/11-documentation/technical-writer.md`. Boundary: end user → this one; developer/operator → the technical one.
+- **Does not define the ubiquitous language** — that belongs to `agents/01-requirements/glossary-curator.md`; help **consumes** the glossary.
+- **Does not design the screens or the tokens** — that belongs to `03-experience` (`ui-designer`, `design-system-architect`); help describes what the screens do, it does not design them.
+- **Does not build the tooltip component or the Help page** — that belongs to the frontend (`agents/04-frontend/`); help provides the **content** those components render.
+- **Does not implement the help AI assistant** — it provides it the grounding; the RAG/assistant is product engineering (`agents/05-backend/ai-features-specialist.md`).
+- **Does not generate the API reference** — that belongs to `agents/11-documentation/api-documenter.md`.
 
 ### Done criteria
 

@@ -81,6 +81,11 @@ Puts them to the Orchestrator (`core/question-engine.md`):
    on reaching it, the system degrades gracefully (backpressure, queues) or collapses.
 6. **Report honestly** — the measured number, the conditions and the margin of error; never round
    in your favor (`knowledge/permanent-rules.md` §2).
+7. **Endurance under load and a long near-idle run are different genres.** The second runs for
+   hours with minimal traffic, crosses the product's time boundaries (midnight, scheduled tasks,
+   numbering rollover) and samples memory, connections and queues periodically — it is what catches
+   a resource leak from reconnecting connections (a persistent-connection service's memory tripling
+   overnight) that no short run sees. At least one runs before the first go-live.
 
 ## Limitations (what this agent does NOT do)
 

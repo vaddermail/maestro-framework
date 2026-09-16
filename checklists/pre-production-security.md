@@ -12,6 +12,11 @@ in F9.
 - [ ] Modern TLS on all entry points (no TLS 1.0/1.1, current ciphers) —
       `agents/09-security/tls-specialist.md`.
 - [ ] Certificates with automatic renewal verified, not dependent on manual action.
+- [ ] Behind a proxy, the application trusts **only the forwarded headers the proxy writes**
+      (origin and protocol, typically); a forwarded host or port header that the proxy does not set
+      or strip arrives forged from the client and lands in the absolute URLs generated — including
+      the password-reset link. Test that sends the forged headers and asserts none of it reaches URL
+      generation (`agents/09-security/http-headers-specialist.md` §Rules).
 
 ## Secrets
 
@@ -46,7 +51,14 @@ in F9.
 - [ ] Authorization and scoping confirmed as the server's exclusive responsibility — no access
       decision only on the client (`modules/rbac-and-scoping.md`).
 - [ ] Service accounts, DB credentials and cloud/CI permissions follow least privilege,
-      verified end to end (`agents/09-security/authorization-and-least-privilege-specialist.md`).
+      **exercised** end to end under the production role — a smoke test that runs with the
+      least-privilege credentials, not the DB owner
+      (`agents/09-security/authorization-and-least-privilege-specialist.md`).
+- [ ] **Rate limits** keyed by identity (user, session, token) with a much higher per-IP ceiling —
+      per-IP alone, a shared network (an event, an office, a carrier with NAT) blocks everyone over
+      a few; counters in storage with atomic increment; proven with a **parallel** burst inside the
+      window, reading the rate-limit headers — serial requests fall outside the window and the
+      limiter looks broken.
 - [ ] No credential shared between environments (dev/staging/production).
 
 ## Backups and recovery
@@ -54,6 +66,8 @@ in F9.
 - [ ] Automatic backup configured **and** tested with a real restore, not just scheduled
       (`agents/06-data/backup-specialist.md`).
 - [ ] RTO/RPO defined and accepted by the user (`agents/06-data/disaster-recovery-planner.md`).
+- [ ] The restore rehearsal proved it touched the real schema and tables before the result counted
+      (`agents/06-data/backup-specialist.md` §Rules).
 
 ## AI features *(not applicable if the product does not call models — record it in `STATE.md`)*
 
@@ -63,6 +77,10 @@ in F9.
       inherited from the user.
 - [ ] Per-model kill switch and credit ceiling wired and tested (`modules/ai-observability.md`,
       `modules/credit-management.md`).
+- [ ] Format or behavior invariants that must always hold (never leak a field, always answer in
+      this format, never X) live in **code** — validation or post-processing —, never only in the
+      system prompt: the model yields to the user's request against the instruction
+      (`agents/09-security/ai-security-specialist.md` §Rules).
 
 ## Residual risk
 

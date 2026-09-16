@@ -94,6 +94,10 @@ The incident **closes** when `checklists/post-incident.md` is complete:
 
 ## Failure recovery (the incident inside the incident)
 
+A blocked operator is an incident of its own: a responding ping with every port timing out means a
+blocked path, not a dead machine — confirm from a third point of view before any restart
+(`checklists/go-live.md` §Target reconnaissance and environment pre-flight).
+
 | Situation | Response |
 | --- | --- |
 | No rollback or flag for the suspect change | Mitigate by whatever means available (isolate the service, degrade gracefully); **1st preventive action of the post-mortem:** make that change reversible. |

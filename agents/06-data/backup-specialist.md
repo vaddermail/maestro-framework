@@ -89,6 +89,12 @@ To the Orchestrator (`core/question-engine.md`):
    the `deployment-strategist` demand before drops/deploys (`knowledge/permanent-rules.md` §5).
 7. **A restore failure is an incident, not a warning** — escalate immediately; discovering there
    is no recovery is not postponed "to the next cadence" (`knowledge/proven-patterns.md` §10).
+8. **The restore rehearsal first proves it hit the real target.** A rehearsal copied from another
+   system asked for tables that did not exist in this schema, read the empty result as "empty
+   database", restored over a full database without confirming, and the sibling script meant to
+   destroy before restoring destroyed a schema that was not the real one — and came back green
+   "claiming it had proven a restore". Before accepting the result, the rehearsal confirms that the
+   schema and tables it touched belong to the system in question.
 
 ## Limitations (what this agent does NOT do)
 

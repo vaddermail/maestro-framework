@@ -291,6 +291,7 @@
       "modulos/README.md": "modules/README.md",
       "modulos/auditoria-e-proveniencia.md": "modules/audit-and-provenance.md",
       "modulos/ciclo-de-vida-de-entidades.md": "modules/entity-lifecycle.md",
+      "modulos/produto-em-varios-repositorios.md": "modules/multi-repository-product.md",
       "modulos/feature-flags.md": "modules/feature-flags.md",
       "modulos/fila-de-jobs.md": "modules/job-queue.md",
       "modulos/fonte-unica-de-conteudos.md": "modules/single-source-of-content.md",

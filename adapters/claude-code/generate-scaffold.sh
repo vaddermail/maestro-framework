@@ -32,6 +32,9 @@
 # grep/sed/awk. Exits 1 on an invalid argument, an unreadable phase, an unreadable spec, or drift with
 # --check. Generated files carry the GENERATED marker on line 1–2 (hooks) or on the first line after the
 # frontmatter (subagents, skills); only those are deleted on regeneration — hand-written ones stay.
+# Line-ending guard: a copy with CRLF (Windows) failed with cryptic errors and the gate never ran.
+# The `#` at the end of the next line makes it immune to the very \r it detects.
+case "$(head -c 4000 "$0")" in *$'\r'*) printf '✗ %s has CRLF line endings — restore with git checkout (the copy .gitattributes prevents the conversion) or: sed -i "s/\\r$//" %s\n' "$0" "$0"; exit 2 ;; esac #
 set -uo pipefail
 AQUI="$(cd "$(dirname "$0")" && pwd)"
 FRAMEWORK="$(cd "$AQUI/../.." && pwd)"

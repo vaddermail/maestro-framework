@@ -2,7 +2,7 @@
 # _meta/generate-contracts.sh — derives, for each category, the short CONTRACTS index from the
 # specs: agents/NN-category/CONTRACTS.md with, per agent, the Phases/Type/Suggested model lines
 # from Identification, the Inputs and Outputs tables, the Rules, the Limitations and the Done
-# criteria checklist (≈35 % of a spec's bytes — what the briefing needs). This is what the
+# criteria checklist (≈40 % of a spec's bytes — what the briefing needs). This is what the
 # Orchestrator reads to build the dependency graph, classify the fan-out by model tier and
 # validate deliveries — without loading whole specs into its own context
 # (workflows/README.md §What each session reads). The executor (the summoned agent) still reads
@@ -12,9 +12,26 @@
 #   bash _meta/generate-contracts.sh          regenerates the 15 CONTRACTS.md (commit in the same step)
 #   bash _meta/generate-contracts.sh --check  exit 1 if any differs from what the specs give
 #                                             (this is check 19 of _meta/verify.sh)
+# Line-ending guard: a copy with CRLF (Windows) failed with cryptic errors and the gate never ran.
+# The `#` at the end of the next line makes it immune to the very \r it detects.
+case "$(head -c 4000 "$0")" in *$'\r'*) printf '✗ %s has CRLF line endings — restore with git checkout (the copy .gitattributes prevents the conversion) or: sed -i "s/\\r$//" %s\n' "$0" "$0"; exit 2 ;; esac #
 set -uo pipefail
 cd "$(dirname "$0")/.."
 export LC_ALL=C   # same file order on every machine (check 19 compares byte for byte)
+
+# List items with continuation lines: the next indented line belongs to the same item. Copying only
+# the first line cut the rule mid-sentence — measured on 1.2.0: about two thirds of the items of
+# Rules, Limitations and Done criteria reached the Orchestrator truncated, with check 19 green.
+itens() { # $1 = section title  $2 = item-start regex  $3 = file → one item per line
+  awk -v sec="$1" -v ini="$2" '
+    $0 ~ "^## " sec { p = 1; next }
+    /^## / { if (cur != "") print cur; cur = ""; p = 0 }
+    !p { next }
+    $0 ~ ini { if (cur != "") print cur; cur = $0; next }
+    /^[[:space:]]+[^[:space:]]/ && cur != "" { l = $0; sub(/^[[:space:]]+/, "", l); cur = cur " " l; next }
+    { if (cur != "") print cur; cur = "" }
+    END { if (cur != "") print cur }' "$3"
+}
 
 gera() { # $1 = category folder → stdout
   local cat="$1" f nome
@@ -36,11 +53,11 @@ gera() { # $1 = category folder → stdout
     printf '\n### Outputs\n\n'
     awk '/^## Outputs/{p=1;next} /^## /{p=0} p && /^\|/' "$f" | grep . || printf '_(no table — see the spec)_\n'
     printf '\n### Rules\n\n'
-    awk '/^## Rules/{p=1;next} /^## /{p=0} p && /^[0-9]+\. |^- /' "$f" | grep . || printf '_(see the spec)_\n'
+    itens 'Rules' '^([0-9]+\\. |- )' "$f" | grep . || printf '_(see the spec)_\n'
     printf '\n### Limitations\n\n'
-    awk '/^## Limitations/{p=1;next} /^## /{p=0} p && /^- /' "$f" | grep . || printf '_(see the spec)_\n'
+    itens 'Limitations' '^- ' "$f" | grep . || printf '_(see the spec)_\n'
     printf '\n### Done criteria\n\n'
-    awk '/^## Done criteria/{p=1;next} /^## /{p=0} p && /^- \[/' "$f" | grep . || printf '_(no checklist — see the spec)_\n'
+    itens 'Done criteria' '^- \\[' "$f" | grep . || printf '_(no checklist — see the spec)_\n'
     printf '\n'
   done
   printf '## Related\n\n'

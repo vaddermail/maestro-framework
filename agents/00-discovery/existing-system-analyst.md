@@ -12,7 +12,7 @@
 | **Name** | Existing System Analyst |
 | **Alias** | Legacy System Analyst |
 | **Category** | `00-discovery` |
-| **Phases** | F1 (when applicable: the product replaces or extends a system in use); consulted in F3 (integrations to preserve) and F8 (cutover constraints) |
+| **Phases** | F0 in adoption mode (`workflows/W00-project-kickoff.md` step 6b) or F1 (when applicable: the product replaces or extends a system in use); consulted in F3 (integrations to preserve) and F8 (cutover constraints) |
 | **Type** | `specialist` |
 | **Suggested model** | Standard for the functional inventory and the data map; **Top, medium effort** for the cutover constraints and the rollback plan — irreversible over real data (`core/model-routing.md`) |
 
@@ -34,6 +34,14 @@ Invoked by the Orchestrator (`core/orchestrator.md`). On a greenfield product it
 Orchestrator records "Not applicable — greenfield product" in `STATE.md` and moves on. Reopened in
 F3 when the architecture designs the integrations and in F8 when the cutover is scheduled.
 
+**Adoption mode** (F0, `workflows/W00-project-kickoff.md` step 6b): the code or product is already
+**in this** repository and Maestro is being adopted partway through. It runs **before** the
+calibration batch, without `idea.md` or `stakeholders.md` (they do not exist yet): it reads the
+code, the Git history, the deploy configuration, and asks the user who operates what. In that mode
+the dossier carries the sections W00 requires — proven features (with proof of use), known risks,
+existing tests and how they run, deploy and data map — and the migration and cutover sections are
+only filled in if there is also a replacement.
+
 ## When it ends
 
 When `product/00-discovery/existing-system.md` exists with the five sections — functional inventory
@@ -48,8 +56,8 @@ records it in `STATE.md`.
 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/00-discovery/idea.md` | `agents/00-discovery/idea-analyst.md` (F1) | Yes | Which system is being replaced/extended and what is promised to be kept |
-| `product/00-discovery/stakeholders.md` | `agents/00-discovery/stakeholder-mapper.md` (F1) | Yes | Who operates the current system and who owns each data set |
+| `product/00-discovery/idea.md` | `agents/00-discovery/idea-analyst.md` (F1) | Yes (in adoption mode: no — the code is read) | Which system is being replaced/extended and what is promised to be kept |
+| `product/00-discovery/stakeholders.md` | `agents/00-discovery/stakeholder-mapper.md` (F1) | Yes (in adoption mode: no — the user is asked) | Who operates the current system and who owns each data set |
 | Read-only access to the current system and data | User (via Orchestrator) | Yes | By path or environment — exports, schema, usage logs; never pasted credentials (`knowledge/permanent-rules.md` §5) |
 | `product/00-discovery/problem.md` | `agents/00-discovery/problem-definer.md` (F1) | No | The cost of the *status quo* points to the features that hurt today |
 | `STATE.md` §Lessons | Project memory | No | Previous migrations and their pitfalls |

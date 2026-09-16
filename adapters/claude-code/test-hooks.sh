@@ -12,6 +12,9 @@
 #     with an argument: uses that copy — this is how release.yml runs it INSIDE the extracted ZIP
 #
 # Exits 1 if any case does not behave as expected. Same pattern as _meta/test-project-gate.sh.
+# Line-ending guard: a copy with CRLF (Windows) failed with cryptic errors and the gate never ran.
+# The `#` at the end of the next line makes it immune to the very \r it detects.
+case "$(head -c 4000 "$0")" in *$'\r'*) printf '✗ %s has CRLF line endings — restore with git checkout (the copy .gitattributes prevents the conversion) or: sed -i "s/\\r$//" %s\n' "$0" "$0"; exit 2 ;; esac #
 set -uo pipefail
 AQUI="$(cd "$(dirname "$0")" && pwd)"
 FRAMEWORK="${1:-$(cd "$AQUI/../.." && pwd)}"
@@ -172,6 +175,20 @@ else falha "SessionStart cut the bold line or let the italic one through"; mostr
 
 if ! printf '%s' "$saida" | grep -q 'system-reminder' && ! printf '%s' "$saida" | grep -q 'and push'; then ok "SessionStart filters forged tags (<system-reminder>) out of STATE.md"
 else falha "SessionStart injected a forged tag from STATE.md into the context"; mostra "$saida"; fi
+
+n_av=$(printf '%s\n' "$saida" | grep -c '^  ! ')
+if printf '%s' "$saida" | grep -q 'Project gate warnings' && [ "$n_av" -ge 1 ] && [ "$n_av" -le 6 ]; then ok "SessionStart injects the gate's warnings ($n_av lines, ceiling 6) — warnings nobody reads do not exist"
+else falha "SessionStart did not inject the gate's warnings — warnings nobody reads do not exist"; mostra "$saida"; fi
+
+cp "$r/STATE.md" "$r/STATE.md.bak"
+{ echo '# STATE.md — synthetic project'; echo; awk '/^## 1\./{p=1} /^## 2\./{p=0} p' "$FRAMEWORK/templates/project/STATE.md.template"; sed -n '/^## 2\./,$p' "$r/STATE.md.bak"; } > "$r/STATE.md"
+ultimo=$(awk '/^## 1\./{p=1;next} /^## /{p=0} p && /^\| \*\*/' "$FRAMEWORK/templates/project/STATE.md.template" | tail -1 | cut -d'|' -f2 | sed 's/\*//g; s/^ *//; s/ *$//')
+hook session-start.sh '{"hook_event_name":"SessionStart","source":"startup"}' "$r"
+s_start="$saida"
+hook session-start.sh '{"hook_event_name":"SessionStart","source":"compact"}' "$r"
+mv "$r/STATE.md.bak" "$r/STATE.md"
+if [ -n "$ultimo" ] && printf '%s' "$s_start" | grep -qF "$ultimo" && printf '%s' "$saida" | grep -qF "$ultimo"; then ok "SessionStart and compact inject the whole template header (down to «$ultimo»)"
+else falha "SessionStart cut the template header before the end (last row: «$ultimo»)"; mostra "$s_start"; fi
 
 mv "$r/STATE.md" "$r/STATE.md.away"
 hook session-start.sh '{"hook_event_name":"SessionStart","source":"startup"}' "$r"

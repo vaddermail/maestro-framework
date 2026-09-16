@@ -32,7 +32,7 @@ arranque() {
     echo "## Maestro — compacted context: re-read before acting"
     echo "The compaction summary is not the file: if it contradicts STATE.md or CLAUDE.md, the file wins. Re-read STATE.md §In progress before any edit."
     if [ -f STATE.md ]; then
-      abre_dados; seccao 1 "Situation header" 12; seccao 3 "In progress" 16; seccao 5 "Pending decisions" 12; fecha_dados
+      abre_dados; seccao 1 "Situation header" 14; seccao 3 "In progress" 16; seccao 5 "Pending decisions" 12; fecha_dados
     else
       echo "F0: instantiate the memory (Maestro/START-HERE.md §2.2)"
     fi
@@ -42,7 +42,7 @@ arranque() {
   echo "## Maestro — session start (${versao:-no Maestro/_meta/VERSION.md: the framework copy is not in Maestro/})"
   if [ -f STATE.md ]; then
     abre_dados
-    seccao 1 "Situation header" 12
+    seccao 1 "Situation header" 14
     seccao 3 "In progress" 12
     seccao 5 "Pending decisions" 10
     if git rev-parse --git-dir >/dev/null 2>&1; then
@@ -58,6 +58,12 @@ arranque() {
       [ "$fase" = "F9" ] && echo "F9: before acting, compute the overdue guardians (Maestro/workflows/W09-continuous-operation.md step 0) and update the «G ·» ledger in STATE.md §In progress."
     else
       echo "! STATE.md with no readable «Current phase» (F0–F9) — fix it before working (Maestro/templates/project/STATE.md.template)."
+    fi
+    # The gate's warnings (memory with no ceiling, aged pending decisions, missing sections) block
+    # nothing — so nobody read them. Here they reach the agent at start-up, with no network, up to 6 lines.
+    if [ -f Maestro/_meta/verify-project.sh ]; then
+      avisos=$(MAESTRO_SEM_REDE=1 bash Maestro/_meta/verify-project.sh 2>/dev/null | grep '^!' | head -6)
+      [ -n "$avisos" ] && { echo "Project gate warnings (bash Maestro/_meta/verify-project.sh — they do not block, but they do not go away on their own):"; printf '%s\n' "$avisos" | cut -c1-160 | sed 's/^/  /'; }
     fi
   else
     echo "F0: instantiate the memory (Maestro/START-HERE.md §2.2) — you are this project's first session; follow Maestro/workflows/W00-project-kickoff.md."

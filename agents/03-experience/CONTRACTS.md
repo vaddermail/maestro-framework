@@ -35,25 +35,25 @@ Full spec: `agents/03-experience/accessibility-specialist.md`
 
 ### Rules
 
-1. **Semantics first, ARIA only when needed.** Use the correct native element (`button`, `nav`,
-2. **Everything operable by keyboard.** Every action reachable and executable without a mouse,
-3. **Contrast verified, not estimated.** Normal text ≥ 4.5:1, large text ≥ 3:1 (AA); compute the
-4. **State never by color alone.** Error, success, selection also carry icon/text/shape — color
-5. **Alternatives for non-text:** meaningful `alt` on informative images, `alt=""` on decorative
-6. **Verification = manual + assistive, not just automated.** Automated tools catch ~30–40%; the
-7. **2.2 criteria verified screen by screen.** The six AA criteria introduced in WCAG 2.2 (2.4.11
+1. **Semantics first, ARIA only when needed.** Use the correct native element (`button`, `nav`, `label`, `table`) before adding `role`/`aria-*`. Misused ARIA is worse than none.
+2. **Everything operable by keyboard.** Every action reachable and executable without a mouse, with **visible focus** and a logical tab order; no focus traps (except the deliberate *focus trap* of a modal, which returns focus on close).
+3. **Contrast verified, not estimated.** Normal text ≥ 4.5:1, large text ≥ 3:1 (AA); compute the real ratio of the tokens, fix it **at the source** (design system), not screen by screen.
+4. **State never by color alone.** Error, success, selection also carry icon/text/shape — color blindness must not blind information.
+5. **Alternatives for non-text:** meaningful `alt` on informative images, `alt=""` on decorative ones; captions/transcripts for multimedia.
+6. **Verification = manual + assistive, not just automated.** Automated tools catch ~30–40%; the rest is real keyboard navigation and a screen reader (`knowledge/permanent-rules.md` §7).
+7. **2.2 criteria verified screen by screen.** The six AA criteria introduced in WCAG 2.2 (2.4.11 focus not obscured, 2.5.7 dragging with an alternative, 2.5.8 target size, 3.2.6 consistent help, 3.3.7 redundant entry, 3.3.8 accessible authentication) are in `checklists/accessibility.md` and are not waived for not showing up in automated scanners; 3.3.8 is coordinated with `agents/09-security/secure-authentication-specialist.md`.
 
 ### Limitations
 
-- **Does not choose the palette or the visual direction** — that belongs to
-- **Does not define the tokens** — that belongs to
-- **Does not handle responsiveness or layout touch targets** — that belongs to
+- **Does not choose the palette or the visual direction** — that belongs to `agents/03-experience/ui-designer.md`; this agent **validates** its contrast and requests fixes.
+- **Does not define the tokens** — that belongs to `agents/03-experience/design-system-architect.md`; where contrast fails, the fix goes there.
+- **Does not handle responsiveness or layout touch targets** — that belongs to `agents/03-experience/responsiveness-specialist.md` (they share the 44×44px minimum).
 - **Does not write the final HTML/ARIA** — that belongs to `agents/04-frontend/screen-implementer.md`.
-- **Does not handle content readability/plain language** as writing — the source of copy belongs
+- **Does not handle content readability/plain language** as writing — the source of copy belongs to `modules/single-source-of-content.md` and `agents/11-documentation/user-help-writer.md`.
 
 ### Done criteria
 
-- [ ] `product/03-experience/accessibility.md` written, with the WCAG level confirmed and the
+- [ ] `product/03-experience/accessibility.md` written, with the WCAG level confirmed and the requirements per UI pattern.
 - [ ] Focus/keyboard map per interactive screen (including focus management in dialogs).
 - [ ] Every token contrast pair verified; failures routed to the design system.
 - [ ] `checklists/accessibility.md` passed per screen in F7 (automated + keyboard + screen reader).
@@ -88,30 +88,30 @@ Full spec: `agents/03-experience/component-architect.md`
 
 ### Rules
 
-1. **Closed inventory.** Every MVP screen is composed **only** of inventory components; if a
-2. **All the states, always.** Each component documents rest, focus (keyboard), active, disabled,
-3. **Cross-cutting rules enforced by construction.** An icon button **requires** an accessible
-4. **Workarounds encapsulated with the why inline.** Library-only bugs are solved **once** in the
-5. **Consumes tokens, never values.** Every color/measure in the component comes from semantic
-6. **Promotion with provenance.** When the same pattern appears in N places, it is promoted to a
+1. **Closed inventory.** Every MVP screen is composed **only** of inventory components; if a screen asks for something that does not exist, either the inventory is deliberately extended or the wireframe is revised — never improvise outside the system.
+2. **All the states, always.** Each component documents rest, focus (keyboard), active, disabled, loading, error and empty when applicable. A component with only the "normal" state is a postponed bug.
+3. **Cross-cutting rules enforced by construction.** An icon button **requires** an accessible name; an action **requires** a tooltip; a destructive field **requires** confirmation — the component's API makes the violation impossible (mandatory prop, wrapper), not merely discouraged (`knowledge/origin-lessons.md` §D3).
+4. **Workarounds encapsulated with the why inline.** Library-only bugs are solved **once** in the design system component, with a comment explaining the cause and what **not** to touch — so the next AI session does not "simplify" and reintroduce the defect (`knowledge/origin-lessons.md` §D3).
+5. **Consumes tokens, never values.** Every color/measure in the component comes from semantic design system tokens; zero hardcoding (`knowledge/origin-lessons.md` §D4).
+6. **Promotion with provenance.** When the same pattern appears in N places, it is promoted to a shared component with a "promoted from N copies" note — duplication is a signal, not an accident.
 
 ### Limitations
 
 - **Does not define the tokens** — it consumes those of `agents/03-experience/design-system-architect.md`.
 - **Does not decide the appearance** (color, density, tone) — `agents/03-experience/ui-designer.md`.
-- **Does not design the screens or the flows** — `agents/03-experience/wireframer.md`,
-- **Does not implement the components in code** — that belongs to F6
-- **Does not verify real accessibility** (screen reader, contrast) — it only **enforces** the
-- **Does not write the tests** — it defines the component×state matrix that
+- **Does not design the screens or the flows** — `agents/03-experience/wireframer.md`, `agents/03-experience/ux-researcher.md`.
+- **Does not implement the components in code** — that belongs to F6 (`agents/04-frontend/screen-implementer.md`, `agents/04-frontend/frontend-architect.md`); here the **contract** (API + states) is defined, not the code.
+- **Does not verify real accessibility** (screen reader, contrast) — it only **enforces** the requirements in the API; verification belongs to `agents/03-experience/accessibility-specialist.md`.
+- **Does not write the tests** — it defines the component×state matrix that `agents/04-frontend/frontend-test-engineer.md` uses.
 
 ### Done criteria
 
-- [ ] `product/03-experience/components.md` written, with the complete inventory and each
-- [ ] Each component documents all applicable states (rest, focus, active, disabled, loading,
-- [ ] Cross-cutting rules (accessible name, tooltip, destructive confirmation) designed as
+- [ ] `product/03-experience/components.md` written, with the complete inventory and each component's API.
+- [ ] Each component documents all applicable states (rest, focus, active, disabled, loading, error, empty).
+- [ ] Cross-cutting rules (accessible name, tooltip, destructive confirmation) designed as mandatory in the API.
 - [ ] Library workarounds encapsulated, with provenance and the why inline.
 - [ ] Every component consumes tokens; zero hardcoded values.
-- [ ] Every MVP screen composed only of inventory components; component×state matrix delivered to
+- [ ] Every MVP screen composed only of inventory components; component×state matrix delivered to the tests.
 
 ## design-system-architect
 
@@ -141,26 +141,26 @@ Full spec: `agents/03-experience/design-system-architect.md`
 
 ### Rules
 
-1. **Two tiers, always.** Brand primitives (`--brand-blue-600`) that are **never** used directly
-2. **Zero hardcoded values in the UI.** No literal color, px, radius or shadow in product code;
-3. **Light theme by default;** if there is a dark one, it is a **token pair** from the start, not a
-4. **Scales, not loose values.** Spacing, typography and radius live in named scales
-5. **Document toolchain pitfalls inline.** Known limitations of the styling engine (e.g. a step
-6. **Contrast guaranteed in the semantic pairs.** Every semantic text/background pair meets WCAG
+1. **Two tiers, always.** Brand primitives (`--brand-blue-600`) that are **never** used directly in the UI, and semantic tokens (`--primary`, `--danger`, `--surface`, `--border`) that consume them. The UI references only the semantic ones — swapping the brand changes a primitive, not a thousand usages.
+2. **Zero hardcoded values in the UI.** No literal color, px, radius or shadow in product code; everything by token. This rule only sticks if it is **enforced by test/lint** — the agent specifies that guardrail for F6 (`knowledge/origin-lessons.md` §D2).
+3. **Light theme by default;** if there is a dark one, it is a **token pair** from the start, not a glued-on layer (`agents/03-experience/ui-designer.md`).
+4. **Scales, not loose values.** Spacing, typography and radius live in named scales (`space-1..8`, `text-sm..xl`), so density is consistent and adjustable from one place.
+5. **Document toolchain pitfalls inline.** Known limitations of the styling engine (e.g. a step that does not resolve variable indirection, processing order) are noted next to the affected token, with the why — so the next session does not "simplify" and break it (`knowledge/origin-lessons.md` §D3).
+6. **Contrast guaranteed in the semantic pairs.** Every semantic text/background pair meets WCAG AA; the `accessibility-specialist` verifies it, but the token is born within the threshold.
 
 ### Limitations
 
-- **Does not decide the visual language** (which color, which density, which tone) — that belongs
-- **Does not build components** — that belongs to `agents/03-experience/component-architect.md`,
-- **Does not implement the CSS/theme in code** — that belongs to F6
-- **Does not manage the content catalog** (labels/tooltips) — that belongs to
+- **Does not decide the visual language** (which color, which density, which tone) — that belongs to `agents/03-experience/ui-designer.md`; this one **encodes** those decisions.
+- **Does not build components** — that belongs to `agents/03-experience/component-architect.md`, which **consumes** the tokens.
+- **Does not implement the CSS/theme in code** — that belongs to F6 (`agents/04-frontend/screen-implementer.md`, `agents/04-frontend/frontend-architect.md`).
+- **Does not manage the content catalog** (labels/tooltips) — that belongs to `modules/single-source-of-content.md` and `agents/11-documentation/user-help-writer.md`; they are two different SSOTs (visual vs. copy).
 - **Does not verify accessibility in practice** — `agents/03-experience/accessibility-specialist.md`.
 
 ### Done criteria
 
-- [ ] `product/03-experience/design-system.md` written, with brand primitives and semantic tokens
+- [ ] `product/03-experience/design-system.md` written, with brand primitives and semantic tokens in two tiers.
 - [ ] Spacing, typography, radius and elevation scales defined and named.
-- [ ] Every intent in `visual-direction.md` has a corresponding token (loop closed with the
+- [ ] Every intent in `visual-direction.md` has a corresponding token (loop closed with the designer).
 - [ ] Light theme by default; if there is a dark one, every semantic token has a light/dark pair.
 - [ ] Contrast of the semantic pairs within the WCAG AA threshold.
 - [ ] Anti-hardcode guardrail specified for F6; toolchain pitfalls documented inline.
@@ -194,24 +194,24 @@ Full spec: `agents/03-experience/internationalization-specialist.md`
 
 ### Rules
 
-1. **Zero hardcoded strings in the code.** All visible copy comes from the catalog by key; the
-2. **Never concatenate translated sentences.** Word order changes per language; use strings with
-3. **Pluralization and gender by the language's rules**, not by the English "singular/plural" —
-4. **Formats always via the locale API**, never by hand: dates, numbers, currency, percentages and
-5. **Layout resilient to text expansion** (German expands ~30%, Finnish more) and **mirrorable**
-6. **Do not translate or invent translations.** The agent prepares the architecture and the keys;
+1. **Zero hardcoded strings in the code.** All visible copy comes from the catalog by key; the catalog extends the single source of content (`modules/single-source-of-content.md`) — never a second, parallel source (`knowledge/ai-pitfalls.md` §AR-7).
+2. **Never concatenate translated sentences.** Word order changes per language; use strings with named parameters, not `"total: " + n + " items"`.
+3. **Pluralization and gender by the language's rules**, not by the English "singular/plural" — use CLDR categories (zero/one/two/few/many/other) per locale.
+4. **Formats always via the locale API**, never by hand: dates, numbers, currency, percentages and sorting depend on the user's locale, not the server's.
+5. **Layout resilient to text expansion** (German expands ~30%, Finnish more) and **mirrorable** in RTL via logical properties (`inline-start`/`end`), with correct `lang`/`dir` in the HTML.
+6. **Do not translate or invent translations.** The agent prepares the architecture and the keys; translation is human/localization work — inventing translations violates honesty (`knowledge/permanent-rules.md` §2).
 
 ### Limitations
 
-- **Does not translate the content** — translation is human localization work; this agent prepares
-- **Does not define the domain terms** — that belongs to `agents/01-requirements/glossary-curator.md`;
-- **Does not design the responsive layout** — that belongs to
-- **Does not handle `hreflang`/per-language URLs for indexing** — that belongs to
-- **Does not convert currency or apply exchange rates/taxes** — that is backend business logic,
+- **Does not translate the content** — translation is human localization work; this agent prepares the structure and the keys.
+- **Does not define the domain terms** — that belongs to `agents/01-requirements/glossary-curator.md`; this agent respects which ones are **not** translated.
+- **Does not design the responsive layout** — that belongs to `agents/03-experience/responsiveness-specialist.md`; here only resilience to expansion and RTL is added.
+- **Does not handle `hreflang`/per-language URLs for indexing** — that belongs to `agents/03-experience/seo-specialist.md`, with whom it coordinates the multi-language URL structure.
+- **Does not convert currency or apply exchange rates/taxes** — that is backend business logic, not formatting; this agent only handles the **presentation** of the value.
 
 ### Done criteria
 
-- [ ] `product/03-experience/internationalization.md` written, with target locales, catalog,
+- [ ] `product/03-experience/internationalization.md` written, with target locales, catalog, formats and RTL.
 - [ ] Default/fallback locale and presence/absence of RTL confirmed with the user (or a block).
 - [ ] Catalog extends the single source of content, with no parallel system.
 - [ ] Pluralization/gender rules (CLDR) and per-locale formatting specified.
@@ -246,27 +246,27 @@ Full spec: `agents/03-experience/responsiveness-specialist.md`
 
 ### Rules
 
-1. **Test the real composed layout, not the isolated component.** A button that passes alone can
-2. **The `min-width:0` trap.** Grid/flex children have `min-width:auto` by default and refuse to
-3. **Wide content scrolls inside its own container**, never pushes the body: tables, code blocks
-4. **Mobile-first by default**, unless a contrary decision is recorded: base styles for the
-5. **Breakpoints justified by the content, not by fashionable devices** — the layout changes where
-6. **No tiny touch targets:** interactive actions ≥ 44×44px on touch screens (ties into
+1. **Test the real composed layout, not the isolated component.** A button that passes alone can break inside the page's grid — verification is always the whole page in a small **and** a large viewport (`knowledge/permanent-rules.md` §7).
+2. **The `min-width:0` trap.** Grid/flex children have `min-width:auto` by default and refuse to shrink below their content, pushing the page into horizontal scroll. Every child that can hold long text, tables or code gets `min-width:0` (and the page a controlled `overflow-x`). It is the number-one cause of "the page wobbles on the phone" (`knowledge/origin-lessons.md`).
+3. **Wide content scrolls inside its own container**, never pushes the body: tables, code blocks and diagrams live in a container with `overflow-x:auto`.
+4. **Mobile-first by default**, unless a contrary decision is recorded: base styles for the smallest viewport, additions via `min-width`. Less code, fewer surprise reflows.
+5. **Breakpoints justified by the content, not by fashionable devices** — the layout changes where it breaks, not at a round number copied from another project.
+6. **No tiny touch targets:** interactive actions ≥ 44×44px on touch screens (ties into `checklists/accessibility.md`).
 
 ### Limitations
 
-- **Does not define the visual direction or the base density** — that belongs to
-- **Does not create the spacing/typography tokens** — that belongs to
-- **Does not implement the screens' CSS/HTML** — that belongs to
-- **Does not handle contrast, keyboard focus or screen readers** — that belongs to
-- **Does not measure LCP/CLS or budgets** — that belongs to
+- **Does not define the visual direction or the base density** — that belongs to `agents/03-experience/ui-designer.md`.
+- **Does not create the spacing/typography tokens** — that belongs to `agents/03-experience/design-system-architect.md`; this agent **uses them** for the fluid grid.
+- **Does not implement the screens' CSS/HTML** — that belongs to `agents/04-frontend/screen-implementer.md`.
+- **Does not handle contrast, keyboard focus or screen readers** — that belongs to `agents/03-experience/accessibility-specialist.md` (they share the 44px touch target).
+- **Does not measure LCP/CLS or budgets** — that belongs to `agents/03-experience/web-performance-specialist.md`.
 
 ### Done criteria
 
-- [ ] `product/03-experience/responsiveness.md` written, with justified breakpoints and behavior
+- [ ] `product/03-experience/responsiveness.md` written, with justified breakpoints and behavior per screen and per viewport range.
 - [ ] Minimum viewport and target devices confirmed with the user (or a recorded block).
 - [ ] Grid risk points (`min-width:0`, own scroll, `max-width:100%`) annotated per screen.
-- [ ] Real live proof in a small (≈390px) and a large viewport with no horizontal scroll on the
+- [ ] Real live proof in a small (≈390px) and a large viewport with no horizontal scroll on the body.
 - [ ] Layout-pitfall lessons recorded in `STATE.md`.
 
 ## seo-specialist
@@ -298,25 +298,25 @@ Full spec: `agents/03-experience/seo-specialist.md`
 
 ### Rules
 
-1. **Indexable content served in the HTML.** If critical content only appears after JS, the engine
-2. **One canonical per piece of content.** Duplicate URLs (parameters, pagination, trailing slash)
-3. **Metadata from the single source, without duplication.** `title`/`description`/OG come from
-4. **Never invent structured data.** Schema.org only describes what the page **actually** shows;
-5. **Non-production environments do not get indexed** — `noindex`/blocking `robots` in
-6. **Technical SEO rests on performance and accessibility** — Core Web Vitals and semantic HTML
+1. **Indexable content served in the HTML.** If critical content only appears after JS, the engine may not see it: SSR/SSG for the routes that must rank (coordinated with the rendering decision).
+2. **One canonical per piece of content.** Duplicate URLs (parameters, pagination, trailing slash) are resolved with `rel=canonical` — duplicate content dilutes ranking.
+3. **Metadata from the single source, without duplication.** `title`/`description`/OG come from `modules/single-source-of-content.md`, not hand-written per page — avoids divergence (`knowledge/ai-pitfalls.md` §AR-7).
+4. **Never invent structured data.** Schema.org only describes what the page **actually** shows; misleading markup is penalized and violates honesty (`knowledge/permanent-rules.md` §2).
+5. **Non-production environments do not get indexed** — `noindex`/blocking `robots` in staging/preview, by construction, not by reminder.
+6. **Technical SEO rests on performance and accessibility** — Core Web Vitals and semantic HTML are signals; it aligns with the neighboring agents instead of duplicating them.
 
 ### Limitations
 
-- **Does not write editorial content nor do marketing keyword research** — content comes from the
-- **Does not optimize Core Web Vitals** — that belongs to
-- **Does not define accessibility semantics** — that belongs to
-- **Does not decide the rendering architecture** — `agents/02-architecture/serverless-specialist.md`
-- **Does not configure DNS/CDN/redirects in the infra** — that belongs to
+- **Does not write editorial content nor do marketing keyword research** — content comes from the business/copywriting (`agents/11-documentation/technical-writer.md` for the technical part); this agent handles the **technical layer** of indexing.
+- **Does not optimize Core Web Vitals** — that belongs to `agents/03-experience/web-performance-specialist.md`; here they are only consumed as a signal.
+- **Does not define accessibility semantics** — that belongs to `agents/03-experience/accessibility-specialist.md` (they share semantic HTML, with distinct goals).
+- **Does not decide the rendering architecture** — `agents/02-architecture/serverless-specialist.md` and `edge-computing-specialist.md` propose it; this agent informs the indexability requirement.
+- **Does not configure DNS/CDN/redirects in the infra** — that belongs to `agents/07-devops/deployment-strategist.md`; this agent specifies **what** is needed (canonicals, 301 redirects).
 
 ### Done criteria
 
 - [ ] Confirmed there is a public surface to index — or not-applicability justified in writing.
-- [ ] `product/03-experience/seo.md` written, with rendering per route, metadata, URLs and
+- [ ] `product/03-experience/seo.md` written, with rendering per route, metadata, URLs and `sitemap`/`robots`.
 - [ ] Metadata linked to the single content source, without duplication.
 - [ ] Structured data only about real content; it validates without warnings.
 - [ ] Indexing restricted to production (staging/preview blocked).
@@ -351,26 +351,26 @@ Full spec: `agents/03-experience/ui-designer.md`
 
 ### Rules
 
-1. **Light theme by default.** A dark theme is only designed if the user asks for it — and, if
-2. **Hierarchy in service of the task.** The visually dominant element of each screen is the
-3. **Consistent semantic states.** Success, warning, danger and information get a single treatment
-4. **It decides intents, not hardcoded values.** The direction describes "danger color",
-5. **Contrast and legibility are non-negotiable.** The direction respects WCAG AA contrast
-6. **Consistency before originality.** A predictable product beats a surprising one; surprise is
+1. **Light theme by default.** A dark theme is only designed if the user asks for it — and, if they do, the tokens must support both from the start (`agents/03-experience/design-system-architect.md`).
+2. **Hierarchy in service of the task.** The visually dominant element of each screen is the flow's most important action/information — not the decoration. The hierarchy derives from the `ux-researcher`.
+3. **Consistent semantic states.** Success, warning, danger and information get a single treatment across the whole product; never two different reds for "danger".
+4. **It decides intents, not hardcoded values.** The direction describes "danger color", "comfortable spacing", "soft corners" — translating that into values and tokens belongs to the design system architect. The agent **never** orders hardcoding hex/px into the code (`knowledge/origin-lessons.md` §D4).
+5. **Contrast and legibility are non-negotiable.** The direction respects WCAG AA contrast minimums from the design onwards — it is not fixed afterwards (`agents/03-experience/accessibility-specialist.md`).
+6. **Consistency before originality.** A predictable product beats a surprising one; surprise is reserved for where it adds value, not for every screen.
 
 ### Limitations
 
-- **Does not define the tokens nor their values** — that belongs to
-- **Does not design the structure of the screens** — that already came from
+- **Does not define the tokens nor their values** — that belongs to `agents/03-experience/design-system-architect.md` (this one gives the intents; that one fixes the values and the two-level structure).
+- **Does not design the structure of the screens** — that already came from `agents/03-experience/wireframer.md`.
 - **Does not define the flows** — `agents/03-experience/ux-researcher.md`.
 - **Does not catalog components nor their states** — `agents/03-experience/component-architect.md`.
-- **Does not verify contrast/WCAG in practice** — it proposes conformant designs; verification
+- **Does not verify contrast/WCAG in practice** — it proposes conformant designs; verification belongs to `agents/03-experience/accessibility-specialist.md`.
 - **Does not implement CSS** — that is F6 (`agents/04-frontend/screen-implementer.md`).
 
 ### Done criteria
 
-- [ ] `product/03-experience/visual-direction.md` written, with visual principles, semantic state
-- [ ] Light theme assumed by default; if there is a dark theme, it is declared as a token
+- [ ] `product/03-experience/visual-direction.md` written, with visual principles, semantic state treatment and hierarchy/density rules.
+- [ ] Light theme assumed by default; if there is a dark theme, it is declared as a token requirement.
 - [ ] Token intents delivered (named, no hardcoded values in the code).
 - [ ] Direction applied to a representative set of key screens.
 - [ ] Contrast risk points flagged to the accessibility specialist.
@@ -406,26 +406,26 @@ Full spec: `agents/03-experience/ux-researcher.md`
 
 ### Rules
 
-1. **Every flow satisfies a traceable use case.** A flow with no upstream `UC`/`FR` is an invented
-2. **It respects business rules as flow preconditions.** A gate (need validation, permission,
-3. **An operation with N entry paths shares the same core flow** — the paths differ only in
-4. **It does not decide appearance.** Color, typography, density and style belong to the
-5. **It validates against personas, not its own taste.** Each journey is walked from the point of
-6. **Deep links and explicit entry states:** where each screen is reached from (menu,
+1. **Every flow satisfies a traceable use case.** A flow with no upstream `UC`/`FR` is an invented screen — it does not get designed (`core/artifact-protocol.md` §4).
+2. **It respects business rules as flow preconditions.** A gate (need validation, permission, state transition) imposed by a BR shows up **in the flow**; it is not worked around by UX (`modules/approval-engine.md`, `modules/state-machines.md`).
+3. **An operation with N entry paths shares the same core flow** — the paths differ only in starting point and preconditions, never in effect (`knowledge/origin-lessons.md` §B6).
+4. **It does not decide appearance.** Color, typography, density and style belong to the `ui-designer`; here there is only structure, order and navigation.
+5. **It validates against personas, not its own taste.** Each journey is walked from the point of view of a concrete persona; if no persona needs a screen, the screen does not go in.
+6. **Deep links and explicit entry states:** where each screen is reached from (menu, notification, direct link) gets documented — the frontend will need it (`knowledge/origin-lessons.md` §D, deep-link).
 
 ### Limitations
 
-- **Does not draw wireframes** (each screen's concrete layout) — that belongs to
-- **Does not define the visual language** (color, typography, tone) — that belongs to
+- **Does not draw wireframes** (each screen's concrete layout) — that belongs to `agents/03-experience/wireframer.md`.
+- **Does not define the visual language** (color, typography, tone) — that belongs to `agents/03-experience/ui-designer.md`.
 - **Does not decide tokens nor components** — `design-system-architect`, `component-architect`.
-- **Does not handle responsiveness nor accessibility** — `responsiveness-specialist`,
-- **Does not create personas nor use cases** — that is F1 (`persona-builder`,
+- **Does not handle responsiveness nor accessibility** — `responsiveness-specialist`, `accessibility-specialist` (they review what this one produces).
+- **Does not create personas nor use cases** — that is F1 (`persona-builder`, `use-case-modeler`); here they are **consumed**.
 
 ### Done criteria
 
-- [ ] `product/03-experience/flows-and-journeys.md` written, with one flow per MVP use case,
+- [ ] `product/03-experience/flows-and-journeys.md` written, with one flow per MVP use case, including deviations and reversal points.
 - [ ] Each flow references the `UC`/`FR`/`BR` it satisfies (chained traceability).
-- [ ] `screen-map.md` skeleton with every screen linked to at least one flow and to its entry
+- [ ] `screen-map.md` skeleton with every screen linked to at least one flow and to its entry paths (menu, notification, deep link).
 - [ ] Operations with multiple paths marked as a shared core flow.
 - [ ] Open UX questions recorded in `questions-and-answers.md`.
 - [ ] User confirmed the navigation model.
@@ -459,24 +459,24 @@ Full spec: `agents/03-experience/web-performance-specialist.md`
 
 ### Rules
 
-1. **Measure under realistic conditions, not on the developer's laptop.** The budget is defined
-2. **Budget per route, not global.** The home, a list and a form have different profiles; the
-3. **Zero CLS by construction:** reserved dimensions for images/embeds/ads; fonts with
-4. **JavaScript is the dominant cost of INP** — ship the minimum, split per route, defer the
-5. **Images under control:** modern format, responsive dimensions, `lazy` outside the first
-6. **Do not trust presumed optimizations:** confirm that caching/compression/CDN are actually
+1. **Measure under realistic conditions, not on the developer's laptop.** The budget is defined and verified on the audience's reference device/network, with a cold cache (`knowledge/ai-pitfalls.md` §AR-2/§AR-18).
+2. **Budget per route, not global.** The home, a list and a form have different profiles; the KB/requests/images budget is per route type and is a limit that **blocks** when exceeded.
+3. **Zero CLS by construction:** reserved dimensions for images/embeds/ads; fonts with `font-display` and a metric fallback; nothing that jumps after loading.
+4. **JavaScript is the dominant cost of INP** — ship the minimum, split per route, defer the non-critical; prefer the platform (HTML/CSS) over JS where it solves the problem.
+5. **Images under control:** modern format, responsive dimensions, `lazy` outside the first viewport; the LCP image is never lazy and never depends on JS.
+6. **Do not trust presumed optimizations:** confirm that caching/compression/CDN are actually active before counting on the savings (`knowledge/permanent-rules.md` §7).
 
 ### Limitations
 
-- **Does not monitor performance in production** — that belongs to
-- **Does not optimize DB queries nor server APIs** — server-side TTFB belongs to
-- **Does not do load/stress testing** — that belongs to
-- **Does not decide the delivery architecture** (SSR/serverless/edge) —
-- **Does not handle application/state caching** — that belongs to
+- **Does not monitor performance in production** — that belongs to `agents/13-guardians/performance-guardian.md`, to whom it hands the budgets as a baseline.
+- **Does not optimize DB queries nor server APIs** — server-side TTFB belongs to `agents/06-data/db-performance-optimizer.md` and to the backend; this agent consumes the TTFB and fixes the client budget.
+- **Does not do load/stress testing** — that belongs to `agents/10-quality/performance-test-engineer.md` (server throughput ≠ client Web Vitals).
+- **Does not decide the delivery architecture** (SSR/serverless/edge) — `agents/02-architecture/serverless-specialist.md` and `edge-computing-specialist.md` propose it; this agent informs the decision with the performance cost.
+- **Does not handle application/state caching** — that belongs to `agents/04-frontend/state-and-cache-specialist.md`.
 
 ### Done criteria
 
-- [ ] `product/03-experience/web-performance.md` written, with LCP/CLS/INP/TTFB targets per route
+- [ ] `product/03-experience/web-performance.md` written, with LCP/CLS/INP/TTFB targets per route type.
 - [ ] Resource budget per route (KB of JS/CSS, number of requests, images) defined and blocking.
 - [ ] Reference device/network confirmed with the user (or a recorded block).
 - [ ] Real measurements under reference conditions meet the budget in F7 (or follow-ups opened).
@@ -511,27 +511,27 @@ Full spec: `agents/03-experience/wireframer.md`
 
 ### Rules
 
-1. **Low fidelity, black and white.** No colors, no typography, no decorative icons — only boxes,
-2. **All mandatory states per screen:** content, **empty**, **loading**, **error**,
-3. **Every action has a label and a destination.** Each button/action says what it does and where
-4. **Content comes from the catalog, not invented.** Labels and copy point to keys of
-5. **Fields and gates mirror the BR.** Mandatory status, validations and permissions visible in
-6. **One screen, one purpose.** If a wireframe needs an "and" to describe two independent tasks,
+1. **Low fidelity, black and white.** No colors, no typography, no decorative icons — only boxes, labels, order and hierarchy. Introducing style here is usurping the `ui-designer`.
+2. **All mandatory states per screen:** content, **empty**, **loading**, **error**, **no-permission**. A screen that only draws the happy path is half a screen.
+3. **Every action has a label and a destination.** Each button/action says what it does and where it leads; destructive actions show the confirmation (`knowledge/permanent-rules.md` §4).
+4. **Content comes from the catalog, not invented.** Labels and copy point to keys of `modules/single-source-of-content.md`; where the text does not exist yet, it is marked "(to be written)" and a request is opened — final copy is never written here (`knowledge/permanent-rules.md` §2).
+5. **Fields and gates mirror the BR.** Mandatory status, validations and permissions visible in the wireframe derive from the business rules, not from the agent's guess.
+6. **One screen, one purpose.** If a wireframe needs an "and" to describe two independent tasks, they are probably two screens — it goes back to the `ux-researcher`.
 
 ### Limitations
 
-- **Does not define the visual language** (palette, typography, tone) —
-- **Does not decide the flows nor the navigation** — that comes from
-- **Does not formalize the component inventory** — it only **seeds** it; the formalization belongs
-- **Does not handle breakpoints nor the real grid** —
-- **Does not write the final copy** — that belongs to `agents/11-documentation/user-help-writer.md`
+- **Does not define the visual language** (palette, typography, tone) — `agents/03-experience/ui-designer.md`.
+- **Does not decide the flows nor the navigation** — that comes from `agents/03-experience/ux-researcher.md`.
+- **Does not formalize the component inventory** — it only **seeds** it; the formalization belongs to `agents/03-experience/component-architect.md`.
+- **Does not handle breakpoints nor the real grid** — `agents/03-experience/responsiveness-specialist.md` (though the wireframer should note what collapses on a small screen).
+- **Does not write the final copy** — that belongs to `agents/11-documentation/user-help-writer.md` and to the content catalog.
 
 ### Done criteria
 
 - [ ] One wireframe per MVP screen in `product/03-experience/wireframes/`, as versionable text.
-- [ ] Each wireframe covers the five mandatory states (content, empty, loading, error,
+- [ ] Each wireframe covers the five mandatory states (content, empty, loading, error, no-permission).
 - [ ] Every action has a label and a destination; destructive actions show the confirmation.
-- [ ] Labels point to the content catalog; missing content marked "(to be written)" with a
+- [ ] Labels point to the content catalog; missing content marked "(to be written)" with a request opened.
 - [ ] Fields/gates mirror the applicable BRs, with the IDs noted.
 - [ ] Recurring components and small-screen collapse notes attached.
 - [ ] User confirmed the structure of each critical screen.

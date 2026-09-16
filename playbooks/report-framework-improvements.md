@@ -29,7 +29,10 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
    two questions of `knowledge/README.md` §The generality test: another domain, another stack.
    What can be rewritten in general form is rewritten now; what fails is moved, never deleted
    (product lessons to `STATE.md` §Lessons, stack-bound blocks to destination `starters/`), and
-   the counts go in the issue body (step 3). **Recovery sweep:** before closing consolidation,
+   the counts go in the issue body (step 3). **Recovery sweep** (if
+   `FRAMEWORK-IMPROVEMENTS.md` was never instantiated — adoptions with a "minimal bootstrap" —
+   create it from the template and recover everything from `STATE.md` §Lessons, §Historical log
+   and `git log` before the first submission): before closing consolidation,
    cross-check `STATE.md` (§Lessons,
    §Done, §Debt and §Decisions made on behalf of the absent owner, since the last submission — debt
    accepted "because of the framework" or a decision made because the framework did not say what

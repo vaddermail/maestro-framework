@@ -79,6 +79,10 @@ Puts them to the Orchestrator (`core/question-engine.md`):
    unit suite and keep asserting the old behavior (`knowledge/ai-pitfalls.md` §AR-17).
 6. **The E2E suite runs focused, without aggressive parallelism, in the foreground**; the subagent
    that runs it is closed explicitly by the controller (`agents/10-quality/README.md` §This category's critical pitfall).
+7. **Each run creates and deletes its own data.** A script that onboards a disposable unit
+   (tenant, account, project), exercises the roles and deletes everything at the end runs against
+   dev or staging without dirtying the data the team uses — and can run in parallel with real
+   actors. It found a years-old defect in a single day.
 
 ## Limitations (what this agent does NOT do)
 

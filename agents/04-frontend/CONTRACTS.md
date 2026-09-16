@@ -38,21 +38,21 @@ Full spec: `agents/04-frontend/api-integrator.md`
 
 ### Rules
 
-1. **The contract is the single source.** Types are **generated** from the server's contract, never
-2. **The mock mirrors the server.** Handlers with the **same shapes** and the **same rules** (upsert
-3. **One contract, all consumers.** If there is more than one client (e.g. web + mobile app), the
-4. **Shape guard in dev/test, no-op in production.** Validating the response against the schema
-5. **Errors normalized and visible.** Every error goes through a single format (RFC 7807 or
-6. **The client does not decide authority.** The client **declares** the active profile; the server
-7. **Secrets and tokens out of the code** — per-environment configuration, never embedded
+1. **The contract is the single source.** Types are **generated** from the server's contract, never written by hand in parallel (`knowledge/proven-patterns.md` §4). The regeneration command gets documented.
+2. **The mock mirrors the server.** Handlers with the **same shapes** and the **same rules** (upsert by stable ID, dedupe, validation) as the backend; every deliberate divergence is **commented** (`knowledge/origin-lessons.md`). A **single** seed serves dev, tests and E2E.
+3. **One contract, all consumers.** If there is more than one client (e.g. web + mobile app), the contract snapshot is identical across them — verifiable by diff (`knowledge/proven-patterns.md` §4).
+4. **Shape guard in dev/test, no-op in production.** Validating the response against the schema catches deviations early at no production cost (`knowledge/origin-lessons.md`).
+5. **Errors normalized and visible.** Every error goes through a single format (RFC 7807 or equivalent), mapped to SSOT copy; no error is silently swallowed (`knowledge/proven-patterns.md` §10).
+6. **The client does not decide authority.** The client **declares** the active profile; the server confirms. The mock simulates the scoping (it only returns the profile's subset), but that is for test fidelity — it is never the security mechanism (`modules/rbac-and-scoping.md`).
+7. **Secrets and tokens out of the code** — per-environment configuration, never embedded (`knowledge/permanent-rules.md` §5).
 
 ### Limitations
 
-- **Does not design the API contract** — that belongs to `agents/05-backend/api-designer.md` and
-- **Does not implement the server or the real authorization** — `agents/05-backend/authorization-specialist.md`;
-- **Does not define the cache/invalidation policy** — `agents/04-frontend/state-and-cache-specialist.md`
+- **Does not design the API contract** — that belongs to `agents/05-backend/api-designer.md` and the style specialists (`agents/05-backend/rest-specialist.md`, `.../graphql-specialist.md`).
+- **Does not implement the server or the real authorization** — `agents/05-backend/authorization-specialist.md`; the mock only *simulates* the scoping for fidelity.
+- **Does not define the cache/invalidation policy** — `agents/04-frontend/state-and-cache-specialist.md` (the integrator provides the hooks; the cache policy belongs to the specialist).
 - **Does not build screens** — `agents/04-frontend/screen-implementer.md`.
-- **Does not write the tests** (although it provides the mocks the tests use) —
+- **Does not write the tests** (although it provides the mocks the tests use) — `agents/04-frontend/frontend-test-engineer.md`.
 
 ### Done criteria
 
@@ -96,20 +96,20 @@ Full spec: `agents/04-frontend/frontend-architect.md`
 
 ### Rules
 
-1. **Content layer before screens.** The typed SSOT of labels/tooltips/help starts **first**
-2. **Tokens, never values.** Colors, spacing, radii and typography are always consumed via design
-3. **Untrusted client.** The structure reflects that the server decides authority and scoping: the
-4. **Explicit boundaries between layers.** Features do not import each other's internals; they
-5. **Explicit filter state, never read from the DOM.** The convention fixes that filters/sorting
-6. **Stable, pinned versions.** Router, framework and libraries on stable versions, pinned in a
-7. **Structural decisions in ADRs.** Rendering, router and state library are recorded with the why
+1. **Content layer before screens.** The typed SSOT of labels/tooltips/help starts **first** (`modules/single-source-of-content.md`) — it is the foundation of the tooltips, the in-app help and the AI grounding. Forbid hardcoded domain strings in screen code (convention + lint).
+2. **Tokens, never values.** Colors, spacing, radii and typography are always consumed via design system token (`knowledge/proven-patterns.md` §4); zero magic hex/px in the code.
+3. **Untrusted client.** The structure reflects that the server decides authority and scoping: the active profile conditions visible surfaces for UX, but the UI never "protects" data — the server does not send it (`modules/rbac-and-scoping.md`, `knowledge/proven-patterns.md` §6).
+4. **Explicit boundaries between layers.** Features do not import each other's internals; they share only via promoted components/utilities — each promotion with a provenance note.
+5. **Explicit filter state, never read from the DOM.** The convention fixes that filters/sorting live in application state or in the URL, never reconstructed from the DOM (`knowledge/ai-pitfalls.md`).
+6. **Stable, pinned versions.** Router, framework and libraries on stable versions, pinned in a lockfile (`knowledge/permanent-rules.md` §6); no alpha/RC by reflex.
+7. **Structural decisions in ADRs.** Rendering, router and state library are recorded with the why and the reversal path (`core/decision-engine.md`).
 
 ### Limitations
 
 - **Does not build concrete screens** — that belongs to `agents/04-frontend/screen-implementer.md`.
 - **Does not write the API client or the mocks** — that belongs to `agents/04-frontend/api-integrator.md`.
-- **Does not define the cache/invalidation policy** — `agents/04-frontend/state-and-cache-specialist.md`
-- **Does not design the tokens or the components** — those come from F4 (`agents/03-experience/design-system-architect.md`,
+- **Does not define the cache/invalidation policy** — `agents/04-frontend/state-and-cache-specialist.md` (the architect chooses *which* state library comes in; the usage policy is the specialist's).
+- **Does not design the tokens or the components** — those come from F4 (`agents/03-experience/design-system-architect.md`, `agents/03-experience/component-architect.md`); the architect **consumes them**.
 - **Does not decide the server architecture or the contract** — `agents/02-architecture/`, `agents/05-backend/api-designer.md`.
 - **Does not write the tests** — `agents/04-frontend/frontend-test-engineer.md`.
 
@@ -154,20 +154,21 @@ Full spec: `agents/04-frontend/frontend-test-engineer.md`
 
 ### Rules
 
-1. **Test against the mocks that mirror the server**, with the **single seed** — the same one that
-2. **Cover the risk logic, not the percentage.** Priority to per-profile authority, filters,
-3. **Never adapt the test to the bug.** If a test fails due to a real defect, the cause gets
-4. **E2E in two viewports.** The smoke runs on desktop **and** at a real ≈390px — the mobile
-5. **Accessibility verified** on the key screens (accessible name on actions, contrast, keyboard
-6. **Deterministic tests.** No dependency on the real network, wall-clock time or ordering; fixed
-7. **Honesty of results.** Report the tests' real output; never declare green without the evidence
+1. **Test against the mocks that mirror the server**, with the **single seed** — the same one that serves dev and E2E; a green test against the mock only counts if the mock reflects the real thing (`knowledge/origin-lessons.md`).
+2. **Cover the risk logic, not the percentage.** Priority to per-profile authority, filters, error/empty states, invalidation after mutation and reversibility — not blind coverage (`knowledge/permanent-rules.md` §7, `MANIFESTO.md` §9).
+3. **Never adapt the test to the bug.** If a test fails due to a real defect, the cause gets fixed, not the test — a test is only changed when it is provably wrong itself (`loops/L02-failing-tests.md`).
+4. **E2E in two viewports.** The smoke runs on desktop **and** at a real ≈390px — the mobile layout is tested for real, not on isolated components (`knowledge/proven-patterns.md`, `checklists/web-performance.md`).
+5. **Accessibility verified** on the key screens (accessible name on actions, contrast, keyboard navigation) — automated where possible, without overestimating the coverage (`checklists/accessibility.md`).
+6. **Deterministic tests.** No dependency on the real network, wall-clock time or ordering; fixed seed, controlled clock — a test that fails "sometimes" is a test that is worthless.
+7. **Honesty of results.** Report the tests' real output; never declare green without the evidence (`knowledge/permanent-rules.md` §2).
+8. **Visibility is asserted from what renders, never from the attribute.** The HTML `hidden` attribute loses to any author display rule; the test that asserted "has the attribute" passed over a block that was visible on screen (`checklists/accessibility.md` §Verification).
 
 ### Limitations
 
-- **Does not define the global test strategy** or the pyramid — `agents/10-quality/test-strategist.md`;
-- **Does not write the mocks or the seed** — `agents/04-frontend/api-integrator.md`; it **uses
-- **Does not do the full-system multi-profile E2E** (all profiles × all pages + critical
-- **Does not test the server logic** (backend unit/integration tests) —
+- **Does not define the global test strategy** or the pyramid — `agents/10-quality/test-strategist.md`; this agent **executes it** on the client.
+- **Does not write the mocks or the seed** — `agents/04-frontend/api-integrator.md`; it **uses them**.
+- **Does not do the full-system multi-profile E2E** (all profiles × all pages + critical end-to-end flows against the real backend) — that belongs to `agents/10-quality/e2e-test-engineer.md`; this agent delivers the **client E2E smoke** that the other extends.
+- **Does not test the server logic** (backend unit/integration tests) — `agents/10-quality/unit-test-engineer.md`, `.../integration-test-engineer.md`.
 - **Does not fix screens** — it reports defects to `agents/04-frontend/screen-implementer.md`.
 - **Does not measure load performance** — `agents/10-quality/performance-test-engineer.md`.
 
@@ -211,23 +212,23 @@ Full spec: `agents/04-frontend/screen-implementer.md`
 
 ### Rules
 
-1. **Zero hardcoded domain strings.** Every label/tooltip/help comes from the content layer
-2. **Tooltip on every action; accessible name mandatory.** Buttons (icon buttons in particular)
-3. **Filters and sorting on every list/table**, with **explicit** state (application or URL),
-4. **Three states always handled:** loading, empty and error — each with SSOT copy; a screen that
-5. **The active profile conditions for UX, not for security.** Hide/disable what the profile does
+1. **Zero hardcoded domain strings.** Every label/tooltip/help comes from the content layer (`modules/single-source-of-content.md`); adding a new key is part of the screen's work.
+2. **Tooltip on every action; accessible name mandatory.** Buttons (icon buttons in particular) use the components that **enforce** the tooltip/`aria-label` by construction — there is no action without a name (`knowledge/proven-patterns.md` §7).
+3. **Filters and sorting on every list/table**, with **explicit** state (application or URL), never read from the DOM (`knowledge/ai-pitfalls.md`).
+4. **Three states always handled:** loading, empty and error — each with SSOT copy; a screen that only handles the "happy path" is not done (`knowledge/proven-patterns.md` §10).
+5. **The active profile conditions for UX, not for security.** Hide/disable what the profile does not use, knowing the server is the real authority (`modules/rbac-and-scoping.md`).
 6. **Tokens, never values.** Consume colors/spacing/typography via token; zero magic hex/px.
-7. **Real layout at both extremes.** `min-width:0` discipline on grid/flex children and a
-8. **Never declare done without live proof.** Green tests are not enough; open the real screen and
+7. **Real layout at both extremes.** `min-width:0` discipline on grid/flex children and a container with its own overflow for wide content — tested at ≈390px **and** desktop (`agents/03-experience/responsiveness-specialist.md`).
+8. **Never declare done without live proof.** Green tests are not enough; open the real screen and navigate it (`knowledge/permanent-rules.md` §7).
 
 ### Limitations
 
-- **Does not design the wireframe or the tokens/components** — F4 (`agents/03-experience/wireframer.md`,
-- **Does not write the API client or the mocks** — `agents/04-frontend/api-integrator.md`;
-- **Does not define the cache/invalidation policy** — `agents/04-frontend/state-and-cache-specialist.md`;
+- **Does not design the wireframe or the tokens/components** — F4 (`agents/03-experience/wireframer.md`, `.../design-system-architect.md`, `.../component-architect.md`).
+- **Does not write the API client or the mocks** — `agents/04-frontend/api-integrator.md`; the Implementer **consumes** the ready-made data hooks.
+- **Does not define the cache/invalidation policy** — `agents/04-frontend/state-and-cache-specialist.md`; it uses the hooks according to the defined policy.
 - **Does not define the app structure or the conventions** — `agents/04-frontend/frontend-architect.md`.
-- **Does not write the screen's tests** — `agents/04-frontend/frontend-test-engineer.md`
-- **Does not decide accessibility or responsiveness rules** — F4; the Implementer **complies with
+- **Does not write the screen's tests** — `agents/04-frontend/frontend-test-engineer.md` (although it delivers the screen in a testable state).
+- **Does not decide accessibility or responsiveness rules** — F4; the Implementer **complies with them**.
 
 ### Done criteria
 
@@ -269,21 +270,21 @@ Full spec: `agents/04-frontend/state-and-cache-specialist.md`
 
 ### Rules
 
-1. **One source of truth per fact; derived state is never copied.** What can be derived (e.g. a
-2. **Explicit invalidation per mutation.** Each write declares **which keys it invalidates**;
-3. **Orthogonal layers for concerns competing for the same field.** When a temporary action
-4. **Optimism with guaranteed rollback.** Optimistic updates only with a clean rollback on error;
-5. **Explicit filter/selection state, never from the DOM** — in application state or the URL
-6. **Visible synchronization failures.** Failed refetch/revalidation gets signaled (a "data
-7. **The client is not the data authority.** The cache speeds up reads; truth and authorization
+1. **One source of truth per fact; derived state is never copied.** What can be derived (e.g. a count, "current driver", cart total) is **derived**, not stored in parallel (`knowledge/proven-patterns.md` §4).
+2. **Explicit invalidation per mutation.** Each write declares **which keys it invalidates**; blind TTL is not trusted to reflect a user action. A mutation→keys map gets written down.
+3. **Orthogonal layers for concerns competing for the same field.** When a temporary action (reservation, edit draft, override) touches permanent state, they are separated into a base layer + overlay and the displayed state is **derived**; ending the overlay reverts to the base, not to a global default (`knowledge/proven-patterns.md` §9, `modules/state-machines.md`).
+4. **Optimism with guaranteed rollback.** Optimistic updates only with a clean rollback on error; without rollback, there is no optimism (`knowledge/permanent-rules.md` §3).
+5. **Explicit filter/selection state, never from the DOM** — in application state or the URL (`knowledge/ai-pitfalls.md`).
+6. **Visible synchronization failures.** Failed refetch/revalidation gets signaled (a "data possibly out of date" indicator), never stays silent (`knowledge/proven-patterns.md` §10).
+7. **The client is not the data authority.** The cache speeds up reads; truth and authorization belong to the server. Nothing the profile should not have received is ever persisted on the client (`modules/rbac-and-scoping.md`).
 
 ### Limitations
 
-- **Does not do transport/fetch nor generate the client** — `agents/04-frontend/api-integrator.md`;
-- **Does not implement server-side caching** (layers, TTL, stampede) — that belongs to
-- **Does not build screens** — `agents/04-frontend/screen-implementer.md` (consumes the mutation
+- **Does not do transport/fetch nor generate the client** — `agents/04-frontend/api-integrator.md`; this agent defines the policy **on top of** the hooks.
+- **Does not implement server-side caching** (layers, TTL, stampede) — that belongs to `agents/05-backend/caching-specialist.md`; they are distinct problems.
+- **Does not build screens** — `agents/04-frontend/screen-implementer.md` (consumes the mutation hooks).
 - **Does not define the app structure nor choose the state library** — `agents/04-frontend/frontend-architect.md`.
-- **Does not model the business rules/state machines** — `agents/01-requirements/business-rules-modeler.md`;
+- **Does not model the business rules/state machines** — `agents/01-requirements/business-rules-modeler.md`; this agent **reflects them** in the client.
 - **Does not write the tests** — `agents/04-frontend/frontend-test-engineer.md`.
 
 ### Done criteria

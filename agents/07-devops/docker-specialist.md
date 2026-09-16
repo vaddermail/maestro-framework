@@ -83,6 +83,10 @@ Via the Orchestrator, in a batch (`core/question-engine.md`):
    load balancers).
 7. **Reproducibility.** The same commit produces the same image; layers ordered to maximize
    caching (dependencies before code).
+8. **Non-root in the compose's auxiliary services too.** Queue workers, persistent-connection
+   servers and scheduled tasks run with an explicit `user:` in the compose files of every
+   environment; a worker running as root creates folders the (non-root) web process cannot write
+   to — "the upload doesn't work" only in staging and production.
 
 ## Limitations (what this agent does NOT do)
 

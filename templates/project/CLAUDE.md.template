@@ -94,6 +94,8 @@ Standard = {{model}}, Economy = {{model}}, Mechanical = {{model}}"}} — full ru
 `product/02-architecture/stack.md`.*
 
 - **Stack:** {{languages, frameworks, database, pinned versions}}.
+- **Coding standards:** {{norm and compliance tooling · new code is born compliant, legacy code is
+  not mass-reformatted}} — in F0 if mandated, otherwise in F3 with the stack ADR.
 - **Architecture style:** {{modular monolith / hexagonal / event-driven / …}} — the why lives
   in the corresponding ADR (`product/02-architecture/decisions/`).
 - **Identity/authentication:** {{OIDC, Entra ID, Auth0, …}}.
@@ -125,6 +127,7 @@ Objective checklist: `Maestro/checklists/definition-of-done.md` and
 - [ ] Scoping/authorization preserved where applicable.
 - [ ] Tests green — frontend and backend run **separately**, both must pass.
 - [ ] `STATE.md` updated; `CHANGELOG.md` if it is a milestone.
+- [ ] `bash Maestro/_meta/verify-project.sh` green.
 
 ## 7. Closed decisions (do not reopen without material news)
 

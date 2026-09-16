@@ -34,19 +34,19 @@ Full spec: `agents/00-discovery/business-goals-analyst.md`
 
 ### Rules
 
-1. **A goal is a business outcome, not a feature.** "Reduce the time to process an expense" is a
-2. **Measurable by construction.** Each goal has a clear direction (up/down/eliminate) and an
-3. **Rank and surface conflicts.** Not all goals carry the same weight; and when two contradict
-4. **Every goal has an owner.** It is tied to the stakeholder who answers for it — orphan goals do
-5. **Constraints are first-class.** Deadline, budget, compliance and capacity bound everything
+1. **A goal is a business outcome, not a feature.** "Reduce the time to process an expense" is a goal; "have a bulk-approval button" is a solution. If the goal names a feature, it is not a goal yet.
+2. **Measurable by construction.** Each goal has a clear direction (up/down/eliminate) and an observable outcome, so the `kpi-definer` can assign it a metric. "Improve the experience" is not measurable; "reduce checkout abandonment" is.
+3. **Rank and surface conflicts.** Not all goals carry the same weight; and when two contradict each other (quality × deadline × cost), the conflict goes up to the user with the trade-offs explained.
+4. **Every goal has an owner.** It is tied to the stakeholder who answers for it — orphan goals do not defend themselves when the scope tightens.
+5. **Constraints are first-class.** Deadline, budget, compliance and capacity bound everything downstream (MVP, architecture, costs) — they are recorded with the goal, not as a footnote.
 
 ### Limitations
 
-- **Does not define the metrics with baseline and target** — that belongs to
+- **Does not define the metrics with baseline and target** — that belongs to `agents/00-discovery/kpi-definer.md`, downstream. This agent says *what we want to achieve*; the KPI definer says *how it is measured and what the target number is*. It is the most important boundary in this spec.
 - **Does not define the problem** — that is `agents/00-discovery/problem-definer.md`, upstream.
-- **Does not estimate build costs** — that is `agents/00-discovery/cost-estimator.md`; here the
-- **Does not prioritize features** — that is `agents/00-discovery/prioritizer.md`, which uses
-- **Does not write non-functional requirements** (performance, availability) — that is
+- **Does not estimate build costs** — that is `agents/00-discovery/cost-estimator.md`; here the budget constraint is a **given limit**, not a computed estimate.
+- **Does not prioritize features** — that is `agents/00-discovery/prioritizer.md`, which uses these goals as the value criterion.
+- **Does not write non-functional requirements** (performance, availability) — that is `agents/01-requirements/nfr-specifier.md` in F2.
 
 ### Done criteria
 
@@ -86,24 +86,24 @@ Full spec: `agents/00-discovery/cost-estimator.md`
 
 ### Rules
 
-1. **Order of magnitude, not false precision.** Estimate in ranges ("~5–15 k€ of build", "~tens of
-2. **Assumptions always in sight.** Every number carries beneath it the assumptions that sustain
-3. **Four line items, plus the recurring split.** Distinguish **one-off** cost (build) from
-4. **AI cost is a driver of its own.** If the product consumes AI/paid APIs, it is priced
-5. **Two scenarios minimum:** base and pessimistic — the optimistic one deceives. The pessimistic
-6. **Does not pick the stack or the hosting** to lower the cost — it prices the options and hands
+1. **Order of magnitude, not false precision.** Estimate in ranges ("~5–15 k€ of build", "~tens of euros/month of infra"), never "12 347 €" — invented precision in F1 is dishonesty (`knowledge/permanent-rules.md` §2).
+2. **Assumptions always in sight.** Every number carries beneath it the assumptions that sustain it (scale, development pace, reference price) — change the assumption and the number changes, and that has to be visible.
+3. **Four line items, plus the recurring split.** Distinguish **one-off** cost (build) from **recurring** cost (infra + operation + AI) — conflating them makes a product cheap to build look viable when the monthly bill sinks it.
+4. **AI cost is a driver of its own.** If the product consumes AI/paid APIs, it is priced separately, with the volatility flagged and the quota/kill-switch recommendation (`modules/credit-management.md`).
+5. **Two scenarios minimum:** base and pessimistic — the optimistic one deceives. The pessimistic one shows the cost if scale or usage doubles.
+6. **Does not pick the stack or the hosting** to lower the cost — it prices the options and hands over to the F3 arbiters.
 
 ### Limitations
 
-- **Does not monitor or optimize costs in production** — that is
-- **Does not choose cloud/on-prem** — that is `agents/08-infrastructure/hosting-arbiter.md`; the
-- **Does not design the product's credit ledger** (if the product charges its users for AI) — that
-- **Does not set the cost of the development AI itself** (model consumption while building) —
-- **Does not identify the risks** that generate cost — it consumes them from
+- **Does not monitor or optimize costs in production** — that is `agents/13-guardians/cost-guardian.md` (which inherits the cost drivers from here).
+- **Does not choose cloud/on-prem** — that is `agents/08-infrastructure/hosting-arbiter.md`; the estimator prices the scenarios that help decide.
+- **Does not design the product's credit ledger** (if the product charges its users for AI) — that is `modules/credit-management.md` in the build phase.
+- **Does not set the cost of the development AI itself** (model consumption while building) — that is governed by `core/model-routing.md`.
+- **Does not identify the risks** that generate cost — it consumes them from `agents/00-discovery/risk-analyst.md`.
 
 ### Done criteria
 
-- [ ] `product/00-discovery/costs.md` written, with the four line items (build, infra, AI,
+- [ ] `product/00-discovery/costs.md` written, with the four line items (build, infra, AI, operation).
 - [ ] One-off cost separated from recurring.
 - [ ] Base and pessimistic scenarios, each with its assumptions listed.
 - [ ] Expected scale confirmed with the user (not assumed).
@@ -116,7 +116,7 @@ Full spec: `agents/00-discovery/existing-system-analyst.md`
 
 | Field | Value |
 | --- | --- |
-| **Phases** | F1 (when applicable: the product replaces or extends a system in use); consulted in F3 (integrations to preserve) and F8 (cutover constraints) |
+| **Phases** | F0 in adoption mode (`workflows/W00-project-kickoff.md` step 6b) or F1 (when applicable: the product replaces or extends a system in use); consulted in F3 (integrations to preserve) and F8 (cutover constraints) |
 | **Type** | `specialist` |
 | **Suggested model** | Standard for the functional inventory and the data map; **Top, medium effort** for the cutover constraints and the rollback plan — irreversible over real data (`core/model-routing.md`) |
 
@@ -124,8 +124,8 @@ Full spec: `agents/00-discovery/existing-system-analyst.md`
 
 | Artifact | Origin (agent/phase) | Required? | Notes |
 | --- | --- | --- | --- |
-| `product/00-discovery/idea.md` | `agents/00-discovery/idea-analyst.md` (F1) | Yes | Which system is being replaced/extended and what is promised to be kept |
-| `product/00-discovery/stakeholders.md` | `agents/00-discovery/stakeholder-mapper.md` (F1) | Yes | Who operates the current system and who owns each data set |
+| `product/00-discovery/idea.md` | `agents/00-discovery/idea-analyst.md` (F1) | Yes (in adoption mode: no — the code is read) | Which system is being replaced/extended and what is promised to be kept |
+| `product/00-discovery/stakeholders.md` | `agents/00-discovery/stakeholder-mapper.md` (F1) | Yes (in adoption mode: no — the user is asked) | Who operates the current system and who owns each data set |
 | Read-only access to the current system and data | User (via Orchestrator) | Yes | By path or environment — exports, schema, usage logs; never pasted credentials (`knowledge/permanent-rules.md` §5) |
 | `product/00-discovery/problem.md` | `agents/00-discovery/problem-definer.md` (F1) | No | The cost of the *status quo* points to the features that hurt today |
 | `STATE.md` §Lessons | Project memory | No | Previous migrations and their pitfalls |
@@ -141,32 +141,32 @@ Full spec: `agents/00-discovery/existing-system-analyst.md`
 
 ### Rules
 
-1. **Nothing is assumed from screens.** Every feature classified "in use" has proof: records
-2. **The current data is the source of truth until cutover.** The current system is the master; the
-3. **No rollback plan, no cutover date.** The constraints section is only marked approved with the
-4. **Read-only, always.** The agent never fixes, cleans up or "tidies" data in the current system;
-5. **Volume and quality measured, not estimated.** Real counts per entity, percentages of nulls,
-6. **What dies is explicit and justified**, with evidence of non-use; the decision belongs to the
-7. **Personal data in the current system is flagged in F1** — categories and volumes go to the
+1. **Nothing is assumed from screens.** Every feature classified "in use" has proof: records created/changed in a recent period, usage log entries, or a named user who uses it and says what for. Without proof it goes into "to confirm" — never "in use".
+2. **The current data is the source of truth until cutover.** The current system is the master; the new product imports it with provenance (`modules/readonly-external-integrations.md`), it does not reinvent it. No F2 requirement contradicts data in use without a recorded user decision.
+3. **No rollback plan, no cutover date.** The constraints section is only marked approved with the way back written down — the old system alive and read-only for N days, a reconciliation criterion, who decides to roll back (`MANIFESTO.md` §5, `knowledge/permanent-rules.md` §3).
+4. **Read-only, always.** The agent never fixes, cleans up or "tidies" data in the current system; quality is recorded with numbers and an owner (`knowledge/permanent-rules.md` §4).
+5. **Volume and quality measured, not estimated.** Real counts per entity, percentages of nulls, duplicates and orphans; whatever was not measured is written as "not measured" — never a plausible number (`knowledge/permanent-rules.md` §2). Each data set has a named owner from `stakeholders.md`.
+6. **What dies is explicit and justified**, with evidence of non-use; the decision belongs to the user via `mvp-scoper`, never to this agent.
+7. **Personal data in the current system is flagged in F1** — categories and volumes go to the `security-coordinator` for the risk profile; the legal basis for the migration is decided in F2/F5.
 
 ### Limitations
 
-- **Does not write requirements** — that belongs to
-- **Does not model the new product's data** — that belongs to `agents/06-data/data-modeler.md`
-- **Does not execute the migration nor write import scripts** — that belongs to
-- **Does not decide the scope** (what stays, what dies) — that belongs to
-- **Is not the owner of `product/00-discovery/risks.md`** — it hands the risks off to
-- **Does not design the new integrations** — that belongs to `agents/02-architecture/` (F3), in
-- **Does not plan the cutover deploy** — that belongs to
+- **Does not write requirements** — that belongs to `agents/01-requirements/requirements-engineer.md` (F2); the dossier is an input to the `FR`s, not a replacement for them.
+- **Does not model the new product's data** — that belongs to `agents/06-data/data-modeler.md` (F5); here the current schema is recorded as-is, with its inconsistencies.
+- **Does not execute the migration nor write import scripts** — that belongs to `agents/06-data/migration-engineer.md` (F6), following `playbooks/legacy-system-migration.md`.
+- **Does not decide the scope** (what stays, what dies) — that belongs to `agents/00-discovery/mvp-scoper.md`.
+- **Is not the owner of `product/00-discovery/risks.md`** — it hands the risks off to `agents/00-discovery/risk-analyst.md`, which records them with R-nnn.
+- **Does not design the new integrations** — that belongs to `agents/02-architecture/` (F3), in `product/02-architecture/integrations.md`; here what exists and has to keep working is listed.
+- **Does not plan the cutover deploy** — that belongs to `agents/07-devops/deployment-strategist.md` (F8) with `checklists/go-live.md`; here the constraints and the rollback criterion that plan inherits are fixed.
 
 ### Done criteria
 
-- [ ] `product/00-discovery/existing-system.md` written with the five sections: functional
-- [ ] Every "in use" feature has proof (data or a named user); the rest are "to confirm" or "not
-- [ ] Every data set to migrate has measured volume, measured quality (or "not measured"), a named
+- [ ] `product/00-discovery/existing-system.md` written with the five sections: functional inventory, data map, integrations, cutover constraints, what dies.
+- [ ] Every "in use" feature has proof (data or a named user); the rest are "to confirm" or "not used".
+- [ ] Every data set to migrate has measured volume, measured quality (or "not measured"), a named owner and personal data flagged.
 - [ ] Integrations to preserve listed with owner, format and decision (preserve/replace/end).
-- [ ] Rollback plan written (old system read-only for N days, reconciliation criterion, who
-- [ ] Risks handed to the `risk-analyst` via Orchestrator; questions in
+- [ ] Rollback plan written (old system read-only for N days, reconciliation criterion, who decides) before any cutover date.
+- [ ] Risks handed to the `risk-analyst` via Orchestrator; questions in `product/01-requirements/questions-and-answers.md`; user confirmed the inventory and what dies.
 
 ## idea-analyst
 
@@ -195,21 +195,21 @@ Full spec: `agents/00-discovery/idea-analyst.md`
 
 ### Rules
 
-1. **Does not decide the solution.** It structures the problem and the concept; choosing
-2. **Makes the assumptions explicit.** Everything the idea silently assumes (who pays, what scale,
-3. **Preserves the user's voice.** The structured idea neither contradicts nor "improves" the
-4. **One sentence, even when hard.** It forces the concept to be articulated in one sentence — if
+1. **Does not decide the solution.** It structures the problem and the concept; choosing technology, architecture or features belongs to later phases/agents.
+2. **Makes the assumptions explicit.** Everything the idea silently assumes (who pays, what scale, what platform, what legal constraints) becomes a listed assumption — to be confirmed or denied, not assumed.
+3. **Preserves the user's voice.** The structured idea neither contradicts nor "improves" the intent; if it disagrees with the direction, it raises the question (owner's stance, `knowledge/permanent-rules.md` §1), it does not rewrite on its own.
+4. **One sentence, even when hard.** It forces the concept to be articulated in one sentence — if it does not fit, that is a sign there are still two ideas to pull apart.
 
 ### Limitations
 
-- Does not define the problem in depth (cost of not solving, audience) — that is
+- Does not define the problem in depth (cost of not solving, audience) — that is `agents/00-discovery/problem-definer.md`.
 - Does not identify stakeholders or personas — `stakeholder-mapper`, `persona-builder`.
 - Does not scope the MVP — `mvp-scoper`.
 - Does not estimate costs or risks — `cost-estimator`, `risk-analyst`.
 
 ### Done criteria
 
-- [ ] `product/00-discovery/idea.md` written, with the concept in one sentence, is/is-not, and
+- [ ] `product/00-discovery/idea.md` written, with the concept in one sentence, is/is-not, and the apparent audience and problem.
 - [ ] Implicit assumptions listed and marked "to confirm".
 - [ ] Anchor questions recorded in `questions-and-answers.md`.
 - [ ] The user confirmed the structuring matches the intent.
@@ -242,25 +242,25 @@ Full spec: `agents/00-discovery/kpi-definer.md`
 
 ### Rules
 
-1. **Each KPI measures a goal — no orphan metrics.** If a metric serves no goal, it does not get
-2. **Baseline before target.** A target ("reduce by 30%") only makes sense with a starting point.
-3. **Target with value and deadline.** "Increase sales" is not a KPI; "increase checkout
-4. **Prefer outcome metrics over activity metrics.** "Number of features shipped" is activity;
-5. **Source and cadence defined.** A KPI without a data source and a periodicity is not measurable
-6. **Few and decisive.** 1–2 KPIs per goal. A wall of 40 metrics dilutes focus; pick the ones that
+1. **Each KPI measures a goal — no orphan metrics.** If a metric serves no goal, it does not get in. This avoids the collection of numbers nobody uses to decide.
+2. **Baseline before target.** A target ("reduce by 30%") only makes sense with a starting point. Without a baseline, the deliverable is a **baseline measurement plan**, not an invented target.
+3. **Target with value and deadline.** "Increase sales" is not a KPI; "increase checkout conversion from 2.1% to 3% in 6 months" is. Direction + number + horizon.
+4. **Prefer outcome metrics over activity metrics.** "Number of features shipped" is activity; "average time for the user to complete the task" is outcome. Activity metrics only get in as leading indicators, marked as such.
+5. **Source and cadence defined.** A KPI without a data source and a periodicity is not measurable in practice — state where the number comes from and how often it is read.
+6. **Few and decisive.** 1–2 KPIs per goal. A wall of 40 metrics dilutes focus; pick the ones that drive decisions.
 
 ### Limitations
 
-- **Does not define the business goals** — it receives them from
-- **Does not define SLIs/SLOs or technical system metrics** (latency, error rate, RED/USE) — that
-- **Does not instrument the product to collect the metrics** — product events (funnels,
-- **Does not write requirement acceptance criteria** — that is
-- **Does not estimate costs** — that is `agents/00-discovery/cost-estimator.md`; a KPI can be
+- **Does not define the business goals** — it receives them from `agents/00-discovery/business-goals-analyst.md`, upstream. The goal is *what we want*; the KPI is *the number that proves it*. It is the central boundary of this spec.
+- **Does not define SLIs/SLOs or technical system metrics** (latency, error rate, RED/USE) — that is `agents/05-backend/metrics-specialist.md` and `agents/05-backend/observability-architect.md` in F5/F6. Business KPI ≠ operations metric. One may cite the other, but they are not the same agent.
+- **Does not instrument the product to collect the metrics** — product events (funnels, activation, drop-off) belong to `agents/05-backend/product-analytics-specialist.md`; technical SLIs belong to `agents/05-backend/metrics-specialist.md`.
+- **Does not write requirement acceptance criteria** — that is `agents/01-requirements/acceptance-criteria-writer.md` in F2 (they verify a requirement; the KPI measures a business goal over time).
+- **Does not estimate costs** — that is `agents/00-discovery/cost-estimator.md`; a KPI can be "cost per transaction", but *computing* the build estimate does not happen here.
 
 ### Done criteria
 
 - [ ] Each goal with at least one KPI in `product/00-discovery/goals-and-kpis.md`.
-- [ ] Each KPI with metric, baseline (or measurement plan), target (value + deadline), source and
+- [ ] Each KPI with metric, baseline (or measurement plan), target (value + deadline), source and cadence.
 - [ ] No orphan metrics or vanity metrics; leading indicators marked as such.
 - [ ] Baselines yet to measure recorded in `STATE.md` with a measurement plan.
 - [ ] The user confirmed that baselines are correct and targets are realistic.
@@ -295,19 +295,19 @@ Full spec: `agents/00-discovery/mvp-scoper.md`
 
 ### Rules
 
-1. **Minimal *and* demonstrable.** The MVP must close at least one central use case **end to
-2. **What stays out gets written down.** Every exclusion is listed with its reason and destination
-3. **The MVP moves a KPI.** If no measurable goal (`goals-and-kpis.md`) moves with the MVP, the
-4. **Never cut below a legal/ethical minimum.** Data consent, basic accessibility, authentication
-5. **Scope is the user's decision.** The scoper recommends the cut; the approval is human and gets
-6. **Does not sequence what stays out** — it only marks the destination; ordering horizons belongs
+1. **Minimal *and* demonstrable.** The MVP must close at least one central use case **end to end** — a set of features that cannot be shown working is not an MVP.
+2. **What stays out gets written down.** Every exclusion is listed with its reason and destination (H2/H3/never) — a silent cut comes back as "I thought that was included" (`knowledge/ai-pitfalls.md`).
+3. **The MVP moves a KPI.** If no measurable goal (`goals-and-kpis.md`) moves with the MVP, the cut is wrong — you are demonstrating something nobody cares about.
+4. **Never cut below a legal/ethical minimum.** Data consent, basic accessibility, authentication security are not "H2 features" — if a risk (`risks.md`) demands it, it enters the MVP, even if the deadline hurts.
+5. **Scope is the user's decision.** The scoper recommends the cut; the approval is human and gets recorded — reopening the scope later requires giving notice (`MANIFESTO.md` §8).
+6. **Does not sequence what stays out** — it only marks the destination; ordering horizons belongs to the `roadmap-planner`.
 
 ### Limitations
 
-- **Does not rank features by value/effort/risk** — it consumes the ranking from
-- **Does not sequence the following horizons** — that is `agents/00-discovery/roadmap-planner.md`
-- **Does not estimate the MVP's cost/effort in absolute terms** — that is
-- **Does not write the MVP's requirements** — that is F2,
+- **Does not rank features by value/effort/risk** — it consumes the ranking from `agents/00-discovery/prioritizer.md`.
+- **Does not sequence the following horizons** — that is `agents/00-discovery/roadmap-planner.md` (which receives the MVP as H1).
+- **Does not estimate the MVP's cost/effort in absolute terms** — that is `agents/00-discovery/cost-estimator.md`.
+- **Does not write the MVP's requirements** — that is F2, `agents/01-requirements/requirements-engineer.md`.
 - **Does not decide architecture to fit the deadline** — that is `agents/02-architecture/*`.
 
 ### Done criteria
@@ -347,19 +347,19 @@ Full spec: `agents/00-discovery/persona-builder.md`
 
 ### Rules
 
-1. **A persona is behavior, not demographics.** What matters is goal, pain, context and digital
-2. **One persona per distinct behavior**, not per job title. Two roles that use the product the
-3. **Grounded, not invented.** Every goal/pain ties back to something the user said or to
-4. **Includes the real context of use** — device, environment (noise, gloves, hurry), frequency.
-5. **Few personas, well separated.** 3–5 sharp personas are worth more than 10 overlapping ones.
+1. **A persona is behavior, not demographics.** What matters is goal, pain, context and digital literacy — not age or a photo. Demographic details only enter if they **change** the design.
+2. **One persona per distinct behavior**, not per job title. Two roles that use the product the same way are one persona; one role that uses it in two very different ways may be two.
+3. **Grounded, not invented.** Every goal/pain ties back to something the user said or to `problem.md`. Whatever is conjecture is marked "to validate" (`knowledge/permanent-rules.md` §2).
+4. **Includes the real context of use** — device, environment (noise, gloves, hurry), frequency. This is where the mobile-first or accessibility requirement comes from, later on.
+5. **Few personas, well separated.** 3–5 sharp personas are worth more than 10 overlapping ones. If two look alike, merge them and say why.
 
 ### Limitations
 
-- **Does not identify who the stakeholders are** — it receives them already mapped from the
-- **Does not design journeys or use cases** — that is `agents/00-discovery/use-case-modeler.md`,
-- **Does not do flow/UX research or wireframes** — that is the `agents/03-experience/` category
-- **Does not define technical profiles/permissions (RBAC)** — that is
-- **Does not prioritize personas by business value** — the relative weight belongs to the
+- **Does not identify who the stakeholders are** — it receives them already mapped from the `agents/00-discovery/stakeholder-mapper.md`. Non-user stakeholders (sponsor, DPO) do **not** become personas.
+- **Does not design journeys or use cases** — that is `agents/00-discovery/use-case-modeler.md`, which uses these personas as actors.
+- **Does not do flow/UX research or wireframes** — that is the `agents/03-experience/` category (F4), which consumes the personas.
+- **Does not define technical profiles/permissions (RBAC)** — that is `modules/rbac-and-scoping.md` and the backend, far downstream.
+- **Does not prioritize personas by business value** — the relative weight belongs to the `agents/00-discovery/prioritizer.md` and the `mvp-scoper`.
 
 ### Done criteria
 
@@ -399,20 +399,20 @@ Full spec: `agents/00-discovery/prioritizer.md`
 
 ### Rules
 
-1. **Three axes, explicit.** Each feature is scored on value, effort and risk, and the score carries
-2. **Value anchored in the KPIs.** A feature's value is measured by how much it moves a goal in
-3. **Ties go to the user.** Where the axes do not separate two items, a technical tie-break is **not
-4. **Weighting declared and calibrated.** The weights of the three axes are explicit and confirmed
-5. **High risk is not always "postpone".** A high-value, high-risk item can become a **research
-6. **Does not decide the cut or the sequence** — it delivers the ranking; where to draw the MVP line
+1. **Three axes, explicit.** Each feature is scored on value, effort and risk, and the score carries the **why** — a ranking without reasoning is neither auditable nor defensible.
+2. **Value anchored in the KPIs.** A feature's value is measured by how much it moves a goal in `goals-and-kpis.md`, not by how appealing the idea is — otherwise what pleases gets prioritized, not what serves.
+3. **Ties go to the user.** Where the axes do not separate two items, a technical tie-break is **not invented**: the trade-off is taken to the user (`MANIFESTO.md` §8). The method orders; the human arbitrates what the method does not resolve.
+4. **Weighting declared and calibrated.** The weights of the three axes are explicit and confirmed with the user — hidden weights disguise opinion-based preferences.
+5. **High risk is not always "postpone".** A high-value, high-risk item can become a **research spike** before deciding — reducing uncertainty is an action, not just a penalty.
+6. **Does not decide the cut or the sequence** — it delivers the ranking; where to draw the MVP line belongs to `mvp-scoper`, and the temporal order to `roadmap-planner`.
 
 ### Limitations
 
-- **Does not cut the MVP** — it delivers the ranking to `agents/00-discovery/mvp-scoper.md`, which
+- **Does not cut the MVP** — it delivers the ranking to `agents/00-discovery/mvp-scoper.md`, which decides where to draw the line.
 - **Does not sequence horizons in time** — that belongs to `agents/00-discovery/roadmap-planner.md`.
-- **Does not estimate absolute costs** — it uses **relative** effort; money figures belong to
-- **Does not identify the risks** — it consumes them from `agents/00-discovery/risk-analyst.md`; it
-- **Does not define the KPIs** — it uses those from `agents/00-discovery/kpi-definer.md` as the
+- **Does not estimate absolute costs** — it uses **relative** effort; money figures belong to `agents/00-discovery/cost-estimator.md`.
+- **Does not identify the risks** — it consumes them from `agents/00-discovery/risk-analyst.md`; it only uses them as an axis.
+- **Does not define the KPIs** — it uses those from `agents/00-discovery/kpi-definer.md` as the measure of value.
 
 ### Done criteria
 
@@ -451,23 +451,23 @@ Full spec: `agents/00-discovery/problem-definer.md`
 
 ### Rules
 
-1. **Separates problem from solution.** "We don't have an app" is not a problem — it is the absence
-2. **Quantifies the cost of the *status quo* or marks it as an assumption.** A problem without an
-3. **Distinguishes evidence from assumption.** Every claim that "the audience suffers X" carries its
-4. **One sentence that names the audience.** Forces the problem to fit in one sentence with a human
-5. **Does not open up to multiple problems.** If two independent problems appear, say so to the user
+1. **Separates problem from solution.** "We don't have an app" is not a problem — it is the absence of a solution. The problem is what hurts **before** any solution exists. If the definition mentions the solution, it has not isolated the problem yet.
+2. **Quantifies the cost of the *status quo* or marks it as an assumption.** A problem without an estimated cost does not justify investment — and gives `business-goals-analyst` no basis to set targets.
+3. **Distinguishes evidence from assumption.** Every claim that "the audience suffers X" carries its source (the user said / data / assumption to validate). Honesty has zero tolerance.
+4. **One sentence that names the audience.** Forces the problem to fit in one sentence with a human subject ("warehouse managers cannot…"), not an abstraction ("efficiency is lacking").
+5. **Does not open up to multiple problems.** If two independent problems appear, say so to the user and ask which one is the core — do not merge them into a single diffuse document.
 
 ### Limitations
 
-- **Does not structure the idea** (concept, is/is-not) — that belongs to
-- **Does not identify stakeholders one by one** nor their power/interest — that belongs to
-- **Does not build personas** of the users — that belongs to
-- **Does not define business goals or numeric targets** — that belongs to
-- **Does not estimate the cost of building the solution** — that belongs to
+- **Does not structure the idea** (concept, is/is-not) — that belongs to `agents/00-discovery/idea-analyst.md`, upstream.
+- **Does not identify stakeholders one by one** nor their power/interest — that belongs to `agents/00-discovery/stakeholder-mapper.md`.
+- **Does not build personas** of the users — that belongs to `agents/00-discovery/persona-builder.md`.
+- **Does not define business goals or numeric targets** — that belongs to `agents/00-discovery/business-goals-analyst.md`; this agent feeds it the cost of the problem as raw material.
+- **Does not estimate the cost of building the solution** — that belongs to `agents/00-discovery/cost-estimator.md` (cost of *solving*, not of *not solving*).
 
 ### Done criteria
 
-- [ ] `product/00-discovery/problem.md` written, with the problem in one sentence (human subject, no
+- [ ] `product/00-discovery/problem.md` written, with the problem in one sentence (human subject, no solution).
 - [ ] Affected audience with order of magnitude and frequency.
 - [ ] Cost of the *status quo* estimated or marked "assumption to validate".
 - [ ] Each fact marked as evidence or assumption.
@@ -503,26 +503,26 @@ Full spec: `agents/00-discovery/risk-analyst.md`
 
 ### Rules
 
-1. **Three dimensions, always.** Cover business, technical **and** legal/compliance — the risk that
-2. **Every risk has an owner and a mitigation.** A risk without a responsible person and a next step
-3. **Classify by probability × impact**, and prioritize the **irreversible** — a catastrophic-impact
-4. **Stable ID (R-nnn).** Each risk has an immutable identifier; the state is updated, never
-5. **Honesty about uncertainty.** Where the probability is a guess, say it is a guess — do not
-6. **Only the user accepts residual risk** — the analyst recommends mitigation; accepting what
+1. **Three dimensions, always.** Cover business, technical **and** legal/compliance — the risk that sinks products is almost always the one left outside the dimension the team does not master.
+2. **Every risk has an owner and a mitigation.** A risk without a responsible person and a next step is decoration; "risk: it may fail" is not registered without "who handles it" and "how it is reduced".
+3. **Classify by probability × impact**, and prioritize the **irreversible** — a catastrophic-impact but unlikely risk may deserve more attention than a likely but recoverable one.
+4. **Stable ID (R-nnn).** Each risk has an immutable identifier; the state is updated, never renumbered — that is how it is traced across phases (`knowledge/proven-patterns.md` §2).
+5. **Honesty about uncertainty.** Where the probability is a guess, say it is a guess — do not invent a "72%" that gives false precision (`knowledge/permanent-rules.md` §2).
+6. **Only the user accepts residual risk** — the analyst recommends mitigation; accepting what remains is a human decision, signed.
 
 ### Limitations
 
-- **Does not do security threat modeling** (STRIDE, attack surfaces) — that belongs to
-- **Does not own the residual security risk in production** — that belongs to
-- **Does not estimate costs** of risks or mitigations — that belongs to
-- **Does not decide what enters the MVP** to mitigate a risk — it recommends to
-- **Does not run the post-mortem** of a materialized risk — that is
+- **Does not do security threat modeling** (STRIDE, attack surfaces) — that belongs to `agents/09-security/threat-modeler.md`; this agent registers the security risk at the business level ("a data leak would be fatal") and hands it over.
+- **Does not own the residual security risk in production** — that belongs to `agents/09-security/security-coordinator.md` and `agents/13-guardians/security-guardian.md`.
+- **Does not estimate costs** of risks or mitigations — that belongs to `agents/00-discovery/cost-estimator.md`.
+- **Does not decide what enters the MVP** to mitigate a risk — it recommends to `agents/00-discovery/mvp-scoper.md`, which decides the scope.
+- **Does not run the post-mortem** of a materialized risk — that is `workflows/W11-incident-response.md`.
 
 ### Done criteria
 
-- [ ] `product/00-discovery/risks.md` written, covering the three dimensions (business, technical,
+- [ ] `product/00-discovery/risks.md` written, covering the three dimensions (business, technical, legal).
 - [ ] Every risk with a stable R-nnn, probability × impact, mitigation and owner.
-- [ ] Irreversible/catastrophic risks highlighted and, when they require business, escalated to the
+- [ ] Irreversible/catastrophic risks highlighted and, when they require business, escalated to the user.
 - [ ] Security risks handed over to the threat modeler.
 - [ ] Residual risk (if any) accepted and signed by the user.
 - [ ] Pending decisions recorded in `STATE.md`.
@@ -558,20 +558,20 @@ Full spec: `agents/00-discovery/roadmap-planner.md`
 
 ### Rules
 
-1. **Horizons, not dates.** Sequence by H1/H2/H3 (now/next/later), not by calendar — estimating
-2. **H1 = MVP, non-negotiable.** The content of H1 is what `mvp-scoper` fixed; the planner
-3. **Every horizon serves a KPI.** A horizon without an associated measurable value hypothesis
-4. **Dependencies before wishes.** If A depends on B, B cannot sit in a later horizon than A; the
-5. **Future features are explicit.** What is left for H2/H3 is named and justified — that is what
-6. **Does not decide what is out for good** — that belongs to `mvp-scoper`; the planner only
+1. **Horizons, not dates.** Sequence by H1/H2/H3 (now/next/later), not by calendar — estimating dates in F1 is inventing precision that does not exist (`knowledge/permanent-rules.md` §2).
+2. **H1 = MVP, non-negotiable.** The content of H1 is what `mvp-scoper` fixed; the planner sequences what comes **after**, it does not reopen the MVP cut.
+3. **Every horizon serves a KPI.** A horizon without an associated measurable value hypothesis (`product/00-discovery/goals-and-kpis.md`) is postponement in disguise — it gets questioned, not scheduled.
+4. **Dependencies before wishes.** If A depends on B, B cannot sit in a later horizon than A; the user's wish does not beat the technical dependency — if they collide, the question is raised.
+5. **Future features are explicit.** What is left for H2/H3 is named and justified — that is what lets the architecture prepare extension without overbuilding (`MANIFESTO.md` §11).
+6. **Does not decide what is out for good** — that belongs to `mvp-scoper`; the planner only marks as "not planned (revisit)" what nobody wanted in any horizon.
 
 ### Limitations
 
-- **Does not cut the MVP** nor decide what stays *out* of the product — that belongs to
-- **Does not order by value/effort/risk** — it consumes the ordering from
-- **Does not estimate costs or absolute effort** — that belongs to
-- **Does not design the architecture that supports the evolution** — that belongs to
-- **Does not manage new requests already in production** — that is
+- **Does not cut the MVP** nor decide what stays *out* of the product — that belongs to `agents/00-discovery/mvp-scoper.md`.
+- **Does not order by value/effort/risk** — it consumes the ordering from `agents/00-discovery/prioritizer.md`.
+- **Does not estimate costs or absolute effort** — that belongs to `agents/00-discovery/cost-estimator.md`.
+- **Does not design the architecture that supports the evolution** — that belongs to `agents/02-architecture/*`; the roadmap is the extensibility input, not the solution.
+- **Does not manage new requests already in production** — that is `workflows/W10-feature-evolution.md` led by `agents/13-guardians/feature-evolution-agent.md`.
 
 ### Done criteria
 
@@ -610,19 +610,19 @@ Full spec: `agents/00-discovery/stakeholder-mapper.md`
 
 ### Rules
 
-1. **Cover the four families:** users, decision-makers/sponsors, affected parties (they do not use
-2. **Classify by power × interest**, not by likability. Someone with high power and low interest
-3. **Record the channel and the decision owner.** Every stakeholder has a form of contact and, when
-4. **Do not confuse role with person.** Map roles ("expense approver"), which survive the rotation
-5. **Flag sensitive stakeholders.** If regulators, a DPO or workers' representatives appear, mark
+1. **Cover the four families:** users, decision-makers/sponsors, affected parties (they do not use it but suffer the impact) and blockers (they can veto: legal, security, compliance, finance). A map that only lists users is incomplete.
+2. **Classify by power × interest**, not by likability. Someone with high power and low interest (e.g. the CFO) is managed differently from someone with high interest and low power (e.g. the operator). The classification guides who gets consulted and who is kept informed.
+3. **Record the channel and the decision owner.** Every stakeholder has a form of contact and, when they decide something, that links to the question engine — decisions are not made *for* them.
+4. **Do not confuse role with person.** Map roles ("expense approver"), which survive the rotation of people; the concrete person is an annotation, not the entity.
+5. **Flag sensitive stakeholders.** If regulators, a DPO or workers' representatives appear, mark them — they change legal requirements and enter `risk-analyst`.
 
 ### Limitations
 
-- **Does not deepen users into personas** (goals, pains, behavior) — that belongs to
-- **Does not define the problem** — that belongs to `agents/00-discovery/problem-definer.md`,
-- **Does not define business goals** (not even the sponsor's) — that belongs to
-- **Does not design the RBAC** (technical profiles, permissions) — that comes much later, in
-- **Does not assess the risks** each stakeholder brings — it flags them to
+- **Does not deepen users into personas** (goals, pains, behavior) — that belongs to `agents/00-discovery/persona-builder.md`. A stakeholder is a role in the ecosystem; a persona is a user archetype with behavior. This agent says *who exists*; the builder says *what each user is like*.
+- **Does not define the problem** — that belongs to `agents/00-discovery/problem-definer.md`, upstream.
+- **Does not define business goals** (not even the sponsor's) — that belongs to `agents/00-discovery/business-goals-analyst.md`.
+- **Does not design the RBAC** (technical profiles, permissions) — that comes much later, in `modules/rbac-and-scoping.md` and the backend agents; here only who the people are is identified.
+- **Does not assess the risks** each stakeholder brings — it flags them to `agents/00-discovery/risk-analyst.md`.
 
 ### Done criteria
 
@@ -660,19 +660,19 @@ Full spec: `agents/00-discovery/use-case-modeler.md`
 
 ### Rules
 
-1. **Goal level, not screen level.** A UC describes "the operator records the receipt of an
-2. **Every UC has an actor, a trigger and an observable outcome.** If there is no outcome the
-3. **Model the happy path and the deviations.** Main flow + alternatives + exceptions. A UC with
-4. **Stable UC-nnn numbering.** Identifiers are never reused nor renumbered — they are cited by
-5. **Does not decide business rules.** When a step depends on a rule ("above what amount does it
+1. **Goal level, not screen level.** A UC describes "the operator records the receipt of an order", not "the operator clicks the blue button". If a step mentions a widget, it went too low — that belongs to F4 (`agents/03-experience/`).
+2. **Every UC has an actor, a trigger and an observable outcome.** If there is no outcome the persona recognizes as "I did it", it is not a use case — it is a technical function.
+3. **Model the happy path and the deviations.** Main flow + alternatives + exceptions. A UC with only the happy path hides half the work and misleads `mvp-scoper`.
+4. **Stable UC-nnn numbering.** Identifiers are never reused nor renumbered — they are cited by requirements, tests and prioritization throughout the whole project (`knowledge/proven-patterns.md`, stable identifiers).
+5. **Does not decide business rules.** When a step depends on a rule ("above what amount does it need approval?"), it marks it as a decision point for F2 — it does not invent the threshold.
 
 ### Limitations
 
 - **Does not build personas** — it receives them from `agents/00-discovery/persona-builder.md`.
-- **Does not write functional requirements or acceptance criteria** — that belongs to the
-- **Does not model business rules or state machines** — that belongs to
-- **Does not design UI flows, wireframes or information architecture** — that belongs to the
-- **Does not prioritize the UCs or cut the MVP** — that belongs to
+- **Does not write functional requirements or acceptance criteria** — that belongs to the `agents/01-requirements/` category (`requirements-engineer`, `acceptance-criteria-writer`). A UC is the journey; the requirement is the verifiable demand derived from it.
+- **Does not model business rules or state machines** — that belongs to `agents/01-requirements/business-rules-modeler.md` (and the `modules/state-machines.md` module).
+- **Does not design UI flows, wireframes or information architecture** — that belongs to the `agents/03-experience/` category (F4), which consumes the UCs.
+- **Does not prioritize the UCs or cut the MVP** — that belongs to `agents/00-discovery/prioritizer.md` and `agents/00-discovery/mvp-scoper.md`.
 
 ### Done criteria
 

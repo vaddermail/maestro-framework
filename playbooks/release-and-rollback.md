@@ -16,6 +16,12 @@ always requires explicit human approval — never delegable to agents.
 
 ## Steps
 
+0. **Runbook derived from the diff.** From the `git log`/diff between the line in production and
+   what is about to ship, list new environment keys, migrations, new commands, the order of
+   scheduled tasks, the steps, and the rollback — and cross-check against the environment example
+   (this has found missing keys that a manual read did not catch). The runbook is never written
+   from memory.
+
 1. **Confirm the gate preconditions.** `checklists/go-live.md` (first release) or green
    quality/security pipeline (subsequent releases). *Verified* by the completed checklist.
    *If it fails*: do not proceed — fix the missing phase first.
@@ -48,7 +54,8 @@ always requires explicit human approval — never delegable to agents.
    profile and the lowest-impact window) with the rollback state from step 4 ready to trigger.
    *Verified* when the delivery pipeline finishes green.
 
-8. **Post-deploy verification: real live smoke test.** Exercise the critical flows in the real
+8. **Post-deploy verification: real live smoke test.** Warm up first (`pipelines/cd-delivery.md`
+   stage 8). Exercise the critical flows in the real
    production environment, not simulated. *Verified* with concrete evidence attached
    (output/screenshot). *If red*: trigger the step 4 rollback immediately — never "look at it
    tomorrow".

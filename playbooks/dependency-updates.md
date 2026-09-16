@@ -46,7 +46,15 @@ needs a newer version. Majors with breaking changes always go up to the user.
    dependency affects, in the target environment. *Verified* with concrete evidence (output/capture)
    — not "it should work".
 
-8. **Decide majors with breaking changes.** Never by drift: write the plan (migration cost, gain,
+8. **Decide majors with breaking changes.** If the target is more than one major away, climb
+   **one step at a time**, full harness green at each step before the next — each incompatibility
+   stays isolated in the version that introduced it, instead of a single jump that confuses
+   everything. When the upgrade lives for weeks on a branch alongside the line in production: a
+   fix born on the base line climbs across by merge, whatever is born on the upgrade branch comes
+   down by cherry-pick, merges are done with `--no-commit`, and the list of commits still to port
+   (`git log --cherry-pick --right-only --no-merges base...upgrade`) is empty before every deploy;
+   the transition plan states what survives the cutover (sessions, devices, cache, queues) and is
+   rehearsed with live sessions. Never by drift: write the plan (migration cost, gain,
    suggested window) and raise it to the user via `core/question-engine.md`. *Verified* by the
    explicit decision recorded before applying. *If the major reaches EOL with no replacement*:
    escalate as a future security risk, not as routine.

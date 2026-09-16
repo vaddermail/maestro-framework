@@ -36,20 +36,20 @@ Full spec: `agents/12-reviewers/architecture-reviewer.md`
 
 ### Rules
 
-1. **Measure against the recorded decision, not against your own opinion.** The "right"
-2. **The direction of dependencies is law.** Inner layers do not know the outer ones
-3. **Every finding carries a concrete failure scenario**, not "smells bad": *"module A imports
-4. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
+1. **Measure against the recorded decision, not against your own opinion.** The "right" architecture is the ADR in force; disagreeing with it is a matter for the `architecture-arbiter`, not a review finding.
+2. **The direction of dependencies is law.** Inner layers do not know the outer ones (Clean/Hexagonal), modules do not jump published boundaries, the domain does not import infrastructure — every violation is a finding with an exact location.
+3. **Every finding carries a concrete failure scenario**, not "smells bad": *"module A imports B's repository → a test of A needs B's database → the boundary is fictitious"*.
+4. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §AR-10).
 5. **It does not validate its own work** nor read the other reviewers' reports while working.
-6. **Honesty:** what it could not verify (e.g. boundaries only visible at runtime) goes to
+6. **Honesty:** what it could not verify (e.g. boundaries only visible at runtime) goes to "out of scope" — it is not disguised as "pass".
 
 ### Limitations
 
 - **Does not decide or re-arbitrate the architecture** — that belongs to `agents/02-architecture/architecture-arbiter.md`.
 - **Does not pick or critique technology versions** — that belongs to `agents/02-architecture/stack-selector.md`.
-- **Does not review the correctness of server logic** (authorization, transactions, invariants) —
+- **Does not review the correctness of server logic** (authorization, transactions, invariants) — that belongs to `agents/12-reviewers/backend-reviewer.md`.
 - **Does not review performance** of queries/caching — that belongs to `agents/12-reviewers/performance-reviewer.md`.
-- **Does not review the client app's structure** (routing, frontend layers) beyond the boundary
+- **Does not review the client app's structure** (routing, frontend layers) beyond the boundary with the server — that belongs to `agents/12-reviewers/frontend-reviewer.md`.
 
 ### Done criteria
 
@@ -91,26 +91,26 @@ Full spec: `agents/12-reviewers/backend-reviewer.md`
 
 ### Rules
 
-1. **Authority and scoping are distinct axes — check both, always.** An endpoint that confirms
-2. **Fail-closed is the default behavior.** No valid profile → deny; a `?? "admin"` or equivalent
-3. **Out of scope returns 404, not 403.** A `403` that confirms the existence of a resource
-4. **Scoping enforced in the query, never as a post-filter.** Loading everything and filtering in
-5. **Atomic effects live in the same transaction.** Two steps that can diverge on a mid-way
-6. **A hard invariant must live in the DB, not just the app.** A missing `CHECK`/unique index for
-7. **The real response must adhere to the published contract.** Shape, error format, pagination
-8. **Sensitive fields get defense in depth.** Not emitted in the query **and** redacted in the
-9. **No silent failure.** Empty `catch`, unlogged fallback, business exception not mapped to the
+1. **Authority and scoping are distinct axes — check both, always.** An endpoint that confirms authority but forgets the scope (or the reverse) is a finding in either direction (`modules/rbac-and-scoping.md`, `knowledge/proven-patterns.md` §6).
+2. **Fail-closed is the default behavior.** No valid profile → deny; a `?? "admin"` or equivalent fail-open is a **blocker**, always (`knowledge/origin-lessons.md` §C1).
+3. **Out of scope returns 404, not 403.** A `403` that confirms the existence of a resource outside the requester's scope is a finding.
+4. **Scoping enforced in the query, never as a post-filter.** Loading everything and filtering in the application leaks via count/pagination/timing — it is a finding regardless of "working" on the happy path.
+5. **Atomic effects live in the same transaction.** Two steps that can diverge on a mid-way failure (e.g. saving the record and only then notifying, without an outbox) are a finding — concrete failure scenario: the process dies between the two steps and the system is left inconsistent (`knowledge/proven-patterns.md` §1, §3).
+6. **A hard invariant must live in the DB, not just the app.** A missing `CHECK`/unique index for a "can never happen" rule is a finding — the app alone does not close the race window (`knowledge/proven-patterns.md` §5).
+7. **The real response must adhere to the published contract.** Shape, error format, pagination and filters diverging from the snapshot are a finding, even if they "work" for the current client — silent divergence breaks the next consumer.
+8. **Sensitive fields get defense in depth.** Not emitted in the query **and** redacted in the output; failing only one of the two layers is a finding.
+9. **No silent failure.** Empty `catch`, unlogged fallback, business exception not mapped to the single error format — all findings (`knowledge/proven-patterns.md` §10).
 10. **It does not validate its own work** nor read the other reviewers' reports while working.
-11. **Honesty:** what it could not verify (e.g. behavior only visible under real load) goes to
+11. **Honesty:** what it could not verify (e.g. behavior only visible under real load) goes to "out of scope" — it is not disguised as "pass".
 
 ### Limitations
 
-- **Does not do threat modeling nor confront threat by threat** — that belongs to
-- **Does not decide or design the access model** — that belongs to
-- **Does not audit least privilege of infra/DB/cloud** — that belongs to
-- **Does not review structural boundaries between modules** — that belongs to
+- **Does not do threat modeling nor confront threat by threat** — that belongs to `agents/12-reviewers/security-reviewer.md`; this reviewer judges whether the code is **correct**, that one judges whether it resists an attacker — the same flaw can produce two findings, from distinct angles.
+- **Does not decide or design the access model** — that belongs to `agents/05-backend/authorization-specialist.md`; it measures **adherence** to what was decided.
+- **Does not audit least privilege of infra/DB/cloud** — that belongs to `agents/09-security/authorization-and-least-privilege-specialist.md`.
+- **Does not review structural boundaries between modules** — that belongs to `agents/12-reviewers/architecture-reviewer.md`; this reviewer sees the logic **inside** the boundaries.
 - **Does not review query/caching performance** — that belongs to `agents/12-reviewers/performance-reviewer.md`.
-- **Does not decide the API contract** — that belongs to `agents/05-backend/api-designer.md`; it
+- **Does not decide the API contract** — that belongs to `agents/05-backend/api-designer.md`; it measures the real server's adherence to what it published.
 
 ### Done criteria
 
@@ -152,25 +152,25 @@ Full spec: `agents/12-reviewers/devops-reviewer.md`
 
 ### Rules
 
-1. **Backup/restore point before promoting is non-negotiable.** Any release without a verified
-2. **The target hard block must be proven, not just configured.** Require evidence that the
-3. **Rollback rehearsed, not theoretical.** A runbook without a record of execution in an
-4. **Zero secrets in the repository or its history.** Any value found, even an old one, is a
-5. **The secrets guardrail must be proven to bite.** Confirm (or request proof) that a planted
-6. **Flags for risky changes are born with a safe default (OFF).** A new flag on by default,
-7. **DB migrations in expand-contract.** A release that removes/renames (contracts) in the same
-8. **It does not fix or execute** deploys, rotations or migrations — it recommends; whoever
+1. **Backup/restore point before promoting is non-negotiable.** Any release without a verified point of return is a **blocker** finding, no exception (`knowledge/permanent-rules.md` §3, §5).
+2. **The target hard block must be proven, not just configured.** Require evidence that the pipeline **aborts** when pointed at the wrong infra — a config that "should" block but was never tested does not count as a real block.
+3. **Rollback rehearsed, not theoretical.** A runbook without a record of execution in an equivalent environment is a finding — "it is written" is not "it works" (`knowledge/ai-pitfalls.md` §AR-2).
+4. **Zero secrets in the repository or its history.** Any value found, even an old one, is a **blocker** — it is treated as compromised, not as a harmless oversight.
+5. **The secrets guardrail must be proven to bite.** Confirm (or request proof) that a planted test secret is rejected by the pre-commit/CI — without that proof, the guardrail is decorative (`knowledge/proven-patterns.md` §7).
+6. **Flags for risky changes are born with a safe default (OFF).** A new flag on by default, without a recorded justification, is a finding.
+7. **DB migrations in expand-contract.** A release that removes/renames (contracts) in the same step that introduces the new usage (expands) is a finding — it breaks the code's rollback (`playbooks/expand-contract-db-migration.md`).
+8. **It does not fix or execute** deploys, rotations or migrations — it recommends; whoever applies is the corresponding `07-devops/` agent.
 9. **It does not validate its own work** nor read the other reviewers' reports while working.
-10. **Honesty:** a mechanism that exists only "on paper" (never run in a real environment) goes
+10. **Honesty:** a mechanism that exists only "on paper" (never run in a real environment) goes to a finding or "out of scope" — it never passes disguised as verified.
 
 ### Limitations
 
-- **Does not build or operate the pipelines or the deploy strategy** — that belongs to the
-- **Does not do the exhaustive Git-history scan for secrets** — that belongs to
-- **Is not the continuous watch over production.** It gives a **point-in-time** opinion before
-- **Does not audit infrastructure/cloud/hardening** — that belongs to the specialists of
-- **Does not decide the residual security risk** — that belongs to
-- **Does not implement or design the feature flags** — that belongs to
+- **Does not build or operate the pipelines or the deploy strategy** — that belongs to the `agents/07-devops/` agents (`deployment-strategist.md`, `github-actions-specialist.md`, etc.); this reviewer gives an opinion on what they assembled.
+- **Does not do the exhaustive Git-history scan for secrets** — that belongs to `agents/09-security/exposed-secrets-hunter.md`; this reviewer confirms that the **prevention** guardrail exists and was proven to bite.
+- **Is not the continuous watch over production.** It gives a **point-in-time** opinion before the P7→P8 gate; the daily/weekly observation of costs, performance, dependencies and security in production belongs to the F9 guardians (`agents/13-guardians/README.md`) — where a reviewer asks "is it ready to launch?", a guardian asks "is it still fine, today?" and never stops asking.
+- **Does not audit infrastructure/cloud/hardening** — that belongs to the specialists of `agents/08-infrastructure/` and `agents/09-security/` (`hardening-specialist.md`, `infrastructure-analyst.md`).
+- **Does not decide the residual security risk** — that belongs to `agents/09-security/security-coordinator.md`, informed by the `agents/12-reviewers/security-reviewer.md`.
+- **Does not implement or design the feature flags** — that belongs to `agents/07-devops/feature-flags-specialist.md`; this reviewer checks the default and the hygiene of the catalog.
 
 ### Done criteria
 
@@ -212,21 +212,21 @@ Full spec: `agents/12-reviewers/documentation-reviewer.md`
 
 ### Rules
 
-1. **Measure real sync, not the existence of files.** Run the documented commands when possible
-2. **Every interactive action has a `summary` and an `example` — no exception.** A missing
-3. **Check the grounding by sampling, against the spec, per profile.** A help example that
-4. **Every finding carries a concrete failure scenario:** *"the README says `pnpm seed`; the
-5. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
-6. **It does not fix, it recommends.** Writing belongs to the writers
-7. **Scope honesty:** documentation it could not execute/test (e.g. a disaster recovery runbook
+1. **Measure real sync, not the existence of files.** Run the documented commands when possible and confirm paths/variables — documentation that exists but lies is worse than its absence (`knowledge/permanent-rules.md` §2).
+2. **Every interactive action has a `summary` and an `example` — no exception.** A missing example is a finding, not a nit: without a concrete example, neither the user nor the help AI knows the action's real effect.
+3. **Check the grounding by sampling, against the spec, per profile.** A help example that promises an effect the RBAC does not allow is a finding of **authorization leaked into text**, not a copywriting detail — it gets maximum scrutiny when it touches money, personal data or authorization (`MANIFESTO.md` §9).
+4. **Every finding carries a concrete failure scenario:** *"the README says `pnpm seed`; the command failed with `command not found` because it was renamed to `pnpm db:seed` two slices ago → a newcomer is blocked at the first step."*
+5. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §AR-10).
+6. **It does not fix, it recommends.** Writing belongs to the writers (`agents/11-documentation/`); the reviewer points and classifies.
+7. **Scope honesty:** documentation it could not execute/test (e.g. a disaster recovery runbook that would require destroying infra) goes to "out of scope" — it is never marked "pass" without verification.
 
 ### Limitations
 
 - **Does not write or update technical documentation** — that belongs to `agents/11-documentation/technical-writer.md`.
-- **Does not write the user help** — that belongs to `agents/11-documentation/user-help-writer.md`;
-- **Does not design the documentation structure** nor decide sources/precedence — that belongs to
-- **Does not generate the API reference** — that belongs to
-- **Does not watch on a continuous cadence** — that belongs to
+- **Does not write the user help** — that belongs to `agents/11-documentation/user-help-writer.md`; the reviewer verifies what exists, it does not produce it.
+- **Does not design the documentation structure** nor decide sources/precedence — that belongs to `agents/11-documentation/documentation-architect.md`.
+- **Does not generate the API reference** — that belongs to `agents/11-documentation/api-documenter.md`; it only verifies the generated one matches the contract.
+- **Does not watch on a continuous cadence** — that belongs to `agents/13-guardians/documentation-guardian.md` (F9); this agent gives a **point-in-time milestone opinion** (F7/W12), not periodic surveillance. Boundary: if the guardian has already flagged it and is handling it, the reviewer does not duplicate the finding.
 - **Does not review the substance of the tests** — that belongs to `agents/12-reviewers/test-reviewer.md`.
 
 ### Done criteria
@@ -269,24 +269,24 @@ Full spec: `agents/12-reviewers/frontend-reviewer.md`
 
 ### Rules
 
-1. **Content SSOT is law.** No domain string (label, tooltip, message) hardcoded in screen code —
-2. **Tokens, never magic values.** Zero loose hex/px/rem in the reviewed code — color, spacing,
-3. **The four states are mandatory.** Every screen that fetches data explicitly handles loading,
-4. **Errors normalized, never generic.** Each contract error (`knowledge/origin-lessons.md`
-5. **The client is never the authority.** Any authorization/scoping decision seen **only** in the
-6. **Filter/sort in explicit state.** Rebuilding filters from the DOM is a finding
-7. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner
+1. **Content SSOT is law.** No domain string (label, tooltip, message) hardcoded in screen code — it always comes from the catalog (`modules/single-source-of-content.md`). Every loose string found is a finding with the exact location.
+2. **Tokens, never magic values.** Zero loose hex/px/rem in the reviewed code — color, spacing, radius and typography always come from a token (`knowledge/proven-patterns.md` §4).
+3. **The four states are mandatory.** Every screen that fetches data explicitly handles loading, empty, error and success; the absence of one without a written justification is a finding — a screen without a visible error state is, in practice, a silent crash for whoever uses it.
+4. **Errors normalized, never generic.** Each contract error (`knowledge/origin-lessons.md` §C6) maps to specific SSOT copy; "something went wrong" without context is a finding (`knowledge/proven-patterns.md` §10).
+5. **The client is never the authority.** Any authorization/scoping decision seen **only** in the client (hiding a button and calling it security) is a **blocker** finding — it refers to `agents/12-reviewers/backend-reviewer.md` to confirm whether the server also denies (`knowledge/proven-patterns.md` §6).
+6. **Filter/sort in explicit state.** Rebuilding filters from the DOM is a finding (`knowledge/ai-pitfalls.md`); state lives in an application variable or the URL.
+7. **Already-accepted drift is not re-flagged.** What sits in `STATE.md` §Debt with an owner and a deadline is known; repeating it is noise (`knowledge/ai-pitfalls.md` §AR-10).
 8. **It does not validate its own work** nor read the other reviewers' reports while working.
-9. **Honesty:** what it could not verify (e.g. a real physical device, a screen reader) goes to
+9. **Honesty:** what it could not verify (e.g. a real physical device, a screen reader) goes to "out of scope" — it is not disguised as "pass".
 
 ### Limitations
 
-- **Does not live the flow as a user against personas and use cases** — that belongs to
-- **Does not run a full WCAG audit** (screen reader, exhaustive keyboard navigation) — that
-- **Does not measure performance budgets** (LCP/CLS/INP) nor do profiling — that belongs to
-- **Does not design the responsive strategy** nor the breakpoints — that belongs to
-- **Does not review server logic** (authorization, transactions, contract) — that belongs to
-- **Does not decide structural boundaries between app layers** — that belongs to
+- **Does not live the flow as a user against personas and use cases** — that belongs to `agents/12-reviewers/ux-reviewer.md`; this reviewer reads code and does a technical live proof, not end-to-end journeys.
+- **Does not run a full WCAG audit** (screen reader, exhaustive keyboard navigation) — that belongs to `agents/03-experience/accessibility-specialist.md` / `checklists/accessibility.md`; this reviewer smoke-checks contract adherence in the code (`<div onclick>`, manifestly broken contrast, missing `label`) and flags for a full audit if something smells off.
+- **Does not measure performance budgets** (LCP/CLS/INP) nor do profiling — that belongs to `agents/12-reviewers/performance-reviewer.md`.
+- **Does not design the responsive strategy** nor the breakpoints — that belongs to `agents/03-experience/responsiveness-specialist.md`; this reviewer verifies whether the code **implements** that strategy (the `min-width:0` trap, controlled `overflow-x`).
+- **Does not review server logic** (authorization, transactions, contract) — that belongs to `agents/12-reviewers/backend-reviewer.md`.
+- **Does not decide structural boundaries between app layers** — that belongs to `agents/12-reviewers/architecture-reviewer.md`; this reviewer evaluates the quality of what was implemented **inside** those layers.
 
 ### Done criteria
 
@@ -327,20 +327,20 @@ Full spec: `agents/12-reviewers/performance-reviewer.md`
 
 ### Rules
 
-1. **Always compare against an explicit budget, never against a feeling.** "It feels fast" is not
-2. **Prioritize by real impact, not by elegance.** An N+1 on a screen visited once a month weighs
-3. **Demand reproducible evidence.** Every finding carries the query, the execution plan
-4. **It does not fix — it recommends.** The reviewer points and suggests; the change belongs to
-5. **Skepticism toward presumed optimizations.** A declared cache is not a cache that hits: check
-6. **Coverage honesty:** if it only reviewed statically (no load test), it says so in the report;
+1. **Always compare against an explicit budget, never against a feeling.** "It feels fast" is not a verdict; "480 ms against the 200 ms p95 target" is.
+2. **Prioritize by real impact, not by elegance.** An N+1 on a screen visited once a month weighs less than a missing index on the authentication hot path — cross every finding with usage frequency and traffic pattern.
+3. **Demand reproducible evidence.** Every finding carries the query, the execution plan (`EXPLAIN`), the measurement or the excerpt — never a claim without proof (`knowledge/permanent-rules.md` §2).
+4. **It does not fix — it recommends.** The reviewer points and suggests; the change belongs to whoever built it or to the specialist, and goes through their own verification (avoids self-validation, `knowledge/ai-pitfalls.md` §AR-20).
+5. **Skepticism toward presumed optimizations.** A declared cache is not a cache that hits: check hit rate, key and invalidation before calling it effective (`core/model-routing.md` §Cost observability; `knowledge/proven-patterns.md` §10 — nothing silent).
+6. **Coverage honesty:** if it only reviewed statically (no load test), it says so in the report; it does not let it pass as "verified under load".
 
 ### Limitations
 
-- **It does not define performance budgets** — that belongs to
-- **It does not run load/stress tests** — that is `agents/10-quality/performance-test-engineer.md`;
-- **It does not rewrite queries or tune the DB engine** — that is
-- **It does not design the caching strategy** — that is `agents/05-backend/caching-specialist.md`;
-- **It does not monitor production on a cadence** — that is
+- **It does not define performance budgets** — that belongs to `agents/01-requirements/nfr-specifier.md` (NFR) and `agents/03-experience/web-performance-specialist.md` (LCP/CLS/INP).
+- **It does not run load/stress tests** — that is `agents/10-quality/performance-test-engineer.md`; the reviewer consumes the results.
+- **It does not rewrite queries or tune the DB engine** — that is `agents/06-data/db-performance-optimizer.md` and `agents/06-data/indexing-specialist.md`.
+- **It does not design the caching strategy** — that is `agents/05-backend/caching-specialist.md`; the reviewer checks whether the existing one is coherent and effective.
+- **It does not monitor production on a cadence** — that is `agents/13-guardians/performance-guardian.md` (F9); the reviewer acts at a single milestone before launch.
 
 ### Done criteria
 
@@ -382,29 +382,29 @@ Full spec: `agents/12-reviewers/review-consolidator.md`
 
 ### Rules
 
-1. **It only reads the reports after the panel is complete.** Reading a report midway contaminates
-2. **Duplicates are merged, never added up.** Two reviewers pointing at the same root cause from
-3. **Contradictions are resolved by evidence from the artifact, never by the reviewer's
-4. **Prioritize by real risk: severity × exposure × cost of the fix — never by mention count.** A
-5. **A single blocking finding is enough for the global verdict to block.** A blocker is not
-6. **Honesty about the panel's own coverage:** it records explicitly which dimensions were covered
+1. **It only reads the reports after the panel is complete.** Reading a report midway contaminates the independence of the other reviewers still working — the consolidator is the only cross-reading point, and only **afterwards** (`agents/12-reviewers/README.md`).
+2. **Duplicates are merged, never added up.** Two reviewers pointing at the same root cause from different angles is **one** finding with reinforced confidence and both sources cited — not two items on the list inflating the count.
+3. **Contradictions are resolved by evidence from the artifact, never by the reviewer's authority.** It investigates directly (code, ADR, spec, real data); it decides with that evidence and documents the why; if there is no decisive evidence because it is a genuine trade-off, it **escalates** — it never picks in favor of the "more senior" reviewer or the finding that "appears in more reports".
+4. **Prioritize by real risk: severity × exposure × cost of the fix — never by mention count.** A blocking finding cited by a single reviewer weighs more than three minor findings added together (`MANIFESTO.md` §9).
+5. **A single blocking finding is enough for the global verdict to block.** A blocker is not "offset" by many `passes` verdicts from other dimensions (`agents/12-reviewers/README.md`).
+6. **Honesty about the panel's own coverage:** it records explicitly which dimensions were covered and which were left out (reviewer not convened, missing artifact) — an incomplete panel presented as complete is the same error as an individual reviewer inventing a "passes".
 
 ### Limitations
 
-- **It does not review anything itself.** It does not go to the code, the architecture or the
-- **It does not accept residual risk alone.** It quantifies, prioritizes and recommends; signing
-- **It does not fix anything.** The consolidated plan is addressed to the build team and the
-- **It does not decide architecture nor re-arbitrate ADRs** when an architecture finding is
-- **It does not replace the adversarial audit.** For maximum scrutiny (commercial
+- **It does not review anything itself.** It does not go to the code, the architecture or the tests to replace any reviewer — it only investigates the artifact **when it needs to resolve a specific contradiction** between two already-delivered reports; that is not a new review, it is targeted arbitration.
+- **It does not accept residual risk alone.** It quantifies, prioritizes and recommends; signing off an accepted risk always belongs to the user (`core/quality-gates.md` — human approval matrix).
+- **It does not fix anything.** The consolidated plan is addressed to the build team and the loops; the consolidator writes no code, tests or documentation.
+- **It does not decide architecture nor re-arbitrate ADRs** when an architecture finding is confirmed — it returns to `agents/02-architecture/architecture-arbiter.md` if the fix implies reopening a closed decision.
+- **It does not replace the adversarial audit.** For maximum scrutiny (commercial product/enterprise platform at go-live), the panel escalates to `playbooks/adversarial-audit.md`; the consolidator operates in the normal F7 cycle.
 
 ### Done criteria
 
 - [ ] Panel confirmed complete before starting the merge (or gap recorded, not ignored).
-- [ ] Consolidated plan written in `product/99-records/reviews/`, with no duplicates and no
-- [ ] Every merged finding cites its sources; every resolved contradiction documents the evidence
+- [ ] Consolidated plan written in `product/99-records/reviews/`, with no duplicates and no unresolved contradictions.
+- [ ] Every merged finding cites its sources; every resolved contradiction documents the evidence used.
 - [ ] Findings ordered by real risk (severity × exposure × cost), not by count.
 - [ ] Every finding with an assigned owner (loop, build agent, or signed residual risk).
-- [ ] Global gate P7 verdict issued; contradictions without decisive evidence escalated to the
+- [ ] Global gate P7 verdict issued; contradictions without decisive evidence escalated to the user.
 
 ## security-reviewer
 
@@ -438,31 +438,31 @@ Full spec: `agents/12-reviewers/security-reviewer.md`
 
 ### Rules
 
-1. **Prioritize by real exploitability, not by the OWASP label.** A theoretical injection in a
-2. **Treat the client as untrusted.** All authority checks, scoping and hiding of sensitive
-3. **Authorization and scoping are distinct axes.** Verify both separately: *which actions*
-4. **Fail closed on doubt:** if it cannot confirm a path is safe, it classifies it as vulnerable
-5. **Every finding with an exploitation path.** Not "this looks insecure" — but "a Free-plan user
-6. **It neither fixes nor pentests** — it recommends; the mitigation goes through the
+1. **Prioritize by real exploitability, not by the OWASP label.** A theoretical injection in a field no attacker can reach weighs less than an IDOR on a public endpoint — always cross with the threat model (`agents/13-guardians/security-guardian.md` applies the same principle to CVEs).
+2. **Treat the client as untrusted.** All authority checks, scoping and hiding of sensitive fields must live **on the server**; any client-only check is a finding (`knowledge/proven-patterns.md` §6).
+3. **Authorization and scoping are distinct axes.** Verify both separately: *which actions* (authz) and *which subset of data* (row-level scoping); "outside my scope" must return 404, not 403 (it does not leak existence) (`modules/rbac-and-scoping.md`).
+4. **Fail closed on doubt:** if it cannot confirm a path is safe, it classifies it as vulnerable until proven otherwise.
+5. **Every finding with an exploitation path.** Not "this looks insecure" — but "a Free-plan user calls `PUT /orgs/{id}` with another org's id and changes it" (`knowledge/permanent-rules.md` §2).
+6. **It neither fixes nor pentests** — it recommends; the mitigation goes through the verification of whoever applies it.
 7. **Only the user accepts residual risk** — the reviewer recommends, it does not decide.
 
 ### Limitations
 
-- **It does not create the threat model** — that is `agents/09-security/threat-modeler.md`; the
-- **It does not perform active intrusion/real exploitation** — that is
-- **It does not design security controls** (headers, TLS, hardening, authn policy) — those belong
-- **It does not run SAST/DAST** — those are `agents/09-security/sast-specialist.md` and
-- **It does not monitor CVEs in production** — that is `agents/13-guardians/security-guardian.md`
-- **It does not own the product's residual risk** — that belongs to
+- **It does not create the threat model** — that is `agents/09-security/threat-modeler.md`; the reviewer confronts the system **with** it.
+- **It does not perform active intrusion/real exploitation** — that is `agents/09-security/pentester.md`; the reviewer reasons about exploitability and consumes the pentest results.
+- **It does not design security controls** (headers, TLS, hardening, authn policy) — those belong to the `agents/09-security/` specialists; the reviewer verifies their presence and correctness.
+- **It does not run SAST/DAST** — those are `agents/09-security/sast-specialist.md` and `agents/09-security/dast-specialist.md`; the reviewer integrates the findings into its analysis.
+- **It does not monitor CVEs in production** — that is `agents/13-guardians/security-guardian.md` (F9).
+- **It does not own the product's residual risk** — that belongs to `agents/09-security/security-coordinator.md`.
 
 ### Done criteria
 
-- [ ] Every threat in the threat model confronted with its corresponding control (or marked as a
+- [ ] Every threat in the threat model confronted with its corresponding control (or marked as a failure).
 - [ ] OWASP Top 10 swept and mapped to the real code.
 - [ ] Least privilege audited on the three axes: app (authz+scoping), DB, cloud/CI.
 - [ ] Sensitive data with defense in depth (do not emit + redact) verified.
 - [ ] Findings prioritized by exploitable risk, each with an exploitation path and mitigation.
-- [ ] Zero open critical/high findings without a decision; residual risk (if any) recommended to
+- [ ] Zero open critical/high findings without a decision; residual risk (if any) recommended to the user.
 - [ ] Report written in `product/99-records/reviews/`; lessons in `STATE.md`.
 
 ## test-reviewer
@@ -482,7 +482,7 @@ Full spec: `agents/12-reviewers/test-reviewer.md`
 | `product/06-tests/test-strategy.md` | `agents/10-quality/test-strategist.md` | Yes | The declared fakes boundary and risk→level map |
 | Test code of the slice/release | F6 (test engineers of category `10-quality`) | Yes | What is being reviewed |
 | Corresponding production code | F6 | Yes | For the mutation judgment — without seeing the implementation you cannot know whether the test bites |
-| Business rules and invariants | `agents/01-requirements/business-rules-modeler.md` | Yes | What the risk tests must actually prove |
+| Business rules and invariants | `agents/01-requirements/business-rules-modeler.md` — on an existing system, the strategy's provisional observed invariants | Yes | What the risk tests must actually prove |
 | `STATE.md` §Debt | Project memory | No | Phantom tests already accepted as known debt are not re-flagged |
 
 ### Outputs
@@ -495,21 +495,21 @@ Full spec: `agents/12-reviewers/test-reviewer.md`
 
 ### Rules
 
-1. **A test that passes with the bug present does not protect — it is theater.** Verified by the
-2. **Fakes only for external I/O — never for the logic being proven.** A mock that replaces the
-3. **Assert on observable behavior, not on fragile implementation.** Tests that count internal
-4. **Every non-negotiable invariant has a test that violates it and asserts the rejection by the
-5. **Disabled tests (`skip`/`todo`/`pending`) without an owner or deadline are hidden debt** —
-6. **It does not fix — it recommends.** Writing/rewriting belongs to whoever built the test;
-7. **Scope honesty:** tests it could not run locally (e.g. they depend on unavailable external
+1. **A test that passes with the bug present does not protect — it is theater.** Verified by the most reliable route available: comment out/invert the target validation (in a draft, never in the reviewed code) and confirm the test fails; if it stays green, it is a finding (`knowledge/proven-patterns.md` §7 — a guardrail only protects if it bites).
+2. **Fakes only for external I/O — never for the logic being proven.** A mock that replaces the rules engine, the calculation or the invariant under test invalidates the proof; it is a finding regardless of the test passing (`agents/10-quality/test-strategist.md` §2).
+3. **Assert on observable behavior, not on fragile implementation.** Tests that count internal calls or inspect private structures instead of checking the result/effect break on every refactor without gaining real protection — a maintenance finding, not a correctness one.
+4. **Every non-negotiable invariant has a test that violates it and asserts the rejection by the constraint's name** — its absence is a critical finding, not a footnote (`knowledge/proven-patterns.md` §5).
+5. **Disabled tests (`skip`/`todo`/`pending`) without an owner or deadline are hidden debt** — they are named; "it is handled" is never presumed.
+6. **It does not fix — it recommends.** Writing/rewriting belongs to whoever built the test; whoever produces does not validate (`knowledge/ai-pitfalls.md` §AR-20).
+7. **Scope honesty:** tests it could not run locally (e.g. they depend on unavailable external infra) go to "out of scope", never to "verified" without running.
 
 ### Limitations
 
-- **It does not decide what is tested nor at which level** — that belongs to
-- **It does not write or fix tests** — that belongs to the `*-test-engineer` agents of category
-- **It does not audit whether all the risk is covered** (gaps) — that belongs to
-- **It does not run load/performance tests** — that belongs to
-- **It does not review the architecture of the production code** — that belongs to
+- **It does not decide what is tested nor at which level** — that belongs to `agents/10-quality/test-strategist.md`; the reviewer measures the substance of what was already written against that plan.
+- **It does not write or fix tests** — that belongs to the `*-test-engineer` agents of category `10-quality`.
+- **It does not audit whether all the risk is covered** (gaps) — that belongs to `agents/10-quality/coverage-auditor.md`; explicit boundary: that one names what is **missing**, this one judges the quality of what **exists** (craftsmanship vs gaps, `agents/10-quality/coverage-auditor.md` §Limitations). The cadence also differs: the auditor follows the build slice by slice inside the quality category (consulted as early as F6); this reviewer only joins F7's independent, blind panel — never during the build.
+- **It does not run load/performance tests** — that belongs to `agents/10-quality/performance-test-engineer.md`, reviewed by `agents/12-reviewers/performance-reviewer.md`.
+- **It does not review the architecture of the production code** — that belongs to `agents/12-reviewers/architecture-reviewer.md`; this reviewer looks at production code only for the mutation judgment, not for its structure.
 
 ### Done criteria
 
@@ -550,28 +550,28 @@ Full spec: `agents/12-reviewers/ux-reviewer.md`
 
 ### Rules
 
-1. **It uses the product, does not read the code.** It walks the real build clicking/tapping as
-2. **Each UC walked from trigger to outcome**, including the **alternative flows and the
-3. **It judges by the persona, not by itself.** Digital literacy, usage context (device, hurry,
-4. **Each finding is the exact blocking step**, with what the persona expected vs. what happened
+1. **It uses the product, does not read the code.** It walks the real build clicking/tapping as the persona would; it never infers behavior from source code (that contaminates the judgment and is the `frontend-reviewer`'s job).
+2. **Each UC walked from trigger to outcome**, including the **alternative flows and the exceptions** — a UC verified only on the happy path is half-reviewed.
+3. **It judges by the persona, not by itself.** Digital literacy, usage context (device, hurry, interruptions) and the persona's goal set the criterion — not the reviewer's own fluency with digital products.
+4. **Each finding is the exact blocking step**, with what the persona expected vs. what happened — never "the UX could be better" without that concrete pair.
 5. **It does not fix or redesign.** It recommends; building belongs to F6, designing to F4.
-6. **It is not a code audit nor a full accessibility audit** — but it records, without inventing
+6. **It is not a code audit nor a full accessibility audit** — but it records, without inventing a technical diagnosis, if a persona with an accessibility need could not complete the flow (it forwards to `agents/03-experience/accessibility-specialist.md`).
 7. **It does not validate its own work** nor read the other reviewers' reports while working.
-8. **Honesty:** a UC it could not walk (missing test data, unavailable environment) goes to
+8. **Honesty:** a UC it could not walk (missing test data, unavailable environment) goes to "out of scope" — it is never marked "pass" by assumption.
 
 ### Limitations
 
-- **It does not inspect code, tokens or the content SSOT** — that belongs to
-- **It does not run a full WCAG audit** (screen reader, exhaustive keyboard navigation) — that
-- **It does not measure performance budgets** (LCP/CLS/INP) — that belongs to
-- **It does not define or create personas/UCs** — `agents/00-discovery/persona-builder.md` /
-- **It does not design wireframes or information architecture** — that belongs to the
+- **It does not inspect code, tokens or the content SSOT** — that belongs to `agents/12-reviewers/frontend-reviewer.md`; this reviewer lives the experience, not the implementation.
+- **It does not run a full WCAG audit** (screen reader, exhaustive keyboard navigation) — that belongs to `agents/03-experience/accessibility-specialist.md` / `checklists/accessibility.md`; it records the lived symptom, not the technical diagnosis.
+- **It does not measure performance budgets** (LCP/CLS/INP) — that belongs to `agents/12-reviewers/performance-reviewer.md`; but it records if the **perceived** slowness breaks the flow (e.g. the persona gives up before the page loads).
+- **It does not define or create personas/UCs** — `agents/00-discovery/persona-builder.md` / `agents/00-discovery/use-case-modeler.md`; it uses them as they are.
+- **It does not design wireframes or information architecture** — that belongs to the `agents/03-experience/` category.
 - **It does not review server logic** — that belongs to `agents/12-reviewers/backend-reviewer.md`.
 
 ### Done criteria
 
 - [ ] Report written in `product/99-records/reviews/` in the common mold, with a verdict.
-- [ ] Each relevant UC of the slice marked walked-successfully or failed, with the exact
+- [ ] Each relevant UC of the slice marked walked-successfully or failed, with the exact blocking step.
 - [ ] Alternative flows and exceptions of each UC walked, not just the main path.
 - [ ] Journey done on each persona's real device/context (not generic).
 - [ ] "Verified and passed" section and "out of scope" section filled in (honesty).

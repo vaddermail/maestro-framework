@@ -11,7 +11,9 @@ Every gate declares:
 1. **What it guards** — the transition (phase→phase, slice→merge, release→production).
 2. **Criteria** — a verifiable checklist (lives in `checklists/`), no subjective items. The
    automatable criteria are called *gates* (`core/glossary.md`); none of them, alone, passes the
-   gate.
+   gate. An automated gate only counts once it is proven to **fail** on a real case — a positive
+   control (`knowledge/ai-pitfalls.md` §AR-25); before that, its green does not distinguish
+   "passed" from "did not measure".
 3. **Who verifies** — never whoever produced (reviewers, the test harness, or the Orchestrator
    for formal criteria).
 4. **Who approves** — the user, when the decision is theirs (see matrix below); otherwise the
@@ -60,7 +62,10 @@ states what is waivable per profile — whatever is not marked as waivable, is n
 **Gate records** (`templates/project/GATE.md.template`): mandatory in every profile for P0–P5,
 P6b, P7 and P8; the P6 record **per slice** is waivable in a prototype —
 `_meta/verify-project.sh` reads the profile from `STATE.md` and does not require it in that case.
-This is the single rule; the template, W06 and the checklists all point back here.
+**Single exception: adoption in a product that already exists** — records count from the adoption
+phase declared in `STATE.md` (the "Adoption" field); earlier gates are not reconstructed
+(`workflows/W00-project-kickoff.md` §Adopting in a product that already exists). This is the single
+rule; the template, W00, W06 and the checklists all point back here.
 
 ## Anti-patterns
 

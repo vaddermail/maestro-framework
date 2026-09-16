@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.2.1** (2026-09-16)
+**Current version: 1.3.0** (2026-09-16)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -16,6 +16,62 @@ framework evolves in this repository through pull requests and curation
 never automatically.
 
 ## Changelog
+
+### 1.3.0 — 2026-09-16
+
+Synced from upstream 2.11.0 and 2.12.0 in one step. The upstream theme: **real use teaches the
+framework**. Until then upstream learned only from what projects remembered to report — two issues
+in two months. 2.11.0 came from a survey run directly on five real projects (their improvement
+files, lessons sections, the `CLAUDE.md` rules each had to add by hand, the Git history — and the
+framework's own gates run against each project); 2.12.0 promoted nineteen of the resulting
+candidates with a single confirmation, under the rule that already allowed it for the obviously
+general. What travelled back down, in this edition's terms:
+
+- **The gate nobody ran.** In three projects `verify-project.sh` was installed and never run; one
+  sat from F6 to F8 with the gate red. It is now stage 8 of `pipelines/ci-quality.md`, step 10 and a
+  P0 criterion in W00, an item in the `CLAUDE.md.template` done summary — and its warnings, which
+  block nothing and so were read by no one, are injected by the session-start hook (up to six).
+- **A CRLF guard** in the seven scripts: a copy with Windows line endings died on
+  `set: pipefail: invalid option name`, and that is how one adopter stopped running the gate. They
+  now stop with exit 2 and say how to restore. Case 12 exercises all seven.
+- **Adopting in a product that already exists** (`workflows/W00-project-kickoff.md`): inventory
+  before calibration (step 6b, the existing-system analyst in adoption mode), an `Adoption` field in
+  the `STATE.md` template, and a gate that stops demanding traces and records of phases the product
+  never went through — while demanding `product/00-discovery/existing-system.md` instead. Test
+  strategist in existing-system mode. Cases 13a–13h, on both sides of every boundary; a 13-mutation
+  matrix against the gate script is fully killed.
+- **Living memory with a ceiling** and **pending decisions with an age**: compaction trigger and
+  procedure in `core/project-memory.md` §Memory hygiene; `core/question-engine.md` §Pending
+  decisions: age and expiry («opened on» per item, a decision at 30 days, batch triage above 15);
+  the gate warns above 60 KB, 3 000 characters on a line, 30 days, 15 open, and on items without a
+  date. Cases 14a–14b and 15a–15b.
+- **AR-25 to AR-28:** an instrument never proven to catch what it looks for (live proof gains a
+  sixth field, «Control»; a gate only counts once proven to fail); the shell lies to the agent;
+  concurrent sessions in the same repository (`core/orchestrator.md` §Parallelism); a loading state
+  that masks the reproduction.
+- **Production configuration: fail-closed and exercised, not only written** (proven patterns §12),
+  applied in go-live, pre-merge, pre-production security and CD; real concurrent actors before
+  go-live; rate limits keyed by identity; one DB per purpose.
+- **New module `modules/multi-repository-product.md`** — the largest capability gap the survey
+  found: the framework assumed one product = one repository. Truth in files in the repository that
+  owns the subject area, conversation as typed items with a closing criterion, mesh not star,
+  whoever closes a blocker tells whoever is waiting.
+- **Everything else the 2.12.0 promotions brought:** long near-idle runs across the product's time
+  boundaries; warm-up before health checks and the health script's betrayals; runbook derived from
+  the diff; the restore drill proves its target first; the system prompt is intent, not a contract;
+  forwarded headers trusted only when the proxy writes them; a public identifier never becomes the
+  internal scope id without explicit resolution; FK column types read in the oldest environment;
+  visibility asserted from what renders; local reproducible gate with hosted CI as a second opinion;
+  «cancelled» as a third CI outcome; executable RF/BR-to-test traceability; the CI green measured
+  this content; multi-major upgrades one step at a time; one fact in one place.
+- **Corrections:** `generate-contracts.sh` copied only the first line of each item — about two
+  thirds of Rules, Limitations and Done criteria reached the Orchestrator cut mid-sentence with check
+  19 green (contracts are ≈40 % of a spec, not 35); `actions/checkout` v4 → v7.0.1 in both workflows.
+
+**Impact on projects** (sync playbook, step 6b): `STATE.md` gains the `Adoption` field in the
+situation header and «opened on yyyy-mm-dd» on each pending decision; `CLAUDE.md` gains the
+«Coding standards» line and the `verify-project.sh` item in the done summary; the project CI gains
+the project-gate stage.
 
 ### 1.2.1 — 2026-09-16
 

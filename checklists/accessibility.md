@@ -71,6 +71,11 @@ they are checked by hand, screen by screen.
 - [ ] Automated scan run (catches ~30–40% of the issues) **and** manual verification by keyboard
       **and** screen reader (`knowledge/permanent-rules.md` §7).
 - [ ] Per-screen result recorded in `product/99-records/`.
+- [ ] Visibility verified by what actually renders (`isVisible`, screenshot), never by the
+      presence of the hiding attribute: any author display rule beats the browser's own
+      stylesheet, and an element can be hidden in the DOM yet visible on screen — the "has the
+      attribute ✓" check passed over a block that was not blocking. Hiding rule given maximum
+      priority at the top of every page.
 
 ## Related
 

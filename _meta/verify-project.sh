@@ -10,6 +10,9 @@
 # session (START-HERE.md §2.5, the Stop hook in adapters/claude-code/) and the project CI
 # (pipelines/ci-quality.md). No network, except check 8 (only with git and timeout; never fails;
 # never asks for credentials; skipped when MAESTRO_SEM_REDE=1 — that is how the Stop hook runs it).
+# Line-ending guard: a copy with CRLF (Windows) failed with cryptic errors and the gate never ran.
+# The `#` at the end of the next line makes it immune to the very \r it detects.
+case "$(head -c 4000 "$0")" in *$'\r'*) printf '✗ %s has CRLF line endings — restore with git checkout (the copy .gitattributes prevents the conversion) or: sed -i "s/\\r$//" %s\n' "$0" "$0"; exit 2 ;; esac #
 set -uo pipefail
 cd "$(dirname "$0")/../.."
 
@@ -73,6 +76,40 @@ if grep -qiE 'upstream framework repository|framework-m[ãa]e' STATE.md || [ -f 
 else
   aviso "STATE.md missing the upstream repository (the destination of improvement reports; in a release copy it comes in Maestro/_meta/ORIGIN)"
 fi
+# Adoption in a product that already exists (workflows/W00-project-kickoff.md §Adopting in a product
+# that already exists): the phases before the adoption leave no trace and no gate records, and
+# demanding them left the gate red forever — a gate nobody runs again. Read only from the header
+# table row (prose that mentions adoption does not count), and only once the placeholder is filled.
+adocao=-1
+adocao_linha=$(grep -E '^\| *\**(Adoption|Ado[çc][ãa]o)\**[[:space:]]*\|' STATE.md | grep -v '{{' | head -1 || true)
+adocao_valor=$(printf '%s' "$adocao_linha" | cut -d'|' -f3)
+if printf '%s' "$adocao_valor" | grep -qiE 'on (existing )?code|on a product in production|sobre (c[óo]digo|produto)'; then
+  a=$(printf '%s' "$adocao_valor" | grep -oE '(^|[^A-Za-z0-9])F[0-9]([^0-9]|$)' | grep -oE '[0-9]' | head -1 || true)
+  if [ -z "$a" ]; then
+    if printf '%s' "$adocao_valor" | grep -qi 'produ'; then
+      falha "ADOPTION WITHOUT PHASE: «Adoption» says product in production but not since which phase (e.g. «since F9 (yyyy-mm-dd)») — the gate does not know what to demand"
+      adocao=-1
+    else
+      adocao=0
+    fi
+  else
+    adocao=$a
+  fi
+  if [ "$adocao" -ge 0 ]; then
+    if [ "$fase_ok" -eq 1 ] && [ "$adocao" -gt "$n" ]; then
+      falha "ADOPTION INCONSISTENT: declared since F$adocao but the current phase is $fase — the adoption cannot be ahead of the product"
+      adocao=-1
+    else
+      ok "adoption on an existing system declared (since F$adocao)"
+    fi
+  fi
+elif [ -n "$adocao_linha" ] && ! printf '%s' "$adocao_valor" | grep -qiE 'from scratch|de raiz'; then
+  aviso "«Adoption» in STATE.md with no recognized value (from scratch · on existing code (F0) · on a product in production, since Fn) — treated as from scratch"
+fi
+if [ "$adocao" -ge 0 ]; then
+  [ -s product/00-discovery/existing-system.md ] \
+    || falha "ADOPTION WITHOUT DOSSIER: product/00-discovery/existing-system.md is missing — the characterization of what exists replaces the trace of the phases before the adoption (workflows/W00-project-kickoff.md §Adopting in a product that already exists)"
+fi
 # Sections of the live files that arrived in later MINORs: a project synced without adding them
 # has 24 specs writing into a §Debt that does not exist.
 grep -qE '^## .*Debt' STATE.md || aviso "STATE.md missing the Debt section (template ≥1.1.0 — playbooks/sync-framework.md step 6b)"
@@ -85,9 +122,10 @@ grep -qE '^## .*Debt' STATE.md || aviso "STATE.md missing the Debt section (temp
 # ---------------------------------------------------------------------------
 tem_conteudo() { [ -d "$1" ] && [ -n "$(find "$1" -type f -name '*.md' 2>/dev/null | head -1)" ]; }
 art_ko=0
-verifica_fase() { # $1=minimum current-phase number  $2=folder  $3=description
+verifica_fase() { # $1=minimum current-phase number  $2=folder  $3=description  $4=artifact phase (default $1-1)
   [ "$fase_ok" -eq 1 ] || return 0
   [ "$n" -ge "$1" ] || return 0
+  [ "$adocao" -ge 0 ] && [ "${4:-$(( $1 - 1 ))}" -lt "$adocao" ] && return 0   # phase before the adoption
   tem_conteudo "$2" || { falha "NO TRACE of $3 ($2/) with current phase $fase"; art_ko=1; }
 }
 verifica_fase 2 product/00-discovery "F1 Discovery"
@@ -95,15 +133,17 @@ verifica_fase 3 product/01-requirements "F2 Requirements"
 verifica_fase 4 product/02-architecture "F3 Architecture"
 verifica_fase 5 product/03-experience "F4 Experience"
 verifica_fase 6 product/04-specification "F5 Specification"
-verifica_fase 6 product/06-tests "F6 Tests (hard precondition of the build — W06)"
+verifica_fase 6 product/06-tests "F6 Tests (hard precondition of the build — W06)" 6
 verifica_fase 8 product/05-security "F7 Quality & Security"
 verifica_fase 9 product/07-operations "F8 Operations"
-[ "$n" -ge 4 ] && { tem_conteudo product/02-architecture/decisions \
+[ "$n" -ge 4 ] && [ "$adocao" -le 3 ] && { tem_conteudo product/02-architecture/decisions \
   || aviso "no ADRs in product/02-architecture/decisions/ with the architecture closed"; }
 if [ "$fase_ok" -eq 0 ]; then
   nao_verificado "artifacts per phase — the current phase in STATE.md is unreadable"
 elif [ "$n" -lt 2 ]; then
   nao_verificado "artifacts per phase — no phase closed yet (current phase $fase)"
+elif [ "$adocao" -ge "$n" ]; then
+  nao_verificado "artifacts per phase — every closed phase is earlier than the adoption (F$adocao)"
 elif [ "$art_ko" -eq 0 ]; then
   ok "closed-phase artifacts left a trace"
 fi
@@ -114,7 +154,7 @@ fi
 #     artifact existed; promoting it to a failure is the owner's call (_meta/VERSION.md).
 # ---------------------------------------------------------------------------
 if [ "$fase_ok" -eq 1 ] && [ "$n" -ge 1 ]; then
-  reg_ko=0; k=0
+  reg_ko=0; k=0; [ "$adocao" -gt 0 ] && k=$adocao; k0=$k
   perfil=$(grep -iE 'perfil de esforço|effort profile' STATE.md | head -1 | tr 'A-Z' 'a-z' || true)
   while [ "$k" -lt "$n" ]; do
     # The per-slice P6 is dispensable in a prototype (templates/project/GATE.md.template)
@@ -124,7 +164,7 @@ if [ "$fase_ok" -eq 1 ] && [ "$n" -ge 1 ]; then
     fi
     k=$((k + 1))
   done
-  [ "$n" -ge 7 ] && ! ls product/99-records/gates/P6b-*.md >/dev/null 2>&1 \
+  [ "$n" -ge 7 ] && [ "$adocao" -le 6 ] && ! ls product/99-records/gates/P6b-*.md >/dev/null 2>&1 \
     && { aviso "NO RECORD OF GATE P6b (build closure) with current phase $fase"; reg_ko=1; }
   for r in product/99-records/gates/P*.md; do
     [ -f "$r" ] || continue
@@ -133,11 +173,15 @@ if [ "$fase_ok" -eq 1 ] && [ "$n" -ge 1 ]; then
     derr=$(awk '/^## .*Waiver/{p=1;next} /^## /{p=0} p' "$r" | grep -viE 'none|^\| *Crit|^\| *---|^[[:space:]]*$' || true)
     [ -n "$derr" ] && ! printf '%s' "$derr" | grep -qi 'risk' && { aviso "waiver without an accepted risk in $r"; reg_ko=1; }
   done
-  if [ "$n" -ge 9 ] && ls product/99-records/gates/P8-*.md >/dev/null 2>&1 \
+  if [ "$n" -ge 9 ] && [ "$adocao" -le 8 ] && ls product/99-records/gates/P8-*.md >/dev/null 2>&1 \
      && ! grep -hiE 'approved by' product/99-records/gates/P8-*.md | grep -qvE '\{\{|not required'; then
     aviso "P8 (production) without a recorded human approval — this is the promise that 'production belongs to the human' (START-HERE.md)"; reg_ko=1
   fi
-  [ "$reg_ko" -eq 0 ] && ok "gate records present for P0–P$((n - 1))"
+  if [ "$k0" -ge "$n" ]; then
+    nao_verificado "gate records — no gate closed since the adoption (F$adocao)"
+  elif [ "$reg_ko" -eq 0 ]; then
+    ok "gate records present for P$k0–P$((n - 1))"
+  fi
 elif [ "$fase_ok" -eq 0 ]; then
   nao_verificado "gate records — the phase is unreadable"
 fi
@@ -146,13 +190,13 @@ fi
 # 3c. Never code before an approved specification (START-HERE.md §What must never happen)
 # ---------------------------------------------------------------------------
 if [ "$fase_ok" -eq 1 ]; then
-  if [ "$n" -ge 6 ]; then
+  if [ "$n" -ge 6 ] && [ "$adocao" -le 5 ]; then
     if grep -rlE '\*\*State:\*\* *approved' product/04-specification >/dev/null 2>&1; then
       ok "specification with approved artifact(s) — P5 passed"
     else
       aviso "NO APPROVED SPECIFICATION: no artifact in product/04-specification/ with a 'State: approved' header and current phase $fase (core/artifact-protocol.md §Standard artifact header)"
     fi
-  else
+  elif [ "$adocao" -lt 0 ]; then   # in an existing system the code predates Maestro by definition
     m=$(find . -maxdepth 3 \( -name package.json -o -name pyproject.toml -o -name go.mod -o -name Cargo.toml -o -name pom.xml -o -name build.gradle -o -name '*.csproj' -o -name composer.json -o -name Gemfile -o -name mix.exs \) \
         ! -path './Maestro/*' ! -path './product/*' ! -path '*/node_modules/*' ! -path './.git/*' 2>/dev/null | head -1)
     [ -n "$m" ] && aviso "code manifest ($m) with current phase $fase — code before P5? (legitimate only for slice 0 of a starter; START-HERE.md §What must never happen)"
@@ -169,7 +213,7 @@ if [ "$fase_ok" -eq 1 ] && [ "$n" -ge 2 ]; then
     prov=$(grep -c 'assumed-by-default' "$qa" 2>/dev/null || true)
     [ "${prov:-0}" -gt 0 ] && aviso "$prov provisional assumption(s) in $qa still unconfirmed — they are confirmed at the next gate (core/question-engine.md §When something is assumed by default)"
     ok "question-and-answer history present"
-  elif [ "$n" -ge 3 ]; then
+  elif [ "$n" -ge 3 ] && [ "$adocao" -le 2 ]; then
     aviso "NO question-and-answer HISTORY ($qa) with current phase $fase — either nothing was asked, or the answers stayed in the conversation (MANIFESTO.md §3)"
   fi
   sem_revisitar=$(awk '/^## .*on behalf of the absent owner/{p=1;next} /^## /{p=0} p && /^- \*\*/ && !/Revisit if/' STATE.md | grep -vc '{{' || true)
@@ -191,6 +235,32 @@ if [ -n "$ult" ] && command -v date >/dev/null; then
   else
     ok "memory alive (most recent date in STATE: $ult)"
   fi
+fi
+# Memory with a ceiling: STATE.md is read in every session. Measured in real projects: tens of
+# thousands of tokens in two weeks in one, hundreds of thousands in another, thousands of characters
+# in a single table cell in a third — the top stops describing the present and every session pays
+# for the whole past (core/project-memory.md §Memory hygiene).
+kb=$(( $(wc -c < STATE.md) / 1024 ))
+[ "$kb" -gt 60 ] && aviso "STATE.md is $kb KB (~$(( kb * 256 )) tokens read in every session) — compact: collapse what already closed into §Historical log (core/project-memory.md §Memory hygiene)"
+maxl=$(awk '{ if (length($0) > m) m = length($0) } END { print m + 0 }' STATE.md)
+[ "$maxl" -gt 3000 ] && aviso "STATE.md has $maxl characters on a single line — a cell or paragraph accumulating sessions; the top describes the present and the past collapses into §Historical log"
+# Pending decisions with an age: a question open for more than 30 days stopped being pending and
+# became forgotten (core/question-engine.md §Pending decisions: age and expiry). Only the template
+# format counts («opened on YYYY-MM-DD»): loose dates in the prose of the question are not the
+# opening date.
+limite=$(date -d '30 days ago' +%F 2>/dev/null || date -v-30d +%F 2>/dev/null || true)
+pend=$(awk '/^## ([0-9]+\. )?(Pending decisions|[Dd]ecis[õo]es pendentes) *$/{p=1;next} /^## /{p=0} p' STATE.md | grep -v '{{' || true)
+if [ -n "$pend" ]; then
+  abertas=$(printf '%s\n' "$pend" | grep -cE '^[-*] \*\*(P|Q)-' || true)
+  sem_data=$(printf '%s\n' "$pend" | grep -E '^[-*] \*\*(P|Q)-' | grep -vcE '(opened on|aberta em) [0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
+  if [ -z "$limite" ]; then
+    nao_verificado "age of the pending decisions — this \`date\` cannot compute relative dates"
+  else
+    velhas=$(printf '%s\n' "$pend" | grep -oE '(opened on|aberta em) [0-9]{4}-[0-9]{2}-[0-9]{2}' | awk -v l="$limite" '$3 < l { c++ } END { print c + 0 }')
+    [ "$velhas" -gt 0 ] && aviso "$velhas pending decision(s) open for more than 30 days — decide, waive with a deadline, or archive (core/question-engine.md §Pending decisions: age and expiry)"
+  fi
+  [ "${sem_data:-0}" -gt 0 ] && aviso "$sem_data pending decision(s) without «opened on yyyy-mm-dd» — without a date the age cannot be measured (templates/project/STATE.md.template §Pending decisions)"
+  [ "${abertas:-0}" -gt 15 ] && aviso "$abertas pending decisions open — a list nobody can decide in one go; triage in a batch (core/question-engine.md §Pending decisions: age and expiry)"
 fi
 # Evidence: "tested" without output is not evidence (knowledge/proven-patterns.md §Live proof)
 sem_ev=$(awk '/^## .*Done/{p=1;next} /^## /{p=0} p && /^- \*\*/ && !/Evidence:/' STATE.md | grep -vc '{{' || true)

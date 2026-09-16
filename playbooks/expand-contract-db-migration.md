@@ -25,7 +25,12 @@ the Contract phase only runs after an explicit **point of no return**.
    passing the existing tests against the schema with the addition in place. *If it fails*: the
    change is not purely additive — fix it before moving on.
 
-3. **Validate the Expand phase in isolation.** Apply in staging, run the full regression (frontend +
+3. **Validate the Expand phase in isolation.** The type of a column referenced by a foreign key is
+   read from the **oldest** environment (production), not from dev — an unsigned integer
+   referenced by a wide integer fails only there; and where DDL is not transactional, the
+   migration can leave the table created but unrecorded, with the second pass "passing" via a
+   `hasTable` check — read the migration command's **entire** output: an exception at the end is
+   red even with green tests right after. Apply in staging, run the full regression (frontend +
    backend), confirm zero impact on code not yet migrated. *Verified* with the harness green and the
    old application working without knowing the new thing exists.
 

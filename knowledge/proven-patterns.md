@@ -149,10 +149,49 @@ reproduce and verify.
   5. **Who verified** — and it is **≠ who did the work** (`knowledge/ai-pitfalls.md` §AR-20,
      self-validation).
 
+  When the evidence is an **instrument's verdict** (scan, guard, probe, gate script) rather than
+  an observed behavior, a sixth field is added:
+  6. **Control** — the case that shows the instrument catches what it looks for (ideally the real
+     artifact before curation) and its result. Without a control, "0 findings" and "could never
+     find" are the same reading (`knowledge/ai-pitfalls.md` §AR-25).
+
   Missing a field → it is not evidence: record it as "unverified", never as done. This is the
   format of the `Evidence:` field in `STATE.md` §Done and what a gate requires before it passes.
 - **Detail:** `checklists/definition-of-done.md` §Per code change;
   `core/quality-gates.md`.
+
+## 12. Production configuration: fail-closed and exercised, not only written
+
+The configuration production uses is the one path no test exercises — in dev and CI the variable
+is set, so the code looks correct even when the default is wrong.
+
+- **Problem it solves:** measured across four projects. Variables that were only missing in the
+  production environment silently degraded to library defaults during days of real use, with no
+  error or log — it surfaced through a user complaint. A least-privilege DB role and a queue
+  worker enabled only in production broke on the first deploy, with the security audit green.
+  Running the suite under a production profile caught defects on day one, one of them a security
+  issue. And the inverse proved true too: an endpoint missing its signing secret refused traffic
+  instead of accepting it unchecked.
+- **How:**
+  1. **Fail-closed startup** — in production, a missing required variable or signing secret → the
+     process refuses to start, or the endpoint refuses to respond; it never degrades to a default.
+  2. **The value the spec fixes lives in the code's default**; the environment file confirms it.
+     An environment missing the variable degrades to what the spec mandates, not to whatever the
+     library chose.
+  3. **Key parity** — the keys in the dev and production environment examples are compared, and
+     every key that exists on only one side is justified in writing. It takes two minutes.
+  4. **No test depends on the dev environment file** — each test wires up what it needs. A
+     default test runs **with the variable absent**: with it set, it tests the test environment,
+     and passes with the bug reinstated.
+  5. **Everything that runs in production with a different privilege or flag** — least-privilege
+     DB role, queue workers enabled only in production, real authentication — has a smoke test
+     that exercises it under production configuration before go-live. The cheapest form is the
+     suite under a **production profile** — the infrastructure adapters that differ in production
+     from dev (session, cache, queues, secure transport, trusted proxies, the same DB engine and
+     version in a disposable container) — against the commit about to ship.
+- **Detail:** `checklists/go-live.md` §Preparation; `checklists/pre-merge.md` §Tests;
+  `pipelines/cd-delivery.md` §Stages; `checklists/pre-production-security.md` §Authentication,
+  authorization and least privilege.
 
 ## Related
 

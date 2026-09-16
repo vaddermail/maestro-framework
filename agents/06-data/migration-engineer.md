@@ -95,6 +95,11 @@ To the Orchestrator (`core/question-engine.md`):
    environment with a legacy sample (`knowledge/permanent-rules.md` §7).
 8. **Backup before irreversible operations** — the final drop only runs with a reversal state
    guaranteed by the `backup-specialist` (`knowledge/permanent-rules.md` §5).
+9. **The referenced column's type is read from the oldest environment, and the migration's output
+   is read in full.** A foreign key whose type differs from the target column's in production only
+   fails in production; where DDL is not transactional, a failure halfway through leaves half
+   applied and re-running it looks like it passed — an exception at the end of the output is red
+   (`playbooks/expand-contract-db-migration.md` step 3).
 
 ## Limitations (what this agent does NOT do)
 

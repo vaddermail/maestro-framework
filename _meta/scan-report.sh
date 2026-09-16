@@ -9,6 +9,9 @@
 # Usage:
 #   bash Maestro/_meta/scan-report.sh <file | -> [terms-list]
 # Exits 0 when clean; 1 with hits — prints file:line and the NAME of the pattern, never the value.
+# Line-ending guard: a copy with CRLF (Windows) failed with cryptic errors and the gate never ran.
+# The `#` at the end of the next line makes it immune to the very \r it detects.
+case "$(head -c 4000 "$0")" in *$'\r'*) printf '✗ %s has CRLF line endings — restore with git checkout (the copy .gitattributes prevents the conversion) or: sed -i "s/\\r$//" %s\n' "$0" "$0"; exit 2 ;; esac #
 set -uo pipefail
 alvo="${1:-}"; lista="${2:-}"
 [ -n "$alvo" ] || { printf 'Usage: scan-report.sh <file | -> [terms-list]\n'; exit 2; }

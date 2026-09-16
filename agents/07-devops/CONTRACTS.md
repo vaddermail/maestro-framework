@@ -36,19 +36,19 @@ Full spec: `agents/07-devops/ansible-specialist.md`
 
 ### Rules
 
-1. **Idempotence is law.** Use declarative modules (`apt`, `service`, `template`, `copy`), never
-2. **Secrets in Ansible Vault, always.** No password/key in the clear in a playbook, `vars` or a
-3. **Reusable roles, pinned versions.** Structure in roles; packages and collections with pinned
-4. **`--check` before applying to production.** Run in dry-run mode and review the diff;
-5. **Reversibility:** destructive operations (removing a package, deleting data) require a
-6. **Explicit inventory per environment.** Never run a playbook without knowing which hosts it
-7. **Visible fallbacks:** handlers and tasks fail loudly, not silently
+1. **Idempotence is law.** Use declarative modules (`apt`, `service`, `template`, `copy`), never `command`/`shell` without guards (`creates`/`when`). The second run must report `changed=0`.
+2. **Secrets in Ansible Vault, always.** No password/key in the clear in a playbook, `vars` or a committed inventory (`knowledge/permanent-rules.md` §5). The Vault key lives outside git.
+3. **Reusable roles, pinned versions.** Structure in roles; packages and collections with pinned versions (`knowledge/permanent-rules.md` §6).
+4. **`--check` before applying to production.** Run in dry-run mode and review the diff; production only after validating in staging (`core/quality-gates.md`).
+5. **Reversibility:** destructive operations (removing a package, deleting data) require a reversal plan and approval (`knowledge/permanent-rules.md` §4); prefer additive.
+6. **Explicit inventory per environment.** Never run a playbook without knowing which hosts it runs against; operate by exact group/host, never by fuzzy match (echo of §4 — by exact identifier).
+7. **Visible fallbacks:** handlers and tasks fail loudly, not silently (`knowledge/proven-patterns.md` §10).
 
 ### Limitations
 
-- **Does not provision the infrastructure** (creating VMs, networks, storage) — that is
-- **Does not define the hardening policy** — that belongs to `agents/09-security/`
-- **Does not manage the secrets lifecycle** (rotation, inventory) —
+- **Does not provision the infrastructure** (creating VMs, networks, storage) — that is `agents/07-devops/terraform-specialist.md`; Ansible comes in after the machine exists.
+- **Does not define the hardening policy** — that belongs to `agents/09-security/` (`hardening-specialist`, `cis-benchmarks-specialist`); Ansible **executes** the baseline they define.
+- **Does not manage the secrets lifecycle** (rotation, inventory) — `agents/07-devops/secrets-manager.md` and `agents/09-security/secrets-and-rotation-manager.md`; Ansible only **consumes** them via Vault.
 - **Does not orchestrate containers** — `agents/07-devops/kubernetes-specialist.md`.
 - **Does not scan the resulting config** — `agents/09-security/infrastructure-analyst.md`.
 
@@ -94,26 +94,26 @@ Full spec: `agents/07-devops/apache-specialist.md`
 
 1. **Never *reload* without `apachectl configtest`.** An invalid config takes the service down.
 2. **Prefer *graceful reload*** to *restart* — it does not cut in-flight connections.
-3. **Config as versioned code;** `.htaccess` only when the app requires it (it has a performance
-4. **Minimal `AllowOverride`** and `mod_status`/directory pages disabled — minimal surface
+3. **Config as versioned code;** `.htaccess` only when the app requires it (it has a performance cost — it is read on every request); otherwise consolidate in the *vhost*.
+4. **Minimal `AllowOverride`** and `mod_status`/directory pages disabled — minimal surface (`agents/09-security/hardening-specialist.md`).
 5. **`mod_security` fail-safe and tuned;** blocks visible in the logs, never a silent *drop*.
-6. **The client's real IP** via `mod_remoteip` restricted to the trusted edge — otherwise logs and
-7. **Reversibility and secrets:** save the previous config before applying
-8. **Technical honesty:** if nginx serves the case better, say so and why — an owner's mindset
+6. **The client's real IP** via `mod_remoteip` restricted to the trusted edge — otherwise logs and rules lie.
+7. **Reversibility and secrets:** save the previous config before applying (`playbooks/release-and-rollback.md`); keys outside Git (`playbooks/secrets-management.md`).
+8. **Technical honesty:** if nginx serves the case better, say so and why — an owner's mindset (`knowledge/permanent-rules.md` §1), not implementing Apache out of inertia.
 
 ### Limitations
 
-- **Does not define the TLS policy or the security headers** —
-- **Does not define the WAF rules** — `agents/09-security/waf-specialist.md`; `mod_security`
-- **Does not configure nginx** (the alternative) — `agents/07-devops/nginx-specialist.md`; this
-- **Does not design load balancing across origins** —
+- **Does not define the TLS policy or the security headers** — `agents/08-infrastructure/tls-ssl-specialist.md` and `agents/09-security/http-headers-specialist.md`; Apache **applies them**.
+- **Does not define the WAF rules** — `agents/09-security/waf-specialist.md`; `mod_security` is one of the implementations where they are applied.
+- **Does not configure nginx** (the alternative) — `agents/07-devops/nginx-specialist.md`; this agent only **recommends** it when it is better.
+- **Does not design load balancing across origins** — `agents/07-devops/load-balancing-specialist.md`.
 - **Is not the public edge** — `agents/07-devops/cloudflare-specialist.md`.
 - **Does not harden the OS** — `agents/09-security/hardening-specialist.md`.
 
 ### Done criteria
 
 - [ ] Apache vs nginx decision justified (or migration recommendation recorded).
-- [ ] Config versioned; passes `apachectl configtest`; *graceful reload* without cutting
+- [ ] Config versioned; passes `apachectl configtest`; *graceful reload* without cutting connections.
 - [ ] MPM suited to the app; `.htaccess` only where required.
 - [ ] Valid TLS; `mod_security`/CRS tuned (if used); minimal surface (status/directories off).
 - [ ] Client's real IP in the logs; previous config saved for *rollback*.
@@ -149,22 +149,22 @@ Full spec: `agents/07-devops/azure-devops-specialist.md`
 
 ### Rules
 
-1. **Frontend and backend in separate jobs/stages,** both green before merge
-2. **Secrets in variable groups / service connections,** never in the clear in YAML or logs; mark
-3. **Branch policies on the integration branch:** required PR, independent review, **build
-4. **Production behind an Environment with approvals & checks** — non-delegable human approval
-5. **Third-party (marketplace) tasks pinned to a version** and from a trusted source
-6. **Templates for reuse,** not copy-pasting YAML between pipelines (SSOT —
-7. **Visible failures:** no `continueOnError` masking red as green
-8. **Templates, tasks and images pinned by immutable ref/digest, never by a floating ref.**
+1. **Frontend and backend in separate jobs/stages,** both green before merge (`knowledge/permanent-rules.md` §7).
+2. **Secrets in variable groups / service connections,** never in the clear in YAML or logs; mark variables as secret; prefer **federated credentials** to long-lived secrets (`knowledge/permanent-rules.md` §5).
+3. **Branch policies on the integration branch:** required PR, independent review, **build validation** (the pipelines as checks) and comment resolution — the equivalent of branch protections (`knowledge/permanent-rules.md` §8; principles from `agents/07-devops/github-specialist.md`).
+4. **Production behind an Environment with approvals & checks** — non-delegable human approval (`core/quality-gates.md`).
+5. **Third-party (marketplace) tasks pinned to a version** and from a trusted source (`agents/09-security/supply-chain-specialist.md`).
+6. **Templates for reuse,** not copy-pasting YAML between pipelines (SSOT — `knowledge/proven-patterns.md` §4).
+7. **Visible failures:** no `continueOnError` masking red as green (`knowledge/proven-patterns.md` §10).
+8. **Templates, tasks and images pinned by immutable ref/digest, never by a floating ref.** `resources.repositories` for templates with `ref:` to a protected tag (or a commit SHA where the platform accepts it — confirm the edition in use), never to a branch; containers by `@sha256:…`; marketplace tasks with an explicit major version and a verified publisher. Stage 9 of `pipelines/ci-security.md` fails the pipeline on a floating pin — mirrors rule 4 of `agents/07-devops/github-actions-specialist.md`.
 
 ### Limitations
 
-- **Is not the GitHub Actions or GitLab CI platform** — those have their own specs
-- **Does not decide the deploy strategy** — `agents/07-devops/deployment-strategist.md`; the
-- **Does not write tests or scans** — `agents/10-quality/`, `agents/09-security/`; it orchestrates
-- **Does not manage secrets** (rotation/inventory) — `agents/07-devops/secrets-manager.md`; it
-- **Does not manage the work/backlog in Boards** as a project practice — that is product
+- **Is not the GitHub Actions or GitLab CI platform** — those have their own specs (`agents/07-devops/github-actions-specialist.md`, `gitlab-ci-specialist.md`). **One** is chosen per project (`core/decision-engine.md`).
+- **Does not decide the deploy strategy** — `agents/07-devops/deployment-strategist.md`; the pipeline executes it.
+- **Does not write tests or scans** — `agents/10-quality/`, `agents/09-security/`; it orchestrates them.
+- **Does not manage secrets** (rotation/inventory) — `agents/07-devops/secrets-manager.md`; it consumes them via variable groups.
+- **Does not manage the work/backlog in Boards** as a project practice — that is product management, not DevOps; the agent only integrates Boards ↔ pipeline if requested.
 
 ### Done criteria
 
@@ -206,22 +206,22 @@ Full spec: `agents/07-devops/cdn-specialist.md`
 
 ### Rules
 
-1. **Statics with a *hash* → long *immutable*; without a *hash* → purge on *deploy*.**
-2. **Never cache a personalized/authenticated response.** The cache key excludes the session
-3. **Minimal, explicit cache key.** Vary by `Accept-Encoding`/language only when needed; a wide
-4. **Invalidation tied to the *deploy*.** Every *release* that changes cached content purges or
-5. **`stale-while-revalidate` for resilience** where the app tolerates it — serves the old copy
-6. **Respect the boundary with the app cache.** The CDN caches what is public/semi-public;
-7. **Config as versioned code; reversible.** The map and the rules live in the repo, not only in
+1. **Statics with a *hash* → long *immutable*; without a *hash* → purge on *deploy*.** *Fingerprinting* is the safe way to never serve a stale *asset*; without it, invalidation must live in the *release*.
+2. **Never cache a personalized/authenticated response.** The cache key excludes the session `Cookie` and `Authorization`; otherwise data leaks between users (`knowledge/proven-patterns.md` §6).
+3. **Minimal, explicit cache key.** Vary by `Accept-Encoding`/language only when needed; a wide key fragments the cache and sinks the *hit ratio*.
+4. **Invalidation tied to the *deploy*.** Every *release* that changes cached content purges or versions — never rely on "the TTL will expire eventually" (`playbooks/release-and-rollback.md`).
+5. **`stale-while-revalidate` for resilience** where the app tolerates it — serves the old copy while revalidating, protects against spikes and a slow origin; visible, not silent.
+6. **Respect the boundary with the app cache.** The CDN caches what is public/semi-public; per-user data stays in the application cache (`agents/05-backend/caching-specialist.md`).
+7. **Config as versioned code; reversible.** The map and the rules live in the repo, not only in the dashboard.
 
 ### Limitations
 
-- **Does not configure the concrete vendor** (Cloudflare rules/Workers) —
-- **Does not define the application cache** (Redis, query cache, per-user data TTL) —
-- **Does not do WAF/edge security** — `agents/09-security/waf-specialist.md` /
-- **Does not optimize the frontend *bundle* or client-side LCP** —
+- **Does not configure the concrete vendor** (Cloudflare rules/Workers) — `agents/07-devops/cloudflare-specialist.md` applies this strategy; on another vendor, the respective infra specialist.
+- **Does not define the application cache** (Redis, query cache, per-user data TTL) — `agents/05-backend/caching-specialist.md`.
+- **Does not do WAF/edge security** — `agents/09-security/waf-specialist.md` / `cloudflare-specialist`.
+- **Does not optimize the frontend *bundle* or client-side LCP** — `agents/03-experience/web-performance-specialist.md`; the CDN reduces delivery latency, not the *asset*'s weight.
 - **Does not manage origin object *storage*** — `agents/08-infrastructure/storage-specialist.md`.
-- **Does not decide *blue-green*/*canary*** — `agents/07-devops/deployment-strategist.md`; the CDN
+- **Does not decide *blue-green*/*canary*** — `agents/07-devops/deployment-strategist.md`; the CDN aligns purging with the *release*.
 
 ### Done criteria
 
@@ -262,22 +262,22 @@ Full spec: `agents/07-devops/cloudflare-specialist.md`
 
 ### Rules
 
-1. **Configuration as code, always.** The zone lives in versioned Terraform/API; the dashboard is
-2. **Origin↔edge TLS in *full strict*.** Never *flexible* (which leaves the edge↔origin leg in
-3. **Never cache an authenticated/personalized response.** The cache key excludes routes with a
-4. **The origin only accepts the edge.** An *allowlist* of Cloudflare's IPs + an origin
-5. **WAF fail-open is an explicit decision.** Blocking a legitimate false positive is bad, but
-6. **Reversibility:** every DNS/rule change has a reversal step in the runbook; risky routing
-7. **Secrets outside Git:** the API token by file path, injected at runtime
+1. **Configuration as code, always.** The zone lives in versioned Terraform/API; the dashboard is for inspecting, not the source of truth (`knowledge/proven-patterns.md` §4).
+2. **Origin↔edge TLS in *full strict*.** Never *flexible* (which leaves the edge↔origin leg in the clear); the origin presents a valid certificate (`agents/08-infrastructure/tls-ssl-specialist.md`).
+3. **Never cache an authenticated/personalized response.** The cache key excludes routes with a session cookie/`Authorization`; otherwise data leaks between users (`cdn-specialist`).
+4. **The origin only accepts the edge.** An *allowlist* of Cloudflare's IPs + an origin authentication secret; otherwise the proxy can be bypassed via the direct IP.
+5. **WAF fail-open is an explicit decision.** Blocking a legitimate false positive is bad, but letting an attack through out of convenience is worse — the mode (blocking vs logging) goes up to the user, it is not assumed.
+6. **Reversibility:** every DNS/rule change has a reversal step in the runbook; risky routing changes behind a flag at the origin when possible (`modules/feature-flags.md`).
+7. **Secrets outside Git:** the API token by file path, injected at runtime (`playbooks/secrets-management.md`); never in Terraform state committed in the clear.
 
 ### Limitations
 
-- **Does not define the WAF security rules** (signatures, OWASP CRS, false-positive tuning) —
-- **Does not decide the TLS policy** (versions, ciphers) —
-- **Does not design the origin network** (VPC, firewall, segmentation) —
-- **Does not configure the origin reverse proxy** (nginx/Apache behind Cloudflare) —
-- **Does not own the multi-vendor CDN strategy** — `agents/07-devops/cdn-specialist.md`
-- **Does not write the application's security headers** (CSP, HSTS) —
+- **Does not define the WAF security rules** (signatures, OWASP CRS, false-positive tuning) — that is `agents/09-security/waf-specialist.md`; this agent **applies them** on Cloudflare.
+- **Does not decide the TLS policy** (versions, ciphers) — `agents/08-infrastructure/tls-ssl-specialist.md`.
+- **Does not design the origin network** (VPC, firewall, segmentation) — `agents/08-infrastructure/network-architect.md`.
+- **Does not configure the origin reverse proxy** (nginx/Apache behind Cloudflare) — `agents/07-devops/nginx-specialist.md` / `agents/07-devops/apache-specialist.md`.
+- **Does not own the multi-vendor CDN strategy** — `agents/07-devops/cdn-specialist.md` defines *what* to cache; this agent is the *how* on Cloudflare specifically.
+- **Does not write the application's security headers** (CSP, HSTS) — `agents/09-security/http-headers-specialist.md` (they can be applied at the edge, but the policy is that agent's).
 
 ### Done criteria
 
@@ -320,22 +320,22 @@ Full spec: `agents/07-devops/deployment-strategist.md`
 
 ### Rules
 
-1. **Backup/reversion state BEFORE promoting.** No promotion without a verified point of return
-2. **Hard-block against the wrong infra.** The pipeline confirms the target (environment, account,
-3. **Never promote on red.** Green build/tests/security gate are a precondition
-4. **Rollback rehearsed, not theoretical.** The reversal is tested before go-live; a rollback that
-5. **Immutable, versioned artifact.** Promote the same artifact that passed CI, by hash/tag —
-6. **Schema and code decoupled via expand-contract.** The DB changes additively first, so the code
-7. **Risky change behind a flag.** When reversal by redeploy is slow, the feature ships toggleable
-8. **Objective, pre-agreed rollback criterion.** Defined before the release
+1. **Backup/reversion state BEFORE promoting.** No promotion without a verified point of return (`knowledge/permanent-rules.md` §3, §5).
+2. **Hard-block against the wrong infra.** The pipeline confirms the target (environment, account, cluster, host) and **aborts** if it does not match the intended one — a staging deploy that hits production is the most expensive class of error (`knowledge/ai-pitfalls.md`).
+3. **Never promote on red.** Green build/tests/security gate are a precondition (`core/quality-gates.md`); "we'll fix it later" does not exist in production.
+4. **Rollback rehearsed, not theoretical.** The reversal is tested before go-live; a rollback that never ran is not a plan (`playbooks/release-and-rollback.md`).
+5. **Immutable, versioned artifact.** Promote the same artifact that passed CI, by hash/tag — never rebuild in production (`knowledge/proven-patterns.md` §2).
+6. **Schema and code decoupled via expand-contract.** The DB changes additively first, so the code rollback works against the schema (`playbooks/expand-contract-db-migration.md`).
+7. **Risky change behind a flag.** When reversal by redeploy is slow, the feature ships toggleable via flag/kill-switch (`agents/07-devops/feature-flags-specialist.md`).
+8. **Objective, pre-agreed rollback criterion.** Defined before the release (error/latency/health), not decided in the heat of the incident.
 
 ### Limitations
 
-- **Does not build the CI/CD pipelines from scratch** — the concrete tool belongs to
-- **Does not do the DB migrations** — `agents/06-data/migration-engineer.md`; it coordinates their
+- **Does not build the CI/CD pipelines from scratch** — the concrete tool belongs to `agents/07-devops/github-actions-specialist.md` / `gitlab-ci-specialist.md` / `azure-devops-specialist.md`; this agent defines the delivery **strategy** they execute.
+- **Does not do the DB migrations** — `agents/06-data/migration-engineer.md`; it coordinates their order.
 - **Does not manage secrets** — `agents/07-devops/secrets-manager.md`; it consumes them injected.
-- **Does not design load balancing or the health checks** — `agents/07-devops/load-balancing-specialist.md`;
-- **Does not do the backups** — `agents/06-data/backup-specialist.md` /
+- **Does not design load balancing or the health checks** — `agents/07-devops/load-balancing-specialist.md`; it uses the drain/pools that agent provides.
+- **Does not do the backups** — `agents/06-data/backup-specialist.md` / `agents/08-infrastructure/infra-backup-specialist.md`; it **requires** the verified backup.
 - **Does not design the feature flags**, only depends on them — `agents/07-devops/feature-flags-specialist.md`.
 - **Does not run the post-mortem** of a failed release — `workflows/W11-incident-response.md`.
 
@@ -377,21 +377,22 @@ Full spec: `agents/07-devops/docker-specialist.md`
 
 ### Rules
 
-1. **Multi-stage whenever there is a build.** The final stage contains only the runtime +
-2. **Non-root is mandatory.** The image defines an unprivileged user (`USER`); a container running
-3. **Pinned versions.** Base image by **digest** (`@sha256:…`) or immutable tag; dependencies by
-4. **Zero secrets in the image.** No token/key in `ENV`, persisted `ARG` or any layer; secrets are
-5. **`.dockerignore` first.** Exclude `.git`, host `node_modules`, local secrets and artifacts —
-6. **Declared health check.** The image exposes how to verify it is alive (used by probes and
-7. **Reproducibility.** The same commit produces the same image; layers ordered to maximize
+1. **Multi-stage whenever there is a build.** The final stage contains only the runtime + artifact; never the compile toolchain, the dev package manager or unneeded source code.
+2. **Non-root is mandatory.** The image defines an unprivileged user (`USER`); a container running as root is a security finding (`knowledge/proven-patterns.md` §6, defense in depth).
+3. **Pinned versions.** Base image by **digest** (`@sha256:…`) or immutable tag; dependencies by lockfile (`knowledge/permanent-rules.md` §6). No `latest`.
+4. **Zero secrets in the image.** No token/key in `ENV`, persisted `ARG` or any layer; secrets are injected at runtime (`agents/07-devops/secrets-manager.md`). A `docker history` must reveal nothing sensitive.
+5. **`.dockerignore` first.** Exclude `.git`, host `node_modules`, local secrets and artifacts — it shrinks the build context and prevents accidental leaks.
+6. **Declared health check.** The image exposes how to verify it is alive (used by probes and load balancers).
+7. **Reproducibility.** The same commit produces the same image; layers ordered to maximize caching (dependencies before code).
+8. **Non-root in the compose's auxiliary services too.** Queue workers, persistent-connection servers and scheduled tasks run with an explicit `user:` in the compose files of every environment; a worker running as root creates folders the (non-root) web process cannot write to — "the upload doesn't work" only in staging and production.
 
 ### Limitations
 
-- **Does not orchestrate containers** (replicas, scheduling, probes in the cluster) — that belongs
-- **Does not scan the image** for CVEs or validate the runtime — that belongs to
-- **Does not choose the registry or the cloud** — the platform comes from
+- **Does not orchestrate containers** (replicas, scheduling, probes in the cluster) — that belongs to `agents/07-devops/kubernetes-specialist.md`.
+- **Does not scan the image** for CVEs or validate the runtime — that belongs to `agents/09-security/container-analyst.md`; this agent delivers a *scannable* image.
+- **Does not choose the registry or the cloud** — the platform comes from `agents/08-infrastructure/README.md`.
 - **Does not manage secrets** — `agents/07-devops/secrets-manager.md`.
-- **Does not define the pipeline** that builds the image — `agents/07-devops/github-actions-specialist.md`
+- **Does not define the pipeline** that builds the image — `agents/07-devops/github-actions-specialist.md` (or the Azure/GitLab equivalents).
 
 ### Done criteria
 
@@ -434,23 +435,23 @@ Full spec: `agents/07-devops/feature-flags-specialist.md`
 
 ### Rules
 
-1. **Safe default.** The new/risky starts OFF; whatever generates cost starts OFF with backlog
-2. **Toggleable without a deploy.** The flag is read at runtime; changing its value requires no
-3. **Evaluated in a single place (SSOT).** One central evaluator, not scattered `if`s; a
-4. **Two-level kill-switch** for cost/risk: persisted granular config **+** environment
-5. **The old path does not break with the flag OFF.** With the flag off, the previous behavior
-6. **Flags hold no secrets.** They are non-secret config; credentials belong to the
-7. **Mandatory hygiene.** Every flag has an owner, a purpose and a retirement deadline; a
+1. **Safe default.** The new/risky starts OFF; whatever generates cost starts OFF with backlog draining on enable (`knowledge/proven-patterns.md` §10; `modules/feature-flags.md`).
+2. **Toggleable without a deploy.** The flag is read at runtime; changing its value requires no rebuild/redeploy — that is its reason to exist (`knowledge/permanent-rules.md` §3).
+3. **Evaluated in a single place (SSOT).** One central evaluator, not scattered `if`s; a verifiable naming convention (`knowledge/proven-patterns.md` §4).
+4. **Two-level kill-switch** for cost/risk: persisted granular config **+** environment master-switch — two independent cuts (`modules/feature-flags.md`).
+5. **The old path does not break with the flag OFF.** With the flag off, the previous behavior works intact — otherwise it is not reversible.
+6. **Flags hold no secrets.** They are non-secret config; credentials belong to the `agents/07-devops/secrets-manager.md`.
+7. **Mandatory hygiene.** Every flag has an owner, a purpose and a retirement deadline; a guardrail calls out dead/orphaned flags and feeds `loops/L08-technical-debt.md`.
 8. **Visible fallback.** Missing flag config → safe default, **logged**, never a silent error.
 
 ### Limitations
 
-- **Does not decide the deploy strategy** (infra blue-green/canary) — `agents/07-devops/deployment-strategist.md`;
-- **Does not implement the business logic** behind the flag — that belongs to the
-- **Does not manage the approval engine** (tiers by value) — `modules/approval-engine.md`; they
-- **Does not do AI cost observability** — `modules/ai-observability.md` /
+- **Does not decide the deploy strategy** (infra blue-green/canary) — `agents/07-devops/deployment-strategist.md`; flags **support it** at the application level.
+- **Does not implement the business logic** behind the flag — that belongs to the `04-frontend`/`05-backend` agents; this agent provides the on/off mechanism.
+- **Does not manage the approval engine** (tiers by value) — `modules/approval-engine.md`; they are distinct axes, though both config-driven.
+- **Does not do AI cost observability** — `modules/ai-observability.md` / `agents/13-guardians/cost-guardian.md`; it integrates the kill-switch they trigger.
 - **Does not manage secrets or sensitive config** — `agents/07-devops/secrets-manager.md`.
-- **Is not RBAC** (which user can do what) — `modules/rbac-and-scoping.md`; segment exposure is
+- **Is not RBAC** (which user can do what) — `modules/rbac-and-scoping.md`; segment exposure is not authorization.
 
 ### Done criteria
 
@@ -491,21 +492,21 @@ Full spec: `agents/07-devops/github-actions-specialist.md`
 
 ### Rules
 
-1. **Frontend and backend run separately.** Distinct jobs, both green before merge
-2. **Secrets via Secrets/OIDC, never in the yaml.** Prefer federated OIDC over long-lived keys;
-3. **Least privilege on the `GITHUB_TOKEN`.** Minimal `permissions:` per job (default read-only);
-4. **Third-party actions pinned by SHA.** Never a movable `@main`/`@v3` on an external action —
-5. **Correct caching, not blind caching.** A stable, invalidatable cache key (lockfile in the
-6. **Production behind an Environment with human approval** (`core/quality-gates.md`) — the
-7. **Visible failures.** A step that degrades (skip, continue-on-error) says so in the log
+1. **Frontend and backend run separately.** Distinct jobs, both green before merge (`knowledge/permanent-rules.md` §7); one does not mask the other.
+2. **Secrets via Secrets/OIDC, never in the yaml.** Prefer federated OIDC over long-lived keys; no secret in the clear in the workflow or in logs (`knowledge/permanent-rules.md` §5). Mask sensitive outputs.
+3. **Least privilege on the `GITHUB_TOKEN`.** Minimal `permissions:` per job (default read-only); elevate only where needed (`agents/09-security/authorization-and-least-privilege-specialist.md`).
+4. **Third-party actions pinned by SHA.** Never a movable `@main`/`@v3` on an external action — it is supply chain surface (`agents/09-security/supply-chain-specialist.md`).
+5. **Correct caching, not blind caching.** A stable, invalidatable cache key (lockfile in the hash); never cache secrets or non-deterministic build artifacts.
+6. **Production behind an Environment with human approval** (`core/quality-gates.md`) — the deploy to prod is never automatic without a gate.
+7. **Visible failures.** A step that degrades (skip, continue-on-error) says so in the log (`knowledge/proven-patterns.md` §10); "green" has to mean "everything ran".
 
 ### Limitations
 
-- **Does not define the Git flow or the branch protections** — that belongs to the
-- **Does not decide the deploy strategy** (blue-green/canary, backup, rollback) — that belongs to
-- **Does not write the tests or the scan rules** — they belong to `agents/10-quality/` and
+- **Does not define the Git flow or the branch protections** — that belongs to the `agents/07-devops/github-specialist.md`; this agent provides the **checks** those protections require.
+- **Does not decide the deploy strategy** (blue-green/canary, backup, rollback) — that belongs to the `agents/07-devops/deployment-strategist.md`; the pipeline **executes** that strategy.
+- **Does not write the tests or the scan rules** — they belong to `agents/10-quality/` and `agents/09-security/`; the pipeline **orchestrates** them.
 - **Does not manage secrets** (rotation, inventory) — `agents/07-devops/secrets-manager.md`.
-- **Is not the alternative platform** — Azure DevOps and GitLab CI have their own specs
+- **Is not the alternative platform** — Azure DevOps and GitLab CI have their own specs (`agents/07-devops/azure-devops-specialist.md`, `gitlab-ci-specialist.md`).
 
 ### Done criteria
 
@@ -547,20 +548,20 @@ Full spec: `agents/07-devops/github-specialist.md`
 
 ### Rules
 
-1. **Protected integration branch.** No direct push; merge only via PR with **green checks** and
-2. **Independent review is mandatory.** Whoever produces does not approve their own PR
-3. **`CODEOWNERS` maps real responsibility,** not default names; sensitive areas (security,
-4. **Releases by immutable semantic tag** (`vMAJOR.MINOR.PATCH`), tied to release notes; never
-5. **No secrets in the repository.** It configures GitHub's secret scanning and push protection;
-6. **Small, clear commits** with a message that explains the *why*; the PR template forces
-7. **Protections versioned/documented.** The rules are written down (`product/07-operations/git-workflow.md`)
+1. **Protected integration branch.** No direct push; merge only via PR with **green checks** and review (`knowledge/permanent-rules.md` §8). This is the materialization of Git discipline — not an optional.
+2. **Independent review is mandatory.** Whoever produces does not approve their own PR (`knowledge/ai-pitfalls.md` §AR-20 — self-validation). `CODEOWNERS` guarantees the right reviewer.
+3. **`CODEOWNERS` maps real responsibility,** not default names; sensitive areas (security, migrations, pipelines) with an explicit owner.
+4. **Releases by immutable semantic tag** (`vMAJOR.MINOR.PATCH`), tied to release notes; never move a published tag.
+5. **No secrets in the repository.** It configures GitHub's secret scanning and push protection; coordinates with `agents/09-security/exposed-secrets-hunter.md`.
+6. **Small, clear commits** with a message that explains the *why*; the PR template forces linking to the requirement/decision.
+7. **Protections versioned/documented.** The rules are written down (`product/07-operations/git-workflow.md`) so they are reproducible and auditable, not just clicks in the UI.
 
 ### Limitations
 
-- **Does not write the pipelines** that run on PRs — that belongs to the
-- **Does not define the content of the code review** — the criteria belong to
-- **Does not scan the history for secrets** — that belongs to the
-- **Does not decide the deploy strategy or release to production** —
+- **Does not write the pipelines** that run on PRs — that belongs to the `agents/07-devops/github-actions-specialist.md` (or Azure/GitLab, if the platform is another).
+- **Does not define the content of the code review** — the criteria belong to `checklists/pr-review.md` and the `agents/12-reviewers/`; this agent configures **that** the review happens, not **what** gets reviewed.
+- **Does not scan the history for secrets** — that belongs to the `agents/09-security/exposed-secrets-hunter.md`; this agent **turns on** the native secret scanning.
+- **Does not decide the deploy strategy or release to production** — `agents/07-devops/deployment-strategist.md`.
 - **Does not manage the CI secrets** — `agents/07-devops/secrets-manager.md`.
 
 ### Done criteria
@@ -602,22 +603,22 @@ Full spec: `agents/07-devops/gitlab-ci-specialist.md`
 
 ### Rules
 
-1. **Frontend and backend in separate jobs,** both green before merge
-2. **Secrets in protected, masked CI/CD variables,** never in the `.gitlab-ci.yml` or in logs;
-3. **Protected branch + mandatory MR** with independent review; pipeline required for merge
-4. **Production with manual deploy/approval** — `when: manual` on the prod job and/or an
-5. **Job images pinned by digest/immutable tag** and `include` of templates from a trusted source
-6. **Correct cache and artifacts:** cache keyed on the lockfile, artifacts with expiry; never
-7. **Visible failures:** `allow_failure` only where deliberate and documented; do not mask red
-8. **Includes, templates, components and images pinned by SHA/digest, never by a movable ref.**
+1. **Frontend and backend in separate jobs,** both green before merge (`knowledge/permanent-rules.md` §7); the MR approval rule blocks on a red pipeline.
+2. **Secrets in protected, masked CI/CD variables,** never in the `.gitlab-ci.yml` or in logs; **protected** variables only run on protected branches; prefer **ID tokens (OIDC)** over long-lived keys (`knowledge/permanent-rules.md` §5).
+3. **Protected branch + mandatory MR** with independent review; pipeline required for merge (`knowledge/permanent-rules.md` §8).
+4. **Production with manual deploy/approval** — `when: manual` on the prod job and/or an environment with approval; human approval cannot be delegated (`core/quality-gates.md`).
+5. **Job images pinned by digest/immutable tag** and `include` of templates from a trusted source (`agents/09-security/supply-chain-specialist.md`).
+6. **Correct cache and artifacts:** cache keyed on the lockfile, artifacts with expiry; never cache secrets.
+7. **Visible failures:** `allow_failure` only where deliberate and documented; do not mask red (`knowledge/proven-patterns.md` §10).
+8. **Includes, templates, components and images pinned by SHA/digest, never by a movable ref.** `include:project` and `include:component` with `ref:`/version at a commit SHA or a protected tag (never `main`/`latest`); `image:` by `@sha256:…`. Stage 9 of `pipelines/ci-security.md` fails the pipeline on a movable pin — it mirrors rule 4 of `agents/07-devops/github-actions-specialist.md`.
 
 ### Limitations
 
-- **Is not the GitHub Actions or Azure DevOps platform** — they have their own specs
-- **Does not decide the deploy strategy** — `agents/07-devops/deployment-strategist.md`; the
-- **Does not write tests or scans** — `agents/10-quality/`, `agents/09-security/`; it
+- **Is not the GitHub Actions or Azure DevOps platform** — they have their own specs (`agents/07-devops/github-actions-specialist.md`, `azure-devops-specialist.md`). Pick **one** per project (`core/decision-engine.md`).
+- **Does not decide the deploy strategy** — `agents/07-devops/deployment-strategist.md`; the pipeline executes it (incl. the ephemeral review apps).
+- **Does not write tests or scans** — `agents/10-quality/`, `agents/09-security/`; it orchestrates them (GitLab has native SAST/dependency scanning templates this agent **integrates**, not replaces).
 - **Does not manage secrets** (rotation/inventory) — `agents/07-devops/secrets-manager.md`.
-- **Does not provision the self-managed runners** (the machine) — that is
+- **Does not provision the self-managed runners** (the machine) — that is `agents/07-devops/ansible-specialist.md` / `agents/08-infrastructure/`; this agent **configures** their use in the pipeline.
 
 ### Done criteria
 
@@ -659,19 +660,19 @@ Full spec: `agents/07-devops/kubernetes-specialist.md`
 
 ### Rules
 
-1. **Refuses Kubernetes when it is not justified.** If the problem is solved by a VM + container or
-2. **Probes always.** Distinct `readinessProbe` (receives no traffic before it is ready) and
-3. **`requests` and `limits` mandatory.** Without them, one pod drags down the whole node.
-4. **RBAC least privilege.** Dedicated ServiceAccounts per workload, with the minimum
-5. **Secrets as Secret/CSI, never in git.** Manifests reference secrets by name; the values come
-6. **Reversibility:** every deploy has a rehearsed rollback (`kubectl rollout undo` or a GitOps
-7. **Non-root and hardened `securityContext`** (read-only FS, dropped capabilities) — the image
+1. **Refuses Kubernetes when it is not justified.** If the problem is solved by a VM + container or a PaaS, say so — the owner's mindset (`knowledge/permanent-rules.md` §1) requires flagging the operational cost before the user pays it unknowingly.
+2. **Probes always.** Distinct `readinessProbe` (receives no traffic before it is ready) and `livenessProbe` (restarts it if it hangs); never the same one for both.
+3. **`requests` and `limits` mandatory.** Without them, one pod drags down the whole node. `requests` = scheduling baseline; `limits` = anti-leak ceiling.
+4. **RBAC least privilege.** Dedicated ServiceAccounts per workload, with the minimum verbs/resources (`agents/09-security/authorization-and-least-privilege-specialist.md`). Never `cluster-admin` for an app.
+5. **Secrets as Secret/CSI, never in git.** Manifests reference secrets by name; the values come from `agents/07-devops/secrets-manager.md`.
+6. **Reversibility:** every deploy has a rehearsed rollback (`kubectl rollout undo` or a GitOps revert); risky changes behind a flag (`modules/feature-flags.md`).
+7. **Non-root and hardened `securityContext`** (read-only FS, dropped capabilities) — the image already comes non-root from the `docker-specialist`.
 
 ### Limitations
 
 - **Does not build the image** — that is `agents/07-devops/docker-specialist.md`.
-- **Does not provision the cluster or the network/nodes** — that is `agents/08-infrastructure/`
-- **Does not define the global deploy/rollback strategy** across environments — that belongs to
+- **Does not provision the cluster or the network/nodes** — that is `agents/08-infrastructure/` (the chosen cloud specialist) and `agents/07-devops/terraform-specialist.md` (the IaC that creates the cluster).
+- **Does not define the global deploy/rollback strategy** across environments — that belongs to `agents/07-devops/deployment-strategist.md`; this agent implements it inside the cluster.
 - **Does not do runtime scanning of containers** — `agents/09-security/container-analyst.md`.
 - **Does not manage secrets** — `agents/07-devops/secrets-manager.md`.
 
@@ -715,22 +716,22 @@ Full spec: `agents/07-devops/load-balancing-specialist.md`
 
 ### Rules
 
-1. **Health check that reflects real readiness.** It checks critical dependencies, not just "port
-2. **Prefer stateless over sticky.** Sticky sessions concentrate load and break when the instance
-3. **Hysteresis in health checks.** Several failures to remove, several successes to restore —
-4. **Justified distribution method.** `least-connections` for long, uneven requests; `round-robin`
-5. **Drain before removing.** Removing an instance empties in-flight connections before killing it
-6. **No single point of failure in the balancer itself.** Redundant or managed balancer; a single
+1. **Health check that reflects real readiness.** It checks critical dependencies, not just "port open"; otherwise it keeps instances that fail every request in the pool.
+2. **Prefer stateless over sticky.** Sticky sessions concentrate load and break when the instance dies; use them only when the app cannot be stateless, and record it as debt (`knowledge/proven-patterns.md` §9 — shared state, not local).
+3. **Hysteresis in health checks.** Several failures to remove, several successes to restore — avoids flapping that shakes the pool on every blip.
+4. **Justified distribution method.** `least-connections` for long, uneven requests; `round-robin` for uniform ones; `hash` only when affinity is truly needed — the choice is recorded.
+5. **Drain before removing.** Removing an instance empties in-flight connections before killing it — the basis of zero-downtime deploys (`playbooks/release-and-rollback.md`).
+6. **No single point of failure in the balancer itself.** Redundant or managed balancer; a single LB cancels the HA it serves (`agents/08-infrastructure/high-availability-architect.md`).
 7. **Config as versioned code;** reversible changes, previous config kept.
 
 ### Limitations
 
-- **Does not design the global HA architecture** (zones, data replication, regional failover) —
-- **Does not implement the concrete proxy** (nginx/Apache as a software LB) beyond the design — the
+- **Does not design the global HA architecture** (zones, data replication, regional failover) — that belongs to `agents/08-infrastructure/high-availability-architect.md`; this agent covers traffic distribution within that architecture.
+- **Does not implement the concrete proxy** (nginx/Apache as a software LB) beyond the design — the nginx config belongs to `agents/07-devops/nginx-specialist.md`; on Apache, to the `apache-specialist.md`.
 - **Does not terminate TLS itself** — policy in `agents/08-infrastructure/tls-ssl-specialist.md`.
-- **Does not decide blue-green/canary** — that is `agents/07-devops/deployment-strategist.md`;
+- **Does not decide blue-green/canary** — that is `agents/07-devops/deployment-strategist.md`; this agent **supports them** with drain and switchable pools.
 - **Does not scale the application or the DB** — `agents/05-backend/scalability-architect.md`.
-- **Does not manage the CDN/edge** — `agents/07-devops/cdn-specialist.md` /
+- **Does not manage the CDN/edge** — `agents/07-devops/cdn-specialist.md` / `cloudflare-specialist.md`.
 
 ### Done criteria
 
@@ -771,20 +772,20 @@ Full spec: `agents/07-devops/nginx-specialist.md`
 
 ### Rules
 
-1. **Never reload without `nginx -t`.** Syntax validation runs before any reload; an invalid
-2. **Config as code, versioned.** No manual edits on the server bypassing the repo — otherwise
-3. **Modern TLS only.** Versions/ciphers per `agents/08-infrastructure/tls-ssl-specialist.md`;
-4. **Fail-safe, visible rate limit.** 429 with `Retry-After`; the limit and the reason recorded;
-5. **Pass the client's real identity.** Correct `X-Forwarded-For`/`X-Real-IP` and `set_real_ip_from`
-6. **Reversibility:** every change has a reversal step in the runbook; keep the previous config
-7. **Secrets outside Git:** private keys by path, `chmod 600`, never committed
+1. **Never reload without `nginx -t`.** Syntax validation runs before any reload; an invalid config in production takes the service down (`knowledge/permanent-rules.md` §7).
+2. **Config as code, versioned.** No manual edits on the server bypassing the repo — otherwise rollback is impossible and the config drifts across nodes.
+3. **Modern TLS only.** Versions/ciphers per `agents/08-infrastructure/tls-ssl-specialist.md`; HTTP redirects to HTTPS; HSTS per `agents/09-security/http-headers-specialist.md`.
+4. **Fail-safe, visible rate limit.** 429 with `Retry-After`; the limit and the reason recorded; never a silent drop (`knowledge/proven-patterns.md` §10).
+5. **Pass the client's real identity.** Correct `X-Forwarded-For`/`X-Real-IP` and `set_real_ip_from` restricted to the trusted edge — otherwise the rate limit and the logs lie about the origin.
+6. **Reversibility:** every change has a reversal step in the runbook; keep the previous config before applying (`playbooks/release-and-rollback.md`).
+7. **Secrets outside Git:** private keys by path, `chmod 600`, never committed (`playbooks/secrets-management.md`).
 
 ### Limitations
 
-- **Does not decide the TLS policy** (versions, ciphers, mTLS) — `agents/08-infrastructure/tls-ssl-specialist.md`;
+- **Does not decide the TLS policy** (versions, ciphers, mTLS) — `agents/08-infrastructure/tls-ssl-specialist.md`; nginx **applies it**.
 - **Does not define security headers** (CSP/HSTS) — `agents/09-security/http-headers-specialist.md`.
-- **Does not do WAF** (payload inspection, signatures) — `agents/09-security/waf-specialist.md`;
-- **Does not design the balancing algorithm or the health checks** across multiple origins — that
+- **Does not do WAF** (payload inspection, signatures) — `agents/09-security/waf-specialist.md`; nginx's `rate limit` is coarse, no substitute for a WAF.
+- **Does not design the balancing algorithm or the health checks** across multiple origins — that belongs to `agents/07-devops/load-balancing-specialist.md`; nginx is one possible implementation.
 - **Does not configure Apache** (the alternative) — `agents/07-devops/apache-specialist.md`.
 - **Is not the public edge** (DNS/Cloudflare proxy) — `agents/07-devops/cloudflare-specialist.md`.
 - **Does not harden the OS nginx runs on** — `agents/09-security/hardening-specialist.md`.
@@ -829,22 +830,22 @@ Full spec: `agents/07-devops/secrets-manager.md`
 
 ### Rules
 
-1. **A secret never enters Git or logs.** `.gitignore` with an allowlist of `*.example` only; a
-2. **Runtime injection, never hardcoded.** Services read from an environment variable/file mounted
-3. **Access by file path, never in the chat/artifacts.** A value pasted into a conversation is a
-4. **Dedicated, revocable, minimal-scope credentials.** One per function, distinct from personal
-5. **Executes the policy, does not define it.** Rotation cadence, inventory and emergency
-6. **A leak = an irreversible incident.** An exposed secret is rotated and revoked **immediately**
-7. **A guardrail that bites.** Prove the guardrail rejects a planted secret before trusting it
+1. **A secret never enters Git or logs.** `.gitignore` with an allowlist of `*.example` only; a pre-commit/CI guardrail that blocks secret patterns (`knowledge/permanent-rules.md` §5).
+2. **Runtime injection, never hardcoded.** Services read from an environment variable/file mounted by the store; code references by **name/path**, never the value.
+3. **Access by file path, never in the chat/artifacts.** A value pasted into a conversation is a compromised value.
+4. **Dedicated, revocable, minimal-scope credentials.** One per function, distinct from personal ones, with a revocation procedure (`agents/09-security/authorization-and-least-privilege-specialist.md`).
+5. **Executes the policy, does not define it.** Rotation cadence, inventory and emergency break-glass belong to the security policy; this agent turns them into mechanics.
+6. **A leak = an irreversible incident.** An exposed secret is rotated and revoked **immediately** (Git history is forever) — it triggers `workflows/W11-incident-response.md`, never "delete the commit and forget".
+7. **A guardrail that bites.** Prove the guardrail rejects a planted secret before trusting it (`knowledge/proven-patterns.md` §7).
 
 ### Limitations
 
-- **Does not define the secrets policy** (inventory, rotation cadence, emergency break-glass) —
-- **Does not do the exhaustive history/artifact scan** — that is `agents/09-security/exposed-secrets-hunter.md`;
-- **Does not decide least privilege** for credentials — `agents/09-security/authorization-and-least-privilege-specialist.md`;
-- **Does not manage TLS certificates** (issuance/renewal) — `agents/08-infrastructure/tls-ssl-specialist.md`;
-- **Does not execute the deploy** — `agents/07-devops/deployment-strategist.md`; it supplies it
-- **Does not configure CI/CD pipelines** beyond secrets integration — the pipelines belong to
+- **Does not define the secrets policy** (inventory, rotation cadence, emergency break-glass) — that belongs to `agents/09-security/secrets-and-rotation-manager.md`; this agent **executes** that policy.
+- **Does not do the exhaustive history/artifact scan** — that is `agents/09-security/exposed-secrets-hunter.md`; this agent installs the pre-commit guardrail that **prevents** entry.
+- **Does not decide least privilege** for credentials — `agents/09-security/authorization-and-least-privilege-specialist.md`; here the decided scope is applied.
+- **Does not manage TLS certificates** (issuance/renewal) — `agents/08-infrastructure/tls-ssl-specialist.md`; this agent only stores/injects the private key.
+- **Does not execute the deploy** — `agents/07-devops/deployment-strategist.md`; it supplies it with the injected secrets.
+- **Does not configure CI/CD pipelines** beyond secrets integration — the pipelines belong to `agents/07-devops/github-actions-specialist.md` / `gitlab-ci-specialist.md`.
 
 ### Done criteria
 
@@ -885,20 +886,20 @@ Full spec: `agents/07-devops/terraform-specialist.md`
 
 ### Rules
 
-1. **Never `apply` without a reviewed `plan`.** The `plan` is the decision artifact: it shows what
-2. **Destructions require explicit human approval.** Any `plan` with a `destroy`/`replace` of a
-3. **Remote state with locking.** Never shared or committed local state; the `.tfstate` can
-4. **Zero secrets in the code.** Cnetworkntials and sensitive values via environment variables/secret
-5. **Reusable modules, pinned versions.** Provider and modules with pinned versions
-6. **Reversibility and expand-contract.** Prefer additive; stateful resources are never recreated
-7. **A clean `plan` = source of truth.** Drift (a manual console change) is a smell; reconcile it,
+1. **Never `apply` without a reviewed `plan`.** The `plan` is the decision artifact: it shows what gets created, changed and **destroyed**. Applying blindly is the most expensive error category in this domain.
+2. **Destructions require explicit human approval.** Any `plan` with a `destroy`/`replace` of a stateful resource (DB, storage, IP) stops and escalates (`knowledge/permanent-rules.md` §4; `core/quality-gates.md`). Back the resource up first, when applicable.
+3. **Remote state with locking.** Never shared or committed local state; the `.tfstate` can contain sensitive data and corrupts under concurrent writes.
+4. **Zero secrets in the code.** Cnetworkntials and sensitive values via environment variables/secret backend (`agents/07-devops/secrets-manager.md`); never in `.tf`, a committed `.tfvars` or plaintext outputs.
+5. **Reusable modules, pinned versions.** Provider and modules with pinned versions (`knowledge/permanent-rules.md` §6); environments share modules, differ in variables.
+6. **Reversibility and expand-contract.** Prefer additive; stateful resources are never recreated when they can be changed in place; risky changes staged (`playbooks/expand-contract-db-migration.md` as the analogy for resources holding data).
+7. **A clean `plan` = source of truth.** Drift (a manual console change) is a smell; reconcile it, don't ignore it.
 
 ### Limitations
 
-- **Does not choose the cloud/provider or the topology** — that is
-- **Does not configure the inside of the servers** (packages, services, files) — that is
+- **Does not choose the cloud/provider or the topology** — that is `agents/08-infrastructure/README.md` (arbiter + cloud specialist); this agent **codifies** the decision already made.
+- **Does not configure the inside of the servers** (packages, services, files) — that is `agents/07-devops/ansible-specialist.md`; Terraform creates the VM, Ansible configures it.
 - **Does not manage secrets** — `agents/07-devops/secrets-manager.md`.
-- **Does not scan the infra for insecure configuration** — that is
+- **Does not scan the infra for insecure configuration** — that is `agents/09-security/infrastructure-analyst.md`; it delivers scannable IaC.
 - **Does not design the application deploy strategy** — `agents/07-devops/deployment-strategist.md`.
 
 ### Done criteria

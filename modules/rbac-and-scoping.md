@@ -70,6 +70,12 @@ decides; the *query* filters by the server's identity; the output redacts by aut
 8. **Policies are auditable and versionable.** Who holds which role and which scope is traceable,
    and the history of grants/revocations is recorded (`modules/audit-and-provenance.md`). Test: an
    access grant traces back to who gave it and when.
+9. **A public identifier never becomes the internal scope id without explicit resolution, at a
+   single point.** A URL or token identifier (a string) stored as an organizational-unit id went
+   through the DB engine's implicit type conversion: scope-dependent features "never worked", and
+   when the string started with digits, the scope pointed at **another** unit — a years-old
+   cross-tenant leak, invisible to the suite. Public→internal resolution in the middleware and only
+   there; a test that asserts the scope bound after every public route.
 
 ## How to adopt it in a new product (steps)
 

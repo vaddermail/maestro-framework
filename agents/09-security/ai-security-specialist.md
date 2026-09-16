@@ -136,6 +136,11 @@ Asked via coordinator → Orchestrator, in batch (`core/question-engine.md`):
     be exfiltrated; what cannot leak is not there (`knowledge/permanent-rules.md` §5) and
     authorization is decided on the server (rule 3), never by instruction to the model. Verifiable:
     the full system prompt can be read by an attacker without that opening any access.
+11. **The system prompt is intent, not a contract.** An invariant of format or behavior that must
+    always hold lives in code (validation, post-processing, refusal); the model obeys the user's
+    request against the system instruction — measured in a product: a format the prompt forbade
+    was requested, and the model gave it. Recorded as an ADR: "the prompt is intent, not a
+    guarantee."
 
 ## Limitations (what this agent does NOT do)
 

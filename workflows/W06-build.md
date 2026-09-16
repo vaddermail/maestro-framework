@@ -50,7 +50,7 @@ most expensive avoidable cost of the phase.
 | 0.2 | `agents/07-devops/github-specialist.md` (or `agents/07-devops/gitlab-ci-specialist.md` / `agents/07-devops/azure-devops-specialist.md`, per the platform pinned in F3 in `product/02-architecture/stack.md`) | Repository, branches, protections, first pipeline | `product/07-operations/git-workflow.md` |
 | 0.3 | `agents/04-frontend/frontend-architect.md` | Client skeleton: structure, design system wired in, one empty screen that builds | code |
 | 0.4 | `agents/05-backend/` (the specialist for the style chosen in the F3 ADR) | Server skeleton with a health endpoint and the DB connection | code |
-| 0.5 | `agents/10-quality/regression-test-engineer.md` | Runners per surface (front **and** back, run separately) + `pipelines/ci-quality.md` and `pipelines/ci-security.md` armed — the first merge runs green | CI |
+| 0.5 | `agents/10-quality/regression-test-engineer.md` | Runners per surface (front **and** back, run separately) + `pipelines/ci-quality.md` (including the Project gate stage) and `pipelines/ci-security.md` armed — the first merge runs green | CI |
 | 0.6 | Orchestrator | `checklists/definition-of-done.md` §F6 — Skeleton (slice 0) item by item, verified by a clean subagent | record `product/99-records/gates/P6-slice-0-YYYY-MM-DD.md` (`templates/project/GATE.md.template`) + summary in `STATE.md` |
 
 ## The principle: vertical slice, not horizontal layer

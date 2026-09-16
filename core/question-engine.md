@@ -102,6 +102,22 @@ All questions and answers live in `product/01-requirements/questions-and-answers
 - Answers **assumed by default** must be confirmed by the phase gate — the gate does not pass with
   critical provisionals.
 
+## Pending decisions: age and expiry
+
+An unanswered question goes to `STATE.md` §Pending decisions with the date it opened ("opened on
+yyyy-mm-dd"). A pending item is not a warehouse: measured across projects, a structural decision
+stayed "deferred" for two months with no deadline, and another project piled up 38 pending items
+in two weeks — a list nobody can decide all at once is a list nobody decides.
+
+- **Open more than 30 days** → at the start of the next session, the Orchestrator puts it back to
+  the user with one of three exits: **decide**, **waive with a deadline** (goes into §Decisions
+  made on behalf of the absent owner with "Revisit if:") or **archive** (it stopped mattering — say
+  why). It is the same rule that already expires the framework's candidates
+  (`knowledge/candidates.md` §Entry and exit rules), applied to the project's decisions.
+- **More than 15 open** → triage in a single batch (§Batches, not a barrage), never one by one.
+- `_meta/verify-project.sh` warns in both cases; the warning does not block, but it also does not
+  disappear on its own.
+
 ## Associated loop
 
 `loops/L01-ambiguous-requirements.md`: while open ambiguities/gaps exist → build a batch → ask →

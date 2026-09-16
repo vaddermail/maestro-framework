@@ -35,20 +35,20 @@ Full spec: `agents/01-requirements/acceptance-criteria-writer.md`
 
 ### Rules
 
-1. **Verifiable or it is not a criterion.** Each criterion must have an **observable** result and a
-2. **Cover happy path + errors + limits.** An `FR` with only the happy-path criterion is
-3. **One scenario, one behavior.** Each criterion tests one thing; chaining five conditions into a
-4. **Structured, consistent format.** Scenarios in given-when-then style (Given/When/Then) or a
-5. **Business rule → rejection criterion.** Every invariant (`BR`) generates at least one criterion
-6. **Traceable.** Each criterion references the `FR`/`BR` it verifies; an orphan criterion is
+1. **Verifiable or it is not a criterion.** Each criterion must have an **observable** result and a binary verdict (passed/failed). "The screen is pleasant" is not a criterion; "the Save button stays disabled until all required fields are filled" is.
+2. **Cover happy path + errors + limits.** An `FR` with only the happy-path criterion is half-specified; the defects live in the error paths and at the limits (`knowledge/origin-lessons.md` §B, §C8: NULL vs FALSE, TOCTOU, limits).
+3. **One scenario, one behavior.** Each criterion tests one thing; chaining five conditions into a criterion makes the verdict ambiguous.
+4. **Structured, consistent format.** Scenarios in given-when-then style (Given/When/Then) or a condition→result table — the same style across the whole artifact, so tests mirror it 1:1.
+5. **Business rule → rejection criterion.** Every invariant (`BR`) generates at least one criterion that verifies the system **refuses** the violation, not only that it accepts the valid path.
+6. **Traceable.** Each criterion references the `FR`/`BR` it verifies; an orphan criterion is suspect, an `FR` without a criterion is a gap detectable by the `coverage-auditor`.
 7. **Glossary terms.** Scenarios written in the ubiquitous language, not synonyms.
 
 ### Limitations
 
-- **Does not elicit or state the requirements** — it consumes the `FR` from
-- **Does not define the business rules or the state machines** — that belongs to
-- **Does not fix the NFR numbers** — they come from `agents/01-requirements/nfr-specifier.md`;
-- **Does not write or run the tests** — that belongs to `agents/10-quality/` (F6/F7); the Writer
+- **Does not elicit or state the requirements** — it consumes the `FR` from `agents/01-requirements/requirements-engineer.md`.
+- **Does not define the business rules or the state machines** — that belongs to `agents/01-requirements/business-rules-modeler.md` (the Writer translates the invariants into rejection criteria).
+- **Does not fix the NFR numbers** — they come from `agents/01-requirements/nfr-specifier.md`; the Writer writes the criterion that verifies them.
+- **Does not write or run the tests** — that belongs to `agents/10-quality/` (F6/F7); the Writer produces the acceptance specification the tests implement.
 - **Does not decide the expected result when it is a business decision** — it asks the user.
 
 ### Done criteria
@@ -57,7 +57,7 @@ Full spec: `agents/01-requirements/acceptance-criteria-writer.md`
 - [ ] Each invariant (`BR`) has ≥1 rejection criterion.
 - [ ] All criteria verifiable (observable result + binary verdict) and in the same style.
 - [ ] Each criterion references the `FR`/`BR` it verifies; no MVP `FR` left without a criterion.
-- [ ] `To be confirmed` criteria have an associated question recorded; no criterion marked
+- [ ] `To be confirmed` criteria have an associated question recorded; no criterion marked ambiguous.
 
 ## ambiguity-hunter
 
@@ -91,27 +91,27 @@ Full spec: `agents/01-requirements/ambiguity-hunter.md`
 
 ### Rules
 
-1. **Detects, does not decide.** The Hunter raises the ambiguity and formulates the question;
-2. **Every finding has an ID and a state.** `A-nnn` with type (ambiguity/contradiction/gap), target
-3. **Test each statement against the question "is there another reasonable reading?"** If yes, it
-4. **Hunt the missing quantifier.** Adjectives without a number ("fast", "secure", "many",
-5. **Cross artifacts, do not just read each one.** Contradictions live **between** documents (an
-6. **Fail-closed at the gate:** when in doubt whether a finding is critical, treat it as critical
-7. **Never repeat an already answered question** — read `questions-and-answers.md` first; if the
+1. **Detects, does not decide.** The Hunter raises the ambiguity and formulates the question; resolution belongs to the owner agent (after the user's answer), never to the Hunter.
+2. **Every finding has an ID and a state.** `A-nnn` with type (ambiguity/contradiction/gap), target (`FR`, `BR`, term…), severity (critical/non-critical) and state (open/resolved/accepted). Traceable.
+3. **Test each statement against the question "is there another reasonable reading?"** If yes, it is ambiguous — even if the intended reading seems obvious to the author.
+4. **Hunt the missing quantifier.** Adjectives without a number ("fast", "secure", "many", "large") are ambiguity by default → return them to the `nfr-specifier` or ask.
+5. **Cross artifacts, do not just read each one.** Contradictions live **between** documents (an `FR` that violates a `BR`, a criterion that contradicts the glossary); the reading must be crossed.
+6. **Fail-closed at the gate:** when in doubt whether a finding is critical, treat it as critical until the user downgrades it. P2 does not pass with open critical ambiguity.
+7. **Never repeat an already answered question** — read `questions-and-answers.md` first; if the old answer looks wrong in light of a new finding, **cite it** and ask whether it stands.
 
 ### Limitations
 
-- **Does not write or rewrite requirements, rules or NFRs** — it returns the finding to the owner
-- **Does not define or arbitrate domain terms** — it flags the dubious term to
+- **Does not write or rewrite requirements, rules or NFRs** — it returns the finding to the owner agent (`requirements-engineer`, `business-rules-modeler`, `nfr-specifier`, `acceptance-criteria-writer`).
+- **Does not define or arbitrate domain terms** — it flags the dubious term to `agents/01-requirements/glossary-curator.md`, which decides.
 - **Does not hunt code or architecture defects** — that belongs to `agents/12-reviewers/` in F7.
-- **Does not do the product's global adversarial audit** — that is `playbooks/adversarial-audit.md`
-- **Does not prioritize features** — the severity it assigns is about the *risk of the ambiguity*,
+- **Does not do the product's global adversarial audit** — that is `playbooks/adversarial-audit.md` (F7); the Hunter is adversarial **only over the specification** of F2/F5.
+- **Does not prioritize features** — the severity it assigns is about the *risk of the ambiguity*, not about business value (that is `agents/00-discovery/prioritizer.md`).
 
 ### Done criteria
 
 - [ ] All F2 artifacts read per artifact **and** crossed.
 - [ ] Each finding recorded as `A-nnn` (type, target, severity, state).
-- [ ] Findings that require a decision converted into batched questions, without repeating the
+- [ ] Findings that require a decision converted into batched questions, without repeating the history.
 - [ ] Zero critical findings open, or pending items recorded in `STATE.md` with P2 blocked.
 - [ ] P2 gate verdict issued to the Orchestrator.
 
@@ -147,28 +147,28 @@ Full spec: `agents/01-requirements/business-rules-modeler.md`
 
 ### Rules
 
-1. **Distinguish the three orthogonal mechanisms** that do not substitute for one another
-2. **Thresholds configurable in data, never fixed per profile or in code.** An approval amount, a
-3. **One source of truth per fact; the inverse is derived.** Bidirectional relations store one
-4. **Explicit state machine for each critical flow**, with **named** transitions and the invalid
-5. **Authority ≠ scoping.** *Which actions I can take* is a distinct axis from *which data I see*;
-6. **Every `BR` has provenance.** Note the why / the defect or decision that originated it, so that
-7. **An invariant is a non-negotiable contract.** Each invariant is a candidate for a DB constraint
-8. **Does not decide what belongs to the user.** Business decision rules (thresholds, who
+1. **Distinguish the three orthogonal mechanisms** that do not substitute for one another (`knowledge/origin-lessons.md` §B1, `modules/approval-engine.md`): *eligibility gate* (blocks early) ≠ *authorization* (closes the flow) ≠ *tier proportional to an amount*. Collapsing them makes the system rigid and unauditable.
+2. **Thresholds configurable in data, never fixed per profile or in code.** An approval amount, a horizon, a reservation limit live in a configurable catalog (`knowledge/origin-lessons.md` §B1).
+3. **One source of truth per fact; the inverse is derived.** Bidirectional relations store one side; computable state is never a rule that gets "synced" (`knowledge/origin-lessons.md` §B3). Prefer **temporal relations** (start/end) over mirrored fields.
+4. **Explicit state machine for each critical flow**, with **named** transitions and the invalid ones **rejected** — and the base + overlay pattern when a temporary action must not destroy permanent state (`modules/state-machines.md`; `knowledge/origin-lessons.md` §B5).
+5. **Authority ≠ scoping.** *Which actions I can take* is a distinct axis from *which data I see*; the rule says which of the two governs (`knowledge/origin-lessons.md` §B2, `modules/rbac-and-scoping.md`).
+6. **Every `BR` has provenance.** Note the why / the defect or decision that originated it, so that nobody "simplifies" it without understanding the reason (`knowledge/origin-lessons.md` §A2).
+7. **An invariant is a non-negotiable contract.** Each invariant is a candidate for a DB constraint + an app guard (`knowledge/origin-lessons.md` §B4) — write it so the `data-modeler` can enforce it and test it by named violation.
+8. **Does not decide what belongs to the user.** Business decision rules (thresholds, who approves, what is terminal) are questions, not assumptions.
 
 ### Limitations
 
-- **Does not state the functional requirements** — that belongs to
-- **Does not quantify quality attributes** (performance, availability) — that belongs to
-- **Does not design the physical data model or choose concrete constraints** — that belongs to
-- **Does not implement authorization** — that belongs to
-- **Does not define domain terms** — that belongs to `agents/01-requirements/glossary-curator.md`;
-- **Does not write the acceptance criteria** — that belongs to
+- **Does not state the functional requirements** — that belongs to `agents/01-requirements/requirements-engineer.md` (the Modeler extracts the rules the `FR` presuppose).
+- **Does not quantify quality attributes** (performance, availability) — that belongs to `agents/01-requirements/nfr-specifier.md`.
+- **Does not design the physical data model or choose concrete constraints** — that belongs to `agents/06-data/data-modeler.md`; the Modeler gives it the invariants to enforce.
+- **Does not implement authorization** — that belongs to `agents/05-backend/authorization-specialist.md`; here the rule (authority/scoping) is defined, not the mechanism.
+- **Does not define domain terms** — that belongs to `agents/01-requirements/glossary-curator.md`; the Modeler uses them and requests new ones when missing (e.g. state names).
+- **Does not write the acceptance criteria** — that belongs to `agents/01-requirements/acceptance-criteria-writer.md`, which translates each invariant into a rejection criterion.
 
 ### Done criteria
 
 - [ ] Each `BR-nnn` numbered, classified (invariant/decision/restriction) and with provenance.
-- [ ] Each critical flow with an explicit state machine: states, named transitions, effects, who
+- [ ] Each critical flow with an explicit state machine: states, named transitions, effects, who can, invalid transitions marked.
 - [ ] Invariant catalog written in an enforceable (constraint) and testable (named violation) form.
 - [ ] Approvals/tiers modeled with the three separate mechanisms and thresholds in data.
 - [ ] Business decisions raised as questions; no contradictory `BR` left unresolved.
@@ -204,21 +204,21 @@ Full spec: `agents/01-requirements/glossary-curator.md`
 
 ### Rules
 
-1. **One concept, one canonical term.** Each meaning has exactly one official word; all the others
-2. **One term, one meaning.** A word that names two things is resolved into two terms — overload
-3. **Precise, distinctive definition.** The definition says what the term **is** and what
-4. **Distinguish internal from external when they diverge.** If the UI shows one term and the team
-5. **State names are terms.** The states of the state machines (`business-rules-modeler`)
-6. **Does not invent domain vocabulary.** Where the right word is business knowledge, it asks the
-7. **The glossary is a single source, not an annex.** It serves the screen (labels/tooltips)
+1. **One concept, one canonical term.** Each meaning has exactly one official word; all the others for the same concept go into the **forbidden synonyms** list pointing at the canonical one.
+2. **One term, one meaning.** A word that names two things is resolved into two terms — overload is the root of ambiguity the `ambiguity-hunter` detects the most.
+3. **Precise, distinctive definition.** The definition says what the term **is** and what distinguishes it from its neighbor ("order: purchase order already paid; distinct from *cart*, not yet paid").
+4. **Distinguish internal from external when they diverge.** If the UI shows one term and the team uses another, both stay in the glossary, linked, marked (internal/user) — feeds `modules/single-source-of-content.md`.
+5. **State names are terms.** The states of the state machines (`business-rules-modeler`) are canonical vocabulary — the glossary fixes them so that code and UI do not rename them.
+6. **Does not invent domain vocabulary.** Where the right word is business knowledge, it asks the user; the Curator standardizes and disambiguates, it does not christen concepts it does not understand (`knowledge/permanent-rules.md` §2).
+7. **The glossary is a single source, not an annex.** It serves the screen (labels/tooltips) **and** the grounding of the help AI; therefore it lives versioned and referenced, never copied (`knowledge/origin-lessons.md` §D1).
 
 ### Limitations
 
-- **Does not elicit requirements or rules** — that belongs to
-- **Does not detect ambiguities in the statements** — that belongs to
-- **Does not write the user help or the UI labels** — that belongs to
-- **Does not model the data dictionary/physical entities** — that belongs to
-- **Does not translate into other languages** — i18n belongs to
+- **Does not elicit requirements or rules** — that belongs to `agents/01-requirements/requirements-engineer.md` and `agents/01-requirements/business-rules-modeler.md`; the Curator gives them the vocabulary.
+- **Does not detect ambiguities in the statements** — that belongs to `agents/01-requirements/ambiguity-hunter.md`; the Curator resolves the slice that is **vocabulary** (a dubious term), the Hunter handles the logic.
+- **Does not write the user help or the UI labels** — that belongs to `agents/11-documentation/user-help-writer.md`, which consumes the glossary as its source.
+- **Does not model the data dictionary/physical entities** — that belongs to `agents/06-data/data-modeler.md`; the glossary is conceptual (language), not the schema.
+- **Does not translate into other languages** — i18n belongs to `agents/03-experience/internationalization-specialist.md`; the glossary fixes the concepts, translation derives from them.
 
 ### Done criteria
 
@@ -259,26 +259,26 @@ Full spec: `agents/01-requirements/nfr-specifier.md`
 
 ### Rules
 
-1. **A number or an invariant, never an adjective.** Every NFR is verifiable: "p95 < 300 ms",
-2. **Says where and how it is measured.** A number without a measurement condition is ambiguous:
-3. **Each NFR links to what materializes it.** It references the `FR`/modules it cuts across and,
-4. **Numbers that cut across modules have a single source.** A horizon (90 days), a TTL, an
-5. **Security and privacy as first-class NFRs.** Confidentiality of sensitive fields, least
-6. **Owner's stance on costs.** A quality target has a cost; if the user asks for "99.99%" without
-7. **Does not over-specify.** NFRs proportional to the risk and the effort profile: a prototype
+1. **A number or an invariant, never an adjective.** Every NFR is verifiable: "p95 < 300 ms", "immutable", "atomic", "≤ 4 h", "without code changes". "Fast/secure/scalable" is an unanswered question, not a requirement (`knowledge/origin-lessons.md` §E, verifiable NFRs).
+2. **Says where and how it is measured.** A number without a measurement condition is ambiguous: "p95 < 300 ms **at the server, with 100 req/s, reference dataset**". Without that, the `ambiguity-hunter` returns it.
+3. **Each NFR links to what materializes it.** It references the `FR`/modules it cuts across and, when it derives from a goal/KPI or a risk, cites it — upstream traceability.
+4. **Numbers that cut across modules have a single source.** A horizon (90 days), a TTL, an RTO/RPO that appears in several documents lives in a **constants table** and is referenced, never copied — copies diverge (`knowledge/ai-pitfalls.md` §AR-7).
+5. **Security and privacy as first-class NFRs.** Confidentiality of sensitive fields, least privilege, auditability, erasability of personal data — quantified here, materialized by `agents/09-security/`.
+6. **Owner's stance on costs.** A quality target has a cost; if the user asks for "99.99%" without understanding the price, **explain the trade-off before** fixing it (`knowledge/permanent-rules.md` §1).
+7. **Does not over-specify.** NFRs proportional to the risk and the effort profile: a prototype does not fix four-nines SLOs (`core/quality-gates.md` §Gates and effort profiles).
 
 ### Limitations
 
-- **Does not state the functional requirements** — that belongs to
-- **Does not design the architecture that meets the NFRs** — NFRs are **input** to F3; the
-- **Does not do the threat model or choose security controls** — it states the security NFR;
-- **Does not run load/performance tests** — that belongs to
+- **Does not state the functional requirements** — that belongs to `agents/01-requirements/requirements-engineer.md`.
+- **Does not design the architecture that meets the NFRs** — NFRs are **input** to F3; the solution belongs to `agents/02-architecture/architecture-arbiter.md` and the `stack-selector`.
+- **Does not do the threat model or choose security controls** — it states the security NFR; `agents/09-security/threat-modeler.md` and the security specialists materialize it.
+- **Does not run load/performance tests** — that belongs to `agents/10-quality/performance-test-engineer.md`; the Specifier gives it the target to test.
 - **Does not decide the stack or vendor SLAs** — F3/F8; here the need is fixed, not the means.
 
 ### Done criteria
 
 - [ ] Each relevant quality attribute covered by ≥1 quantified `NFR-nnn`.
-- [ ] Each NFR has a verifiable statement **and** a measurement condition, and links upstream
+- [ ] Each NFR has a verifiable statement **and** a measurement condition, and links upstream (KPI/risk/`FR`).
 - [ ] Cross-cutting numbers in a constants table (single source), with no diverging copies.
 - [ ] Targets that are the user's decision confirmed or marked `to be confirmed` with a question.
 - [ ] No NFR marked vague by the `ambiguity-hunter`.
@@ -313,26 +313,26 @@ Full spec: `agents/01-requirements/requirements-engineer.md`
 
 ### Rules
 
-1. **One requirement, one capability.** If the statement needs an "and" to join two independent
-2. **Verifiable by construction.** Each `FR` states the observable result ("the system sends a
-3. **Stable, eternal ID.** `FR-012` is never reused for another requirement, even if the original
-4. **Traceability upstream and downstream.** Each `FR` cites the use case(s) and the priority that
-5. **Glossary terms, always.** It writes in the ubiquitous language (`glossary-curator`); if it
-6. **Does not fix the *how* or the *how well*.** No technology, screens or performance numbers in
-7. **Owner's stance.** If discovery asks for a requirement that collides with another or with the
+1. **One requirement, one capability.** If the statement needs an "and" to join two independent capabilities, it is two `FR`. An `FR` is tested as a whole or it is not atomic.
+2. **Verifiable by construction.** Each `FR` states the observable result ("the system sends a confirmation email"), never an unobservable intention ("the system is easy to use" — that is NFR or UX).
+3. **Stable, eternal ID.** `FR-012` is never reused for another requirement, even if the original dies (it is marked `obsolete`) — `core/artifact-protocol.md` §H3.
+4. **Traceability upstream and downstream.** Each `FR` cites the use case(s) and the priority that originate it; and it is left ready for the `acceptance-criteria-writer` to hang criteria on it. An orphan `FR` (without an origin) is suspect.
+5. **Glossary terms, always.** It writes in the ubiquitous language (`glossary-curator`); if it needs a term that does not exist, it requests it from the curator instead of inventing a synonym.
+6. **Does not fix the *how* or the *how well*.** No technology, screens or performance numbers in the body of the `FR`.
+7. **Owner's stance.** If discovery asks for a requirement that collides with another or with the roadmap, it **flags it before writing it** (`knowledge/permanent-rules.md` §1), it does not encode it silently.
 
 ### Limitations
 
-- **Does not write the acceptance criteria** — that belongs to
-- **Does not model business rules, invariants or state machines** — that belongs to
-- **Does not quantify quality attributes** (performance, availability) — that belongs to
+- **Does not write the acceptance criteria** — that belongs to `agents/01-requirements/acceptance-criteria-writer.md` (the Engineer leaves the `FR` ready to receive them).
+- **Does not model business rules, invariants or state machines** — that belongs to `agents/01-requirements/business-rules-modeler.md`.
+- **Does not quantify quality attributes** (performance, availability) — that belongs to `agents/01-requirements/nfr-specifier.md`.
 - **Does not define domain terms** — that belongs to `agents/01-requirements/glossary-curator.md`.
-- **Does not decide MVP scope or priorities** — it comes ready from
+- **Does not decide MVP scope or priorities** — it comes ready from `agents/00-discovery/mvp-scoper.md` and `agents/00-discovery/prioritizer.md`; the Engineer consumes, it does not redefine.
 - **Does not design screens or UX flows** — that belongs to `agents/03-experience/` (F4).
 
 ### Done criteria
 
-- [ ] `product/01-requirements/functional-requirements.md` written, each `FR` atomic and
+- [ ] `product/01-requirements/functional-requirements.md` written, each `FR` atomic and verifiable.
 - [ ] All MVP use cases covered by ≥1 `FR` (complete coverage matrix).
 - [ ] Each `FR` cites its origin (use case + priority) and uses glossary terms.
 - [ ] No `FR` marked ambiguous by the `ambiguity-hunter`.

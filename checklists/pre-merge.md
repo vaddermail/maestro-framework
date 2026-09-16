@@ -23,12 +23,24 @@ integrated.
       never the detector (`loops/L02-failing-tests.md`) — a diff that touches tests, CI or
       thresholds is reviewed by someone who did not write it (`knowledge/ai-pitfalls.md` §AR-22,
       manipulated gate).
+- [ ] New or changed CI script, guard or scan: proven to **fail** on a real case (positive
+      control), with the failure of any step in a pipeline propagating (in bash,
+      `set -o pipefail`), and without discarding the exit code of the command that decides
+      (`knowledge/ai-pitfalls.md` §AR-25).
+- [ ] No test depends on the dev environment file; a default test runs with the variable
+      **absent** (`knowledge/proven-patterns.md` §Production configuration); the suite never
+      runs against the development DB (`agents/10-quality/README.md` §Duties shared by every
+      agent in the category).
 
 ## Review
 
 - [ ] Review done by someone who is not the author of the change — `checklists/pr-review.md`
       satisfied.
 - [ ] Review findings resolved or explicitly accepted, with the why recorded.
+- [ ] CI green measured **this** content: before merging, confirm through the hosting service
+      (not the local disk) that the PR contains the commits and files the verdict claims to have
+      proven — CI may have run before the last push, and a cherry-pick changes the SHA; the check
+      is by content, not by color.
 
 ## Secrets and security
 

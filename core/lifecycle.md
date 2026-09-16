@@ -20,7 +20,11 @@ F0 Kickoff
 
 1. **No skipping.** No phase is skipped — it is scaled. The effort profile
    (`core/orchestrator.md` §Effort profiles) decides the depth: in a prototype, F1–F5 may fit in
-   a day; on an enterprise platform, they take weeks. But a gate is never crossed out of haste.
+   a day; on an enterprise platform, they take weeks. But a gate is never crossed out of haste. The
+   only entry point that does not start at F0 is **adoption in a product that already exists**: it
+   enters at the phase the product is in, and the earlier ones are represented by the
+   existing-system inventory, not reconstructed (`workflows/W00-project-kickoff.md` §Adopting in a
+   product that already exists).
 2. **Going back is normal; advancing without a gate is not.** Discovering in F5 that a requirement
    is missing sends work back to F2 — that is the process working. Record the reason in `STATE.md`.
 3. **Iteration inside a phase is free.** Loops (`loops/`) run inside the phases until the exit

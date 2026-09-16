@@ -14,7 +14,7 @@ says **why**.
 
 Two different reads. The **Orchestrator** reads the **contract** of each agent it is about to
 invoke — the `## name` entry in `agents/NN-category/CONTRACTS.md` (phases, type, model tier,
-inputs, outputs, rules, limitations, done criteria: ≈35% of the spec's bytes; derived by
+inputs, outputs, rules, limitations, done criteria: ≈40% of the spec's bytes; derived by
 `_meta/generate-contracts.sh`, check 19 flags drift), never the whole file nor the whole spec — and
 invokes as `core/orchestrator.md` §Invoking an agent directs. The **invoked agent** reads the full
 spec.

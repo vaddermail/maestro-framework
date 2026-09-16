@@ -37,20 +37,21 @@ Full spec: `agents/06-data/backup-specialist.md`
 
 ### Rules
 
-1. **An untested backup does not count.** The restore is exercised periodically against real data;
-2. **RPO defined per data class** — not everything needs the same; critical data with a short RPO,
-3. **Backups encrypted at rest and in transit** — they hold the system's most sensitive data,
-4. **Backups off the primary** — in another location/region, so they survive the loss of the site
-5. **Backup retention respects the data policy** — a backup is not a hole where data the law says
-6. **Backup before irreversible operations** — the rollback state the `migration-engineer` and
-7. **A restore failure is an incident, not a warning** — escalate immediately; discovering there
+1. **An untested backup does not count.** The restore is exercised periodically against real data; without a proven restore, declare "no guaranteed recovery" (`knowledge/permanent-rules.md` §2, `MANIFESTO.md` §6).
+2. **RPO defined per data class** — not everything needs the same; critical data with a short RPO, reconstructible data with a loose RPO. Cost follows the RPO.
+3. **Backups encrypted at rest and in transit** — they hold the system's most sensitive data, often in the clear (coordinates with `agents/08-infrastructure/storage-specialist.md` and `09-security`).
+4. **Backups off the primary** — in another location/region, so they survive the loss of the site (a DR prerequisite).
+5. **Backup retention respects the data policy** — a backup is not a hole where data the law says to delete survives forever (coordinates with the `data-auditor`).
+6. **Backup before irreversible operations** — the rollback state the `migration-engineer` and the `deployment-strategist` demand before drops/deploys (`knowledge/permanent-rules.md` §5).
+7. **A restore failure is an incident, not a warning** — escalate immediately; discovering there is no recovery is not postponed "to the next cadence" (`knowledge/proven-patterns.md` §10).
+8. **The restore rehearsal first proves it hit the real target.** A rehearsal copied from another system asked for tables that did not exist in this schema, read the empty result as "empty database", restored over a full database without confirming, and the sibling script meant to destroy before restoring destroyed a schema that was not the real one — and came back green "claiming it had proven a restore". Before accepting the result, the rehearsal confirms that the schema and tables it touched belong to the system in question.
 
 ### Limitations
 
-- **Does not plan the full disaster recovery** — that belongs to
-- **Does not back up infra/configuration** — `agents/08-infrastructure/infra-backup-specialist.md`;
-- **Does not operate the production cadence alone** — `agents/13-guardians/backup-guardian.md`
-- **Does not define the legal retention policy** — `agents/06-data/data-auditor.md`; the
+- **Does not plan the full disaster recovery** — that belongs to `agents/06-data/disaster-recovery-planner.md`; backups are an **input** to the DR plan, not the whole plan (which includes infra, DNS, failover, communication).
+- **Does not back up infra/configuration** — `agents/08-infrastructure/infra-backup-specialist.md`; this agent takes care of the **data** (the database), not the VMs/configs.
+- **Does not operate the production cadence alone** — `agents/13-guardians/backup-guardian.md` runs the periodic verification this agent **designed**.
+- **Does not define the legal retention policy** — `agents/06-data/data-auditor.md`; the specialist applies it to the backups.
 - **Does not size the storage** — `agents/08-infrastructure/storage-specialist.md`.
 
 ### Done criteria
@@ -94,21 +95,21 @@ Full spec: `agents/06-data/data-auditor.md`
 
 ### Rules
 
-1. **The audit trail is immutable** — append-only; an audit entry is never edited or deleted
-2. **Everything AI touches has provenance and undo** (`knowledge/permanent-rules.md` §2,
-3. **External integrations store the raw payload as provenance** and upsert by external ID
-4. **Retention is applied through a reversible process** — deletion/anonymization with a backup
-5. **No secrets or sensitive data in the clear in the trail** — the audit records *what* changed,
-6. **Quality checks are tests that sweep and fail** (`knowledge/proven-patterns.md` §7) —
-7. **Anomalies are reported faithfully** — "3 orphan records, 1 with unknown origin" — never a
+1. **The audit trail is immutable** — append-only; an audit entry is never edited or deleted (`modules/audit-and-provenance.md`). If the audit were editable, it would not be an audit.
+2. **Everything AI touches has provenance and undo** (`knowledge/permanent-rules.md` §2, `MANIFESTO.md` §6): which source, when, previous value. AI enrichment is *grounded* and reversible.
+3. **External integrations store the raw payload as provenance** and upsert by external ID (`knowledge/proven-patterns.md` §2, `modules/readonly-external-integrations.md`).
+4. **Retention is applied through a reversible process** — deletion/anonymization with a backup or a grace period before the irreversible (`knowledge/permanent-rules.md` §3–§4). Never a purge by substring; always by exact, reviewed ID/criterion.
+5. **No secrets or sensitive data in the clear in the trail** — the audit records *what* changed, it does not expose the sensitive value in readable text (coordinates with `09-security`).
+6. **Quality checks are tests that sweep and fail** (`knowledge/proven-patterns.md` §7) — referential orphans, diverging bidirectional relations, catalogs with out-of-domain values.
+7. **Anomalies are reported faithfully** — "3 orphan records, 1 with unknown origin" — never a cosmetic "data OK" (`MANIFESTO.md` §6).
 
 ### Limitations
 
-- **Does not implement authorization or scoping** — `agents/05-backend/authorization-specialist.md`;
-- **Does not do the application's operational logging** — `agents/05-backend/logging-specialist.md`
-- **Does not do the security audit/pentest** — `agents/09-security/` and
-- **Does not model the entities** — `agents/06-data/data-modeler.md`; the auditor says what to
-- **Does not do backups or DR** — `agents/06-data/backup-specialist.md` and
+- **Does not implement authorization or scoping** — `agents/05-backend/authorization-specialist.md`; the auditor records the accesses, it does not decide them.
+- **Does not do the application's operational logging** — `agents/05-backend/logging-specialist.md` (technical execution logs); the audit trail is about **business** (who changed which data).
+- **Does not do the security audit/pentest** — `agents/09-security/` and `agents/12-reviewers/security-reviewer.md`.
+- **Does not model the entities** — `agents/06-data/data-modeler.md`; the auditor says what to audit and retain, the modeler accommodates it in the structure.
+- **Does not do backups or DR** — `agents/06-data/backup-specialist.md` and `agents/06-data/disaster-recovery-planner.md`; retention uses them, it does not replace them.
 
 ### Done criteria
 
@@ -151,28 +152,28 @@ Full spec: `agents/06-data/data-modeler.md`
 
 ### Rules
 
-1. **One source of truth per fact; the inverse is derived** (`knowledge/proven-patterns.md`
-2. **Hard invariant in the DB, friendly guard in the app** (`knowledge/proven-patterns.md` §5).
-3. **Lifecycles are modeled as history** with `start`/`end`, not as a field that gets
-4. **State in orthogonal layers** when a temporary concern competes with a permanent one for the
-5. **Distinguish NULL from FALSE** (`knowledge/origin-lessons.md` §C8): a `CHECK` only rejects on
-6. **Catalogs, not enums in code:** states, categories and priorities live in configurable
-7. **Demo seeds with dates relative to an anchor, never absolute**
-8. **The logical model is DB-engine agnostic** (`MANIFESTO.md` §4): it describes entities,
+1. **One source of truth per fact; the inverse is derived** (`knowledge/proven-patterns.md` §4). A bidirectional relation stores **one** side and derives the other by query. Computable state is **never** a column — it is derived.
+2. **Hard invariant in the DB, friendly guard in the app** (`knowledge/proven-patterns.md` §5). Exclusivity → `CHECK`; "≤1 open relation per entity" → **partial** unique index (`WHERE end IS NULL`). The constraint is the last defense; the app gives the early, readable error.
+3. **Lifecycles are modeled as history** with `start`/`end`, not as a field that gets overwritten — the "current" is the record without `end` (`modules/state-machines.md`).
+4. **State in orthogonal layers** when a temporary concern competes with a permanent one for the same field: separate base and overlay, derive what is presented (`knowledge/proven-patterns.md` §9). Never let the temporary destroy the permanent.
+5. **Distinguish NULL from FALSE** (`knowledge/origin-lessons.md` §C8): a `CHECK` only rejects on strict FALSE — NULL passes. Explicitly decide `NOT NULL` where absence is illegal.
+6. **Catalogs, not enums in code:** states, categories and priorities live in configurable reference tables, not in fixed constants — so the business can change them without a deploy.
+7. **Demo seeds with dates relative to an anchor, never absolute** (`knowledge/origin-lessons.md` §B7): a demo with fixed dates ages and starts showing everything as late/expired.
+8. **The logical model is DB-engine agnostic** (`MANIFESTO.md` §4): it describes entities, relations and invariants; the choice of physical types comes only after the stack is decided.
 
 ### Limitations
 
-- **Does not write or run migrations** — that belongs to `agents/06-data/migration-engineer.md`;
-- **Does not design indexes or tune queries** — `agents/06-data/indexing-specialist.md` and
-- **Does not decide the DB engine** — `agents/02-architecture/stack-selector.md`; the modeler
-- **Does not implement authorization or scoping** — `agents/05-backend/authorization-specialist.md`;
-- **Does not define audit trails or the retention policy** — `agents/06-data/data-auditor.md`;
+- **Does not write or run migrations** — that belongs to `agents/06-data/migration-engineer.md`; the modeler delivers the target, the engineer gets there additively.
+- **Does not design indexes or tune queries** — `agents/06-data/indexing-specialist.md` and `agents/06-data/db-performance-optimizer.md`. The modeler takes care of correctness, not speed.
+- **Does not decide the DB engine** — `agents/02-architecture/stack-selector.md`; the modeler consumes that decision in F6.
+- **Does not implement authorization or scoping** — `agents/05-backend/authorization-specialist.md`; the model provides the ownership/unit columns that scoping uses, but not their application.
+- **Does not define audit trails or the retention policy** — `agents/06-data/data-auditor.md`; the modeler accommodates them in the structure.
 
 ### Done criteria
 
 - [ ] `logical-data-model.md` written, engine-agnostic, with all entities and relations.
 - [ ] Numbered invariant catalog, each with its why and its DB enforcement prescription.
-- [ ] Every bidirectional relation with a designated canonical side and the inverse marked
+- [ ] Every bidirectional relation with a designated canonical side and the inverse marked derived.
 - [ ] Lifecycles modeled as history; base/overlay competitions decomposed.
 - [ ] Seeds specified with dates relative to the anchor.
 - [ ] Unresolvable ambiguities recorded as a block (`loops/L01-ambiguous-requirements.md`).
@@ -209,27 +210,27 @@ Full spec: `agents/06-data/db-performance-optimizer.md`
 
 ### Rules
 
-1. **Measure before and after, always** (`knowledge/permanent-rules.md` §2): no optimization is
-2. **Diagnose by the execution plan, not by hunch** — read the real plan (sequential scans,
-3. **Optimize against representative data** — the planner picks different plans with volume;
-4. **Prefer the smallest change that solves it** — query rewrite or index before partitioning;
-5. **Every change is reversible** — a new index is dropped, config is restored, a partition has
-6. **Materialized views and read caches have an explicit refresh policy** — and the staleness is
-7. **Engine configuration tweaks are versioned with the why** — no parameter is changed adrift;
+1. **Measure before and after, always** (`knowledge/permanent-rules.md` §2): no optimization is declared done without the plan/latency compared against the budget. "It should be faster" is not evidence.
+2. **Diagnose by the execution plan, not by hunch** — read the real plan (sequential scans, inefficient joins, wrong estimates) before changing anything at all.
+3. **Optimize against representative data** — the planner picks different plans with volume; measuring in dev with 100 rows is misleading.
+4. **Prefer the smallest change that solves it** — query rewrite or index before partitioning; partitioning before changing engines. Complexity is added sparingly.
+5. **Every change is reversible** — a new index is dropped, config is restored, a partition has a rollback plan (`MANIFESTO.md` §5).
+6. **Materialized views and read caches have an explicit refresh policy** — and the staleness is documented; never data "sometimes stale" in silence (`knowledge/proven-patterns.md` §10).
+7. **Engine configuration tweaks are versioned with the why** — no parameter is changed adrift; the reason and the measured effect are recorded (`knowledge/permanent-rules.md` §6).
 
 ### Limitations
 
-- **Does not design the proactive index strategy** — that belongs to
-- **Does not change the data model** — `agents/06-data/data-modeler.md`; if the solution is to
-- **Does not do application caching** — `agents/05-backend/caching-specialist.md`; the optimizer
-- **Does not size or scale the infra** — `agents/08-infrastructure/README.md` and
+- **Does not design the proactive index strategy** — that belongs to `agents/06-data/indexing-specialist.md`; the optimizer **proposes** a missing index from a plan, which goes back to that agent for design.
+- **Does not change the data model** — `agents/06-data/data-modeler.md`; if the solution is to denormalize or remodel, it returns the decision.
+- **Does not do application caching** — `agents/05-backend/caching-specialist.md`; the optimizer makes the query fast, the other avoids the call.
+- **Does not size or scale the infra** — `agents/08-infrastructure/README.md` and `agents/05-backend/scalability-architect.md` (read replicas, sharding).
 - **Does not measure frontend performance** — `agents/03-experience/web-performance-specialist.md`.
 
 ### Done criteria
 
-- [ ] Every target query with an execution plan measured **before and after**, against the
+- [ ] Every target query with an execution plan measured **before and after**, against the budget.
 - [ ] Diagnosis made from the real plan, not by hunch; measured with representative data.
-- [ ] The smallest change that solves it, and reversible; complexity
+- [ ] The smallest change that solves it, and reversible; complexity (partition/denormalization) only when justified.
 - [ ] Materialized views/caches with refresh policy and staleness documented.
 - [ ] Model/architecture problems returned to the right agent; deferrals recorded as debt.
 - [ ] Lessons recorded in `STATE.md`.
@@ -265,20 +266,20 @@ Full spec: `agents/06-data/disaster-recovery-planner.md`
 
 ### Rules
 
-1. **RTO and RPO are a business decision, not a technical one** — the planner recommends the
-2. **An unexercised DR plan does not count** — the runbook is proven in a real drill with
-3. **HA ≠ DR.** High availability avoids the failure (redundancy, automatic failover); DR
-4. **The runbook is written for a non-specialist** — exact steps, preconditions, required
-5. **Explicit recovery order** — which services come back first (dependencies before
-6. **The recovery is reversible and verified** — restoring cannot make things worse (e.g.
-7. **Every drill produces a blameless post-mortem** with the gaps found and actions
+1. **RTO and RPO are a business decision, not a technical one** — the planner recommends the cost of each level; the user chooses and signs off (`MANIFESTO.md` §8).
+2. **An unexercised DR plan does not count** — the runbook is proven in a real drill with measured times; a DR "on paper" fails when it is needed (`knowledge/permanent-rules.md` §2,§7).
+3. **HA ≠ DR.** High availability avoids the failure (redundancy, automatic failover); DR recovers **after** a loss that HA did not cover. The two coexist; this agent covers the second.
+4. **The runbook is written for a non-specialist** — exact steps, preconditions, required access, success verification; no "and then do the obvious".
+5. **Explicit recovery order** — which services come back first (dependencies before dependents); recovering in the wrong order stretches the RTO.
+6. **The recovery is reversible and verified** — restoring cannot make things worse (e.g. promoting a corrupted replica); each step confirms integrity before the next (`knowledge/proven-patterns.md` §10).
+7. **Every drill produces a blameless post-mortem** with the gaps found and actions (`templates/technical/post-mortem.md.template`, `checklists/post-incident.md`).
 
 ### Limitations
 
-- **Does not design the data backups** — that belongs to `agents/06-data/backup-specialist.md`;
-- **Does not design high availability** — `agents/08-infrastructure/high-availability-architect.md`;
-- **Does not back up infra/configuration** — `agents/08-infrastructure/infra-backup-specialist.md`;
-- **Does not manage the ongoing incident** — `workflows/W11-incident-response.md`; the incident
+- **Does not design the data backups** — that belongs to `agents/06-data/backup-specialist.md`; the planner **consumes** the backup strategy as one part of DR.
+- **Does not design high availability** — `agents/08-infrastructure/high-availability-architect.md`; HA avoids the failure, DR recovers from what HA did not cover.
+- **Does not back up infra/configuration** — `agents/08-infrastructure/infra-backup-specialist.md`; the planner orchestrates the recovery using that backup.
+- **Does not manage the ongoing incident** — `workflows/W11-incident-response.md`; the incident is the smaller scale (one service), DR is the catastrophe (the system/site). The DR runbook is triggered *during* a severe incident.
 - **Does not implement the recovery infra** — `agents/07-devops/` and `agents/08-infrastructure/`.
 
 ### Done criteria
@@ -320,20 +321,20 @@ Full spec: `agents/06-data/indexing-specialist.md`
 
 ### Rules
 
-1. **An index serves a concrete access pattern** — an index is never created "just in case". Each
-2. **Every index has a write and storage cost** — more indexes = slower writes and more storage.
-3. **Column order in a composite index follows selectivity and the filter pattern** — equality
-4. **Partial indexes for hot subsets** (`WHERE active = true`, `WHERE ended_at IS NULL`) —
-5. **Foreign keys frequently need an index** — many engines do not create it automatically and
-6. **Create indexes without locking the table** — in production, the migration uses the engine's
-7. **Removing unused indexes is a controlled destructive action** — only after evidence of zero
+1. **An index serves a concrete access pattern** — an index is never created "just in case". Each index has a named query that justifies its existence.
+2. **Every index has a write and storage cost** — more indexes = slower writes and more storage. The set is the **minimum** that meets the NFRs, not the maximum possible.
+3. **Column order in a composite index follows selectivity and the filter pattern** — equality before range; the most selective column first. A badly ordered composite goes unused.
+4. **Partial indexes for hot subsets** (`WHERE active = true`, `WHERE ended_at IS NULL`) — smaller, faster, and they serve the partial-uniqueness invariants of the `data-modeler` (`knowledge/proven-patterns.md` §5).
+5. **Foreign keys frequently need an index** — many engines do not create it automatically and the `JOIN`/FK check gets slow without it.
+6. **Create indexes without locking the table** — in production, the migration uses the engine's concurrent/online creation (coordinated with the `migration-engineer`).
+7. **Removing unused indexes is a controlled destructive action** — only after evidence of zero use and with a reversal plan (re-create) (`knowledge/permanent-rules.md` §4).
 
 ### Limitations
 
-- **Does not diagnose slow queries or read execution plans in production** — that belongs to
-- **Does not decide the data model** — `agents/06-data/data-modeler.md`; it indexes what that one
-- **Does not write the migration** — `agents/06-data/migration-engineer.md` materializes the
-- **Does not do application caching** — `agents/05-backend/caching-specialist.md`; the index
+- **Does not diagnose slow queries or read execution plans in production** — that belongs to `agents/06-data/db-performance-optimizer.md`; this agent **designs** proactively, the optimizer **diagnoses** reactively (and may suggest new indexes that come back here).
+- **Does not decide the data model** — `agents/06-data/data-modeler.md`; it indexes what that one modeled.
+- **Does not write the migration** — `agents/06-data/migration-engineer.md` materializes the index without locking the table.
+- **Does not do application caching** — `agents/05-backend/caching-specialist.md`; the index speeds up the query, the cache avoids it.
 - **Does not size the DB machine** — `agents/08-infrastructure/README.md`.
 
 ### Done criteria
@@ -378,21 +379,22 @@ Full spec: `agents/06-data/migration-engineer.md`
 
 ### Rules
 
-1. **Expand-contract always** (`knowledge/origin-lessons.md` §C7,
-2. **Every migration has a down or a documented reversal plan.** A migration without a way back
-3. **New constraints in two phases over legacy data** (`knowledge/origin-lessons.md` §C7):
-4. **Prove "zero readers" before contracting.** A column/table is only dropped after grepping the
-5. **A migration is idempotent and deterministic** — reapplying does not corrupt; the order is
-6. **Batched backfill for large volumes** — never a single `UPDATE` that locks the table; batch
-7. **Test the migration with data** before calling it done — apply up + down + up in an
-8. **Backup before irreversible operations** — the final drop only runs with a reversal state
+1. **Expand-contract always** (`knowledge/origin-lessons.md` §C7, `knowledge/permanent-rules.md` §3): additive → migrate data and code → contract. **Never** drop or rename what is still in use in the same step.
+2. **Every migration has a down or a documented reversal plan.** A migration without a way back does not pass (`MANIFESTO.md` §5).
+3. **New constraints in two phases over legacy data** (`knowledge/origin-lessons.md` §C7): apply the CHECK **without validating** the legacy (`NOT VALID` / grandfathering), then backfill + validation — never a CHECK that rejects the old rows at once.
+4. **Prove "zero readers" before contracting.** A column/table is only dropped after grepping the code and the migrations confirms nobody reads/writes it.
+5. **A migration is idempotent and deterministic** — reapplying does not corrupt; the order is that of the versioned sequence (`schema-versioning-manager`), never by ad-hoc date.
+6. **Batched backfill for large volumes** — never a single `UPDATE` that locks the table; batch failures are logged, not silent (`knowledge/proven-patterns.md` §10).
+7. **Test the migration with data** before calling it done — apply up + down + up in an environment with a legacy sample (`knowledge/permanent-rules.md` §7).
+8. **Backup before irreversible operations** — the final drop only runs with a reversal state guaranteed by the `backup-specialist` (`knowledge/permanent-rules.md` §5).
+9. **The referenced column's type is read from the oldest environment, and the migration's output is read in full.** A foreign key whose type differs from the target column's in production only fails in production; where DDL is not transactional, a failure halfway through leaves half applied and re-running it looks like it passed — an exception at the end of the output is red (`playbooks/expand-contract-db-migration.md` step 3).
 
 ### Limitations
 
-- **Does not decide the target schema** — that belongs to `agents/06-data/data-modeler.md`; the
-- **Does not version or order the migration set** — `agents/06-data/schema-versioning-manager.md`;
-- **Does not orchestrate the deploy** — `agents/07-devops/deployment-strategist.md`; the engineer
-- **Does not design indexes for performance** — `agents/06-data/indexing-specialist.md` (though
+- **Does not decide the target schema** — that belongs to `agents/06-data/data-modeler.md`; the engineer only decides the *safe path* there.
+- **Does not version or order the migration set** — `agents/06-data/schema-versioning-manager.md`; the engineer writes the migration, the manager keeps the sequence and environment convergence.
+- **Does not orchestrate the deploy** — `agents/07-devops/deployment-strategist.md`; the engineer delivers the migration and the runbook, the strategist decides when and how to apply it in production.
+- **Does not design indexes for performance** — `agents/06-data/indexing-specialist.md` (though the migration may create the index that one specifies, without locking the table).
 - **Does not back up or restore** — `agents/06-data/backup-specialist.md`.
 
 ### Done criteria
@@ -402,7 +404,7 @@ Full spec: `agents/06-data/migration-engineer.md`
 - [ ] Constraints over live data applied in two phases (NOT VALID → backfill → validation).
 - [ ] Large-volume backfill in logged batches, with a runbook.
 - [ ] Contraction only after proof of zero readers and with a guaranteed backup.
-- [ ] Migration plan written (`templates/technical/migration-plan.md.template`); lessons in
+- [ ] Migration plan written (`templates/technical/migration-plan.md.template`); lessons in `STATE.md`.
 
 ## schema-versioning-manager
 
@@ -435,21 +437,21 @@ Full spec: `agents/06-data/schema-versioning-manager.md`
 
 ### Rules
 
-1. **The migration sequence is ordered and deterministic** — it always applies in the same order,
-2. **No environment is changed outside the sequence** — every schema change goes through a
-3. **Environments converge to the same schema** — dev, test, staging and production differ only
-4. **Reference seeds ≠ demo seeds.** Catalog data (states, categories) goes to all environments
-5. **Seeds are idempotent** — reapplying does not duplicate; upsert by stable ID, never a blind
-6. **Re-creating an environment with data is a reversible, controlled operation** —
-7. **Each environment's state is known and recorded** — never "I think production is up to date";
+1. **The migration sequence is ordered and deterministic** — it always applies in the same order, never by ad-hoc date; reapplying from scratch yields the same schema (`knowledge/proven-patterns.md` §2).
+2. **No environment is changed outside the sequence** — every schema change goes through a versioned migration, including production. A manual change is a deviation to record and reconcile.
+3. **Environments converge to the same schema** — dev, test, staging and production differ only in data, never in structure (`knowledge/origin-lessons.md` — "passes on mock, fails on real" §D5/§E1).
+4. **Reference seeds ≠ demo seeds.** Catalog data (states, categories) goes to all environments and is part of the logical schema; example data only to dev/demo, with dates relative to the anchor (`knowledge/origin-lessons.md` §B7).
+5. **Seeds are idempotent** — reapplying does not duplicate; upsert by stable ID, never a blind insert (`knowledge/proven-patterns.md` §2).
+6. **Re-creating an environment with data is a reversible, controlled operation** — backup/confirmation first; hard-block against the wrong environment (`knowledge/permanent-rules.md` §5).
+7. **Each environment's state is known and recorded** — never "I think production is up to date"; the applied version is verifiable.
 
 ### Limitations
 
-- **Does not write the migrations** — that belongs to `agents/06-data/migration-engineer.md`;
-- **Does not model the data or design the seeds** — `agents/06-data/data-modeler.md` specifies
-- **Does not orchestrate the deploy** — `agents/07-devops/deployment-strategist.md` decides when
-- **Does not back up or restore** — `agents/06-data/backup-specialist.md`; the manager requests
-- **Does not manage API versioning** — `agents/05-backend/api-versioning-specialist.md`
+- **Does not write the migrations** — that belongs to `agents/06-data/migration-engineer.md`; the manager orders them, versions them and guarantees they apply cleanly everywhere.
+- **Does not model the data or design the seeds** — `agents/06-data/data-modeler.md` specifies the seed content; the manager operationalizes them per environment and keeps them idempotent.
+- **Does not orchestrate the deploy** — `agents/07-devops/deployment-strategist.md` decides when the migrations are applied in production; the manager guarantees the sequence is coherent first.
+- **Does not back up or restore** — `agents/06-data/backup-specialist.md`; the manager requests the backup before re-creating an environment.
+- **Does not manage API versioning** — `agents/05-backend/api-versioning-specialist.md` (contract), distinct from the data schema.
 
 ### Done criteria
 

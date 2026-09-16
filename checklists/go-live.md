@@ -24,6 +24,11 @@ never tested.
       (not a stuck/old copy).
 - [ ] Operational access to the target stable during the deploy (reuse connections; avoid
       tripping protections through excess attempts) — so the deploy itself does not self-sabotage.
+- [ ] Access-diagnosis decided before it is needed: if the machine answers ping but every TCP
+      port times out, it is almost always **path blocking** (the provider throttling the source
+      IP after repeated attempts), not a dead machine — confirm in seconds from a third vantage
+      point before rebooting or entering recovery mode; repeated access attempts trigger the
+      provider's own mitigation.
 
 ## Preparation
 
@@ -38,8 +43,22 @@ never tested.
       `agents/08-infrastructure/infra-backup-specialist.md`).
 - [ ] **Production** authentication flow genuinely exercised (real login, not the development
       shortcut) before there are users.
+- [ ] **Production configuration exercised, not only written**
+      (`knowledge/proven-patterns.md` §Production configuration): production-environment keys
+      compared against dev's, every difference justified; startup refuses a misconfigured
+      production; every component with a production-only privilege or flag exercised under the
+      real configuration, including the suite on a production profile against the commit being
+      launched.
+- [ ] **Path played by real concurrent actors** against an environment with engine parity: N
+      users in parallel on the flows that write shared state (numbering, reservations,
+      counters), including several on the same network and with the same source identity; the
+      invariant is read from the DB at the end. This is not a load test, and it is not replaced
+      by sequential tests (`knowledge/ai-pitfalls.md` §AR-15).
 - [ ] DB migration, if any, done expand-contract — nothing dropped/renamed while still in use
       (`playbooks/expand-contract-db-migration.md`).
+- [ ] **Long run left nearly idle** (≥ one cycle of the product's clock — midnight, scheduled
+      tasks) with periodic sampling of memory, connections and queues, before the first go-live
+      (`agents/10-quality/performance-test-engineer.md` §Rules).
 
 ## Rollback
 

@@ -3,6 +3,9 @@
 # Checks Maestro's internal consistency. Run from the framework root or from anywhere
 # (the script repositions itself). Exits with code 1 on failures — serves as a gate in CI
 # or in playbooks/add-an-agent.md.
+# Line-ending guard: a copy with CRLF (Windows) failed with cryptic errors and the gate never ran.
+# The `#` at the end of the next line makes it immune to the very \r it detects.
+case "$(head -c 4000 "$0")" in *$'\r'*) printf '✗ %s has CRLF line endings — restore with git checkout (the copy .gitattributes prevents the conversion) or: sed -i "s/\\r$//" %s\n' "$0" "$0"; exit 2 ;; esac #
 set -uo pipefail
 cd "$(dirname "$0")/.."
 # Deterministic locale: under LC_ALL=C, [^[:alnum:]] matches the bytes of accented characters and
