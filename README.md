@@ -37,8 +37,10 @@ documentation, launch and evolution — **assuming nothing**: whatever is missin
 ## How this mirror works
 
 Maestro is developed against real products in its original (Portuguese) upstream and mirrored here
-fully in English — structure, paths, tooling and prose. Each upstream release is translated and
-synced as a release of this edition. Issues and PRs are welcome — see
+fully in English — structure, paths, tooling and prose. Upstream releases are translated and
+synced **in batches**, not one by one: this edition (1.4.0) derives from upstream 2.13.0, and the
+next batch lands when there is an external user, an upstream MAJOR, or three months have passed —
+whichever comes first. The version this edition derives from is always stated in `_meta/VERSION.md`. Issues and PRs are welcome — see
 [CONTRIBUTING.md](CONTRIBUTING.md), which explains the framework's own contribution circuit:
 **field reports go up, curated releases come down.**
 
