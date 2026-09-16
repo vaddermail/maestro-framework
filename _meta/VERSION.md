@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.2.0** (2026-09-15)
+**Current version: 1.2.1** (2026-09-16)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -16,6 +16,30 @@ framework evolves in this repository through pull requests and curation
 never automatically.
 
 ## Changelog
+
+### 1.2.1 — 2026-09-16
+
+**The generality test moves to the source.** Maestro serves any kind of product, yet only the
+curator filtered out what belonged to a single product — after the report had been written,
+sanitized, sent and triaged. The project side checked privacy and never asked whether a lesson
+would help anyone else. This is a change to the framework's own circuit, requested by the owner,
+not a lesson from a project: it does not go through the candidates. PATCH — it makes an existing
+rule ("product lessons stay in `STATE.md` §Lessons", `knowledge/README.md`) applicable where
+entries are written; no contract between agents changes. Born in this edition and **going back
+upstream**.
+
+- **New `knowledge/README.md` §The generality test:** two questions (another domain, another
+  stack), a routing table for what fails — moved, never deleted — and a worked rewrite from
+  incident to general form.
+- **Applied at both ends of the circuit.** `templates/project/FRAMEWORK-IMPROVEMENTS.md.template`
+  carries it at capture time; `playbooks/report-framework-improvements.md` step 1 applies it at
+  consolidation and step 3 puts the counts in the issue body; `playbooks/framework-curation.md`
+  step 4 makes a domain-specific verdict name the question that failed, so the reporting project
+  calibrates its next filter.
+- **Outside contributors see it too:** `CONTRIBUTING.md` and the field-report issue template.
+
+**Impact on projects** (`playbooks/sync-framework.md` step 6b): `FRAMEWORK-IMPROVEMENTS.md` gains
+the "Generality" note under the sanitization note. No other live file changes.
 
 ### 1.2.0 — 2026-09-15
 

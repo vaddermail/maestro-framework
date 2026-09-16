@@ -52,6 +52,34 @@ real project ◀──(deliberate sync — playbooks/sync-framework.md)◀──
    (`core/project-memory.md`); what goes to the improvements file is what belongs to the
    **framework**. That is how Maestro grows wiser with every product.
 
+## The generality test — what rises
+
+Maestro serves any kind of product, so what a project sends upstream must help a project that
+shares **neither its domain nor its stack**. A lesson is usually born from one concrete incident —
+that is expected: what rises is the general form, and the incident stays as its evidence. Every
+entry of `FRAMEWORK-IMPROVEMENTS.md` answers two questions when it is written and again at
+consolidation (`playbooks/report-framework-improvements.md` step 1):
+
+1. **Another domain.** Would a product of a different kind — an online store, an internal
+   back-office app, a data platform — have hit the same problem or gained from the same pattern?
+2. **Another stack.** Does the entry still read the same with every product, library, database
+   engine, cloud and tool name replaced by the capability it provides? (The per-line test the
+   curator applies to candidates, `playbooks/framework-curation.md` step 5.)
+
+| Answers | Where the entry goes |
+| --- | --- |
+| yes · yes | `FRAMEWORK-IMPROVEMENTS.md`, in general form |
+| yes · no, but it can be rewritten by capability | rewritten now, then `FRAMEWORK-IMPROVEMENTS.md` |
+| yes · no, and it cannot be separated from the stack | a reusable block → `FRAMEWORK-IMPROVEMENTS.md` §Reusable blocks with destination `starters/` (`starters/README.md`); anything else → `STATE.md` §Lessons |
+| no | a **product** lesson → `STATE.md` §Lessons: valuable, and it stays home |
+
+Worked rewrite: "the payment provider's webhook arrived twice and the customer was charged twice"
+fails both questions as written. Its general form — "third-party webhooks are delivered at least
+once: consume them idempotently, keyed by the event ID" — passes both, and the incident becomes
+the evidence. What fails is **moved, never deleted**. When the answer is genuinely unclear, the
+entry is sent with the doubt written in it: the curator's verdict decides, and a declined entry
+costs one comment while a lost lesson costs every future project.
+
 ## Golden rule of this directory
 
 Every statement carries the **why** and the **how to apply**. A lesson without a why becomes

@@ -9,6 +9,8 @@ Project (codename is fine): · Domain (one sanitized line): · Framework version
 
 > Sanitize before sending: no personal data, client names, secrets, or confidential domain detail.
 > Every entry needs **what → why → evidence → suggested destination**. Delete empty sections.
+> Generic, not project-specific: each entry must help a project with another domain and another
+> stack (`knowledge/README.md` §The generality test). Product-only lessons stay in your project.
 
 ## New traps
 <!-- Defects or process failures the framework doesn't prevent yet -->
