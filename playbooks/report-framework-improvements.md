@@ -25,7 +25,12 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
 1. **Consolidate.** Reread the new entries (without the `(sent #nnn)` mark) across the five
    sections. Does each have the what, the why, evidence and a suggested destination? Incomplete
    ones are completed now or wait for the next submission — entries without a why and evidence are
-   never sent. **Recovery sweep:** before closing consolidation, cross-check `STATE.md` (§Lessons,
+   never sent. **Generality test:** each entry — the recovered ones below included — answers the
+   two questions of `knowledge/README.md` §The generality test: another domain, another stack.
+   What can be rewritten in general form is rewritten now; what fails is moved, never deleted
+   (product lessons to `STATE.md` §Lessons, stack-bound blocks to destination `starters/`), and
+   the counts go in the issue body (step 3). **Recovery sweep:** before closing consolidation,
+   cross-check `STATE.md` (§Lessons,
    §Done, §Debt and §Decisions made on behalf of the absent owner, since the last submission — debt
    accepted "because of the framework" or a decision made because the framework did not say what
    to do is reportable friction) and, if cheap, the period's `git log` against the file's
@@ -81,6 +86,7 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
    ```
    Domain (1 line, sanitized): {{…}}
    Copied framework version: {{X.Y.Z}} · Milestone: {{phase closed / cadence}}
+   Generality test: {{n}} entries sent · {{m}} kept in the project (product lessons / stack-bound)
 
    ## New pitfalls
    {{new entries from this section, complete}}

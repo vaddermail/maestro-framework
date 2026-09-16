@@ -59,7 +59,9 @@ below fire.
 4. **Classify each item** on a curation branch (`git checkout -b curation/YYYY-MM`):
    - **Duplicate/cross-validation** → add the confirmation (on the candidate, or an "also
      confirmed in {…}" note in the promoted file). With no new content, it is a PATCH.
-   - **Domain-specific** → written verdict on the issue; record as declined in candidates.
+   - **Domain-specific** → written verdict on the issue; record as declined in candidates. The
+     verdict names which question of `knowledge/README.md` §The generality test failed — the
+     same test the project applied before sending — so the project calibrates its next filter.
    - **New, 1 project** → entry in candidates (`awaiting-confirmation`, count 1, link to the issue).
    - **Confirmed (≥2 projects)** → promote in step 5. "Obviously general with 1" exception: only
      with an explicit question to the owner, never on own initiative

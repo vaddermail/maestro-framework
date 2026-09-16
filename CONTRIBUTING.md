@@ -22,6 +22,11 @@ building block. Open an issue with the **field report** template. Rules:
   and evidence is an opinion, and opinions don't merge.
 - **Sanitize before sending**: no personal data, client names, secrets, or confidential domain
   detail. The lesson generalizes; the context stays home.
+- **Generic, not project-specific.** Maestro serves any kind of product, so an entry is worth
+  sending only if it would help a project with another domain and another stack — the two
+  questions of `knowledge/README.md` §The generality test. A lesson that only holds for your
+  product stays in your project; a block tied to one stack is proposed for `starters/`. Write the
+  general form; your concrete incident is the evidence.
 - One project's lesson becomes a **candidate** (`knowledge/candidates.md`) and waits for a second,
   independent confirmation before being promoted — so also report when you **confirm or refute an
   existing candidate** (reference its stable ID, `C-nnn`). Confirmations are as valuable as new

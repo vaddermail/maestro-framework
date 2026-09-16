@@ -13,6 +13,13 @@
 > data, customer names, secrets or confidential domain detail — the lesson is written in
 > general form; the evidence points to paths/commits, without pasting sensitive content.
 
+> **Generality (mandatory):** the framework serves any kind of product, so an entry belongs here
+> only if it would help a project with **another domain and another stack** — the two questions
+> of `Maestro/knowledge/README.md` §The generality test. What fails is moved, never deleted: a
+> product lesson goes to `STATE.md` §Lessons; a block that cannot be separated from its stack
+> goes to §Reusable blocks with destination `starters/`. Write the general form; the concrete
+> incident is the evidence.
+
 ---
 
 *Format of each entry (same across the five sections): **what → why → evidence → suggested
