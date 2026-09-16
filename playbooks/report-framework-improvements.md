@@ -51,7 +51,8 @@ serialization happens later, during curation (`playbooks/framework-curation.md`)
    what unblocks promotions. **Confirming candidates does not require syncing the copy**
    (`playbooks/sync-framework.md` is deliberate and may involve a MAJOR; confirmation does not
    wait for that). **At the close of F8**, also include the "Close" block of the genesis dossier
-   (`product/99-records/genesis.md`) — it is what curation uses to update the ecosystem's curve
+   (`product/99-records/genesis.md` — or, in a product in F9, the §Evolutions lines closed since
+   the last submission) — it is what curation uses to update the ecosystem's curve
    (`knowledge/learning-curve.md`).
 2. **Sanitize.** An explicit check, entry by entry: no personal data, no client or project names,
    no secrets, no confidential domain detail. The lesson in its general form; the evidence by

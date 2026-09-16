@@ -16,7 +16,8 @@
 # Exits 1 if any case does not behave as expected. Cases: conforming, deviant, unreadable phase,
 # unfilled genesis, first day, unfilled STATE, edited copy, CRLF, draft spec, no Q&A/gate records,
 # future date, P8 without human approval, scripts with CRLF, adoption (F9, mid-way, from scratch,
-# inconsistent, without a phase), memory ceiling, pending decisions (age, no date, batch).
+# inconsistent, without a phase), memory ceiling, pending decisions (age, no date, batch), genesis
+# instantiated mid-project and per evolution in F9.
 
 # Line-ending guard: a copy with CRLF (Windows) failed with cryptic errors and the gate never ran.
 # The `#` at the end of the next line makes it immune to the very \r it detects.
@@ -446,6 +447,52 @@ if printf '%s' "$saida" | grep -q '16 pending decisions open'; then
   ok "15b 16 pending decisions open: batch triage requested"
 else
   falha "15b 16 pending: not flagged"
+fi
+
+# ---------------------------------------------------------------------------
+# Case 16 — the genesis in a project that was not born with it, and in F9. Instantiated mid-project,
+#           the phases already closed are marked «not measured» and do not count as measurement; in F9
+#           the unit is the evolution (one line per closed EV-nnn) — otherwise the genesis stayed empty
+#           forever and the gate warned forever.
+# ---------------------------------------------------------------------------
+genese_meio() { # $1 = root: genesis instantiated mid-project, F1–F8 «not measured»
+  mkdir -p "$1/product/99-records"
+  { printf '# Genesis\n\n**Measured since:** 2026-09-16\n\n## Phases\n\n| Phase | Closed on | Days since F0 | AI cost | Questions to the user | Rework | 1st? | Notes |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n'
+    for f in 1 2 3 4 5 6 7 8; do printf '| F%s | not measured — before instantiation | — | — | — | — | — | |\n' "$f"; done
+    printf '\n## Evolutions (F9)\n\n| Evolution | Closed on | Days (request → production) | AI cost | Questions to the user | Rework | 1st? | Notes |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n'; } > "$1/product/99-records/genesis.md"
+}
+r=$(constroi genesis-f9 "F9 — Operations" deviant)
+printf '| **Adoption** | on a product in production, since F9 (2026-09-01) |\n' >> "$r/STATE.md"
+mkdir -p "$r/product/00-discovery" "$r/product/99-records/evolutions"; printf '# x\n' > "$r/product/00-discovery/existing-system.md"
+genese_meio "$r"
+saida=$(corre "$r")
+if printf '%s' "$saida" | grep -q 'no evolution closed yet'; then
+  ok "16a genesis in F9 with no evolutions: NOT VERIFIED, neither a warning nor green"
+else
+  falha "16a genesis in F9 with no evolutions: unexpected behaviour"; printf '%s\n' "$saida" | grep -i 'genesis' | sed 's/^/    /'
+fi
+printf '# EV-001\n' > "$r/product/99-records/evolutions/EV-001-x.md"
+saida=$(corre "$r")
+if printf '%s' "$saida" | grep -q 'with no evolution line' && ! printf '%s' "$saida" | grep -q 'tracks the phases'; then
+  ok "16b genesis in F9 with one recorded EV and no line: warns per evolution; «not measured» does not count as a measured phase"
+else
+  falha "16b genesis in F9 with an EV and no line: no warning, or «not measured» counted as measurement"; printf '%s\n' "$saida" | grep -i 'genesis' | sed 's/^/    /'
+fi
+printf '| EV-001 | 2026-09-10 | 3 | 2.10 € | 1 | 0 | yes | |\n' >> "$r/product/99-records/genesis.md"
+saida=$(corre "$r")
+if printf '%s' "$saida" | grep -q 'tracks the evolutions (1'; then
+  ok "16c genesis in F9 with the evolution line: green per evolution"
+else
+  falha "16c genesis in F9 with an EV line: not recognized"; printf '%s\n' "$saida" | grep -i 'genesis' | sed 's/^/    /'
+fi
+r=$(constroi genesis-mid-f3 "F3 — Architecture" conforming)
+genese_meio "$r"
+sed -i 's/^| F2 | not measured — before instantiation | — | — | — | — | — | |$/| F2 | 2026-09-15 | 40 | 3.00 € | 2 | 0 | yes | |/' "$r/product/99-records/genesis.md"
+saida=$(corre "$r")
+if printf '%s' "$saida" | grep -q 'tracks the phases (1 measured'; then
+  ok "16d genesis instantiated mid-project at F3: only the measured phase counts (1), «not measured» does not"
+else
+  falha "16d genesis mid-project: wrong count"; printf '%s\n' "$saida" | grep -i 'genesis' | sed 's/^/    /'
 fi
 
 printf '\n'

@@ -70,7 +70,11 @@ circulates); the copy is never edited.
      existing sections (e.g. "AI cost" in the §Done blocks), which the title comparison does not
      see; **(iii) errata** — the only exception to "never rewritten": text in an existing section
      that contradicts a permanent rule gets rewritten (2.10.0: `CLAUDE.md` §How to work, steps 5–6,
-     "Commit + push" → "Propose the commit"). A project that skips this step ends up with 17 agent
+     "Commit + push" → "Propose the commit"); **(iv) genesis** — if `product/99-records/genesis.md`
+     does not exist (projects predating 2.6.0, or adopted without it), instantiate it from the
+     template with «Measured since:» set to this sync's date; phases already closed get marked «not
+     measured — before instantiation», never reconstructed, and in F9 the next line is the next
+     evolution's (§Evolutions). A project that skips this step ends up with 17 agent
      specs (24 files) writing to a `STATE.md` §Debt it does not have; `_meta/verify-project.sh`
      warns. Jumps with known impact on living files:
 
@@ -82,6 +86,7 @@ circulates); the copy is never edited.
      | 2.10.0 | `STATE.md` | "AI cost" field in §Done blocks; ledger lines in §In progress |
      | 2.10.0 | `FRAMEWORK-IMPROVEMENTS.md` | §Framework usage this phase (i) |
      | 2.10.0 | project root | `FORBIDDEN-TERMS` (from `templates/project/FORBIDDEN-TERMS.template`) |
+     | 1.4.0 | `product/99-records/genesis.md` | instantiate if missing, with «Measured since» (iv); in those that exist, §Evolutions (i) |
 
      As of 2.10.0, every `_meta/VERSION.md` entry that changes a `templates/project/*.template`
      ends with a **Project impact** line — the table above does not grow by hand.

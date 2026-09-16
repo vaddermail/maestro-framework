@@ -282,29 +282,44 @@ if [ -f FRAMEWORK-IMPROVEMENTS.md ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 6. Genesis dossier: one line per closed phase (the measurement of the promise)
+# 6. Genesis dossier: one line per closed phase (the measurement of the promise). Instantiated
+#    mid-project (sync or adoption), the phases already closed are marked «not measured» and do not
+#    count. In F9 no phase ever closes again: the unit becomes the evolution (one line per closed
+#    EV-nnn, workflows/W10-feature-evolution.md §Exit gate) — without that, the genesis of a mature
+#    product stayed empty forever, and the gate warned forever.
 # ---------------------------------------------------------------------------
-if [ -f product/99-records/genesis.md ]; then
+g=product/99-records/genesis.md
+if [ -f "$g" ]; then
   # An unedited template row still carries {{...}}: counting it made the very instrument
   # that measures the framework's promise go green over placeholders.
-  linhas=$(grep -E '^\| F[0-9] ' product/99-records/genesis.md | grep -vc '{{' || true)
-  porpreencher=$(grep -cE '^\| F[0-9] .*{{' product/99-records/genesis.md || true)
+  linhas=$(grep -E '^\| F[0-9] ' "$g" | grep -v '{{' | grep -viE 'not measured|não medido' | wc -l | tr -d ' ')
+  porpreencher=$(grep -cE '^\| (F[0-9]|EV-[0-9]+) .*{{' "$g" || true)
   if [ "${porpreencher:-0}" -gt 0 ]; then
     aviso "genesis.md with $porpreencher unfilled row(s) (template placeholders {{...}})"
   fi
-  if [ "${linhas:-0}" -eq 0 ]; then
-    if [ "$fase_ok" -eq 0 ]; then
-      nao_verificado "genesis dossier — depends on the phase, and the phase is unreadable"
-    elif [ "$n" -ge 2 ]; then
-      aviso "genesis.md with no filled closed-phase row (templates/project/GENESIS.md.template)"
+  ev_reg=$(ls product/99-records/evolutions/EV-*.md 2>/dev/null | wc -l | tr -d ' ')
+  ev_lin=$(grep -E '^\| EV-[0-9]+ ' "$g" | grep -vc '{{' || true)
+  if [ "$fase_ok" -eq 0 ]; then
+    nao_verificado "genesis dossier — depends on the phase, and the phase is unreadable"
+  elif [ "$n" -ge 9 ]; then
+    if [ "${ev_lin:-0}" -gt 0 ]; then
+      ok "genesis dossier tracks the evolutions ($ev_lin EV-nnn line(s))"
+    elif [ "${ev_reg:-0}" -gt 0 ]; then
+      aviso "genesis.md with no evolution line while $ev_reg EV-nnn are recorded in product/99-records/evolutions/ — in F9 the genesis measures per evolution (workflows/W10-feature-evolution.md §Exit gate)"
     else
-      nao_verificado "genesis dossier — no closed phase to measure yet"
+      nao_verificado "genesis dossier — no evolution closed yet to measure (F9)"
     fi
+  elif [ "${linhas:-0}" -gt 0 ]; then
+    ok "genesis dossier tracks the phases ($linhas measured row(s))"
+  elif [ "$adocao" -ge 0 ] && [ "$adocao" -ge "$n" ]; then
+    nao_verificado "genesis dossier — no phase closed since the adoption (F$adocao)"
+  elif [ "$n" -ge 2 ]; then
+    aviso "genesis.md with no phase measured yet — the next phase to close gets the first row (templates/project/GENESIS.md.template)"
   else
-    ok "genesis dossier tracks the phases ($linhas filled row(s))"
+    nao_verificado "genesis dossier — no closed phase to measure yet"
   fi
 else
-  [ "$n" -ge 1 ] && aviso "no product/99-records/genesis.md — the ecosystem curve stays blind to this project"
+  [ "$n" -ge 1 ] && aviso "no product/99-records/genesis.md — the ecosystem curve stays blind to this project; it is instantiated mid-project too (playbooks/sync-framework.md step 6b)"
 fi
 
 # ---------------------------------------------------------------------------

@@ -17,6 +17,18 @@ project fills the "previous product" column of its own genesis dossier.
 > findings dropped by an order of magnitude between its second and third product once
 > specification-before-construction took hold. This edition starts its own measurement from zero.
 
+## The curve per evolution (products in F9)
+
+A product in F9 never closes a phase again; it closes evolutions. The promise changes shape —
+**each evolution cheaper and better than the previous one** — and it is the curve that matters in
+a mature product, and the only one that exists for a product adopted while already in production
+(with no F0 → production to measure). Curation aggregates, by project codename, the §Evolutions
+lines from the genesis dossier that arrive in the F9-cadence reports.
+
+| Product | Evolutions measured | Days request → production (median) | AI cost per evolution (median) | Rework | 1st-try rate | Source |
+| --- | --- | --- | --- | --- | --- | --- |
+| — | *(empty — the first line arrives with the first F9 report that brings §Evolutions)* | — | — | — | — | — |
+
 ## How to read it, and what it feeds
 
 - **Trend, not points:** a product worse than the previous one is not a framework failure — it is
@@ -24,6 +36,9 @@ project fills the "previous product" column of its own genesis dossier.
   starter?).
 - **Where to invest:** cost concentrated in F6 → the starter is the answer; high F7 findings →
   evals and earlier review; rework from spec divergence → reinforce F5.
+- **A product adopted midway is not compared by its Close** — the phases before instantiation
+  were marked "not measured" and are never reconstructed; it is compared by the trend of its
+  evolutions.
 - Each close's reading goes in the curation round's PR; deciding where to invest is the
   maintainer's call.
 

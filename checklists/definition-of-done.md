@@ -10,7 +10,9 @@ item by item, evidence in the format of `knowledge/proven-patterns.md` §Live pr
 ≠ whoever produced, who approved, waivers; the P6 record **per slice** is *(waivable in: prototype)*
 — `core/quality-gates.md` §Gates and effort profiles); and a green
 `bash Maestro/_meta/verify-project.sh` confirms the process is being followed, not just declared;
-and, at the close of each phase, `STATE.md` compacted (`core/project-memory.md` §Memory hygiene).
+and, at the close of each phase, `STATE.md` compacted (`core/project-memory.md`
+§Memory hygiene) and the phase's line in `product/99-records/genesis.md`
+(`templates/project/GENESIS.md.template` — in F9, each evolution's line).
 
 ## F1 — Discovery
 
@@ -123,6 +125,8 @@ bypassed throughout the entire build.
       (`checklists/post-incident.md`).
 - [ ] Improvement report sent at the profile's cadence (`agents/13-guardians/README.md`
       §Cadences per profile; `playbooks/report-framework-improvements.md`).
+- [ ] Every closed evolution has its line in `product/99-records/genesis.md` §Evolutions
+      (`workflows/W10-feature-evolution.md` §Exit gate).
 
 ## Per code change
 

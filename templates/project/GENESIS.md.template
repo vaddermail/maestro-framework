@@ -2,16 +2,23 @@
 
 > **How to use:** instantiated in F0 to `product/99-records/genesis.md`
 > (`workflows/W00-project-kickoff.md`) and gains **one line at the close of each phase** — it
-> is part of the gate (`checklists/definition-of-done.md`). It is the instrument that measures
-> the framework's promise ("each product cheaper and better than the previous one"): without
-> these numbers, the improvement is conviction; with them, it is the curve in
-> `knowledge/learning-curve.md`. Honest, approximate numbers are worth more than empty fields
-> — estimating is allowed, inventing is not (`knowledge/permanent-rules.md`).
+> is part of the gate (`checklists/definition-of-done.md`). A project that was not born with it
+> instantiates it midway (`playbooks/sync-framework.md` step 6b, or adopting via
+> `workflows/W00-project-kickoff.md` §Adopting in a product that already exists): measurement
+> starts on that date, and phases already closed get marked "not measured" — never
+> reconstructed. In F9 the unit of measurement becomes the evolution (§Evolutions). It is the
+> instrument that measures the framework's promise ("each product cheaper and better than the
+> previous one"): without these numbers, the improvement is conviction; with them, it is the
+> curve in `knowledge/learning-curve.md`. Honest, approximate numbers are worth more than empty
+> fields — estimating is allowed, inventing is not (`knowledge/permanent-rules.md`).
+
+**Measured since:** {{yyyy-mm-dd — the date of F0, or of the sync/adoption that instantiated this file}}
 
 ## Phases
 
-*Fill in the line when closing the phase gate. "AI cost": tokens or €, whatever the tool
-gives — consistent within the project. Source: sum of the "AI cost" fields in `STATE.md` §Done
+*Fill in the line when closing the phase gate. Phase closed before measurement begins:
+`| Fn | not measured — before instantiation | — | — | — | — | — | |` (the gate does not count
+it). "AI cost": tokens or €, whatever the tool gives — consistent within the project. Source: sum of the "AI cost" fields in `STATE.md` §Done
 since the previous phase closed (plus the milestone totals archived in §Historical log).
 "Rework": slices/artifacts redone because of a defect or a divergence from the spec — counted
 from artifacts marked `obsolete` and from reopened slices recorded in `STATE.md` §Done.
@@ -23,6 +30,19 @@ instantiation; each phase close adds its own.*
 | Phase | Closed on | Days since F0 | AI cost | Questions to the user | Rework | 1st? | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | F1 | {{yyyy-mm-dd}} | {{n}} | {{…}} | {{n}} | {{…}} | {{yes/no}} | {{…}} |
+
+## Evolutions (F9)
+
+*In F9 it never closes a phase again; it closes an evolution — each `EV-nnn` from
+`workflows/W10-feature-evolution.md` is a miniature F2→F8 and gains its line here at the exit
+gate. It is the mature product's curve: each evolution cheaper and better than the previous one.
+"Days": from the request being recorded (`product/99-records/evolutions/EV-nnn.md`) to
+production. The remaining columns are measured as in the phases, from the evolution's
+`STATE.md` §Done blocks.*
+
+| Evolution | Closed on | Days (request → production) | AI cost | Questions to the user | Rework | 1st? | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| EV-{{nnn}} | {{yyyy-mm-dd}} | {{n}} | {{…}} | {{n}} | {{…}} | {{yes/no}} | {{…}} |
 
 ## Quality at F7
 
@@ -43,6 +63,10 @@ instantiation; each phase close adds its own.*
 
 **Honest 3-line reading:** {{where this product was cheaper/better than the previous one,
 where it was worse, and the hypothesis of why — this is what curation wants to read}}.
+
+*In a product adopted while already in production there is no F0 → production to measure: the
+Close reads "not applicable — adopted in F9" and curation reads the trend in §Evolutions
+instead.*
 
 > **Sending:** the Close block goes in the improvement report at the F8 close
 > (`playbooks/report-framework-improvements.md`); curation updates the upstream curve with

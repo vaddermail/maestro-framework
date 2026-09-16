@@ -96,6 +96,10 @@ The evolution **closes** when:
 - [ ] Rollback rehearsed and available (`playbooks/release-and-rollback.md`); risky change behind
       a switchable flag (`modules/feature-flags.md`).
 - [ ] `EV-nnn.md` closed (what was done, what was left behind and why) and `STATE.md` updated.
+- [ ] Evolution's line in `product/99-records/genesis.md` §Evolutions — days from request to
+      production, AI cost, questions, rework, 1st? (`templates/project/GENESIS.md.template`); it
+      is the product's curve in F9, and `_meta/verify-project.sh` warns when there are recorded
+      EV-nnn with no line.
 
 **Who verifies:** the Orchestrator (formal gates) + the stage 5 panel (substance). **Who approves
 the release:** the user.

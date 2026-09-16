@@ -102,7 +102,9 @@ the right one. → Block: operate by exact identifier (echoing `knowledge/perman
 in one project, commit and log messages came out mangled time after time, silently and with `rc=0`.
 A `;` before `git commit`/`git push` pushes a red commit; a chained merge commits conflict markers;
 commits "pending push" counted against a tracking ref that was days stale came up as zero. →
-Block: messages generated via heredoc with a quoted delimiter, or `git commit -F <file>`; commit
+Block: messages generated via heredoc with a quoted delimiter, or `git commit -F <file>`
+(double quotes also betray via `$` — a variable or substitution expands silently and, unlike
+backticks, leaves no visible hole on reread); commit
 and push chained only with `&&` so the exit code decides; merge with `--no-commit` and an empty
 `git grep -n '^<<<<<<< '` before the commit; `git fetch` before any claim about what is pending to
 push or pull (`knowledge/permanent-rules.md` §8).
@@ -135,7 +137,11 @@ negative one, at the same scope it will run at; it states how many items it visi
 criterion, never just the verdict; the failure of any step in a pipeline propagates (in bash,
 `set -o pipefail`, or `PIPESTATUS` for a middle element); a failed command is a failure, never
 zero; a diagnostic's stderr is captured. For refusal guards, a deliberate mutation (the inverted
-condition) has to make it fail (`knowledge/proven-patterns.md` §Live proof).
+condition) has to make it fail (`knowledge/proven-patterns.md` §Live proof). Two nuances measured
+in the origin ecosystem: the positive control proves the **class**, not the case — a cure written
+for the case that motivated it inherits that case's boundary and looks like it closes the whole
+class; and a command guard that classifies by text is fragile to quoting forms and equivalent flag
+aliases — classify by tokenizing with the target interpreter's parser, never by substring.
 
 ## Context and delegation
 
@@ -158,7 +164,9 @@ in `STATE.md`, correct when read, was already false by the time it was published
 authorization" quoted from one session to another was taken as a mandate. → Block:
 `core/orchestrator.md` §Parallelism — a dedicated `git worktree` for whoever mutates, a re-read
 immediately before writing, territory reserved and logged before the work, a lock for simultaneous
-contention, and only the user authorizes.
+contention, and only the user authorizes. The shell's working directory can drift back to the main
+tree on its own between harness calls, and a guard that only looks at the git verb misses that:
+confirm `pwd` before mutating.
 
 
 **AR-28. A loading state that masks the reproduction.** In a client with deferred loading, the

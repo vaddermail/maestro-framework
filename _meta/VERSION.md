@@ -1,6 +1,6 @@
 # Framework Version
 
-**Current version: 1.3.0** (2026-09-16)
+**Current version: 1.4.0** (2026-09-16)
 
 The framework is versioned with [SemVer](https://semver.org/) applied to executable documentation:
 
@@ -16,6 +16,39 @@ framework evolves in this repository through pull requests and curation
 never automatically.
 
 ## Changelog
+
+### 1.4.0 — 2026-09-16
+
+Synced from upstream 2.13.0. **The genesis measures the projects that were not born with it — and
+the ones that no longer close phases.** The owner asked whether a project already under way should
+have the genesis dossier; the critical answer was yes, and the gap was bigger than the question: the
+sync playbook — the path projects under way actually take — never instantiated it, so three of four
+projects synced upstream that day were left without it and with the gate warning forever; a product
+in F9 never closes a phase again, so the genesis as designed would stay empty forever in a mature or
+adopted-in-production product; and the template claimed the phase row was part of the definition of
+done, which never mentioned it.
+
+- **Instantiated mid-project, without inventing:** `templates/project/GENESIS.md.template` gains
+  «Measured since:»; phases closed before it are marked «not measured — before instantiation» and the
+  gate does not count them. `playbooks/sync-framework.md` step 6b gains sub-step (iv); the W00
+  adoption says the same. Improvements were already collected retroactively by
+  `FRAMEWORK-IMPROVEMENTS.md`; what was missing was the quantitative instrument.
+- **In F9 the unit is the evolution:** §Evolutions in the genesis — one line per closed `EV-nnn`,
+  demanded by the exit gate of `workflows/W10-feature-evolution.md` and by the definition of done
+  §F9. `knowledge/learning-curve.md` gains the curve per evolution: in a mature product «each
+  evolution cheaper and better than the previous one» is the promise that exists; in one adopted in
+  production, it is the only one.
+- **The gate** (`_meta/verify-project.sh` check 6) tells measured from «not measured», warns in F9
+  when EV-nnn are recorded without a line, says NOT VERIFIED while no evolution has closed, and does
+  not demand phases before the adoption. Cases 16a–16d, failing before the implementation.
+- Complements to AR-25, AR-26 and AR-27 from the last triage of the origin ecosystem: the positive
+  control proves the class, not the case; text-based command guards tokenize with the real parser;
+  double quotes also betray through `$`; the shell's working directory can drift back to the main
+  tree between harness calls.
+
+**Impact on projects** (sync playbook, step 6b): `product/99-records/genesis.md` — instantiate if
+missing, with «Measured since:» and earlier phases «not measured»; in those that exist, add
+§Evolutions. In F9, the next evolution to close writes the first row.
 
 ### 1.3.0 — 2026-09-16
 

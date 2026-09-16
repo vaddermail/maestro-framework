@@ -99,10 +99,12 @@ permanently red gate is a gate nobody runs.
 Rules for the "product in production" case:
 
 1. **The foundation is complete, not minimal** — `STATE.md`, `CLAUDE.md`,
-   `FRAMEWORK-IMPROVEMENTS.md`, `FORBIDDEN-TERMS` and genesis from the point of adoption. Without
-   the improvements file, the in-the-moment capture does not happen: an adopter with a "minimal
-   bootstrap" ended up with ten days of lessons sitting only in `STATE.md` and in conversation, and
-   had to recover them afterward.
+   `FRAMEWORK-IMPROVEMENTS.md`, `FORBIDDEN-TERMS` and genesis with «Measured since:» set to the
+   adoption date (earlier phases get marked "not measured"; F9 is measured per evolution —
+   `templates/project/GENESIS.md.template` §Evolutions). Without the improvements file, the
+   in-the-moment capture does not happen: an adopter with a "minimal bootstrap" ended up with ten
+   days of lessons sitting only in `STATE.md` and in conversation, and had to recover them
+   afterward.
 2. **The phases before adoption are not reconstructed.** F1–F8 artifacts are not written
    retroactively for a product that never went through them. In place of that trail, the gate
    requires `product/00-discovery/existing-system.md` — the characterization of what exists:
